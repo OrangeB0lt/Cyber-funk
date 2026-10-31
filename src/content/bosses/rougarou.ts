@@ -15,6 +15,7 @@ export const rougarou = {
   weak: 'HOT',
   resist: 'LOW',
   note: 'G',
+  next: { unlock: 'cemetery', act: 'cemetery' },
   lines: {
     intro:
       "The wolf that was Lucien lifts its chrome muzzle. The pump station's signal screams in its skull. It howls in perfect time.",

@@ -14,6 +14,7 @@ export const captainHush = {
   weak: 'FUNK',
   resist: 'BLUE',
   note: 'C',
+  next: { unlock: 'quarter', act: 'quarter' },
   lines: {
     intro:
       'By order of Metronome, this square is now a Quiet Zone. Unlicensed syncopation detected. Cease all swing.',

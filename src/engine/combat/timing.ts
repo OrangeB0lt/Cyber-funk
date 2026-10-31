@@ -5,23 +5,10 @@
  */
 import { clamp, hasStatus, livingEnemies } from '@core/helpers';
 import { NOTE_IDS } from '@core/ids/enemies';
-import type { Battle, PlayerIntent, TimingGradeDef } from '@core/types';
+import type { Battle, PlayerIntent, TimingGradeDef, TimingSpec } from '@core/types';
+
 import { SKILLS, TIMING } from '@content/data';
 import { logLine } from './events';
-
-/** The On the One bar for one action. Positions are fractions of the track (0–1). */
-export interface TimingSpec {
-  /** How long the marker takes to cross the track. Faster against higher-level enemies. */
-  durationMs: number;
-  /** Center of the target zones. */
-  center: number;
-  /** Half-width of the ONE zone. */
-  one: number;
-  /** Half-width of the pocket zone. */
-  pocket: number;
-  /** Half-width of the loose zone. */
-  loose: number;
-}
 
 /** Delay before the marker starts moving. */
 export const TIMING_LEAD_MS = 220;
@@ -102,3 +89,5 @@ export function bluesLabel(accuracy: number): string {
         ? 'ROUGH BUT TRUE'
         : 'CLAMS';
 }
+
+export type { TimingSpec };

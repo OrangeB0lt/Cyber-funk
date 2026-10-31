@@ -1,19 +1,10 @@
 /** XP and levelling. */
-import { STAT_KEYS, type SkillId, type StatKey } from '@core/ids/combat';
-import type { GameState } from '@core/types';
+import { STAT_KEYS, type StatKey } from '@core/ids/combat';
+import type { GameState, LevelUp } from '@core/types';
+
 import { CLASSES, LEVEL_CAP, SKILL_LEVELS } from '@content/data';
 import { xpToNext } from './balance';
 import { displayStats, funkPct, healPct } from './stats';
-
-/** One level gained. */
-export interface LevelUp {
-  /** The new level. */
-  level: number;
-  /** Displayed stat increases. */
-  gains: Record<StatKey, number>;
-  /** A skill unlocked at this level, if any. */
-  newSkill: SkillId | null;
-}
 
 /**
  * Add XP and apply every level-up it pays for. Each level-up restores 30% Heart and Funk.
@@ -41,3 +32,5 @@ export function gainXp(s: GameState, n: number): LevelUp[] {
   if (s.level >= LEVEL_CAP) s.xp = 0;
   return ups;
 }
+
+export type { LevelUp };

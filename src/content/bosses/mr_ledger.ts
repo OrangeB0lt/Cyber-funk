@@ -14,6 +14,7 @@ export const mrLedger = {
   weak: 'FUNK',
   resist: 'BLUE',
   note: 'F',
+  next: { unlock: 'bayou', act: 'bayou' },
   lines: {
     intro:
       "Every song in this district has a lienholder, and the lienholder is me. Let's discuss your balance.",

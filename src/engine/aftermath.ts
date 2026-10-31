@@ -4,7 +4,8 @@
  */
 import type { BossId, EnemyId } from '@core/ids/enemies';
 import { ACT_STEPS, type StoryPosition } from '@core/ids/story';
-import type { Battle, GameState, StepDef } from '@core/types';
+import type { Battle, GameState, StepDef, VictorySummary } from '@core/types';
+
 import {
   ACTS,
   BOSSES,
@@ -13,21 +14,9 @@ import {
   QUEST_KILL_COUNTERS,
   STREET_DEFEAT_DOUBLOON_LOSS,
 } from '@content/data';
-import { battleRewards, type BattleRewards } from './combat/rewards';
+import { battleRewards } from './combat/rewards';
 import { addItem, countItem } from './inventory';
 import { derivedStats } from './stats';
-
-/** What the victory screen shows. */
-export interface VictorySummary {
-  /** XP (not yet applied; apply with gainXp after the screen), Doubloons and drops (applied). */
-  rewards: BattleRewards;
-  /** Bounty paid out, if this was the bounty fight. */
-  bountyGold: number;
-  /** Names of enemies whose weakness was discovered this fight. */
-  discoveries: string[];
-  /** The main-quest step this battle completed, if any (show its completeToast). */
-  completedStep: StoryPosition | null;
-}
 
 /** Move the main quest to the next step of the current act. */
 export function advanceStep(s: GameState): void {
@@ -141,3 +130,5 @@ export function applyStreetDefeat(s: GameState): void {
   s.dreamBuff = null;
   s.nextFight = null;
 }
+
+export type { VictorySummary };

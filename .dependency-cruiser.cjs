@@ -34,9 +34,10 @@ module.exports = {
     },
     {
       name: 'content-data-has-no-prose-runtime',
-      comment: 'Only *.scene.ts files in content/ may import narrative/. Data and rules stay scene-free.',
+      comment:
+        'Only *.scene.ts files (and the content/index.ts scene registry) may import narrative/. Data and rules stay scene-free.',
       severity: 'error',
-      from: { path: '^src/content/', pathNot: '\\.scene\\.ts$' },
+      from: { path: '^src/content/', pathNot: '(\\.scene\\.ts$)|(^src/content/index\\.ts$)' },
       to: { path: '^src/narrative/' },
     },
     {

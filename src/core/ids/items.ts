@@ -95,3 +95,6 @@ export type GearSlot = (typeof GEAR_SLOTS)[number];
 export const SHEET_MUSIC_IDS = ['sm_circular', 'sm_secondwind', 'sm_swing', 'sm_rubato', 'sm_ghost'] as const;
 /** A sheet music technique. */
 export type SheetMusicId = (typeof SHEET_MUSIC_IDS)[number];
+
+/** Anything a shop can sell. */
+export type ShopItemId = ItemId | GearId | SheetMusicId;

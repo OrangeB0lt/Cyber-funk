@@ -10,8 +10,8 @@ import type { ClassId, RootsId } from '../ids/characters';
 import type { SkillId, StatKey, StatusId, TimingId, ToneId } from '../ids/combat';
 import type { BossId, EnemyId, NoteId } from '../ids/enemies';
 import type { GearId, GearSlot, InstrumentTierId, ItemId, SheetMusicId } from '../ids/items';
-import type { StoryPosition } from '../ids/story';
-import type { DistrictId, PlaceId, QuestId } from '../ids/world';
+import type { ActId, StoryPosition } from '../ids/story';
+import type { DistrictId, GlossaryId, NpcId, PlaceId, QuestId } from '../ids/world';
 import type { Rng } from '../rng';
 import type { Actor, Battle } from './battle';
 import type { Effect, EffectOps } from './effects';
@@ -256,6 +256,8 @@ export interface BossDef {
   hpMult?: number;
   /** Only Playing the Blues breaks this boss's Perfect Silence (The Click). */
   bluesTarget?: boolean;
+  /** What beating the boss opens up: a district to unlock and the act that starts. */
+  next?: { unlock: DistrictId | null; act: ActId };
   /** What the boss says at the start, at half Heart, and on defeat. */
   lines: { intro: string; half: string; defeat: string };
   /** Blue Book entry, including the fight's tells. */
@@ -544,4 +546,74 @@ export interface EncounterRig {
   at: StoryPosition;
   /** The first enemy is replaced with one of these unless the group already has one. */
   anyOf: readonly EnemyId[];
+}
+
+/* ------------------------------------------------------------------ */
+/* World                                                                */
+/* ------------------------------------------------------------------ */
+
+/** A place inside a district. What you can do there is its scene (content/districts/<id>/places.scene.ts). */
+export interface PlaceDef {
+  /** Id. */
+  id: PlaceId;
+  /** The district it's in. */
+  district: DistrictId;
+  /** Display name. */
+  name: string;
+  /** One-line description on the district screen. */
+  desc: string;
+  /** The boss fought here, if any. */
+  boss?: BossId;
+}
+
+/** Someone who speaks in scenes. */
+export interface NpcDef {
+  /** Id. */
+  id: NpcId;
+  /** Name shown over their lines. */
+  name: string;
+  /** Name color. */
+  color: string;
+}
+
+/** A side quest, as the journal shows it. Its logic lives in the giver's scene. */
+export interface QuestDef {
+  /** Id. */
+  id: QuestId;
+  /** Display name. */
+  name: string;
+  /** Where it's given. */
+  district: DistrictId;
+  /** Who gives it (display). */
+  giver: string;
+  /** What to do. */
+  desc: string;
+  /** What you get (display). */
+  reward: string;
+  /** XP reward. */
+  xp: number;
+  /** Doubloon reward. */
+  gold: number;
+  /** Journal progress: a counter name, or an item id when `item` is set. */
+  progress?: string;
+  /** Journal progress goal. */
+  goal?: number;
+  /** `progress` names an item to count in the bag. */
+  item?: boolean;
+}
+
+/** A lexicon entry. Matching words in narration link to it automatically unless `noauto`. */
+export interface GlossaryDef {
+  /** Id: the lowercase term text matches. */
+  id: GlossaryId;
+  /** Display form. */
+  term: string;
+  /** Pronunciation hint ('' when obvious). */
+  pron: string;
+  /** Definition. */
+  def: string;
+  /** Lexicon category. */
+  cat: string;
+  /** Only link when written as [[term]], never automatically. */
+  noauto?: boolean;
 }

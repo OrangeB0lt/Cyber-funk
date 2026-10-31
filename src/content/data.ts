@@ -19,6 +19,10 @@ export { BANDMATES } from './band/bandmates';
 export { SECOND_LINE } from './band/secondLine';
 export { DISTRICTS } from './districts';
 export { ACTS } from './story/acts';
+export { PLACES } from './places';
+export { NPCS } from './npcs';
+export { QUESTS } from './quests';
+export { GLOSSARY } from './glossary';
 export {
   LEVEL_CAP,
   SKILL_LEVELS,

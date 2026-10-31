@@ -5,10 +5,17 @@
  * branching boss decisions; they have values, not just on/off. Add a flag here with a line saying
  * what sets it and what reads it.
  *
- * Draft for P1 (the engine needs `gusFreed` and the choices). The full list is filled in as scenes
- * are ported in P2–P4.
+ * The list grows as scenes are ported (P2–P4).
  */
 export const FLAG_IDS = [
+  /** Met Mama Roux (prologue end, or first talk in her kitchen). */
+  'metRoux',
+  /** Got Gus's cassette in the prologue; the club can play it back. */
+  'hasCassette',
+  /** Ti-Jacques told you Captain Hush's weakness (and maybe gave you Disco Beads). */
+  'hushHint',
+  /** Ti-Jacques built your legendary instrument. */
+  'legendBuilt',
   /** Gus Thibodeaux has been freed from the Data Mausoleum (Archivist). He leads the second line. */
   'gusFreed',
 ] as const;

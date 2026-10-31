@@ -15,6 +15,7 @@ export const voxPerfecta = {
   resist: 'HOT',
   note: 'Eb',
   hologram: true,
+  next: { unlock: 'storyville', act: 'storyville' },
   lines: {
     intro:
       "Welcome to the Licensed Entertainment Strip. Tonight's performance is brought to you by Metronome. Please remain in perfect time.",

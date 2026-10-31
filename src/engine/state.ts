@@ -49,6 +49,9 @@ export function newGame(
     notes: [],
     story: { ...NEW_GAME.story },
     quests: {},
+    bossesDefeated: [],
+    bossIntros: [],
+    districtIntros: [],
     choices: {},
     flags: {},
     counters: {},
@@ -66,6 +69,7 @@ export function newGame(
     ngPlus: ngPlus || 0,
     secondLine: null,
     inTower: false,
+    resume: null,
   };
   (r.gear || []).forEach(g => {
     s.gearBag.push(g);

@@ -11,6 +11,7 @@ import type { BossId, OpponentId } from '../ids/enemies';
 import type { BandmateId } from '../ids/band';
 import type { ItemId } from '../ids/items';
 import type { Rng } from '../rng';
+import type { StoryPosition } from '../ids/story';
 import type { GameState } from './state';
 
 /** The four stats an actor fights with. */
@@ -194,7 +195,7 @@ export interface BattleOptions {
 
 /** Styling class of a battle log line. */
 export type LogClass =
-  '' | 'boss' | 'telegraph' | 'good' | 'bad' | 'heal' | 'crit' | 'you' | 'solo' | 'assist';
+  '' | 'boss' | 'telegraph' | 'good' | 'bad' | 'heal' | 'crit' | 'you' | 'solo' | 'assist' | 'narr';
 
 /** The final outcome of a battle. */
 export type BattleResult = 'win' | 'lose' | 'fled';
@@ -295,4 +296,50 @@ export interface TimingResult {
   mult: number;
   /** Groove bonus. */
   groove: number;
+}
+
+/** One level gained. */
+export interface LevelUp {
+  /** The new level. */
+  level: number;
+  /** Displayed stat increases. */
+  gains: Record<'heart' | 'funk' | 'chops' | 'grit' | 'tempo' | 'mojo', number>;
+  /** A skill unlocked at this level, if any. */
+  newSkill: SkillId | null;
+}
+
+/** The On the One bar for one action. Positions are fractions of the track (0–1). */
+export interface TimingSpec {
+  /** How long the marker takes to cross the track. Faster against higher-level enemies. */
+  durationMs: number;
+  /** Center of the target zones. */
+  center: number;
+  /** Half-width of the ONE zone. */
+  one: number;
+  /** Half-width of the pocket zone. */
+  pocket: number;
+  /** Half-width of the loose zone. */
+  loose: number;
+}
+
+/** XP, Doubloons and item drops for a won battle. */
+export interface BattleRewards {
+  /** XP earned. */
+  xp: number;
+  /** Doubloons earned, including any stolen Doubloons returned. */
+  gold: number;
+  /** Items dropped. */
+  drops: ItemId[];
+}
+
+/** What the victory screen shows. */
+export interface VictorySummary {
+  /** XP (applied after the screen), Doubloons and drops (already applied). */
+  rewards: BattleRewards;
+  /** Bounty paid out, if this was the bounty fight. */
+  bountyGold: number;
+  /** Names of enemies whose weakness was discovered this fight. */
+  discoveries: string[];
+  /** The main-quest step this battle completed, if any (show its completeToast). */
+  completedStep: StoryPosition | null;
 }

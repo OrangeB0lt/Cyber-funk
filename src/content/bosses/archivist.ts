@@ -15,6 +15,7 @@ export const archivist = {
   resist: 'FUNK',
   note: 'Bb',
   machine: true,
+  next: { unlock: 'garden', act: 'garden' },
   lines: {
     intro:
       'Every song ever played in this city is catalogued below. The dead do not improvise. Soon, neither will you.',

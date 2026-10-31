@@ -1,0 +1,150 @@
+/** Places inside districts. What you can do at each one is its scene (districts/<id>/places.scene.ts). */
+import type { PlaceId } from '@core/ids/world';
+import type { PlaceDef, Table } from '@core/types';
+
+export const PLACES: Table<PlaceId, PlaceDef> = {
+  club: {
+    id: 'club',
+    district: 'treme',
+    name: 'Lagniappe Social Aid & Pleasure Club',
+    desc: "Home base. Folding chairs, a trophy wall, a coffee urn older than you, and the quest board nobody's allowed to touch but Mama Roux.",
+  },
+  kitchen: {
+    id: 'kitchen',
+    district: 'treme',
+    name: "Mama Roux's Kitchen",
+    desc: 'Six stools, one pot, and the best cook in the Sixth Ward.',
+  },
+  pawn: {
+    id: 'pawn',
+    district: 'treme',
+    name: "Ti-Jacques' Pawn & Horn",
+    desc: 'Horns in the window, suits in the back, and a man who can fix anything that makes a sound.',
+  },
+  congo: {
+    id: 'congo',
+    district: 'treme',
+    name: 'Congo Square',
+    boss: 'captain_hush',
+    desc: 'Sacred ground, where the drums never stopped. Metronome put a fence around it. The fence hums.',
+  },
+  strip: {
+    id: 'strip',
+    district: 'quarter',
+    name: 'The Bourbon Strip',
+    boss: 'vox_perfecta',
+    desc: 'The Licensed Entertainment Strip. Neon, jingles, and trouble, and at the end of it, the main stage.',
+  },
+  pelican: {
+    id: 'pelican',
+    district: 'quarter',
+    name: 'The Thirsty Pelican',
+    desc: 'Dive bar on Decatur. Drinks, rumors, a bounty board, and a crawfish track behind the pool table.',
+  },
+  feufollet: {
+    id: 'feufollet',
+    district: 'quarter',
+    name: 'Club Feu Follet',
+    desc: 'Frenchmen Street. The last real jazz club. Miss Odette runs it, and the Cutting Contest runs the back room.',
+  },
+  market: {
+    id: 'market',
+    district: 'quarter',
+    name: 'The French Market',
+    desc: 'Pralines, pepper sauce, sno-balls, and anything else that fits in a go-cup.',
+  },
+  jackson: {
+    id: 'jackson',
+    district: 'quarter',
+    name: 'Jackson Square',
+    desc: "Madame Zinnia's card table under the cathedral, and across the square, the Metronome licensing broadcaster, humming.",
+  },
+  lantern: {
+    id: 'lantern',
+    district: 'storyville',
+    name: 'The Velvet Lantern',
+    desc: "Madame Céleste's parlor. Live piano, deluxe rooms, and secrets for a price.",
+  },
+  chopshop: {
+    id: 'chopshop',
+    district: 'storyville',
+    name: 'Basin Street Chop Shop',
+    desc: 'Cyberware installed while you wait. Bring your own anesthesia or buy theirs.',
+  },
+  counting: {
+    id: 'counting',
+    district: 'storyville',
+    name: 'Ledger & Sons Counting House',
+    boss: 'mr_ledger',
+    desc: "Mr. Ledger's front. Brass teller windows, armed clerks, and a vault somewhere under Basin Street.",
+  },
+  cabin: {
+    id: 'cabin',
+    district: 'bayou',
+    name: "Grand-mère Clothilde's Cabin",
+    desc: 'A cabin on stilts with a lantern in the window and herbs hanging from every beam.',
+  },
+  faisdodo: {
+    id: 'faisdodo',
+    district: 'bayou',
+    name: 'The Fais Do-Do Dancehall',
+    desc: "Cajun dancehall on the water. Accordion, frottoir, cold beer, and a floor that's seen better gators.",
+  },
+  boudin: {
+    id: 'boudin',
+    district: 'bayou',
+    name: "Boudreaux's Boudin Shack",
+    desc: 'Boudin, gumbo, cracklins, and the worst jokes in the parish, free with purchase.',
+  },
+  pump: {
+    id: 'pump',
+    district: 'bayou',
+    name: 'Pump Station 13',
+    boss: 'rougarou',
+    desc: "A Metronome pump station broadcasting the Click's test signal across the swamp. The wolves circle it.",
+  },
+  temple: {
+    id: 'temple',
+    district: 'cemetery',
+    name: "Mambo Rosalie's Temple",
+    desc: "Candles, a bell, an altar with everyone's photo on it. Mambo Rosalie keeps the dead company.",
+  },
+  crypts: {
+    id: 'crypts',
+    district: 'cemetery',
+    name: 'The Crypt Rows',
+    desc: 'Rows of whitewashed tombs. Something moves between them.',
+  },
+  mausoleum: {
+    id: 'mausoleum',
+    district: 'cemetery',
+    name: 'The Data Mausoleum',
+    boss: 'archivist',
+    desc: 'Beneath the oldest tomb, a server farm shaped like a chapel. The Archivist is waiting.',
+  },
+  maison: {
+    id: 'maison',
+    district: 'garden',
+    name: 'Maison Chrome',
+    desc: 'Top-tier gear in a boutique that smells like money and ozone.',
+  },
+  tuxedo: {
+    id: 'tuxedo',
+    district: 'garden',
+    name: 'The Silver Tuxedo Supper Club',
+    desc: 'A stuffy licensed-music club. String-quartet bots, white tablecloths, and a valet who knows things.',
+  },
+  manor: {
+    id: 'manor',
+    district: 'garden',
+    name: 'Vane Manor',
+    boss: 'isolde',
+    desc: 'The biggest house on St. Charles. Tonight, the debutante ball. The ballroom is where the duel happens.',
+  },
+  towerlobby: {
+    id: 'towerlobby',
+    district: 'tower',
+    name: 'Metronome Tower',
+    desc: 'The final dungeon. Lobby, Server Floors, the Studio Floor, the Booth, and the Crown.',
+  },
+};

@@ -1,0 +1,35 @@
+/** Everyone who speaks in scenes, with the color their name shows in. */
+import type { NpcId } from '@core/ids/world';
+import type { NpcDef, Table } from '@core/types';
+
+export const NPCS: Table<NpcId, NpcDef> = {
+  mamaroux: { id: 'mamaroux', name: 'Mama Roux', color: '#ffc43d' },
+  tijacques: { id: 'tijacques', name: 'Ti-Jacques', color: '#39ff88' },
+  gus: { id: 'gus', name: 'Gus', color: '#b14aff' },
+  odette: { id: 'odette', name: 'Miss Odette', color: '#ff6ad5' },
+  sugar: { id: 'sugar', name: 'Sugar', color: '#ff6ad5' },
+  zinnia: { id: 'zinnia', name: 'Madame Zinnia', color: '#00e5ff' },
+  celeste: { id: 'celeste', name: 'Madame Céleste', color: '#ff2bd6' },
+  theo: { id: 'theo', name: 'Professor Theo', color: '#ffc43d' },
+  static: { id: 'static', name: 'Static', color: '#00e5ff' },
+  clothilde: { id: 'clothilde', name: 'Grand-mère Clothilde', color: '#39ff88' },
+  remy: { id: 'remy', name: 'Remy', color: '#39ff88' },
+  boudreaux: { id: 'boudreaux', name: 'Boudreaux', color: '#ffc43d' },
+  lucien: { id: 'lucien', name: 'Lucien', color: '#ff5a2b' },
+  rosalie: { id: 'rosalie', name: 'Mambo Rosalie', color: '#b14aff' },
+  moses: { id: 'moses', name: 'Brother Moses', color: '#ffc43d' },
+  valet: { id: 'valet', name: 'The Valet', color: '#cfcfcf' },
+  isolde: { id: 'isolde', name: 'Isolde Vane', color: '#ffffff' },
+  hush: { id: 'hush', name: 'Captain Hush', color: '#cfcfcf' },
+  vox: { id: 'vox', name: 'Vox Perfecta', color: '#ff2bd6' },
+  ledger: { id: 'ledger', name: 'Mr. Ledger', color: '#cfcfcf' },
+  archivist: { id: 'archivist', name: 'The Archivist', color: '#cfcfcf' },
+  conductor: { id: 'conductor', name: 'The Conductor', color: '#ffffff' },
+  pralinelady: { id: 'pralinelady', name: 'The Praline Lady', color: '#ffc43d' },
+  stranger: { id: 'stranger', name: 'Stranger', color: '#cfcfcf' },
+  haint: { id: 'haint', name: 'Haint', color: '#3fb6ff' },
+  busker: { id: 'busker', name: 'Busker', color: '#39ff88' },
+  preacher: { id: 'preacher', name: 'Street Preacher', color: '#cfcfcf' },
+  vendor: { id: 'vendor', name: 'Vending Machine', color: '#cfcfcf' },
+  you: { id: 'you', name: 'You', color: '#ffffff' },
+};

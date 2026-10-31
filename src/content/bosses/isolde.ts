@@ -16,6 +16,7 @@ export const isolde = {
   weak: 'FUNK',
   resist: 'BLUE',
   note: 'Gb',
+  next: { unlock: null, act: 'tower' },
   lines: {
     intro:
       'A duel? In my ballroom? How quaint. Very well. I will show you what a note sounds like when it is exactly where it belongs.',

@@ -2,7 +2,8 @@
  * Using items outside battle, and the shop. (Moved from v1's UI: legacy/src/06_ui_core.js
  * useFieldItem and legacy/src/08_world.js openShop.) The UI shows the results; it decides nothing.
  */
-import type { GearId, ItemId, SheetMusicId } from '@core/ids/items';
+import type { GearId, ItemId, SheetMusicId, ShopItemId } from '@core/ids/items';
+
 import type { DistrictId } from '@core/ids/world';
 import type { Rng } from '@core/rng';
 import type { GameState } from '@core/types';
@@ -65,9 +66,6 @@ export function useFieldItem(rng: Rng, s: GameState, id: ItemId): FieldUse {
 /* ------------------------------------------------------------------ */
 /* Shop                                                                 */
 /* ------------------------------------------------------------------ */
-
-/** Something a shop sells: an item, a piece of gear, or sheet music. */
-export type ShopItemId = ItemId | GearId | SheetMusicId;
 
 /** One line of stock in a shop. */
 export interface ShopEntry {
@@ -216,3 +214,5 @@ export function sell(s: GameState, id: ItemId | GearId): void {
     s.doubloons += sellPrice(ITEMS[id as ItemId].price);
   }
 }
+
+export type { ShopItemId };

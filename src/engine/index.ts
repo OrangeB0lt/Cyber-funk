@@ -29,3 +29,4 @@ export * from './band';
 export * from './encounters';
 export * from './items';
 export * from './combat/timing';
+export { legalActions, skillNeedsTarget, type LegalActions, type SkillChoice } from './combat/legal';

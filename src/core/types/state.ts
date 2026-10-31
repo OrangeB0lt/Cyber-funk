@@ -8,10 +8,10 @@
 import type { BandmateId } from '../ids/band';
 import type { ClassId, RootsId } from '../ids/characters';
 import type { StatKey, StatusId } from '../ids/combat';
-import type { NoteId, OpponentId } from '../ids/enemies';
+import type { BossId, NoteId, OpponentId } from '../ids/enemies';
 import type { GearId, ItemId, SheetMusicId } from '../ids/items';
 import type { StoryPosition } from '../ids/story';
-import type { DistrictId, QuestId } from '../ids/world';
+import type { DistrictId, GlossaryId, QuestId } from '../ids/world';
 import type { FlagId, StoryChoices } from '../ids/flags';
 
 /** Player-adjustable settings. Saved with the game; the title screen keeps its own copy. */
@@ -93,6 +93,19 @@ export interface SecondLineEntry {
 /** Side-quest progress. */
 export type QuestStatus = 'active' | 'done';
 
+/**
+ * Where to pick up after a reload, when the player quit at a moment that can't simply restart
+ * from the district screen. Cleared once the moment is over.
+ */
+export type ResumePoint =
+  /** In the prologue's tutorial fights (step 1 or 2). */
+  | { kind: 'tutorial'; step: 1 | 2 }
+  /** In a battle that restarts when the player goes back in (shows a notice on load). */
+  | {
+      kind: 'battle';
+      context: 'quest' | 'boss' | 'bounty' | 'cutting' | 'spar' | 'street' | 'tower' | 'tutorial';
+    };
+
 /** Everything that persists. */
 export interface GameState {
   /** Player name. */
@@ -135,6 +148,12 @@ export interface GameState {
   story: StoryPosition;
   /** Side quests. */
   quests: Partial<Record<QuestId, QuestStatus>>;
+  /** Bosses beaten. */
+  bossesDefeated: BossId[];
+  /** Bosses whose pre-fight scene has played (going back in skips it). */
+  bossIntros: BossId[];
+  /** Districts whose arrival narration has played. */
+  districtIntros: DistrictId[];
   /** The three big boss choices. */
   choices: StoryChoices;
   /** One-time story beats. */
@@ -148,7 +167,7 @@ export interface GameState {
   /** Blue Book (bestiary). */
   book: Partial<Record<OpponentId, BookEntry>>;
   /** Lexicon terms seen. */
-  lexicon: string[];
+  lexicon: GlossaryId[];
   /** District whose bounty is being tracked. */
   bounty: DistrictId | null;
   /** Bounties claimed. */
@@ -169,4 +188,6 @@ export interface GameState {
   secondLine: SecondLineEntry[] | null;
   /** Inside Metronome Tower (the second line's stat bonus applies). */
   inTower: boolean;
+  /** A moment to resume after a reload, if any. */
+  resume: ResumePoint | null;
 }

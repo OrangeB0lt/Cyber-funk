@@ -73,7 +73,7 @@ describe('content parity with legacy v1 tables', () => {
     expect(Object.keys(C.ENEMIES)).toEqual(Object.keys(E.ENEMIES));
     const bosses: any = {};
     for (const [id, b] of Object.entries<any>(C.BOSSES)) {
-      const { note, bluesTarget: _bt, ...rest } = b;
+      const { note, bluesTarget: _bt, next: _next, ...rest } = b;
       bosses[id] = { ...toLegacy(rest), drop: note };
     }
     same('BOSSES', bosses, legacyView(E.BOSSES));
@@ -168,6 +168,18 @@ describe('content parity with legacy v1 tables', () => {
         } else expect(mine.progress).toBeUndefined();
       });
     }
+  });
+
+  it('world tables: places, NPCs, quests, glossary', () => {
+    const places: any = {};
+    for (const [id, p] of Object.entries<any>(E.PLACES)) {
+      const { kind: _kind, ...rest } = p;
+      places[id] = rest;
+    }
+    same('PLACES', C.PLACES, places);
+    same('NPCS', C.NPCS, legacyView(E.NPCS));
+    same('QUESTS', C.QUESTS, legacyView(E.QUESTS));
+    same('GLOSSARY', toLegacy(C.GLOSSARY, ['id']), legacyView(E.GLOSSARY));
   });
 
   it('id lists cover the legacy world tables', () => {

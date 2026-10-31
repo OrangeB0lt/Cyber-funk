@@ -2,22 +2,13 @@
  * What a battle pays out, and writing the battle's results back to the save.
  */
 import type { ItemId } from '@core/ids/items';
-import type { Battle } from '@core/types';
+import type { Battle, BattleRewards } from '@core/types';
+
 import { LOOT, QUEST_DROPS } from '@content/data';
 import { countItem } from '../inventory';
 import { derivedStats, funkPct, healPct, clampVitals } from '../stats';
 import { storyIs } from '../story';
 import { effStat } from './statuses';
-
-/** XP, Doubloons and item drops for a won battle. */
-export interface BattleRewards {
-  /** XP earned. */
-  xp: number;
-  /** Doubloons earned, including any stolen Doubloons returned. */
-  gold: number;
-  /** Items dropped. */
-  drops: ItemId[];
-}
 
 /**
  * Per enemy: XP 5 + 4L and Doubloons (3 + 3L) × 0.75–1.25, ×10 for bosses, ×2.5/×3 for elites, half
@@ -89,3 +80,5 @@ export function applyBattleResult(b: Battle): void {
   }
   clampVitals(s);
 }
+
+export type { BattleRewards };
