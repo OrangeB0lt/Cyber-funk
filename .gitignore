@@ -1,0 +1,4 @@
+node_modules/
+shots/
+.playwright-mcp/
+.claude/settings.local.json
