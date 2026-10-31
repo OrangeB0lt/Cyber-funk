@@ -112,8 +112,8 @@ export interface EngineAdapter {
   gainXp(state: Opaque, n: number): unknown;
   /** The live events array. The driver stamps pushes and drains it. */
   events(b: Opaque): unknown[];
-  /** Event → comparable record. `role` maps an actor id to P / E<i> / A:<bandmate>. */
-  normalizeEvent(e: Opaque, role: (id: string) => string): Record<string, unknown>;
+  /** Event → comparable record (null skips engine-specific events). `role` maps an actor id to P / E<i> / A:<bandmate>. */
+  normalizeEvent(e: Opaque, role: (id: string) => string): Record<string, unknown> | null;
   view(b: Opaque): BattleView;
   projectState(state: Opaque): Record<string, unknown>;
   skill(id: string): { fp: number; once: boolean; damaging: boolean };
@@ -178,7 +178,7 @@ function subset<T>(rng: Rng, items: readonly T[], p: number): T[] {
   return items.filter(() => rng.next() < p);
 }
 
-function randomState(rng: Rng, f: ContentFacts, cls: string, level: number): StateSpec {
+export function randomState(rng: Rng, f: ContentFacts, cls: string, level: number): StateSpec {
   const tier = f.instrumentTiers[rng.int(0, f.instrumentTiers.length - 1)]!;
   const maybe = (slot: 'threads' | 'charm' | 'mod') =>
     rng.chance(0.6) ? rng.pick(f.gearBySlot[slot]) : null;
@@ -436,6 +436,7 @@ export function runFight(a: EngineAdapter, spec: FightSpec, maxActions = 60): Fi
       const e = live.shift();
       const draw = stamps.shift();
       const n = a.normalizeEvent(e, role);
+      if (!n) continue;
       if (n.t === 'assist') lastAssist = String(n.who);
       events.push({ ...n, draw });
     }
