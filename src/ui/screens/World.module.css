@@ -1,0 +1,64 @@
+.screen {
+  display: flex;
+  flex-direction: column;
+}
+.name {
+  margin-top: 2px;
+}
+.ambient {
+  color: var(--ambient);
+  font-style: italic;
+  border-left: 2px solid var(--purple);
+  padding-left: 10px;
+  margin: 8px 0;
+}
+.quest {
+  background: var(--bg2);
+  border: 1px solid rgba(255, 196, 61, 0.4);
+  border-radius: var(--radius);
+  padding: 10px 12px;
+  margin: 8px 0;
+}
+.list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-top: 10px;
+}
+.place {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+.pname {
+  font-weight: bold;
+  color: var(--cyan);
+}
+.pdesc {
+  font-size: 0.84em;
+  color: var(--dim);
+  font-weight: normal;
+}
+.bang {
+  color: var(--gold);
+  font-weight: bold;
+}
+.grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 8px;
+}
+.two {
+  grid-template-columns: 1fr 1fr;
+}
+.act {
+  text-align: center;
+  font-weight: bold;
+  letter-spacing: 0.06em;
+  min-height: 56px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 8px 6px;
+  font-size: 0.95em;
+}

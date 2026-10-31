@@ -1,0 +1,92 @@
+.backdrop {
+  position: absolute;
+  inset: 0;
+  z-index: 30;
+  background: rgba(5, 0, 15, 0.72);
+  display: flex;
+  align-items: flex-end;
+}
+.card {
+  width: 100%;
+  max-height: 90%;
+  background: var(--bg2);
+  border: 1px solid var(--line);
+  border-bottom: 0;
+  border-radius: 16px 16px 0 0;
+  display: flex;
+  flex-direction: column;
+  animation: up 0.2s ease-out;
+}
+.head {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 14px;
+  border-bottom: 1px solid var(--line);
+}
+.head h3 {
+  flex: 1;
+  margin: 0;
+  min-width: 0;
+}
+.close {
+  min-width: 44px;
+  text-align: center;
+}
+.body {
+  overflow-y: auto;
+  overflow-x: hidden;
+  padding: 10px 14px 16px;
+  min-height: 0;
+}
+.foot {
+  padding: 10px 14px calc(12px + env(safe-area-inset-bottom, 0px));
+  border-top: 1px solid var(--line);
+}
+.menu {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+}
+.menu > * {
+  text-align: center;
+}
+.card2 {
+  background: var(--bg3);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  padding: 10px 12px;
+  margin: 8px 0;
+}
+.skill {
+  padding: 8px 0;
+  border-bottom: 1px solid var(--line);
+}
+.locked {
+  opacity: 0.5;
+}
+.skillHead {
+  display: flex;
+  gap: 8px;
+  align-items: baseline;
+  flex-wrap: wrap;
+}
+.row {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  align-items: center;
+  margin-top: 8px;
+}
+.tabs {
+  display: flex;
+  gap: 8px;
+  margin: 6px 0;
+}
+.gold {
+  color: var(--gold);
+  margin-bottom: 4px;
+}
+.howto p {
+  font-size: 0.95em;
+}

@@ -1,0 +1,68 @@
+.story {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  min-height: 100%;
+}
+.title {
+  margin-top: 0;
+}
+.line {
+  margin: 0;
+  padding: 8px 10px;
+  border-radius: var(--radius);
+  background: rgba(255, 255, 255, 0.03);
+}
+.narr {
+  background: transparent;
+  padding: 2px 2px;
+  color: var(--narr);
+}
+.spoken {
+  border-left: 3px solid var(--line);
+  background: var(--bg2);
+}
+.you {
+  border-left: 3px solid var(--gold);
+  background: rgba(255, 196, 61, 0.06);
+}
+.prompt {
+  background: transparent;
+  color: var(--gold);
+}
+.who {
+  display: block;
+  font-weight: bold;
+  font-size: 0.9em;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  margin-bottom: 2px;
+}
+.outcome {
+  text-align: center;
+  padding: 12px 0;
+}
+.victory h2 {
+  color: var(--green);
+  text-shadow: 0 0 14px var(--green);
+  font-size: 1.6em;
+}
+.defeat h2 {
+  color: var(--red);
+  text-shadow: 0 0 14px var(--red);
+  font-size: 1.6em;
+}
+.vrow {
+  display: flex;
+  justify-content: space-between;
+  padding: 6px 12px;
+  border-bottom: 1px solid var(--line);
+}
+.choices {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.choice {
+  border-color: rgba(255, 196, 61, 0.45);
+}

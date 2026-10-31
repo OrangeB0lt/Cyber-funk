@@ -1,0 +1,33 @@
+.topbar {
+  flex: none;
+  padding: 8px 0 6px;
+  border-bottom: 1px solid var(--line);
+  background: linear-gradient(180deg, rgba(20, 5, 39, 0.95), rgba(11, 2, 24, 0.8));
+}
+.top {
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  gap: 10px;
+  align-items: center;
+  min-height: 40px;
+  width: 100%;
+  background: none;
+  border: 0;
+  padding: 0;
+  text-align: left;
+  cursor: pointer;
+}
+.name {
+  white-space: nowrap;
+}
+.gold {
+  color: var(--gold);
+  font-weight: bold;
+  white-space: nowrap;
+}
+.bars {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  min-width: 0;
+}

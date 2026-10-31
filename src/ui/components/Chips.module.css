@@ -1,0 +1,19 @@
+.chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+  min-height: 4px;
+}
+.chip {
+  font: inherit;
+  font-size: 0.78em;
+  padding: 3px 8px;
+  min-height: 26px;
+  display: inline-flex;
+  align-items: center;
+  border-radius: 999px;
+  border: 1px solid var(--c, var(--dim));
+  color: var(--c, var(--dim));
+  background: rgba(0, 0, 0, 0.3);
+  cursor: pointer;
+}

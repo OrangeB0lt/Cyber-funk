@@ -1,0 +1,45 @@
+.backdrop {
+  position: absolute;
+  inset: 0;
+  z-index: 40;
+  background: rgba(5, 0, 15, 0.78);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 16px;
+}
+.card {
+  width: 100%;
+  max-width: 420px;
+  max-height: 90%;
+  overflow-y: auto;
+  background: var(--bg3);
+  border: 1px solid var(--purple);
+  border-radius: 14px;
+  padding: 14px;
+  box-shadow: 0 0 30px rgba(177, 74, 255, 0.4);
+}
+.card h4 {
+  margin-top: 0;
+  color: var(--gold);
+}
+.levelup h4 {
+  font-size: 1.4em;
+  color: var(--green);
+  text-shadow: 0 0 12px var(--green);
+}
+.row {
+  display: flex;
+  gap: 8px;
+  margin-top: 8px;
+}
+.row > * {
+  flex: 1;
+}
+.newskill {
+  margin: 8px 0;
+  padding: 8px;
+  border-radius: 8px;
+  background: rgba(0, 229, 255, 0.08);
+  border: 1px solid rgba(0, 229, 255, 0.3);
+}

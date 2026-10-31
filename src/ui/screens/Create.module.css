@@ -1,0 +1,16 @@
+.create {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.card {
+  display: block;
+}
+.card b {
+  font-size: 1.05em;
+}
+.row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+}

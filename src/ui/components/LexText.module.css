@@ -1,0 +1,12 @@
+.lex {
+  font: inherit;
+  background: none;
+  border: 0;
+  padding: 0;
+  border-bottom: 1px dotted var(--cyan);
+  color: var(--lex);
+  cursor: pointer;
+}
+.hidden {
+  visibility: hidden;
+}

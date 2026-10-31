@@ -1,0 +1,65 @@
+.grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 8px;
+}
+.act {
+  text-align: center;
+  font-weight: bold;
+  letter-spacing: 0.06em;
+  min-height: 56px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 8px 6px;
+  font-size: 0.95em;
+}
+.ready {
+  border-color: var(--gold);
+  color: var(--gold);
+  box-shadow: 0 0 14px rgba(255, 196, 61, 0.5);
+  animation: pulse 1s infinite alternate;
+}
+.blues {
+  margin-bottom: 8px;
+  background: linear-gradient(90deg, var(--blue), var(--purple));
+  border-color: var(--cyan);
+  color: #fff;
+  box-shadow: 0 0 16px rgba(63, 182, 255, 0.6);
+  animation: pulse 0.9s infinite alternate;
+}
+.skills {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  max-height: 42vh;
+  overflow-y: auto;
+  margin-bottom: 6px;
+}
+.skill {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 2px 8px;
+  min-height: 52px;
+}
+.sname {
+  font-weight: bold;
+}
+.sfp {
+  color: var(--gold);
+  font-size: 0.85em;
+}
+.sdesc {
+  grid-column: 1 / -1;
+  font-size: 0.8em;
+  color: var(--dim);
+}
+.select {
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+.wait {
+  text-align: center;
+}

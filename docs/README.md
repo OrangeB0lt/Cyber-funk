@@ -13,12 +13,30 @@ Start here if you're new. Suggested reading order:
 | Folder | What's in it |
 |---|---|
 | [vision/](vision/) | Pillars, world bible, tone and voice, engineering principles |
-| [architecture/](architecture/) | How the code is built: layers, engine, content model, narrative runtime, combat presentation, UI, saves, platform |
+| [architecture/](architecture/) | How the code is built: layers, engine, content model, narrative runtime, UI, state and saves, platform |
 | [systems/](systems/) | How the game works as a game: combat, progression, economy, gear, band, story and quests, exploration |
 | [guides/](guides/) | Step-by-step how-tos |
 | [reference/](reference/) | Generated tables of every skill, enemy, boss, status, item and story step (`npm run docs:reference`) |
 | [adr/](adr/) | Architecture Decision Records: why things are the way they are |
 | [team/](team/) | Workstreams and extension points for a five-person team |
 | [known-issues.md](known-issues.md) | v1 behavior queued for fixing |
+
+## Written so far
+
+| Doc | What it covers |
+|---|---|
+| [vision/engineering-principles.md](vision/engineering-principles.md) | The six rules |
+| [architecture/core-and-engine.md](architecture/core-and-engine.md) | Core types, the Rng, the engine's modules and combat loop |
+| [architecture/content-model.md](architecture/content-model.md) | Typed content tables, ids, renames from v1 |
+| [architecture/narrative-runtime.md](architecture/narrative-runtime.md) | Scenes, the Director, routes, presenters, battles |
+| [architecture/ui.md](architecture/ui.md) | The React layer: stores, layout, battle view, a11y, test ids |
+| [architecture/state-and-saves.md](architecture/state-and-saves.md) | GameState, the save envelope, resume points, changing the format |
+| [systems/combat.md](systems/combat.md) | How combat works as a game |
+| [guides/writing-scenes.md](guides/writing-scenes.md) | Cookbook for story content |
+| [guides/balancing.md](guides/balancing.md) | The sim and how to read it |
+| [guides/testing.md](guides/testing.md) | Unit, oracles, headless playthroughs, e2e |
+| [adr/](adr/) | 0001 stack · 0002 layering · 0003 determinism and parity · 0004 scene API (draft) · 0005 UI state and styling |
+
+Links to docs not yet written point to their planned location; they arrive with later phases.
 
 > **2.0 migration in progress.** The v1 game lives in `legacy/` and stays playable (`legacy/dist/cyberfunk.html`) until the TypeScript rebuild reaches parity. Docs marked *draft* describe the target design.

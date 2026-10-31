@@ -19,8 +19,10 @@ export default defineConfig({
     serviceWorkers: 'block',
     trace: 'retain-on-failure',
   },
+  // A `test`-mode build: production code plus the window.CF handle tests use to set up states.
   webServer: {
-    command: 'npm run build && npm run preview -- --port 4173 --strictPort',
+    command:
+      'npx vite build --mode test --outDir dist-e2e && npx vite preview --outDir dist-e2e --port 4173 --strictPort',
     url: 'http://localhost:4173',
     reuseExistingServer: !process.env.CI,
     timeout: 120_000,

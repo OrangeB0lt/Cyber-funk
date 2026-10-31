@@ -25,6 +25,7 @@ export default defineConfig(
     ignores: [
       'legacy/**',
       'dist/**',
+      'dist-e2e/**',
       'coverage/**',
       'playwright-report/**',
       'test-results/**',
@@ -52,6 +53,13 @@ export default defineConfig(
     files: ['src/core/**', 'src/content/**', 'src/engine/**', 'src/narrative/**', 'src/app/**'],
     ignores: ['src/app/audio/**'],
     rules: noMathRandom,
+  },
+  {
+    // A scene that forgets `await` races its own lines (and a dropped promise hides errors).
+    // Type-aware, so it's scoped to the code that juggles scene promises.
+    files: ['src/content/**/*.scene.ts', 'src/app/**/*.ts', 'src/narrative/**/*.ts'],
+    languageOptions: { parserOptions: { projectService: true, tsconfigRootDir: import.meta.dirname } },
+    rules: { '@typescript-eslint/no-floating-promises': 'error' },
   },
   {
     // The public contracts every team member codes against must explain themselves on hover.

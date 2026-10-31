@@ -1,0 +1,90 @@
+.title {
+  min-height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  gap: 12px;
+  position: relative;
+  padding: 24px 0;
+}
+.logo {
+  font-family: var(--font-logo);
+  font-weight: 400;
+  font-size: clamp(2.2rem, 11vw, 3.6rem);
+  letter-spacing: 0.06em;
+  margin: 0;
+  color: #fff;
+  text-shadow:
+    0 0 6px #fff,
+    0 0 18px var(--magenta),
+    0 0 42px var(--magenta),
+    0 0 70px var(--purple);
+  animation: flicker 6s infinite;
+  line-height: 1.1;
+}
+@keyframes flicker {
+  0%,
+  93%,
+  100% {
+    opacity: 1;
+  }
+  94% {
+    opacity: 0.75;
+  }
+  95% {
+    opacity: 1;
+  }
+  97% {
+    opacity: 0.85;
+  }
+  98% {
+    opacity: 1;
+  }
+}
+.sub {
+  color: var(--cyan);
+  letter-spacing: 0.25em;
+  text-transform: uppercase;
+  font-size: 0.8em;
+  margin-top: 10px;
+}
+.tag {
+  color: var(--dim);
+  font-style: italic;
+  margin-top: 6px;
+  max-width: 30ch;
+}
+.art {
+  display: flex;
+  gap: 28px;
+  font-size: 2em;
+  color: var(--green);
+  text-shadow: 0 0 12px var(--green);
+  margin-top: 10px;
+}
+.art span:nth-child(2) {
+  color: var(--gold);
+  text-shadow: 0 0 12px var(--gold);
+}
+.art span:nth-child(3) {
+  color: var(--magenta);
+  text-shadow: 0 0 12px var(--magenta);
+}
+.version {
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  color: var(--dim);
+  font-size: 0.75em;
+  padding: 10px;
+  background: none;
+  border: 0;
+  cursor: pointer;
+}
+.buttons {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}

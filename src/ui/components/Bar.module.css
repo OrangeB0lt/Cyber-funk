@@ -1,0 +1,57 @@
+.bar {
+  position: relative;
+  height: 16px;
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.08);
+  overflow: hidden;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+.fill {
+  display: block;
+  height: 100%;
+  background: var(--gold);
+  transition: width 0.35s ease;
+}
+.label {
+  position: absolute;
+  inset: 0;
+  font-size: 0.74em;
+  line-height: 16px;
+  text-align: center;
+  color: #fff;
+  text-shadow:
+    0 0 3px #000,
+    0 0 3px #000;
+  font-variant-numeric: tabular-nums;
+}
+.heart .fill {
+  background: linear-gradient(90deg, #ff2bd6, #ff5a2b);
+}
+.funk .fill {
+  background: linear-gradient(90deg, #00e5ff, #3fb6ff);
+}
+.groove .fill {
+  background: linear-gradient(90deg, #39ff88, #ffc43d);
+}
+.full {
+  box-shadow: 0 0 12px var(--gold);
+}
+.full .fill {
+  animation: pulse 1s infinite alternate;
+}
+.enemy .fill {
+  background: linear-gradient(90deg, #ff3b5c, #ff5a2b);
+}
+.xp {
+  height: 8px;
+  margin: 6px 0;
+}
+.xp .fill {
+  background: var(--purple);
+}
+.compact {
+  height: 14px;
+}
+.compact .label {
+  line-height: 14px;
+}

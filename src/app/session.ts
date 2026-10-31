@@ -23,7 +23,7 @@ import {
 } from '@content/index';
 import { clampVitals, newGame, priceFor, storyIs, storyReached } from '@engine/index';
 import { Director } from '@narrative/director';
-import type { PlaceHelpers, PlaceOption } from '@narrative/define';
+import type { PlaceHelpers, PlaceIntro, PlaceOption } from '@narrative/define';
 import type { FightSpec, Presenter, Route, RunResult, Scene } from '@narrative/types';
 import type { BossId } from '@core/ids/enemies';
 import type { BattleOutcome, SessionPort } from './sessionPort';
@@ -40,6 +40,8 @@ export interface SessionDeps {
   seed?: () => number;
   /** Report unexpected errors (defaults to console.error). */
   onError?: (e: unknown) => void;
+  /** A scene started or finished (for a busy indicator). */
+  onBusy?: (busy: boolean) => void;
   /**
    * Replace real battles (tests only): the transcript oracle stubs every fight as a win so it can
    * compare scenes against v1 without battle noise.
@@ -85,6 +87,7 @@ export class Session implements SessionPort {
         };
       },
       onSettled: () => this.showRoute(),
+      onBusy: busy => this.deps.onBusy?.(busy),
     });
   }
 
@@ -188,6 +191,11 @@ export class Session implements SessionPort {
       is: p => storyIs(g, p),
       reached: p => storyReached(g, p),
     };
+  }
+
+  /** A place's intro right now. */
+  placeIntro(id: PlaceId): PlaceIntro | null {
+    return PLACE_SCENES[id]?.intro?.(this.game, this.placeHelpers()) ?? null;
   }
 
   /** The options at a place right now. */

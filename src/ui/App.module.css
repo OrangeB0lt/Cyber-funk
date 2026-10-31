@@ -1,0 +1,51 @@
+.app {
+  position: relative;
+  height: 100%;
+  max-width: 520px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+  padding-left: max(16px, env(safe-area-inset-left, 0px));
+  padding-right: max(16px, env(safe-area-inset-right, 0px));
+  font-size: 17px;
+}
+@media (display-mode: standalone) {
+  .app {
+    height: 100dvh;
+    padding-top: env(safe-area-inset-top, 0px);
+    padding-bottom: env(safe-area-inset-bottom, 0px);
+  }
+}
+@media (min-width: 560px) {
+  .app {
+    border-left: 1px solid var(--line);
+    border-right: 1px solid var(--line);
+  }
+}
+.sizeS {
+  font-size: 15.5px;
+}
+.sizeL {
+  font-size: 19px;
+}
+.screen {
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow-y: auto;
+  overflow-x: hidden;
+  -webkit-overflow-scrolling: touch;
+  padding: 10px 0 12px;
+  overscroll-behavior: contain;
+}
+.actions {
+  flex: none;
+  padding: 8px 0 10px;
+  border-top: 1px solid var(--line);
+  background: var(--bg);
+}
+.actions:empty {
+  display: none;
+}

@@ -2,7 +2,7 @@
 
 This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
 
-CYBER FUNK is a phone-first text RPG. **It is mid-migration** from v1 (vanilla JS in one global scope, shipped as one HTML file) to v2 (TypeScript + React 19 + Valtio, a multi-file PWA built with Vite). The approved plan is in `docs/` (ADRs 0001–0004) and the phases are below.
+CYBER FUNK is a phone-first text RPG. **It is mid-migration** from v1 (vanilla JS in one global scope, shipped as one HTML file) to v2 (TypeScript + React 19 + Valtio, a multi-file PWA built with Vite). The approved plan is in `docs/` (ADRs 0001–0005) and the phases are below.
 
 - **v1 lives in `legacy/`** and stays runnable and unchanged until cutover: `legacy/src/01–10_*.js`, `legacy/build.js` → `legacy/dist/cyberfunk.html`. It is the source of truth for behavior.
 - **v2 lives in `src/`**, in six layers (ADR-0002): `core ← narrative ← content ← engine ← app ← ui`. Imports point down only, and `npm run depcruise` enforces it.
@@ -12,7 +12,8 @@ CYBER FUNK is a phone-first text RPG. **It is mid-migration** from v1 (vanilla J
 ```
 npm run check            # typecheck + lint + layer rules + tests (run before committing)
 npm test                 # Vitest: unit, integration, parity oracles
-npm run dev              # Vite dev server
+npm run dev              # Vite dev server (the v2 game; window.CF is the GameApp)
+npm run e2e              # Playwright at 360×740: builds in test mode, runs tests/e2e (fails on overflow)
 npm run build            # production build -> dist/ (gitignored)
 npm run parity:coverage  # corpus vs legacy engine under c8; fails below 95% branch coverage
 npm run legacy:build     # rebuild legacy/dist (the hook does this automatically)
@@ -33,8 +34,8 @@ Node 24 (`.nvmrc`). `npm run depcruise` calls dependency-cruiser's API (`tools/d
 ## Phases
 
 - P0 groundwork and oracles (done)
-- P1 core + content data + engine (exact parity gate)
-- P2 vertical slice (prologue + Tremé + Captain Hush, React shell)
+- P1 core + content data + engine (exact parity gate) (done)
+- P2 vertical slice (prologue + Tremé + Captain Hush, React shell): built; waiting on the user's phone playtest, then freeze SceneContext v1 (ADR-0004)
 - P3 remaining districts
 - P4 finale + persistence
 - P5 PWA, cutover (delete `legacy/`), docs
@@ -43,7 +44,7 @@ Node 24 (`.nvmrc`). `npm run depcruise` calls dependency-cruiser's API (`tools/d
 ## Claude Code setup (`.claude/`, `.mcp.json`)
 
 - **Rebuild hook** (`.claude/hooks/rebuild.js`): keeps `legacy/dist/` in sync when legacy sources change. It does nothing for `src/`.
-- **Playwright MCP**: serves `legacy/dist/cyberfunk.html` at `http://cyberfunk.local/` until P5 repoints it at the v2 build. See the `playtest` skill (it still describes v1's `data-act` ids).
+- **Playwright MCP**: serves `legacy/dist/cyberfunk.html` at `http://cyberfunk.local/` until P5 repoints it at the v2 build. See the `playtest` skill (it still describes v1's `data-act` ids). To see v2, run `npm run dev` and navigate to the dev server; v2 uses `data-testid` (conventions in `docs/architecture/ui.md`). `init-page.ts` must stay CommonJS (`.claude/package.json`); if the MCP reports "Cannot use import statement", restart the MCP server.
 - **Project skills** (`add-content`, `balance-check`, `playtest`) describe **v1**. They are rewritten in P5.
 - `.claude/package.json` and `legacy/package.json` mark those folders as CommonJS. The repo root is ESM.
 

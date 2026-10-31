@@ -1,0 +1,25 @@
+.tone {
+  display: inline-block;
+  padding: 0 6px;
+  border-radius: 6px;
+  font-size: 0.78em;
+  font-weight: bold;
+  letter-spacing: 0.05em;
+  color: #000;
+  vertical-align: middle;
+}
+.HOT {
+  background: var(--hot);
+}
+.LOW {
+  background: var(--low);
+}
+.BLUE {
+  background: var(--blue);
+}
+.FUNK {
+  background: var(--funk);
+}
+.SWEET {
+  background: var(--sweet);
+}

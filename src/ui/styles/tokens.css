@@ -1,0 +1,41 @@
+/* CYBER FUNK design tokens: Neon Orleans, a CRT in a dark bar. Single theme by design.
+   Components use these variables; add a token before adding a raw color to a component. */
+:root {
+  /* surfaces */
+  --bg: #0b0218;
+  --bg2: #140527;
+  --bg3: #1e0a3a;
+  --fg: #f3ecff;
+  --dim: #a893c7;
+  --line: #3a1c63;
+  --narr: #e9dfff;
+  --ambient: #dcd1f3;
+
+  /* neon */
+  --purple: #b14aff;
+  --green: #39ff88;
+  --gold: #ffc43d;
+  --magenta: #ff2bd6;
+  --cyan: #00e5ff;
+  --red: #ff3b5c;
+  --lex: #c8f6ff;
+  --assist: #c9b8ff;
+
+  /* tones */
+  --hot: #ff5a2b;
+  --low: #9b5cff;
+  --blue: #3fb6ff;
+  --funk: #39ff88;
+  --sweet: #ff6ad5;
+
+  /* type */
+  --font-ui: 'Share Tech Mono', ui-monospace, Menlo, Consolas, 'Liberation Mono', monospace;
+  --font-logo: 'Monoton', 'Share Tech Mono', ui-monospace, monospace;
+
+  /* shape */
+  --tap: 48px;
+  --radius: 10px;
+  --col: 520px;
+
+  color-scheme: dark;
+}
