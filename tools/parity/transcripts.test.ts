@@ -7,7 +7,7 @@
  */
 import { afterAll, describe, expect, it } from 'vitest';
 import { Session } from '@app/session';
-import { memorySaveStorage } from '@app/persistence';
+import { memorySaveStorage } from '@app/save/storage';
 import { ScriptedPresenter, type TranscriptEntry } from '@app/testing/scriptedPresenter';
 import type { Rng } from '@core/rng';
 import type { ClassId, RootsId } from '@core/ids/characters';

@@ -10,7 +10,10 @@ import type { ClassId, RootsId } from '@core/ids/characters';
 import type { LevelUp, LogClass, Settings, TimingGradeDef, TimingSpec } from '@core/types';
 import type { LegalActions } from '@engine/index';
 import type { ChoiceView, Route, ShopStock } from '@narrative/types';
+import { SAVE_SLOT_IDS, type SaveSlotId } from '@core/ids/saves';
 import { defaultSettings } from '@engine/index';
+import type { SaveSummary } from './save/format';
+import type { SlotInfo } from './save/slots';
 
 /** Which screen fills the middle of the app. */
 export type Screen = 'title' | 'create' | 'story' | 'district' | 'place' | 'battle';
@@ -71,7 +74,28 @@ export type SheetView = { id: number; awaited?: boolean } & (
   | { kind: 'howto'; start: boolean }
   | { kind: 'dev' }
   | { kind: 'bounties' }
+  | { kind: 'saves'; mode: SlotPick; raw?: string }
 );
+
+/** Why the slot picker is open: load a game, start one, or import a save code into a slot. */
+export type SlotPick = 'continue' | 'new' | 'import';
+
+/** How a save slot stands with the cloud. */
+export type SlotSync = 'local' | 'synced' | 'pending' | 'conflict';
+
+/** A save slot as the slot picker shows it. */
+export interface SlotView {
+  /** The slot. */
+  slot: SaveSlotId;
+  /** Who and how far (null when empty or unreadable). */
+  summary: SaveSummary | null;
+  /** When it was saved (ISO time). */
+  savedAt: string | null;
+  /** The stored save can't be loaded. */
+  problem: SlotInfo['problem'];
+  /** Cloud status ('local' when cloud saves are off or the device isn't linked). */
+  sync: SlotSync;
+}
 
 /** A sheet to open (a SheetView without its id). */
 export type SheetSpec = SheetView extends infer T ? (T extends unknown ? Omit<T, 'id'> : never) : never;
@@ -192,6 +216,8 @@ export interface ViewState {
   lastGrade: TimingId | null;
   /** Character creation in progress. */
   create: { step: 1 | 2 | 3; name: string; roots: RootsId; cls: ClassId };
+  /** The device's save slots, in order. */
+  saves: SlotView[];
 }
 
 /** A fresh view. */
@@ -213,5 +239,6 @@ export function createView(): ViewState {
     ambient: {},
     lastGrade: null,
     create: { step: 1, name: '', roots: 'creole', cls: 'trumpet' },
+    saves: SAVE_SLOT_IDS.map(slot => ({ slot, summary: null, savedAt: null, problem: null, sync: 'local' })),
   });
 }

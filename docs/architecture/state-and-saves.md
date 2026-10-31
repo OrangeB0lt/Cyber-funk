@@ -1,6 +1,6 @@
 # State and saves
 
-*What persists, how it is saved, loaded and resumed, and how to change the format safely. Code: [`src/core/types/state.ts`](../../src/core/types/state.ts) and [`src/app/persistence.ts`](../../src/app/persistence.ts).*
+*What persists, how it is saved, loaded and resumed, and how to change the format safely. Code: [`src/core/types/state.ts`](../../src/core/types/state.ts) and [`src/app/save/format.ts`](../../src/app/save/format.ts).*
 
 ## GameState
 
@@ -55,10 +55,10 @@ P4 extends `ResumePoint` for the tower climb and the post-boss choice, which v1 
 
 ## Changing the save format
 
-The schema and the interface must agree, and a compile-time check in `persistence.ts` fails if `GameState` gains a field the schema doesn't know about.
+The schema and the interface must agree, and a compile-time check in `save/format.ts` fails if `GameState` gains a field the schema doesn't know about.
 
 1. Add the field to `GameState`, with its doc comment.
 2. Initialize it in `engine/state.ts` (`newGame`).
-3. Add it to `gameStateSchema` in `app/persistence.ts`.
+3. Add it to `gameStateSchema` in `app/save/format.ts`.
 4. If existing saves need a value filled in, bump `SAVE_VERSION` and add a step to `MIGRATIONS`. Never edit an old migration.
-5. Extend the round-trip test in `app/persistence.test.ts`.
+5. Extend the round-trip test in `app/save/format.test.ts`.

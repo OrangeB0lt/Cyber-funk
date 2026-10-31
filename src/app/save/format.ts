@@ -1,7 +1,8 @@
 /**
- * Saving and loading. Save format v2: an envelope `{format, version, savedAt, rng, game}` stored under
- * `cyberfunk_save_v2`, validated with Zod on every load and import. The v1 key is ignored and left in
- * place (v2 starts fresh; see docs/adr/0001-stack.md).
+ * The save format, v2: an envelope `{format, version, savedAt, rng, game}`, validated with Zod on every
+ * load, import and upload. This module is DOM-free because the server validates uploads with the same
+ * `decodeSave` (see docs/adr/0006-server-and-cloud-saves.md). Where saves are kept is storage.ts and
+ * slots.ts; the v1 localStorage key is ignored and left in place (v2 starts fresh).
  *
  * The Zod schema mirrors core/types/state.ts. A compile-time check below fails if GameState gains a
  * field the schema doesn't know about. To change the save format:
@@ -27,12 +28,12 @@ import { ACT_ORDER, ACT_STEPS, type ActId, type StoryPosition } from '@core/ids/
 import { DISTRICT_IDS, GLOSSARY_IDS, QUEST_IDS } from '@core/ids/world';
 import type { RngState } from '@core/rng';
 import type { GearId } from '@core/ids/items';
+import type { ClassId } from '@core/ids/characters';
+import type { DistrictId } from '@core/ids/world';
 import type { GameState } from '@core/types';
 
 /** The current save format. */
 export const SAVE_VERSION = 2;
-/** localStorage key. */
-export const SAVE_KEY = 'cyberfunk_save_v2';
 /** Prefix of exported save codes. */
 export const CODE_PREFIX = 'CF2:';
 
@@ -160,6 +161,8 @@ export interface LoadedSave {
   game: GameState;
   /** The random stream to resume. */
   rng: RngState;
+  /** When it was written (ISO time, from the envelope). */
+  savedAt: string;
 }
 
 /** Migrations from older v2+ formats, keyed by the version they upgrade *from*. */
@@ -199,60 +202,7 @@ export function decodeSave(raw: string | null): LoadedSave | LoadError {
   }
   const parsed = gameStateSchema.safeParse(game);
   if (!parsed.success) return 'invalid';
-  return { game: parsed.data as GameState, rng: env.data.rng };
-}
-
-/** Where saves live. */
-export interface SaveStorage {
-  /** Read the raw save (null if none or unavailable). */
-  read(): string | null;
-  /** Write; false if storage is unavailable. */
-  write(raw: string): boolean;
-  /** Delete. */
-  clear(): void;
-}
-
-/** Browser localStorage. Every access is guarded: private modes can throw. */
-export const localSaveStorage: SaveStorage = {
-  read() {
-    try {
-      return localStorage.getItem(SAVE_KEY);
-    } catch {
-      return null;
-    }
-  },
-  write(raw) {
-    try {
-      localStorage.setItem(SAVE_KEY, raw);
-      return true;
-    } catch {
-      return false;
-    }
-  },
-  clear() {
-    try {
-      localStorage.removeItem(SAVE_KEY);
-    } catch {
-      // unavailable: nothing to clear
-    }
-  },
-};
-
-/** In-memory storage for tests and headless runs. */
-export function memorySaveStorage(initial: string | null = null): SaveStorage & { raw: string | null } {
-  return {
-    raw: initial,
-    read() {
-      return this.raw;
-    },
-    write(raw) {
-      this.raw = raw;
-      return true;
-    },
-    clear() {
-      this.raw = null;
-    },
-  };
+  return { game: parsed.data as GameState, rng: env.data.rng, savedAt: env.data.savedAt };
 }
 
 /** A save as a shareable text code (CF2:…). */
@@ -273,4 +223,35 @@ export function importCode(code: string): string | null {
   } catch {
     return null;
   }
+}
+
+/** What a save slot shows without loading the game: who, how far, where. */
+export interface SaveSummary {
+  /** Character name. */
+  name: string;
+  /** Instrument class. */
+  cls: ClassId;
+  /** Level. */
+  level: number;
+  /** Story act. */
+  act: ActId;
+  /** Story step within the act. */
+  step: string;
+  /** Where the character is. */
+  district: DistrictId;
+  /** New Game+ count. */
+  ngPlus: number;
+}
+
+/** The summary of a game (slot pickers on the client, summary columns on the server). */
+export function summarize(game: GameState): SaveSummary {
+  return {
+    name: game.name,
+    cls: game.cls,
+    level: game.level,
+    act: game.story.act,
+    step: game.story.step,
+    district: game.district,
+    ngPlus: game.ngPlus,
+  };
 }

@@ -106,7 +106,7 @@ export function SettingsSheet({ fromTitle }: { fromTitle: boolean }) {
         </Button>
         {g && (
           <Button testId="reset" small variant="danger" onClick={() => void app.confirmReset()}>
-            Reset Game
+            Delete Save
           </Button>
         )}
       </div>

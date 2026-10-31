@@ -17,7 +17,7 @@
 ```bash
 npm test                              # all Vitest suites (seconds)
 npx vitest run src/engine             # one folder
-npx vitest src/app/persistence.test.ts  # watch one file
+npx vitest src/app/save/format.test.ts  # watch one file
 npm run check                         # typecheck + lint + layer rules + tests: run before committing
 npm run e2e                           # Playwright: builds in test mode, serves on :4173, runs tests/e2e
 npx playwright test -g "Captain Hush" # one e2e test

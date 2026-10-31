@@ -18,6 +18,8 @@ test('new game: create, walk the dirge, win the tutorial, reach Tremé', async (
   await tid(page, 'sheet-close').click();
 
   await tid(page, 'new').click();
+  await expectNoOverflow(page, 'slot picker');
+  await tid(page, 'save:1').click();
   await page.getByLabel('Your name').fill('Dawlin');
   await expectNoOverflow(page, 'create: name');
   await tid(page, 'next').click();

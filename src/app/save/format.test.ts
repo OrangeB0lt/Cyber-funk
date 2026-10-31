@@ -1,7 +1,15 @@
 import { describe, expect, it } from 'vitest';
 import { createRng } from '@core/rng';
 import { newGame } from '@engine/index';
-import { CODE_PREFIX, SAVE_VERSION, decodeSave, encodeSave, exportCode, importCode } from './persistence';
+import {
+  CODE_PREFIX,
+  SAVE_VERSION,
+  decodeSave,
+  encodeSave,
+  exportCode,
+  importCode,
+  summarize,
+} from './format';
 
 const game = () => newGame('Dawlin', 'yat', 'snare', undefined, 0);
 const rng = () => {
@@ -16,8 +24,9 @@ describe('save format v2', () => {
     g.story = { act: 'treme', step: 'congo_square' };
     g.flags.metRoux = true;
     g.resume = { kind: 'tutorial', step: 2 };
-    const r = decodeSave(encodeSave(g, rng()));
-    expect(r).toEqual({ game: g, rng: rng() });
+    const at = new Date('2026-10-31T12:00:00.000Z');
+    const r = decodeSave(encodeSave(g, rng(), at));
+    expect(r).toEqual({ game: g, rng: rng(), savedAt: at.toISOString() });
   });
 
   it('refuses empty, corrupt, too-new and invalid saves with a reason', () => {
@@ -46,5 +55,19 @@ describe('save format v2', () => {
     expect(importCode(`  ${code}\n`)).toBe(raw);
     expect(importCode('CF1:abc')).toBeNull();
     expect(importCode(CODE_PREFIX + '%%%')).toBeNull();
+  });
+
+  it('summarizes a game for slot pickers and the server', () => {
+    const g = game();
+    g.story = { act: 'treme', step: 'congo_square' };
+    expect(summarize(g)).toEqual({
+      name: 'Dawlin',
+      cls: 'snare',
+      level: 1,
+      act: 'treme',
+      step: 'congo_square',
+      district: 'treme',
+      ngPlus: 0,
+    });
   });
 });

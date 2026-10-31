@@ -10,6 +10,7 @@ import {
   SlotSheet,
   StatusSheet,
 } from '../sheets/MenuSheets';
+import { SavesSheet } from '../sheets/SavesSheet';
 import { SettingsSheet } from '../sheets/SettingsSheet';
 import { ShopSheet } from '../sheets/ShopSheet';
 import { BountySheet, DevSheet, HowToSheet, TravelSheet } from '../sheets/WorldSheets';
@@ -27,6 +28,8 @@ export function SheetLayer() {
       return <HowToSheet key={sh.id} start={sh.start} />;
     case 'dev':
       return <DevSheet key={sh.id} />;
+    case 'saves':
+      return <SavesSheet key={sh.id} mode={sh.mode} raw={sh.raw} />;
   }
   if (!g) return null;
   switch (sh.kind) {

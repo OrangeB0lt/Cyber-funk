@@ -6,6 +6,7 @@ import { App } from '@ui/App';
 import '@ui/styles/global.css';
 
 const app = new GameApp();
+app.start();
 try {
   if (window.matchMedia?.('(prefers-reduced-motion: reduce)').matches)
     app.view.titleSettings.reduceMotion = true;

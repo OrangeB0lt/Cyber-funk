@@ -12,8 +12,9 @@ import type { GearId, GearSlot, ItemId, ShopItemId } from '@core/ids/items';
 import { ACT_ORDER, ACT_STEPS, type ActId, type StoryPosition } from '@core/ids/story';
 import type { DistrictId, GlossaryId, PlaceId } from '@core/ids/world';
 import type { StatusId } from '@core/ids/combat';
+import type { SaveSlotId } from '@core/ids/saves';
 import type { PlayerIntent, Settings, StepDef } from '@core/types';
-import { ACTS, BOSSES, DISTRICTS, ENEMIES, GEAR, PLACES, cuttingContest } from '@content/index';
+import { ACTS, BOSSES, CLASSES, DISTRICTS, ENEMIES, GEAR, PLACES, cuttingContest } from '@content/index';
 import {
   addItem,
   buy,
@@ -28,10 +29,12 @@ import {
   useFieldItem,
 } from '@engine/index';
 import { Sfx } from './audio/sfx';
-import { exportCode, importCode, localSaveStorage, type SaveStorage } from './persistence';
+import { decodeSave, exportCode, importCode } from './save/format';
+import { SaveSlots } from './save/slots';
+import { browserKv, type KeyValue } from './save/storage';
 import { ReactPresenter } from './reactPresenter';
 import { Session } from './session';
-import { createView, type SheetSpec, type ViewState } from './view';
+import { createView, type SheetSpec, type SlotPick, type ViewState } from './view';
 
 /** Nicknames for a player who leaves the name blank. */
 const DEFAULT_NAMES = ['Lagniappe', 'Dawlin', 'Cher', 'Hotshot', "Lil' Bit"] as const;
@@ -42,10 +45,13 @@ export class GameApp {
   readonly sfx: Sfx;
   readonly presenter: ReactPresenter;
   readonly session: Session;
+  /** The device's save slots. The session saves to the active one. */
+  readonly slots: SaveSlots;
   /** Test speed-up (Playwright and the dev menu set it). */
   turbo = false;
 
-  constructor(storage: SaveStorage = localSaveStorage) {
+  constructor(opts: { kv?: KeyValue } = {}) {
+    this.slots = new SaveSlots(opts.kv ?? browserKv);
     this.sfx = new Sfx(() => this.settings().sound);
     this.presenter = new ReactPresenter(this.view, {
       settings: () => this.settings(),
@@ -59,11 +65,23 @@ export class GameApp {
     });
     this.session = new Session({
       presenter: this.presenter,
-      storage,
+      storage: this.slots.current,
       onBusy: busy => {
         this.view.busy = busy;
       },
     });
+    this.slots.subscribe(slot => this.refreshSlot(slot));
+  }
+
+  /** Boot: show what the save slots hold. */
+  start(): void {
+    for (const info of this.slots.all()) this.refreshSlot(info.slot);
+  }
+
+  /** Mirror one slot into the view (the slot picker and the title's Continue button read it). */
+  private refreshSlot(slot: SaveSlotId): void {
+    const i = this.view.saves.findIndex(s => s.slot === slot);
+    if (i >= 0) this.view.saves[i] = { ...this.slots.info(slot), sync: 'local' };
   }
 
   /** The live save proxy (render snapshots of `store`). */
@@ -80,28 +98,75 @@ export class GameApp {
 
   /** Is there a save to continue? */
   hasSave(): boolean {
-    return !!this.session.deps.storage.read();
+    return this.view.saves.some(s => s.summary || s.problem);
   }
 
-  /** Load the save and pick up where it left off. */
-  continueGame(): boolean {
-    if (this.session.load()) {
-      this.presenter.toast('No save found.');
-      return false;
+  /** Title → Continue: pick the slot to load. */
+  continueGame(): void {
+    this.openSheet({ kind: 'saves', mode: 'continue' });
+  }
+
+  /** Title → New Game: pick the slot to start in. */
+  startNewGame(): void {
+    this.openSheet({ kind: 'saves', mode: 'new' });
+  }
+
+  /** A slot was tapped in the slot picker. `raw` is the save being imported (mode 'import'). */
+  async pickSlot(slot: SaveSlotId, mode: SlotPick, raw?: string): Promise<void> {
+    const info = this.slots.info(slot);
+    if (mode === 'continue') {
+      if (!info.summary) {
+        this.presenter.toast(info.problem ? "That save can't be read." : 'That slot is empty.');
+        return;
+      }
+      this.presenter.closeSheet();
+      this.slots.active = slot;
+      if (this.session.load()) {
+        this.presenter.toast("That save can't be read.");
+        return;
+      }
+      void this.session.resume();
+      return;
     }
-    void this.session.resume();
-    return true;
+    if (info.summary || info.problem) {
+      const who = info.summary
+        ? `${info.summary.name} (${CLASSES[info.summary.cls].name}, Lv ${info.summary.level})`
+        : 'an unreadable save';
+      const ok = await this.presenter.confirm(
+        `Overwrite slot ${slot}?`,
+        mode === 'new'
+          ? `Slot ${slot} holds ${who}. A new game here replaces it when it first autosaves. Export it first if you want to keep it.`
+          : `Slot ${slot} holds ${who}. The imported save replaces it.`,
+        'Overwrite',
+        'Cancel',
+        new AbortController().signal,
+      );
+      if (!ok) return;
+    }
+    if (mode === 'new') {
+      this.presenter.closeSheet();
+      this.slots.active = slot;
+      this.newGame();
+    } else if (raw && !(await this.loadInto(slot, raw))) {
+      this.presenter.toast("That code didn't work.");
+    }
   }
 
-  /** Ask before a new game overwrites the save. */
-  confirmNewGame(): Promise<boolean> {
-    return this.presenter.confirm(
-      'Start a new game?',
-      'Your current save will be overwritten when the new game autosaves. Export it first if you want to keep it.',
-      'New game',
-      'Cancel',
+  /** Slot picker → Delete, after a confirm. Never the slot of a game in progress. */
+  async confirmDeleteSlot(slot: SaveSlotId): Promise<void> {
+    if (this.store.game && slot === this.slots.active) return;
+    const info = this.slots.info(slot);
+    const who = info.summary ? info.summary.name : 'This save';
+    const ok = await this.presenter.confirm(
+      `Delete slot ${slot}?`,
+      `${who} will be gone. Export first if you want it back.`,
+      'Delete',
+      'Keep',
       new AbortController().signal,
     );
+    if (!ok) return;
+    this.slots.storage(slot).clear();
+    this.presenter.toast('Deleted.');
   }
 
   /** Go to character creation. */
@@ -343,12 +408,25 @@ export class GameApp {
     return raw ? exportCode(raw) : null;
   }
 
-  /** Load a CF2: code. */
+  /**
+   * Load a CF2: code. In a game it replaces the current slot; from the title it asks which slot.
+   * False if the code isn't a save this version can load.
+   */
   async importSave(code: string): Promise<boolean> {
     const raw = importCode(code);
-    if (!raw) return false;
+    if (!raw || typeof decodeSave(raw) === 'string') return false;
+    if (!this.store.game) {
+      this.presenter.openSheet({ kind: 'saves', mode: 'import', raw });
+      return true;
+    }
+    return this.loadInto(this.slots.active, raw);
+  }
+
+  /** Make `raw` the save in `slot` and play it. */
+  private async loadInto(slot: SaveSlotId, raw: string): Promise<boolean> {
     // Stop whatever scene is running before the save underneath it changes.
     await this.session.director.abort('import');
+    this.slots.active = slot;
     if (this.session.load(raw)) return false;
     this.session.save();
     this.presenter.closeSheet();
@@ -357,12 +435,12 @@ export class GameApp {
     return true;
   }
 
-  /** Settings → Reset Game, after a confirm. */
+  /** Settings → Delete Save, after a confirm. */
   async confirmReset(): Promise<void> {
     this.presenter.closeSheet();
     const ok = await this.presenter.confirm(
-      'Reset everything?',
-      'This erases your save. The city will not remember you. Export first if you want it back.',
+      'Delete this save?',
+      `This erases slot ${this.slots.active}. The city will not remember you. Export first if you want it back.`,
       'Erase',
       'Keep',
       new AbortController().signal,
@@ -370,11 +448,11 @@ export class GameApp {
     if (ok) await this.resetGame();
   }
 
-  /** Erase the save. */
+  /** Erase the current slot and go to the title. */
   async resetGame(): Promise<void> {
-    this.session.deps.storage.clear();
+    this.slots.current.clear();
     await this.toTitle();
-    this.presenter.toast('Reset.');
+    this.presenter.toast('Deleted.');
   }
 
   /* ---------------- dev menu ---------------- */

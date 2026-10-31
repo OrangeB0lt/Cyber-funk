@@ -1,0 +1,46 @@
+.list {
+  display: grid;
+  gap: 8px;
+}
+.row {
+  display: flex;
+  gap: 8px;
+  align-items: stretch;
+}
+.slot {
+  flex: 1 1 auto;
+  min-width: 0;
+}
+.slot > span {
+  display: block;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.label {
+  display: flex;
+  justify-content: space-between;
+  gap: 8px;
+  color: var(--dim);
+  font-size: 0.8em;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+.badge {
+  text-transform: none;
+  letter-spacing: 0;
+}
+.synced {
+  color: var(--green);
+}
+.pending {
+  color: var(--gold);
+}
+.conflict {
+  color: var(--red);
+}
+.side {
+  flex: none;
+  display: grid;
+  gap: 4px;
+}

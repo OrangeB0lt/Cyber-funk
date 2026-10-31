@@ -27,7 +27,8 @@ import type { PlaceHelpers, PlaceIntro, PlaceOption } from '@narrative/define';
 import type { FightSpec, Presenter, Route, RunResult, Scene } from '@narrative/types';
 import type { BossId } from '@core/ids/enemies';
 import type { BattleOutcome, SessionPort } from './sessionPort';
-import { decodeSave, encodeSave, type LoadError, type SaveStorage } from './persistence';
+import { decodeSave, encodeSave, type LoadError } from './save/format';
+import type { SaveStorage } from './save/storage';
 import { createSceneContext } from './sceneContext';
 
 /** What a session needs from its environment. */

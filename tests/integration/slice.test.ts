@@ -4,7 +4,7 @@
  */
 import { describe, expect, it } from 'vitest';
 import { Session } from '@app/session';
-import { memorySaveStorage } from '@app/persistence';
+import { memorySaveStorage } from '@app/save/storage';
 import { ScriptedPresenter } from '@app/testing/scriptedPresenter';
 import { defaultSettings } from '@engine/index';
 

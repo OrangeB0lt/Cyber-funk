@@ -1,6 +1,6 @@
 import { useRef } from 'react';
 import { Button } from '../components/Button';
-import { useApp } from '../GameContext';
+import { useApp, useView } from '../GameContext';
 import s from './Title.module.css';
 
 /** The title screen. Tap the version five times for the dev menu. */
@@ -41,14 +41,7 @@ export function TitleScreen() {
 /** Title actions: Continue, New Game, How to Play, Settings. */
 export function TitleActions() {
   const app = useApp();
-  const saved = app.hasSave();
-  const startNew = async () => {
-    if (saved) {
-      const ok = await app.confirmNewGame();
-      if (!ok) return;
-    }
-    app.newGame();
-  };
+  const saved = useView().saves.some(s => s.summary || s.problem);
   return (
     <div className={s.buttons}>
       {saved && (
@@ -56,7 +49,7 @@ export function TitleActions() {
           Continue
         </Button>
       )}
-      <Button testId="new" variant={saved ? undefined : 'primary'} wide onClick={startNew}>
+      <Button testId="new" variant={saved ? undefined : 'primary'} wide onClick={() => app.startNewGame()}>
         New Game
       </Button>
       <Button testId="howto" wide onClick={() => app.openSheet({ kind: 'howto', start: false })}>

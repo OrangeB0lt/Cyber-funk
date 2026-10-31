@@ -1,7 +1,7 @@
 /**
  * GameState: everything that persists between sessions. This is the save format (version 2).
  *
- * It is hand-written so it reads as documentation; app/persistence holds the matching Zod schema
+ * It is hand-written so it reads as documentation; app/save/format holds the matching Zod schema
  * and a compile-time check that the two agree. Add a field here, give it a value in
  * engine/state.ts `newGame`, and add a migration if older saves need it filled in.
  */
