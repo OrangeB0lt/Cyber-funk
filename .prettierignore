@@ -1,0 +1,13 @@
+legacy/
+dist/
+coverage/
+playwright-report/
+test-results/
+.playwright-mcp/
+package-lock.json
+.claude/skills/fixing-accessibility/
+.devcontainer/devcontainer-lock.json
+.claude/
+.devcontainer/
+.github/dependabot.yml
+*.md

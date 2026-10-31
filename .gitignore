@@ -1,4 +1,10 @@
 node_modules/
+/dist/
+coverage/
+playwright-report/
+test-results/
 shots/
 .playwright-mcp/
 .claude/settings.local.json
+.DS_Store
+*.local

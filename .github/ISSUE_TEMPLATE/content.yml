@@ -1,0 +1,20 @@
+name: Content or design proposal
+description: A new enemy, place, quest, item, system, or a change to an existing one
+labels: [content]
+body:
+  - type: textarea
+    id: pitch
+    attributes:
+      label: The idea
+      description: What the player sees and does. How it fits the pillars in docs/vision/design-pillars.md.
+    validations:
+      required: true
+  - type: textarea
+    id: data
+    attributes:
+      label: Data and rules
+      description: Numbers, ids, which tables and scenes it touches (see docs/guides/adding-content.md).
+  - type: textarea
+    id: balance
+    attributes:
+      label: Balance expectations
