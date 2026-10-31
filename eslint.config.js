@@ -26,6 +26,7 @@ export default defineConfig(
       'legacy/**',
       'dist/**',
       'dist-e2e/**',
+      'dist-server/**',
       'coverage/**',
       'playwright-report/**',
       'test-results/**',
@@ -57,7 +58,7 @@ export default defineConfig(
   {
     // A scene that forgets `await` races its own lines (and a dropped promise hides errors).
     // Type-aware, so it's scoped to the code that juggles scene promises.
-    files: ['src/content/**/*.scene.ts', 'src/app/**/*.ts', 'src/narrative/**/*.ts'],
+    files: ['src/content/**/*.scene.ts', 'src/app/**/*.ts', 'src/narrative/**/*.ts', 'server/**/*.ts'],
     languageOptions: { parserOptions: { projectService: true, tsconfigRootDir: import.meta.dirname } },
     rules: { '@typescript-eslint/no-floating-promises': 'error' },
   },

@@ -9,6 +9,10 @@
                *.scene.ts or content/index.ts (keeps prose out of the sim's module graph).
    - app       stores, commands, presenters, persistence. Imports everything below, never React/ui.
    - ui        React. May import everything below.
+
+   server/ (the cloud-save API) is not a game layer. It shares only the save format and the API
+   contract (app/save/format.ts, app/save/protocol.ts, and the core ids they use), and src/ never
+   imports it. See docs/adr/0006-server-and-cloud-saves.md.
    See docs/architecture/overview.md and docs/adr/0002-layering.md. */
 module.exports = {
   forbidden: [
@@ -64,6 +68,26 @@ module.exports = {
       severity: 'error',
       from: { path: '^src/' },
       to: { path: '^(tools|tests|legacy)/' },
+    },
+    {
+      name: 'src-does-not-import-server',
+      severity: 'error',
+      from: { path: '^src/' },
+      to: { path: '^server/' },
+    },
+    {
+      name: 'server-shares-only-the-save-format',
+      comment: 'The server may use core and the save format/protocol, nothing else from the game.',
+      severity: 'error',
+      from: { path: '^server/' },
+      to: { path: '^src/', pathNot: '^src/(core/|app/save/(format|protocol)\\.ts$)' },
+    },
+    {
+      name: 'save-format-stays-portable',
+      comment: 'format.ts and protocol.ts run in the browser and on the server: core and Zod only.',
+      severity: 'error',
+      from: { path: '^src/app/save/(format|protocol)\\.ts$' },
+      to: { path: '(^src/(?!core/|app/save/(format|protocol)\\.ts$))|(^node_modules/(?!zod/))' },
     },
     {
       name: 'tools-headless',

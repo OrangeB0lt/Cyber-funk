@@ -1,6 +1,8 @@
 legacy/
 dist/
 dist-e2e/
+dist-server/
+server/db/migrations/meta/
 coverage/
 playwright-report/
 test-results/

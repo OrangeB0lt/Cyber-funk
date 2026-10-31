@@ -21,7 +21,7 @@ const options: ICruiseOptions = {
   outputType: 'err',
 };
 const tsConfig = extractTSConfig('tsconfig.json');
-const result = await cruise(['src', 'tools'], options, {}, { tsConfig });
+const result = await cruise(['src', 'server', 'tools'], options, {}, { tsConfig });
 const output = typeof result.output === 'string' ? result.output : JSON.stringify(result.output);
 process.stdout.write(output);
 if (result.exitCode !== 0) process.exit(result.exitCode);
