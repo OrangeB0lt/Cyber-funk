@@ -12,7 +12,7 @@ import type { GearId, GearSlot, ItemId, ShopItemId } from '@core/ids/items';
 import { ACT_ORDER, ACT_STEPS, type ActId, type StoryPosition } from '@core/ids/story';
 import type { DistrictId, GlossaryId, PlaceId } from '@core/ids/world';
 import type { StatusId } from '@core/ids/combat';
-import type { SaveSlotId } from '@core/ids/saves';
+import { SAVE_SLOT_IDS, type SaveSlotId } from '@core/ids/saves';
 import type { PlayerIntent, Settings, StepDef } from '@core/types';
 import { ACTS, BOSSES, CLASSES, DISTRICTS, ENEMIES, GEAR, PLACES, cuttingContest } from '@content/index';
 import {
@@ -29,9 +29,11 @@ import {
   useFieldItem,
 } from '@engine/index';
 import { Sfx } from './audio/sfx';
-import { decodeSave, exportCode, importCode } from './save/format';
+import type { CloudClient } from './save/cloud';
+import { decodeSave, exportCode, importCode, type SaveSummary } from './save/format';
 import { SaveSlots } from './save/slots';
 import { browserKv, type KeyValue } from './save/storage';
+import { CloudSync } from './save/sync';
 import { ReactPresenter } from './reactPresenter';
 import { Session } from './session';
 import { createView, type SheetSpec, type SlotPick, type ViewState } from './view';
@@ -47,11 +49,22 @@ export class GameApp {
   readonly session: Session;
   /** The device's save slots. The session saves to the active one. */
   readonly slots: SaveSlots;
+  /** Background sync of the slots with the cloud-save server. */
+  readonly cloud: CloudSync;
   /** Test speed-up (Playwright and the dev menu set it). */
   turbo = false;
+  /** A conflict prompt is showing. */
+  private settling = false;
+  /** Cancels the conflict prompt (leaving for the title clears dialogs). */
+  private conflictPrompt: AbortController | null = null;
 
-  constructor(opts: { kv?: KeyValue } = {}) {
-    this.slots = new SaveSlots(opts.kv ?? browserKv);
+  /**
+   * `kv` is where saves live (localStorage by default). `cloud` is the cloud-save API, or null for
+   * a local-only game (static builds, the local e2e suite).
+   */
+  constructor(opts: { kv?: KeyValue; cloud?: CloudClient | null } = {}) {
+    const kv = opts.kv ?? browserKv;
+    this.slots = new SaveSlots(kv);
     this.sfx = new Sfx(() => this.settings().sound);
     this.presenter = new ReactPresenter(this.view, {
       settings: () => this.settings(),
@@ -61,6 +74,8 @@ export class GameApp {
       onRoute: r => {
         const g = this.session.store.game;
         if (r.kind === 'district' && g) this.nextAmbient(g.district);
+        // A conflict found mid-battle waits until the player is back on the map.
+        if (this.cloud.conflicts.size) void this.settleConflicts();
       },
     });
     this.session = new Session({
@@ -70,18 +85,34 @@ export class GameApp {
         this.view.busy = busy;
       },
     });
+    this.cloud = new CloudSync({
+      slots: this.slots,
+      api: opts.cloud ?? null,
+      kv,
+      isPlaying: slot => !!this.session.store.game && this.slots.active === slot,
+      onChange: () => this.refreshCloud(),
+      onConflict: () => void this.settleConflicts(),
+    });
     this.slots.subscribe(slot => this.refreshSlot(slot));
   }
 
-  /** Boot: show what the save slots hold. */
+  /** Boot: show what the save slots hold, then catch up with the cloud in the background. */
   start(): void {
-    for (const info of this.slots.all()) this.refreshSlot(info.slot);
+    this.refreshCloud();
+    void this.cloud.start();
   }
 
   /** Mirror one slot into the view (the slot picker and the title's Continue button read it). */
   private refreshSlot(slot: SaveSlotId): void {
     const i = this.view.saves.findIndex(s => s.slot === slot);
-    if (i >= 0) this.view.saves[i] = { ...this.slots.info(slot), sync: 'local' };
+    if (i >= 0) this.view.saves[i] = { ...this.slots.info(slot), sync: this.cloud.slotState(slot) };
+  }
+
+  /** Mirror the cloud's state into the view. */
+  private refreshCloud(): void {
+    const c = this.cloud;
+    this.view.cloud = { mode: c.mode, linked: c.linked, code: c.code, pending: c.pending };
+    for (const slot of SAVE_SLOT_IDS) this.refreshSlot(slot);
   }
 
   /** The live save proxy (render snapshots of `store`). */
@@ -113,6 +144,10 @@ export class GameApp {
 
   /** A slot was tapped in the slot picker. `raw` is the save being imported (mode 'import'). */
   async pickSlot(slot: SaveSlotId, mode: SlotPick, raw?: string): Promise<void> {
+    if (this.cloud.conflicts.has(slot)) {
+      await this.settleConflicts();
+      if (this.cloud.conflicts.has(slot)) return;
+    }
     const info = this.slots.info(slot);
     if (mode === 'continue') {
       if (!info.summary) {
@@ -212,6 +247,7 @@ export class GameApp {
   /** Back to the title screen (the save stays). */
   async toTitle(): Promise<void> {
     this.presenter.closeSheet();
+    this.conflictPrompt?.abort();
     await this.session.quit();
     Object.assign(this.view, {
       screen: 'title',
@@ -222,6 +258,7 @@ export class GameApp {
       timing: null,
       popups: [],
     });
+    void this.cloud.sync().then(() => this.settleConflicts());
   }
 
   /** Menu → Title Screen, after a confirm. */
@@ -455,6 +492,121 @@ export class GameApp {
     this.presenter.toast('Deleted.');
   }
 
+  /* ---------------- cloud saves ---------------- */
+
+  /**
+   * Ask about each slot another device changed, one at a time, never during a battle. The running
+   * game's slot is offered as "load theirs or keep playing"; others as "use theirs or keep mine".
+   */
+  private async settleConflicts(): Promise<void> {
+    if (this.settling) return;
+    this.settling = true;
+    const asked = new Set<SaveSlotId>();
+    try {
+      for (;;) {
+        if (this.view.battle) return;
+        const next = [...this.cloud.conflicts].find(([slot]) => !asked.has(slot));
+        if (!next) return;
+        const [slot, remote] = next;
+        asked.add(slot);
+        const playing = !!this.store.game && this.slots.active === slot;
+        const mine = this.slots.info(slot).summary;
+        const theirs = remote.summary ? describe(remote.summary, remote.savedAt) : null;
+        const body = !theirs
+          ? `Another device deleted slot ${slot}.`
+          : !mine && !playing
+            ? `You deleted slot ${slot} here, but another device saved ${theirs}. Keep their save?`
+            : playing
+              ? `Another device saved ${theirs}. Load that save, or keep playing here? Your next save replaces it.`
+              : `Another device saved ${theirs}. Use that save, or keep this device's (${describe(mine!)})?`;
+        this.conflictPrompt = new AbortController();
+        const takeTheirs = await this.presenter.confirm(
+          `Slot ${slot} changed on another device`,
+          body,
+          playing ? 'Load theirs' : mine ? 'Use theirs' : 'Keep theirs',
+          mine || playing ? 'Keep mine' : 'Delete it',
+          this.conflictPrompt.signal,
+        );
+        if (!takeTheirs) {
+          await this.cloud.keepLocal(slot);
+        } else if (!(await this.cloud.takeRemote(slot))) {
+          this.presenter.toast("Couldn't download it. It'll ask again later.");
+        } else if (playing) {
+          await this.session.director.abort('import');
+          if (!this.session.load()) {
+            this.presenter.toast("Loaded the other device's save.");
+            void this.session.resume();
+          }
+        }
+      }
+    } catch {
+      // The prompt was cancelled (back to the title): it asks again after the next sync.
+    } finally {
+      this.settling = false;
+      this.conflictPrompt = null;
+    }
+  }
+
+  /** Settings → Use a player code. */
+  async linkCode(code: string): Promise<boolean> {
+    const r = await this.cloud.link(code);
+    this.presenter.toast(
+      r === 'ok'
+        ? 'Linked. Your saves are syncing.'
+        : r === 'bad-code'
+          ? "That player code didn't work."
+          : "Can't reach the server right now.",
+    );
+    return r === 'ok';
+  }
+
+  /** Settings → Unlink this device, after a confirm. */
+  async confirmUnlink(): Promise<void> {
+    const ok = await this.presenter.confirm(
+      'Unlink this device?',
+      'Your saves stay on this device and in the cloud. Keep your player code to link again. This device gets a new code the next time it saves.',
+      'Unlink',
+      'Cancel',
+      new AbortController().signal,
+    );
+    if (!ok) return;
+    this.cloud.unlink();
+    this.presenter.toast('Unlinked.');
+  }
+
+  /** Slot picker → History: the slot's checkpoints on the server. */
+  async openHistory(slot: SaveSlotId): Promise<void> {
+    this.view.history = { slot, entries: null, failed: false };
+    this.openSheet({ kind: 'history', slot });
+    const entries = await this.cloud.history(slot);
+    if (this.view.history?.slot !== slot) return;
+    this.view.history = { slot, entries, failed: entries === null };
+  }
+
+  /** History → Restore, after a confirm. Only from the title (never under a running game). */
+  async confirmRestore(
+    slot: SaveSlotId,
+    revision: number,
+    summary: SaveSummary,
+    savedAt: string,
+  ): Promise<void> {
+    if (this.store.game) return;
+    const ok = await this.presenter.confirm(
+      'Restore this checkpoint?',
+      `Slot ${slot} goes back to ${describe(summary, savedAt)}, on every device. The current save stays in the history.`,
+      'Restore',
+      'Cancel',
+      new AbortController().signal,
+    );
+    if (!ok) return;
+    if (await this.cloud.restore(slot, revision)) {
+      this.presenter.toast('Restored.');
+      this.presenter.openSheet({ kind: 'saves', mode: 'continue' });
+    } else {
+      this.presenter.toast("Couldn't restore it. Check your connection.");
+    }
+  }
+
   /* ---------------- dev menu ---------------- */
 
   readonly dev = {
@@ -598,4 +750,18 @@ function bossStep(id: BossId): StoryPosition {
     steps.find(s => place && (ACTS[act] as Record<string, StepDef>)[s]?.hintPlace === place.id) ??
     (act === 'tower' ? 'climb_tower' : steps[steps.length - 1]!);
   return { act, step } as StoryPosition;
+}
+
+/** "Dawlin (Trumpet, Lv 4) in Tremé, Oct 31 10:42": a save in one line, for dialogs. */
+function describe(s: SaveSummary, savedAt?: string): string {
+  const when = savedAt
+    ? ', ' +
+      new Date(savedAt).toLocaleString(undefined, {
+        month: 'short',
+        day: 'numeric',
+        hour: 'numeric',
+        minute: '2-digit',
+      })
+    : '';
+  return `${s.name} (${CLASSES[s.cls].name}, Lv ${s.level}) in ${DISTRICTS[s.district].name}${when}`;
 }

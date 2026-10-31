@@ -12,8 +12,10 @@ import type { LegalActions } from '@engine/index';
 import type { ChoiceView, Route, ShopStock } from '@narrative/types';
 import { SAVE_SLOT_IDS, type SaveSlotId } from '@core/ids/saves';
 import { defaultSettings } from '@engine/index';
+import type { HistoryEntry } from './save/cloud';
 import type { SaveSummary } from './save/format';
 import type { SlotInfo } from './save/slots';
+import type { CloudMode, SlotSyncState } from './save/sync';
 
 /** Which screen fills the middle of the app. */
 export type Screen = 'title' | 'create' | 'story' | 'district' | 'place' | 'battle';
@@ -75,13 +77,36 @@ export type SheetView = { id: number; awaited?: boolean } & (
   | { kind: 'dev' }
   | { kind: 'bounties' }
   | { kind: 'saves'; mode: SlotPick; raw?: string }
+  | { kind: 'history'; slot: SaveSlotId }
 );
 
 /** Why the slot picker is open: load a game, start one, or import a save code into a slot. */
 export type SlotPick = 'continue' | 'new' | 'import';
 
 /** How a save slot stands with the cloud. */
-export type SlotSync = 'local' | 'synced' | 'pending' | 'conflict';
+export type SlotSync = SlotSyncState;
+
+/** Cloud saves as Settings shows them. */
+export interface CloudView {
+  /** Connection: 'off' when this build has no server. */
+  mode: CloudMode;
+  /** This device has a player (it has synced at least once, or linked a code). */
+  linked: boolean;
+  /** The player code to show (null until linked). */
+  code: string | null;
+  /** Slots with changes the server hasn't seen. */
+  pending: number;
+}
+
+/** A slot's checkpoints on the server (the history sheet). */
+export interface HistoryView {
+  /** The slot. */
+  slot: SaveSlotId;
+  /** Newest first; null while loading. */
+  entries: HistoryEntry[] | null;
+  /** Couldn't be fetched. */
+  failed: boolean;
+}
 
 /** A save slot as the slot picker shows it. */
 export interface SlotView {
@@ -218,6 +243,10 @@ export interface ViewState {
   create: { step: 1 | 2 | 3; name: string; roots: RootsId; cls: ClassId };
   /** The device's save slots, in order. */
   saves: SlotView[];
+  /** Cloud saves. */
+  cloud: CloudView;
+  /** The open history sheet's data. */
+  history: HistoryView | null;
 }
 
 /** A fresh view. */
@@ -240,5 +269,7 @@ export function createView(): ViewState {
     lastGrade: null,
     create: { step: 1, name: '', roots: 'creole', cls: 'trumpet' },
     saves: SAVE_SLOT_IDS.map(slot => ({ slot, summary: null, savedAt: null, problem: null, sync: 'local' })),
+    cloud: { mode: 'off', linked: false, code: null, pending: 0 },
+    history: null,
   });
 }

@@ -77,7 +77,10 @@ export function SettingsSheet({ fromTitle }: { fromTitle: boolean }) {
   const v = useView();
   const st = g?.settings ?? v.titleSettings;
   const [area, setArea] = useState<
-    { kind: 'export'; code: string | null } | { kind: 'import'; text: string } | null
+    | { kind: 'export'; code: string | null }
+    | { kind: 'import'; text: string }
+    | { kind: 'link'; text: string }
+    | null
   >(null);
   const copy = async (code: string) => {
     try {
@@ -156,6 +159,107 @@ export function SettingsSheet({ fromTitle }: { fromTitle: boolean }) {
           </Button>
         </>
       )}
+      <CloudSection
+        linking={area?.kind === 'link' ? area.text : null}
+        onLinking={text => setArea(text === null ? null : { kind: 'link', text })}
+        onCopy={code => void copy(code)}
+      />
     </Sheet>
+  );
+}
+
+const CLOUD_STATUS = {
+  off: 'Cloud saves are off in this build. Your saves stay on this device.',
+  checking: 'Checking the connection…',
+  online: null,
+  offline: "Offline. Your saves are safe on this device and upload when you're back online.",
+} as const;
+
+/** Settings → Cloud saves: status, the player code, linking another device. */
+function CloudSection({
+  linking,
+  onLinking,
+  onCopy,
+}: {
+  linking: string | null;
+  onLinking: (text: string | null) => void;
+  onCopy: (code: string) => void;
+}) {
+  const app = useApp();
+  const c = useView().cloud;
+  const status =
+    CLOUD_STATUS[c.mode] ??
+    (!c.linked
+      ? 'Your saves upload to the cloud the next time the game saves.'
+      : c.pending > 0
+        ? 'Uploading your latest saves…'
+        : 'Your saves are backed up to the cloud.');
+  return (
+    <>
+      <h4>Cloud saves</h4>
+      <p className="small" data-testid="cloud:status">
+        {status}
+      </p>
+      {c.mode !== 'off' && (
+        <>
+          {c.code && (
+            <>
+              <p className="small">
+                Your player code. Write it down: enter it on another device to play these saves there, or to
+                get them back if this browser forgets them.
+              </p>
+              <p className={s.code} data-testid="cloud:code">
+                {c.code}
+              </p>
+            </>
+          )}
+          <div className={s.row}>
+            {c.code && (
+              <Button testId="cloud:copy" small onClick={() => onCopy(c.code!)}>
+                Copy code
+              </Button>
+            )}
+            <Button testId="cloud:link" small onClick={() => onLinking(linking === null ? '' : null)}>
+              Use a player code
+            </Button>
+            {c.linked && (
+              <Button testId="cloud:unlink" small variant="ghost" onClick={() => void app.confirmUnlink()}>
+                Unlink this device
+              </Button>
+            )}
+          </div>
+          {linking !== null && (
+            <>
+              <p className="small">Enter the player code from your other device:</p>
+              <input
+                type="text"
+                inputMode="text"
+                autoCapitalize="characters"
+                autoComplete="off"
+                spellCheck={false}
+                placeholder="CFP-XXXX-XXXX-XXXX-XXXX-XXXX-XXXX"
+                aria-label="Player code"
+                className={s.codeInput}
+                data-testid="cloud:link-text"
+                data-autofocus
+                value={linking}
+                onChange={e => onLinking(e.target.value)}
+              />
+              <Button
+                testId="cloud:dolink"
+                small
+                variant="primary"
+                wide
+                onClick={() => {
+                  void app.linkCode(linking).then(ok => ok && onLinking(null));
+                }}
+              >
+                Link this device
+              </Button>
+            </>
+          )}
+        </>
+      )}
+    </>
   );
 }

@@ -2,10 +2,13 @@
 import { StrictMode } from 'react';
 import { createRoot } from 'react-dom/client';
 import { GameApp } from '@app/game';
+import { CloudApi } from '@app/save/cloud';
 import { App } from '@ui/App';
 import '@ui/styles/global.css';
 
-const app = new GameApp();
+// Cloud saves need the server (compose.yaml). VITE_CLOUD=off builds a local-only game: the e2e
+// suite's test mode (.env.test) and any static hosting.
+const app = new GameApp({ cloud: import.meta.env.VITE_CLOUD === 'off' ? null : new CloudApi() });
 app.start();
 try {
   if (window.matchMedia?.('(prefers-reduced-motion: reduce)').matches)

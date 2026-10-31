@@ -11,7 +11,7 @@
   flex: 1 1 auto;
   min-width: 0;
 }
-.slot > span {
+.line {
   display: block;
   overflow: hidden;
   text-overflow: ellipsis;

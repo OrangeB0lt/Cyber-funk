@@ -90,3 +90,16 @@
 .howto p {
   font-size: 0.95em;
 }
+.code {
+  color: var(--gold);
+  user-select: all;
+  -webkit-user-select: all;
+  word-break: break-all;
+  letter-spacing: 0.04em;
+}
+/* 16px or more, or iOS zooms the page when the field gets focus. */
+.codeInput {
+  font-size: max(16px, 1em);
+  text-transform: uppercase;
+  margin-top: 6px;
+}

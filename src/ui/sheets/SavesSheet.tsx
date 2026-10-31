@@ -29,9 +29,12 @@ function savedAt(iso: string | null): string {
 function SlotRow({ sv, mode, raw }: { sv: Snapshot<SlotView>; mode: SlotPick; raw?: string }) {
   const app = useApp();
   const g = useGame();
+  const cloud = useView().cloud;
   const sum = sv.summary;
   const badge = SYNC_LABEL[sv.sync];
   const playing = !!g && app.slots.active === sv.slot;
+  // A slot the server has seen (even one deleted since) has checkpoints to restore.
+  const history = cloud.linked && (!!sum || sv.sync !== 'local');
   return (
     <div className={s.row}>
       <Button
@@ -47,33 +50,46 @@ function SlotRow({ sv, mode, raw }: { sv: Snapshot<SlotView>; mode: SlotPick; ra
         </span>
         {sum ? (
           <>
-            <span>
+            <span className={s.line}>
               <b>{sum.name}</b> · {CLASSES[sum.cls].name} · Lv {sum.level}
               {sum.ngPlus > 0 && ` · NG+${sum.ngPlus}`}
             </span>
-            <span className="dim small">
+            <span className={`${s.line} dim small`}>
               {DISTRICTS[sum.district].name} · {savedAt(sv.savedAt)}
             </span>
           </>
         ) : sv.problem ? (
-          <span className="bad small">
+          <span className={`${s.line} bad small`}>
             {sv.problem === 'too-new' ? 'Saved by a newer version of the game' : "This save can't be read"}
           </span>
         ) : (
-          <span className="dim">Empty</span>
+          <span className={`${s.line} dim`}>Empty</span>
         )}
       </Button>
-      {(sum || sv.problem) && !playing && (
+      {!playing && (sum || sv.problem || history) && (
         <div className={s.side}>
-          <Button
-            testId={`save-del:${sv.slot}`}
-            small
-            variant="ghost"
-            aria-label={`Delete slot ${sv.slot}`}
-            onClick={() => void app.confirmDeleteSlot(sv.slot)}
-          >
-            🗑
-          </Button>
+          {(sum || sv.problem) && (
+            <Button
+              testId={`save-del:${sv.slot}`}
+              small
+              variant="ghost"
+              aria-label={`Delete slot ${sv.slot}`}
+              onClick={() => void app.confirmDeleteSlot(sv.slot)}
+            >
+              🗑
+            </Button>
+          )}
+          {history && (
+            <Button
+              testId={`save-history:${sv.slot}`}
+              small
+              variant="ghost"
+              aria-label={`History of slot ${sv.slot}`}
+              onClick={() => void app.openHistory(sv.slot)}
+            >
+              ⟲
+            </Button>
+          )}
         </div>
       )}
     </div>
