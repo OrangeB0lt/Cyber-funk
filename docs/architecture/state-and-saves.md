@@ -1,6 +1,6 @@
 # State and saves
 
-*What persists, how it is saved, loaded and resumed, and how to change the format safely. Code: [`src/core/types/state.ts`](../../src/core/types/state.ts) and [`src/app/save/format.ts`](../../src/app/save/format.ts).*
+*What persists, how it is saved, loaded and resumed, and how to change the format safely. Code: [`src/core/types/state.ts`](../../src/core/types/state.ts) and [`src/app/save/`](../../src/app/save/). Cloud sync and the server: [server.md](server.md).*
 
 ## GameState
 
@@ -34,10 +34,25 @@ Only at explicit checkpoints, never on every change. A subscription would save m
 { "format": "cyberfunk", "version": 2, "savedAt": "2026-10-31T00:00:00.000Z", "rng": { "s": 123456, "draws": 812 }, "game": { … } }
 ```
 
-- It's stored under `localStorage['cyberfunk_save_v2']`. v1's key is ignored and left alone (decision: fresh start, no migration).
+- It's stored per slot under `localStorage['cyberfunk_save_v2:<slot>']` (slots 1–3). v1's key is ignored and left alone (decision: fresh start, no migration).
 - `rng` is the game's random-stream state, so a reload continues the same seeded sequence.
 - **Loading validates with Zod** (`gameStateSchema`). A corrupt, invalid or too-new save is refused with a reason (`LoadError`: `empty`, `corrupt`, `too-new` or `invalid`), not half-loaded. "Too new" matters for a PWA, where an old cached build could meet a save written by a newer one.
 - **Export codes** are `CF2:` + base64 of the envelope (Settings → Export Save). Import goes through the same validation. Bug reports should include one.
+
+## Slots and the cloud
+
+There are three slots per device (`SAVE_SLOT_IDS` in `core/ids/saves.ts`). Continue, New Game and Import pick one in the slot picker, and the `Session` saves through `slots.current`, which is whichever slot is active.
+
+Saving is always **local and synchronous**: a checkpoint writes `localStorage` and returns. If the build has cloud saves (the Docker stack; see [server.md](server.md)), `CloudSync` uploads the changed slot in the background a second later. It keeps a little bookkeeping per slot under `cyberfunk_sync_v2:<slot>`: the server revision the copy is based on, and whether it has unsynced changes. The device's anonymous player is kept under `cyberfunk_player`.
+
+The server checks every upload with the same `decodeSave`, so a save the game can't load never reaches the database.
+
+| Module | Holds |
+|---|---|
+| `app/save/format.ts` | the envelope, the Zod schema, migrations, `CF2:` codes, `summarize` (shared with the server) |
+| `app/save/storage.ts` | `SaveStorage` (sync) and the key-value stores (localStorage, memory) |
+| `app/save/slots.ts` | the three slots and their sync bookkeeping |
+| `app/save/protocol.ts`, `cloud.ts`, `sync.ts` | the cloud: the API contract, the HTTP client, the sync engine |
 
 ## Resume
 

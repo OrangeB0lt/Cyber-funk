@@ -1,0 +1,24 @@
+# Only what the image build needs: package files, index.html, configs, src/ and server/.
+.git
+.github
+.claude
+.devcontainer
+.playwright-mcp
+.mcp.json
+.env
+.env.*
+!.env.example
+**/.DS_Store
+node_modules
+dist
+dist-e2e
+dist-server
+coverage
+playwright-report
+test-results
+shots
+legacy
+docs
+tests
+tools
+*.md

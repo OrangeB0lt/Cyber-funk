@@ -20,6 +20,7 @@ Start here if you're new. Suggested reading order:
 | [adr/](adr/) | Architecture Decision Records: why things are the way they are |
 | [team/](team/) | Workstreams and extension points for a five-person team |
 | [known-issues.md](known-issues.md) | v1 behavior queued for fixing |
+| [roadmap.md](roadmap.md) | The phases of the rebuild |
 
 ## Written so far
 
@@ -30,12 +31,15 @@ Start here if you're new. Suggested reading order:
 | [architecture/content-model.md](architecture/content-model.md) | Typed content tables, ids, renames from v1 |
 | [architecture/narrative-runtime.md](architecture/narrative-runtime.md) | Scenes, the Director, routes, presenters, battles |
 | [architecture/ui.md](architecture/ui.md) | The React layer: stores, layout, battle view, a11y, test ids |
-| [architecture/state-and-saves.md](architecture/state-and-saves.md) | GameState, the save envelope, resume points, changing the format |
+| [architecture/state-and-saves.md](architecture/state-and-saves.md) | GameState, the save envelope, slots, resume points, changing the format |
+| [architecture/server.md](architecture/server.md) | The cloud-save server: API, database, sync rules, player codes |
 | [systems/combat.md](systems/combat.md) | How combat works as a game |
 | [guides/writing-scenes.md](guides/writing-scenes.md) | Cookbook for story content |
 | [guides/balancing.md](guides/balancing.md) | The sim and how to read it |
-| [guides/testing.md](guides/testing.md) | Unit, oracles, headless playthroughs, e2e |
-| [adr/](adr/) | 0001 stack · 0002 layering · 0003 determinism and parity · 0004 scene API (draft) · 0005 UI state and styling |
+| [guides/testing.md](guides/testing.md) | Unit, oracles, server tests, headless playthroughs, e2e |
+| [guides/docker.md](guides/docker.md) | Running the stack, developing in Docker, the database |
+| [roadmap.md](roadmap.md) | The phases of the 2.0 rebuild and what's left |
+| [adr/](adr/) | 0001 stack · 0002 layering · 0003 determinism and parity · 0004 scene API (draft) · 0005 UI state and styling · 0006 server and cloud saves |
 
 Links to docs not yet written point to their planned location; they arrive with later phases.
 

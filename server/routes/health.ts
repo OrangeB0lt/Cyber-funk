@@ -6,7 +6,8 @@ import type { healthResponse } from '@app/save/protocol';
 import type { RouteDeps } from './http';
 
 export function healthRoutes(app: FastifyInstance, deps: RouteDeps): void {
-  app.get('/health', async (_req, reply) => {
+  // The compose healthcheck calls this every 10 seconds: log it only when something's wrong.
+  app.get('/health', { logLevel: 'warn' }, async (_req, reply) => {
     let db = false;
     try {
       await deps.db.execute(sql`select 1`);

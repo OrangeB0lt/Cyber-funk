@@ -6,7 +6,17 @@ A complete text-based RPG in one self-contained HTML file, built for a phone. NE
 
 Vanilla JS, no frameworks, no images, no audio files. Sound is synthesized with the Web Audio API.
 
-## Play it
+## 2.0 (in progress): run it with Docker
+
+The game is being rebuilt in TypeScript and React (`src/`), with cloud saves in PostgreSQL (`server/`). Start the whole thing, game, API and database, with:
+
+```bash
+docker compose up --build -d --wait     # then open http://localhost:8080
+```
+
+To develop inside Docker with hot reload, run `docker compose -f compose.dev.yaml up --build` and open http://localhost:5173. See [docs/guides/docker.md](docs/guides/docker.md), and [docs/README.md](docs/README.md) for the documentation. The rest of this README describes v1, which now lives in `legacy/` and stays playable until the rebuild reaches parity.
+
+## Play it (v1)
 
 Open `dist/cyberfunk.html` in a browser. That's the whole game. Progress autosaves to `localStorage` (key `cyberfunk_save_v1`); Settings also has Export/Import Save as a text code.
 

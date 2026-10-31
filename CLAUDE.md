@@ -6,14 +6,22 @@ CYBER FUNK is a phone-first text RPG. **It is mid-migration** from v1 (vanilla J
 
 - **v1 lives in `legacy/`** and stays runnable and unchanged until cutover: `legacy/src/01–10_*.js`, `legacy/build.js` → `legacy/dist/cyberfunk.html`. It is the source of truth for behavior.
 - **v2 lives in `src/`**, in six layers (ADR-0002): `core ← narrative ← content ← engine ← app ← ui`. Imports point down only, and `npm run depcruise` enforces it.
+- **The cloud-save server lives in `server/`** (Fastify + Drizzle + PostgreSQL, ADR-0006). It may import only `src/core/*` and `src/app/save/{format,protocol}.ts`, and `src/` never imports it. The game still runs without it (`VITE_CLOUD=off`).
 
 ## Commands
 
 ```
 npm run check            # typecheck + lint + layer rules + tests (run before committing)
-npm test                 # Vitest: unit, integration, parity oracles
+npm test                 # Vitest project `game`: unit, integration, parity oracles (no database)
+npm run test:server      # Vitest project `server`: real Postgres (docker compose -f compose.dev.yaml up -d db)
 npm run dev              # Vite dev server (the v2 game; window.CF is the GameApp)
-npm run e2e              # Playwright at 360×740: builds in test mode, runs tests/e2e (fails on overflow)
+npm run e2e              # Playwright at 360×740: builds in test mode (cloud off), runs tests/e2e (fails on overflow)
+npm run dev:server       # the API on :8787 (needs DATABASE_URL); `npm run dev` forwards /api to it
+npm run db:generate      # after editing server/db/schema.ts: write the SQL migration (commit it)
+docker compose up --build -d --wait                       # production stack: game + API + Postgres on :8080
+E2E_STACK_URL=http://localhost:8080 npx playwright test   # tests/e2e/stack against that stack
+docker compose -f compose.dev.yaml up --build             # develop in Docker: :5173 (HMR), :8787, Postgres
+npm run docker:check / docker:e2e                         # check + server tests / e2e inside containers
 npm run build            # production build -> dist/ (gitignored)
 npm run parity:coverage  # corpus vs legacy engine under c8; fails below 95% branch coverage
 npm run legacy:build     # rebuild legacy/dist (the hook does this automatically)
@@ -36,10 +44,13 @@ Node 24 (`.nvmrc`). `npm run depcruise` calls dependency-cruiser's API (`tools/d
 - P0 groundwork and oracles (done)
 - P1 core + content data + engine (exact parity gate) (done)
 - P2 vertical slice (prologue + Tremé + Captain Hush, React shell): built; waiting on the user's phone playtest, then freeze SceneContext v1 (ADR-0004)
+- P2.5 Docker + Compose + cloud saves in PostgreSQL (three slots, history, anonymous player codes; ADR-0006) (done)
 - P3 remaining districts
 - P4 finale + persistence
 - P5 PWA, cutover (delete `legacy/`), docs
 - P6 post-parity fixes
+
+Details per phase: `docs/roadmap.md`.
 
 ## Claude Code setup (`.claude/`, `.mcp.json`)
 
@@ -52,3 +63,4 @@ Node 24 (`.nvmrc`). `npm run depcruise` calls dependency-cruiser's API (`tools/d
 
 - Target is a ~360px-wide phone; nothing may cause horizontal overflow.
 - Keep `legacy/` byte-for-byte unchanged unless a parity tool needs it. It is the oracle.
+- Saves are local-first: `SaveStorage` stays synchronous; cloud sync (`src/app/save/sync.ts`) runs behind it. Schema changes go through `npm run db:generate`; never edit a shipped migration.

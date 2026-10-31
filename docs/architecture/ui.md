@@ -23,7 +23,7 @@ Rules the UI needs (prices, what a skill costs, whether SOLO is ready, the journ
 | Store | Type | Who writes | What's in it |
 |---|---|---|---|
 | `app.store.game` | `GameState` (Valtio proxy) | engine and scene helpers, via commands | The save: everything that persists |
-| `app.view` | `ViewState` (Valtio proxy) | `ReactPresenter` and `GameApp` | Everything on screen that isn't the save: the screen, story lines, the prompt, popups, the open sheet, the battle view, the timing overlay, toasts, character-creation drafts |
+| `app.view` | `ViewState` (Valtio proxy) | `ReactPresenter` and `GameApp` | Everything on screen that isn't the save: the screen, story lines, the prompt, popups, the open sheet, the battle view, the timing overlay, toasts, character-creation drafts, the save slots and cloud status |
 
 Both are serializable data. The promises scenes wait on live inside `ReactPresenter`, keyed by the numeric ids in `view.prompt`, `view.popups[n]` and `view.timing`. Battles, content tables and deferreds are never proxied.
 
@@ -82,6 +82,8 @@ Every interactive element gets a stable `data-testid`, and Playwright uses `test
 | Menu item, sheet controls | `m:bag`, `sheet-close`, `sheet-back` |
 | Shop, bag, gear | `buy:gumbo`, `sell:gumbo`, `use:gumbo`, `slot:charm`, `equip:ch_gator` |
 | Settings | `set:textSpeed:instant` |
+| Save slots, history | `save:2`, `save-del:2`, `save-history:2`, `restore:7` (a server revision) |
+| Cloud saves (Settings) | `cloud:status`, `cloud:code`, `cloud:link`, `cloud:link-text`, `cloud:dolink`, `cloud:unlink` |
 
 Keys come from content ids and choice keys, never from labels, so rewording copy never breaks a test.
 
