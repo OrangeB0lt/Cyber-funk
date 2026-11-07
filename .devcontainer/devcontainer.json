@@ -13,7 +13,7 @@
 		"ghcr.io/kvokka/features/aicommit2:1": {},
 		"ghcr.io/wxw-matt/devcontainer-features/command_runner:0": {},
 		"ghcr.io/wxw-matt/devcontainer-features/script_runner:0": {},
-		"ghcr.io/nikiforovall/devcontainer-features/dotnet-csharpier:1": {},
+		"ghcr.io/nikiforovall/devcontainer-features/dotnet-csharpier:2": {},
 		"ghcr.io/ait-assistive-autonomous-systems/devcontainer_features/add-groups:0": {},
 		"ghcr.io/devcontainers-extra/features/act:1": {},
 		"ghcr.io/devcontainers-extra/features/act-asdf:2": {},
