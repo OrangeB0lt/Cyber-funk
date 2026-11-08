@@ -643,6 +643,82 @@ const cases: Case[] = [
       inAct('cemetery', 0, { district: 'bayou', choices: { lucien } }),
     ),
   ),
+  // ---- St. Louis No. 1 ----
+  placeCase('temple talk, first time', 'temple', 'talk', inAct('cemetery', 0)),
+  placeCase('temple talk, first time, later step', 'temple', 'talk', inAct('cemetery', 2)),
+  placeCase('temple talk', 'temple', 'talk', inAct('cemetery', 1, { flags: ['metRoux', 'metRosalie'] })),
+  placeCase(
+    'temple talk, Gus freed and the haints at rest',
+    'temple',
+    'talk',
+    inAct('garden', 0, {
+      district: 'cemetery',
+      flags: ['metRoux', 'metRosalie', 'gusFreed'],
+      quests: { haints: 'done' },
+    }),
+  ),
+  ...[0, 2, 5].map(pick =>
+    placeCase(
+      `temple blessing (${pick})`,
+      'temple',
+      'blessing',
+      inAct('cemetery', 1, { doubloons: 400 }),
+      pick,
+    ),
+  ),
+  placeCase(
+    'temple blessing, the last one',
+    'temple',
+    'blessing',
+    inAct('cemetery', 1, { doubloons: 400, blessings: 2 }),
+  ),
+  placeCase('temple blessing, broke', 'temple', 'blessing', inAct('cemetery', 1, { doubloons: 100 })),
+  placeCase('temple altar', 'temple', 'altar', inAct('cemetery', 1)),
+  ...[0, 1].map(pick =>
+    placeCase(
+      `temple haints, the first (${pick})`,
+      'temple',
+      'haints',
+      inAct('cemetery', 1, { flags: ['metRoux', 'metRosalie'], quests: { haints: 'active' } }),
+      pick,
+    ),
+  ),
+  placeCase(
+    'temple haints, the second',
+    'temple',
+    'haints',
+    inAct('cemetery', 1, {
+      flags: ['metRoux', 'metRosalie'],
+      quests: { haints: 'active' },
+      counters: { haints: 1 },
+    }),
+  ),
+  placeCase(
+    'temple haints, the third, and Moses joins',
+    'temple',
+    'haints',
+    inAct('cemetery', 2, {
+      flags: ['metRoux', 'metRosalie'],
+      quests: { haints: 'active' },
+      counters: { haints: 2 },
+    }),
+  ),
+  placeCase(
+    'temple haints, all three already',
+    'temple',
+    'haints',
+    inAct('cemetery', 2, {
+      flags: ['metRoux', 'metRosalie'],
+      quests: { haints: 'active' },
+      counters: { haints: 3 },
+    }),
+  ),
+  placeCase('crypts walk', 'crypts', 'walk', inAct('cemetery', 1, { doubloons: 300 })),
+  placeCase('crypts inscriptions', 'crypts', 'inscriptions', inAct('cemetery', 1)),
+  placeCase('mausoleum door', 'mausoleum', 'door', inAct('cemetery', 1)),
+  placeCase('mausoleum boss', 'mausoleum', 'boss', inAct('cemetery', 2)),
+  placeCase('mausoleum boss (again)', 'mausoleum', 'boss', inAct('cemetery', 2, { intros: ['archivist'] })),
+  placeCase('mausoleum listen', 'mausoleum', 'listen', inAct('garden', 0, { district: 'cemetery' })),
   {
     name: 'vox perfecta boss flow',
     state: inAct('quarter', 2),

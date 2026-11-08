@@ -245,8 +245,6 @@ const NEVER: Partial<Record<ObtainableKey, string>> = {
  * The values are pending districts, so porting one turns its leftover entries into type errors.
  */
 const PENDING_SOURCES: Partial<Record<ObtainableKey, PendingDistrict>> = {
-  // The Archivist's Regalia.
-  thr_regalia: 'cemetery',
   // Maison Chrome and the invitation to the Ball.
   invitation: 'garden',
   thr_kevlar: 'garden',

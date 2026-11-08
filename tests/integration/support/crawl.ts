@@ -276,12 +276,16 @@ export async function runOnce(
 /* Every branch                                                         */
 /* ------------------------------------------------------------------ */
 
-/** Most choice paths tried per scene and state. */
+/** Most choice paths tried per scene, state and random stream. */
 export const PATH_CAP = 16;
 
+/** The random streams each scene is explored under: middle, low and high (pick, chance and roll ends). */
+export const RNG_STREAMS: readonly (readonly number[])[] = [[0.5], [0], [0.99]];
+
 /**
- * Run a scene down every path through its choices (breadth first, up to PATH_CAP), then once more at
- * the low and high ends of the random range, and once with fights fled.
+ * Run a scene down every path through its choices (breadth first, up to PATH_CAP), under each of
+ * RNG_STREAMS (a branch that only opens on a high roll still gets its choices explored), then once
+ * more with fights fled.
  */
 export async function explore(
   state: GameState,
@@ -289,22 +293,20 @@ export async function explore(
   place?: PlaceId,
 ): Promise<{ spec: RunSpec; out: RunOutcome }[]> {
   const runs: { spec: RunSpec; out: RunOutcome }[] = [];
-  const queue: number[][] = [[]];
-  while (queue.length && runs.length < PATH_CAP) {
-    const script = queue.shift()!;
-    const spec: RunSpec = { script, place };
-    const out = await runOnce(state, what, spec);
-    runs.push({ spec, out });
-    for (let i = script.length; i < out.widths.length; i++)
-      for (let alt = 1; alt < out.widths[i]!; alt++) queue.push([...out.taken.slice(0, i), alt]);
+  for (const rng of RNG_STREAMS) {
+    const queue: number[][] = [[]];
+    let n = 0;
+    while (queue.length && n++ < PATH_CAP) {
+      const script = queue.shift()!;
+      const spec: RunSpec = { script, rng, place };
+      const out = await runOnce(state, what, spec);
+      runs.push({ spec, out });
+      for (let i = script.length; i < out.widths.length; i++)
+        for (let alt = 1; alt < out.widths[i]!; alt++) queue.push([...out.taken.slice(0, i), alt]);
+    }
   }
-  for (const spec of [
-    { rng: [0], place },
-    { rng: [0.99], place },
-    { battle: 'fled', place },
-  ] as RunSpec[]) {
-    runs.push({ spec, out: await runOnce(state, what, spec) });
-  }
+  const fled: RunSpec = { battle: 'fled', place };
+  runs.push({ spec: fled, out: await runOnce(state, what, fled) });
   return runs;
 }
 
