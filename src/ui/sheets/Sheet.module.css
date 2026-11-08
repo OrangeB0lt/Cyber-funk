@@ -103,3 +103,13 @@
   text-transform: uppercase;
   margin-top: 6px;
 }
+@keyframes up {
+  from {
+    transform: translateY(30px);
+    opacity: 0;
+  }
+  to {
+    transform: none;
+    opacity: 1;
+  }
+}

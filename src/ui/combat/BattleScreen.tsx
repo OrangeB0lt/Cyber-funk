@@ -1,4 +1,4 @@
-import { useEffect, type CSSProperties } from 'react';
+import { useEffect, useRef, type CSSProperties, type RefObject } from 'react';
 import type { Snapshot } from 'valtio';
 import type { ActorView } from '@app/view';
 import { CLASSES } from '@content/index';
@@ -90,19 +90,45 @@ function EnemyCard({ e }: { e: Snapshot<ActorView> }) {
   );
 }
 
+const SHAKE: Keyframe[] = [
+  { transform: 'none' },
+  { transform: 'translateX(-5px)', offset: 0.25 },
+  { transform: 'translateX(5px)', offset: 0.75 },
+  { transform: 'none' },
+];
+const FLASH: Keyframe[] = [{ filter: 'brightness(2.2)' }, { filter: 'none' }];
+
+/**
+ * Plays `frames` on the element each time `count` goes up. Web Animations instead of a remount, so
+ * the enemy list keeps its scroll position and nothing inside restarts. Global CSS can't reach these,
+ * so reduce motion (the setting or the OS preference) is checked here.
+ */
+function useReplay(
+  ref: RefObject<HTMLElement | null>,
+  count: number,
+  frames: Keyframe[],
+  ms: number,
+  calm: boolean,
+) {
+  useEffect(() => {
+    if (!count || calm || matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+    ref.current?.animate(frames, { duration: ms });
+  }, [ref, count, frames, ms, calm]);
+}
+
 /** The battle screen: enemies, the log, and you. */
 export function BattleScreen() {
   const v = useView();
   const g = useGame()!;
   const b = v.battle;
+  const root = useRef<HTMLDivElement>(null);
   useEffect(resetBattleInput, []);
+  useReplay(root, b?.shake ?? 0, SHAKE, 300, g.settings.reduceMotion);
+  useReplay(root, b?.flash ?? 0, FLASH, 400, g.settings.reduceMotion);
   if (!b) return null;
   const p = b.player;
   return (
-    <div
-      key={`${b.shake}-${b.flash}`}
-      className={`${s.battle} ${b.shake ? s.shake : ''} ${b.flash ? s.flash : ''}`}
-    >
+    <div ref={root} className={s.battle}>
       <div className={s.enemies}>
         {b.enemies.map(e => (
           <EnemyCard key={e.id} e={e} />

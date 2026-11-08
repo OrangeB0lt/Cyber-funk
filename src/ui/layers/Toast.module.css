@@ -13,5 +13,16 @@
   pointer-events: none;
   max-width: 92%;
   text-align: center;
-  animation: up 0.2s ease-out;
+  animation: toast-up 0.2s ease-out;
+}
+/* Keeps the centring translateX(-50%) while it slides in. */
+@keyframes toast-up {
+  from {
+    transform: translate(-50%, 30px);
+    opacity: 0;
+  }
+  to {
+    transform: translate(-50%, 0);
+    opacity: 1;
+  }
 }

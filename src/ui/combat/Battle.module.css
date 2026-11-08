@@ -4,12 +4,6 @@
   height: 100%;
   gap: 8px;
 }
-.shake {
-  animation: shake 0.3s;
-}
-.flash {
-  animation: flash 0.4s;
-}
 .enemies {
   flex: none;
   display: flex;
@@ -176,5 +170,13 @@
   to {
     transform: translateY(-34px);
     opacity: 0;
+  }
+}
+@keyframes pulse {
+  from {
+    filter: brightness(1);
+  }
+  to {
+    filter: brightness(1.5);
   }
 }

@@ -63,3 +63,11 @@
 .wait {
   text-align: center;
 }
+@keyframes pulse {
+  from {
+    filter: brightness(1);
+  }
+  to {
+    filter: brightness(1.5);
+  }
+}

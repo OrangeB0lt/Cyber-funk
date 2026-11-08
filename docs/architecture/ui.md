@@ -66,8 +66,10 @@ One more tiny store, `ui/combat/targeting.ts`, holds battle-input UI state (skil
 ## Styling
 
 - `ui/styles/tokens.css`: the palette, tone colors, fonts, tap size and radius as CSS variables, ported 1:1 from v1.
-- `ui/styles/global.css`: the reset, headings, utility classes (`dim`, `small`, `good`, `bad`, `gold`, `sr-only`), shared keyframes and reduce-motion.
+- `ui/styles/global.css`: the reset, headings, utility classes (`dim`, `small`, `good`, `bad`, `gold`, `sr-only`) and reduce-motion.
 - Everything else is a **CSS Module** next to its component (`Button.module.css`…). No global class names leak between components.
+- **Keyframes live in the module that uses them.** CSS Modules rename every keyframe name a module's `animation` refers to, so a module can't use a global `@keyframes` by name (it silently never runs).
+- Animations started from script (the battle shake and flash use `element.animate()`) aren't covered by the global reduce-motion rule, so they check the setting and `prefers-reduced-motion` themselves.
 - Fonts are self-hosted with `@fontsource` so the game works offline.
 
 ## Test ids

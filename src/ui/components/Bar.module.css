@@ -55,3 +55,11 @@
 .compact .label {
   line-height: 14px;
 }
+@keyframes pulse {
+  from {
+    filter: brightness(1);
+  }
+  to {
+    filter: brightness(1.5);
+  }
+}

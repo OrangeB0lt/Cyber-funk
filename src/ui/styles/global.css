@@ -1,4 +1,4 @@
-/* Global styles: reset, the app frame, headings, utilities, shared keyframes, reduced motion.
+/* Global styles: reset, the app frame, headings, utilities, reduced motion.
    Component styles live next to their components as *.module.css. */
 @import '@fontsource/share-tech-mono';
 @import '@fontsource/monoton';
@@ -114,45 +114,8 @@ textarea {
   outline-offset: 2px;
 }
 
-/* shared keyframes */
-@keyframes pulse {
-  from {
-    filter: brightness(1);
-  }
-  to {
-    filter: brightness(1.5);
-  }
-}
-@keyframes up {
-  from {
-    transform: translateY(30px);
-    opacity: 0;
-  }
-  to {
-    transform: none;
-    opacity: 1;
-  }
-}
-@keyframes shake {
-  0%,
-  100% {
-    transform: none;
-  }
-  25% {
-    transform: translateX(-5px);
-  }
-  75% {
-    transform: translateX(5px);
-  }
-}
-@keyframes flash {
-  0% {
-    filter: brightness(2.2);
-  }
-  100% {
-    filter: none;
-  }
-}
+/* Keyframes live in the CSS Module that uses them. CSS Modules rename every keyframe name a module's
+   `animation` refers to, so a module can never reach a global @keyframes by name. */
 
 /* Reduced motion: the setting, or the OS preference. */
 .reduce-motion *,

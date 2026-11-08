@@ -193,9 +193,9 @@ export interface BattleView {
   active: string | null;
   /** Floating numbers. */
   floats: Float[];
-  /** Increments on a crit (restarts the shake animation). */
+  /** Increments on a crit; the battle screen plays a shake each time it goes up. */
   shake: number;
-  /** Increments on a shatter (restarts the flash). */
+  /** Increments on a shatter; the battle screen plays a flash each time it goes up. */
   flash: number;
   /** Waiting for the player's action. */
   legal: LegalActions | null;
