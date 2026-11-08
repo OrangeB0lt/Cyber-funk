@@ -1,3 +1,4 @@
+import type { SpriteId } from '@core/ids/sprites';
 import type { DistrictId } from '@core/ids/world';
 import type { GearId, ItemId, SheetMusicId } from '@core/ids/items';
 import type { ShopStock } from '@narrative/types';
@@ -5,6 +6,7 @@ import { GEAR, ITEMS, SHEET_MUSIC, fmtDoubloons } from '@content/index';
 import { sellables, shopRow } from '@engine/index';
 import { Button } from '../components/Button';
 import { ItemRow } from '../components/ItemRow';
+import { Sprite } from '../components/Sprite';
 import { useApp, useGame } from '../GameContext';
 import { gearStats } from './format';
 import { Sheet } from './Sheet';
@@ -15,15 +17,17 @@ interface Props {
   stock: readonly ShopStock[];
   noSell: boolean;
   tab: 'buy' | 'sell';
+  /** Who runs it (their portrait beside the title). */
+  keeper: SpriteId | null;
 }
 
 /** A shop: Buy and (usually) Sell at 40%. Prices come from the engine. */
-export function ShopSheet({ title, stock, noSell, tab }: Props) {
+export function ShopSheet({ title, stock, noSell, tab, keeper }: Props) {
   const app = useApp();
   const g = useGame()!;
   const district: DistrictId = g.district;
   return (
-    <Sheet title={title}>
+    <Sheet title={title} lead={keeper && <Sprite id={keeper} scale={2} />}>
       <div className={s.gold}>
         You have <b>{fmtDoubloons(g.doubloons)}</b>
       </div>

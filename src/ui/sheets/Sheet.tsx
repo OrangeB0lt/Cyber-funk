@@ -6,6 +6,8 @@ import s from './Sheet.module.css';
 interface Props {
   /** Heading. */
   title: string;
+  /** Shown before the heading (a shopkeeper's portrait). */
+  lead?: ReactNode;
   /** Show "‹ Menu" (sheets opened from the menu). */
   back?: boolean;
   /** Pinned footer (e.g. How to Play's start button). */
@@ -17,7 +19,7 @@ interface Props {
  * The bottom-sheet frame: a modal dialog with a heading, back and close buttons, a scrolling body
  * and an optional footer. Escape closes it.
  */
-export function Sheet({ title, back, foot, children }: Props) {
+export function Sheet({ title, lead, back, foot, children }: Props) {
   const app = useApp();
   const ref = useRef<HTMLDivElement>(null);
   useEffect(() => {
@@ -35,6 +37,7 @@ export function Sheet({ title, back, foot, children }: Props) {
     <div className={s.backdrop} data-testid="sheet">
       <div ref={ref} className={s.card} role="dialog" aria-modal="true" aria-label={title}>
         <div className={s.head}>
+          {lead}
           <h3>{title}</h3>
           {back && (
             <Button testId="sheet-back" small variant="ghost" onClick={() => app.openSheet({ kind: 'menu' })}>

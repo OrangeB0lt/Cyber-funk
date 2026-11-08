@@ -1,15 +1,30 @@
 import { useEffect, useRef } from 'react';
+import type { Snapshot } from 'valtio';
+import type { ClassId } from '@core/ids/characters';
+import type { SpriteId } from '@core/ids/sprites';
 import { plainText } from '@app/lexicon';
+import type { StoryLine } from '@app/view';
+import { heroSprite, npcSprite } from '@content/sprites';
 import { Button } from '../components/Button';
 import { LexText } from '../components/LexText';
+import { Sprite } from '../components/Sprite';
 import { Typewriter } from '../components/Typewriter';
-import { useApp, useView } from '../GameContext';
+import { useApp, useGame, useView } from '../GameContext';
 import s from './Story.module.css';
+
+/** Who to draw beside a line: the speaker's sprite, your hero on your own lines, nobody on narration. */
+function portraitOf(l: Snapshot<StoryLine>, cls: ClassId | undefined): SpriteId | null {
+  if (l.kind === 'you') return cls ? heroSprite(cls) : null;
+  if (l.kind !== 'spoken') return null;
+  if (l.sprite) return l.sprite;
+  return l.npc && cls ? npcSprite(l.npc, cls) : null;
+}
 
 /** The story transcript: narration, dialogue, the player's choices, and battle outcome cards. */
 export function StoryScreen() {
   const app = useApp();
   const v = useView();
+  const cls = useGame()?.cls;
   const end = useRef<HTMLDivElement>(null);
   useEffect(() => {
     end.current?.scrollIntoView({ block: 'end' });
@@ -20,20 +35,27 @@ export function StoryScreen() {
     <div className={s.story} onClick={() => app.advance()} data-testid="story">
       {v.title && <h2 className={s.title}>{v.title}</h2>}
       <div aria-live="polite" className={s.story}>
-        {v.lines.map(l => (
-          <p key={l.id} className={`${s.line} ${s[l.kind]}`}>
-            {l.who && (
-              <span className={s.who} style={{ color: l.color ?? '#fff' }}>
-                {l.who}
-              </span>
-            )}
-            {l.kind === 'narr' || l.kind === 'spoken' ? (
-              <Typewriter id={l.id} text={l.text} typed={l.typed} />
-            ) : (
-              <LexText text={l.text} />
-            )}
-          </p>
-        ))}
+        {v.lines.map((l, i) => {
+          const sprite = portraitOf(l, cls);
+          // One portrait per run: a speaker's follow-up lines don't repeat it.
+          const prev = v.lines[i - 1];
+          const shown = sprite && !(prev && prev.kind === l.kind && portraitOf(prev, cls) === sprite);
+          return (
+            <p key={l.id} className={`${s.line} ${s[l.kind]}`}>
+              {shown && <Sprite id={sprite} scale={2} flip={l.kind === 'you'} className={s.portrait} />}
+              {l.who && (
+                <span className={s.who} style={{ color: l.color ?? '#fff' }}>
+                  {l.who}
+                </span>
+              )}
+              {l.kind === 'narr' || l.kind === 'spoken' ? (
+                <Typewriter id={l.id} text={l.text} typed={l.typed} />
+              ) : (
+                <LexText text={l.text} />
+              )}
+            </p>
+          );
+        })}
       </div>
       {v.outcome?.kind === 'victory' && (
         <div className={`${s.outcome} ${s.victory}`} data-testid="victory">

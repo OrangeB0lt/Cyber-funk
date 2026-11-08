@@ -1557,7 +1557,7 @@ Character art, for the UI and tools only. The engine, app, scenes and the rest o
 - Source: [src/content/sprites/index.ts](../../../src/content/sprites/index.ts)
 - Imports: core: [ids/sprites](core.md#src-core-ids-sprites-ts) · content: [sprites/compile](#src-content-sprites-compile-ts), [sprites/palette](#src-content-sprites-palette-ts), [sprites/refs](#src-content-sprites-refs-ts), [sprites/table](#src-content-sprites-table-ts)
 - Re-exports: `{ PALETTE } from './palette'`, `{ SPRITES } from './table'`, `{ MAX_VARIANT_DEPTH, compileSprite, resolveSprite, spriteSvg, type CompiledSprite, type Palette, type ResolvedSprite } from './compile'`, `{ CLONE_RECOLOR, NPC_SPRITE, RESERVED_P3, actorSprite, cloneSprite, heroSprite, npcSprite, opponentSprite } from './refs'`
-- Imported by: ui: [combat/BattleScreen](ui.md#src-ui-combat-battlescreen-tsx), [components/Sprite](ui.md#src-ui-components-sprite-tsx) · tools: [sprites](tools.md#tools-sprites-ts), [validate-content](tools.md#tools-validate-content-ts)
+- Imported by: ui: [combat/BattleScreen](ui.md#src-ui-combat-battlescreen-tsx), [components/Sprite](ui.md#src-ui-components-sprite-tsx), [screens/Story](ui.md#src-ui-screens-story-tsx) · tools: [sprites](tools.md#tools-sprites-ts), [validate-content](tools.md#tools-validate-content-ts)
 - Types used: **[content/sprites/compile](#src-content-sprites-compile-ts)** [CompiledSprite](#src-content-sprites-compile-ts--compiledsprite) · **[core/ids/sprites](core.md#src-core-ids-sprites-ts)** [SpriteId](core.md#src-core-ids-sprites-ts--spriteid)
 
 Declarations:
@@ -1630,12 +1630,12 @@ Declarations:
 - <a id="src-content-sprites-refs-ts--clone-recolor"></a>**CLONE_RECOLOR** · *const* `: Readonly<Partial<Record<PaletteId, PaletteId>>>` — The Session Clone look: a hero in corporate chrome.
   - used by: **[content/sprites/table](#src-content-sprites-table-ts)** [CLONE_ART](#src-content-sprites-table-ts--clone-art)
 - <a id="src-content-sprites-refs-ts--herosprite"></a>**heroSprite** · *function* `(cls: ClassId): HeroSpriteId` — A class's hero sprite.
-  - used by: here [actorSprite](#src-content-sprites-refs-ts--actorsprite), [npcSprite](#src-content-sprites-refs-ts--npcsprite) · **[content/sprites/table](#src-content-sprites-table-ts)** [CLONE_ART](#src-content-sprites-table-ts--clone-art) · **[ui/combat/BattleScreen](ui.md#src-ui-combat-battlescreen-tsx)** [PlayerPanel](ui.md#src-ui-combat-battlescreen-tsx--playerpanel)
+  - used by: here [actorSprite](#src-content-sprites-refs-ts--actorsprite), [npcSprite](#src-content-sprites-refs-ts--npcsprite) · **[content/sprites/table](#src-content-sprites-table-ts)** [CLONE_ART](#src-content-sprites-table-ts--clone-art) · **[ui/combat/BattleScreen](ui.md#src-ui-combat-battlescreen-tsx)** [PlayerPanel](ui.md#src-ui-combat-battlescreen-tsx--playerpanel) · **[ui/screens/Story](ui.md#src-ui-screens-story-tsx)** [portraitOf](ui.md#src-ui-screens-story-tsx--portraitof)
 - <a id="src-content-sprites-refs-ts--clonesprite"></a>**cloneSprite** · *function* `(cls: ClassId): CloneSpriteId` — A class's Session Clone sprite.
   - used by: here [actorSprite](#src-content-sprites-refs-ts--actorsprite), [opponentSprite](#src-content-sprites-refs-ts--opponentsprite) · **[content/sprites/table](#src-content-sprites-table-ts)** [CLONE_ART](#src-content-sprites-table-ts--clone-art)
 - <a id="src-content-sprites-refs-ts--npcsprite"></a>**npcSprite** · *function* `(id: NpcId, playerCls: ClassId): SpriteId` — A speaker's sprite.
   - uses: here [NPC_SPRITE](#src-content-sprites-refs-ts--npc-sprite), [heroSprite](#src-content-sprites-refs-ts--herosprite)
-  - *no references found*
+  - used by: **[ui/screens/Story](ui.md#src-ui-screens-story-tsx)** [portraitOf](ui.md#src-ui-screens-story-tsx--portraitof)
 - <a id="src-content-sprites-refs-ts--opponentsprite"></a>**opponentSprite** · *function* `(id: OpponentId, playerCls: ClassId): SpriteId` — An opponent's sprite outside battle (the Blue Book).
   - uses: here [cloneSprite](#src-content-sprites-refs-ts--clonesprite)
   - used by: here [actorSprite](#src-content-sprites-refs-ts--actorsprite)

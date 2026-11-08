@@ -58,7 +58,16 @@ export function SheetLayer() {
     case 'lexicon':
       return <LexiconSheet key={sh.id} />;
     case 'shop':
-      return <ShopSheet key={sh.id} title={sh.title} stock={sh.stock} noSell={sh.noSell} tab={sh.tab} />;
+      return (
+        <ShopSheet
+          key={sh.id}
+          title={sh.title}
+          stock={sh.stock}
+          noSell={sh.noSell}
+          tab={sh.tab}
+          keeper={sh.keeper}
+        />
+      );
     case 'travel':
       return <TravelSheet key={sh.id} />;
     case 'bounties':

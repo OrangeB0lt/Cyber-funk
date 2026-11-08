@@ -5,7 +5,7 @@
  */
 import { expect, test } from '@playwright/test';
 import { SPRITE_IDS } from '../../src/core/ids/sprites';
-import { cf, expectNoOverflow, quickStart, tid, watchErrors } from './helpers';
+import { cf, expectNoOverflow, playUntil, quickStart, tid, watchErrors } from './helpers';
 
 test('the dev menu sprite gallery shows every sprite and fits at 360px', async ({ page }) => {
   const errors = watchErrors(page);
@@ -41,5 +41,25 @@ test('battle cards show each enemy, your hero, and a Session Clone as the clone 
   await expect(cards.nth(2).getByTestId('sprite:nutria')).toBeVisible();
   await expect(tid(page, 'pstat').getByTestId('sprite:hero_saxophone')).toBeVisible();
   await expectNoOverflow(page, 'battle with sprites');
+  expect(errors).toEqual([]);
+});
+
+test('speakers get portraits in dialogue, and shopkeepers in their shop', async ({ page }) => {
+  const errors = watchErrors(page);
+  await quickStart(page);
+  await tid(page, 'place:kitchen').click();
+  await tid(page, 'opt:talk').click();
+  const story = tid(page, 'story');
+  await expect(story.getByTestId('sprite:mamaroux').first()).toBeVisible();
+  await expectNoOverflow(page, 'dialogue with a portrait');
+  await playUntil(page, async () => (await tid(page, 'leave').count()) > 0);
+  await tid(page, 'leave').click();
+
+  await tid(page, 'place:pawn').click();
+  await tid(page, 'opt:gear').click();
+  await playUntil(page, async () => (await tid(page, 'sheet').count()) > 0);
+  const shop = page.getByRole('dialog', { name: "Ti-Jacques' Pawn & Horn" });
+  await expect(shop.getByTestId('sprite:tijacques')).toBeVisible();
+  await expectNoOverflow(page, 'shop with its keeper');
   expect(errors).toEqual([]);
 });

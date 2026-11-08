@@ -8,6 +8,7 @@
   margin-top: 0;
 }
 .line {
+  display: flow-root;
   margin: 0;
   padding: 8px 10px;
   border-radius: var(--radius);
@@ -29,6 +30,15 @@
 .prompt {
   background: transparent;
   color: var(--gold);
+}
+/* The speaker's portrait: text wraps beside it, then under it. Your own lines put your hero on the right. */
+.portrait {
+  float: left;
+  margin: 2px 8px 2px 0;
+}
+.you .portrait {
+  float: right;
+  margin: 2px 0 2px 8px;
 }
 .who {
   display: block;

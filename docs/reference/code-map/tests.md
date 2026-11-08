@@ -172,7 +172,7 @@ Declarations:
   - used by: here [playUntil](#tests-e2e-helpers-ts--playuntil), [quickStart](#tests-e2e-helpers-ts--quickstart) · tests: [saves.spec](#tests-e2e-saves-spec-ts), [slice.spec](#tests-e2e-slice-spec-ts), [cloud.spec](#tests-e2e-stack-cloud-spec-ts)
 - <a id="tests-e2e-helpers-ts--playuntil"></a>**playUntil** · *function* `(page: Page, done: () => Promise<boolean>, opts: { onScreen?: (screen: string) => Promise<void>; choose?: string; maxSteps?: number } = {}): Promise<void>` — Tap through whatever the game asks (Continue, first choice, dialogs, timing bar, RIFF at the first target, outcome buttons) until `done` holds.
   - uses: here [screenOf](#tests-e2e-helpers-ts--screenof), [tid](#tests-e2e-helpers-ts--tid)
-  - used by: here [quickStart](#tests-e2e-helpers-ts--quickstart) · tests: [saves.spec](#tests-e2e-saves-spec-ts), [slice.spec](#tests-e2e-slice-spec-ts), [cloud.spec](#tests-e2e-stack-cloud-spec-ts)
+  - used by: here [quickStart](#tests-e2e-helpers-ts--quickstart) · tests: [saves.spec](#tests-e2e-saves-spec-ts), [slice.spec](#tests-e2e-slice-spec-ts), [sprites.spec](#tests-e2e-sprites-spec-ts), [cloud.spec](#tests-e2e-stack-cloud-spec-ts)
 - <a id="tests-e2e-helpers-ts--quickstart"></a>**quickStart** · *function* `(page: Page, cls = 'trumpet'): Promise<void>` — A new game in Tremé after the prologue, fast: text instant, playback in turbo.
   - uses: here [cf](#tests-e2e-helpers-ts--cf), [playUntil](#tests-e2e-helpers-ts--playuntil), [screenOf](#tests-e2e-helpers-ts--screenof)
   - used by: tests: [saves.spec](#tests-e2e-saves-spec-ts), [slice.spec](#tests-e2e-slice-spec-ts), [sprites.spec](#tests-e2e-sprites-spec-ts)
