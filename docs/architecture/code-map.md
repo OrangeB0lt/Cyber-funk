@@ -1,6 +1,6 @@
 # Code map: how the code fits together
 
-*A guided tour of the v2 code (`src/`, `server/`), for a programmer who is new to it. It follows real call paths from a tap on the phone down to the engine and the database, naming every file and function on the way. Status: describes the code at P2.5 (vertical slice and cloud saves).*
+*A guided tour of the v2 code (`src/`, `server/`), for a programmer who is new to it. It follows real call paths from a tap on the phone down to the engine and the database, naming every file and function on the way. Status: describes the code at P3 (every district but the Tower; cloud saves).*
 
 There are two halves to the code map:
 

@@ -6,38 +6,42 @@
 |---|---|---|
 | P0 | Groundwork: move v1 to `legacy/`, toolchain, parity oracles, ADRs 0001–0004 | done |
 | P1 | Core, typed content, engine at exact parity with v1 | done |
-| P2 | Vertical slice: prologue, Tremé, Captain Hush, the React shell | built; waiting on a phone playtest |
+| P2 | Vertical slice: prologue, Tremé, Captain Hush, the React shell | done (played through to the Quarter; SceneContext v1 accepted) |
 | P2.5 | Docker, Docker Compose, cloud saves in PostgreSQL (three slots, history, player codes) | done ([ADR-0006](adr/0006-server-and-cloud-saves.md)) |
-| P3 | The remaining districts | next |
+| P3 | The remaining districts | districts and minigames done; the accessibility pass is left |
 | P4 | Finale and persistence | |
 | P5 | PWA, cutover, docs | |
 | P6 | Post-parity fixes | |
 
-## P2 close-out
+## P2 close-out (done)
 
-- The owner plays the Tremé slice on a phone.
-- Freeze SceneContext v1. Rewrite [ADR-0004](adr/0004-scene-api.md) to match the API as built (`story.set`; there is no `checkpoint`, `story.advance` or `minigame`) and mark it Accepted. After that, scene API changes go through an ADR.
-- Extract the templates the slice needed: `defineBossPlace`, `defineNpc` (first meeting plus idle lines) and quest helpers (recruiting, escort waves).
+- The owner played the Tremé slice through to the French Quarter (2026-11-08). The Quarter turned out to be empty, which started P3 and the completeness tests below.
+- SceneContext v1 is frozen. [ADR-0004](adr/0004-scene-api.md) now describes the API as built, plus `timing` and `board` for P3's minigames, and it's Accepted. Scene API changes go through an ADR.
+- Templates: P3 didn't need `defineBossPlace` or `defineNpc`. Helpers shared by districts live in `src/content/world/shared.scene.ts`: instrument stock, rumors, the ball invitation. Revisit if P4 repeats a shape.
 
 ## P3: the remaining districts
 
-- **Districts:** French Quarter, Storyville, Bayou, Cemetery, Garden District. For each: places, NPCs, quests, street events, the boss and its pre/post scenes. One commit per district.
-- **Sprites:** every character already has art (ADR-0007, [character design](vision/character-design.md)). When a district's places arrive:
-  - give each shop its `keeper`, using the shopkeepers in `SHOPKEEPERS` (`src/content/sprites/refs.ts`) where nobody else runs the shop
-  - draw the Restless Haints ghosts with `speak(…, 'haint')`
-- **Minigames:** crawfish races, sit-in, tarot, blessing, whispers.
-- **An accessibility pass.**
-- **Gate per district:**
-  - transcript parity with v1
-  - the headless playthrough extended through it
-  - e2e at 360px
+- **Districts (done):** French Quarter, Storyville, Bayou, Cemetery, Garden District, one commit each. Each has its places, NPCs, quests and its boss's pre/post scenes. The street events were already ported. The Ball moved here from P4, because it's the only way from `attend_ball` to `duel_isolde`.
+- **Sprites (done):** every shop has a `keeper`. Shopkeepers who never speak are listed in `SHOPKEEPERS` (`src/content/sprites/refs.ts`). The Restless Haints speak with `speak(…, 'haint')`.
+- **Minigames (done):**
+  - crawfish races (`s.board`)
+  - sit-in (`s.timing`)
+  - tarot, blessing, whispers (choices and rolls)
+- **Still to do:** an accessibility pass.
+- **Gate per district** (all green):
+  - transcript parity with v1 for every option in each meaningful state
+  - off `src/content/pending.ts`, so that:
+    - the completeness test and the crawler (every place, option, choice branch, quest and item) cover it
+    - the playthrough plays through it, down every branch of the boss choices
+    - the e2e world walk taps it at 360px
 
 ## P4: finale and persistence
 
-- **Story:** the Ball, the second line, the tower floors, the Conductor, the Click with Play the Blues, the ending, credits, New Game+.
+- **Story:** the second line, the tower floors, the Conductor, the Click with Play the Blues, the ending, credits, New Game+.
+- **Finish the migration's scaffolding:** port the Tower, delete `src/content/pending.ts`, and make `PLACE_SCENES` and `BOSS_SCENES` plain `Record`s. The completeness tests and the crawler then cover the Tower too.
 - **`ResumePoint` for every unfinished state:** a tower floor or fight, and the post-boss choice (v1 loses both on reload).
 - **Gate:**
-  - a headless playthrough to the ending for every combination of the three boss choices (vox × contracts × lucien)
+  - a headless playthrough to the ending for every combination of the three boss choices (vox × contracts × lucien): `tests/integration/playthrough.test.ts` already plays every combination up to the Tower and goes further on its own
   - a Playwright full flow
   - screenshots side by side with v1
 
