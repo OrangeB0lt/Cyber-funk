@@ -1332,14 +1332,13 @@ Declarations:
 Manchac Swamp: its street enemies, its elite and Le Rougarou Chromé. Specs: docs/vision/character-design.md (Manchac Swamp, Le Rougarou Chromé).
 
 - Source: [src/content/sprites/art/bayou.ts](../../../src/content/sprites/art/bayou.ts)
-- Imports: core: [types/index](core.md#src-core-types-index-ts) · content: [sprites/placeholder](#src-content-sprites-placeholder-ts)
+- Imports: core: [types/index](core.md#src-core-types-index-ts)
 - Imported by: content: [sprites/table](#src-content-sprites-table-ts)
 - Types used: **[core/types/sprites](core.md#src-core-types-sprites-ts)** [SpriteTable](core.md#src-core-types-sprites-ts--spritetable)
 
 Declarations:
 
 - <a id="src-content-sprites-art-bayou-ts--bayou-art"></a>**BAYOU_ART** · *const* `satisfies Partial<SpriteTable>`
-  - uses: **[content/sprites/placeholder](#src-content-sprites-placeholder-ts)** [todo](#src-content-sprites-placeholder-ts--todo)
   - used by: **[content/sprites/table](#src-content-sprites-table-ts)** [SPRITES](#src-content-sprites-table-ts--sprites)
 
 <a id="src-content-sprites-art-cemetery-ts"></a>
@@ -1349,14 +1348,13 @@ Declarations:
 Cities of the Dead: its street enemies, its elite, the Ghost Track summon and the Archivist. Specs: docs/vision/character-design.md (Cities of the Dead, The Archivist).
 
 - Source: [src/content/sprites/art/cemetery.ts](../../../src/content/sprites/art/cemetery.ts)
-- Imports: core: [types/index](core.md#src-core-types-index-ts) · content: [sprites/placeholder](#src-content-sprites-placeholder-ts)
+- Imports: core: [types/index](core.md#src-core-types-index-ts)
 - Imported by: content: [sprites/table](#src-content-sprites-table-ts)
 - Types used: **[core/types/sprites](core.md#src-core-types-sprites-ts)** [SpriteTable](core.md#src-core-types-sprites-ts--spritetable)
 
 Declarations:
 
 - <a id="src-content-sprites-art-cemetery-ts--cemetery-art"></a>**CEMETERY_ART** · *const* `satisfies Partial<SpriteTable>`
-  - uses: **[content/sprites/placeholder](#src-content-sprites-placeholder-ts)** [todo](#src-content-sprites-placeholder-ts--todo)
   - used by: **[content/sprites/table](#src-content-sprites-table-ts)** [SPRITES](#src-content-sprites-table-ts--sprites)
 
 <a id="src-content-sprites-art-garden-ts"></a>
@@ -1588,7 +1586,7 @@ Stand-in art: a grey "?" bust that keeps the sprite table complete while the rea
 
 - Source: [src/content/sprites/placeholder.ts](../../../src/content/sprites/placeholder.ts)
 - Imports: core: [ids/sprites](core.md#src-core-ids-sprites-ts), [types/index](core.md#src-core-types-index-ts)
-- Imported by: content: [sprites/art/bayou](#src-content-sprites-art-bayou-ts), [sprites/art/cemetery](#src-content-sprites-art-cemetery-ts), [sprites/art/garden](#src-content-sprites-art-garden-ts), [sprites/art/people](#src-content-sprites-art-people-ts), [sprites/art/shopkeepers](#src-content-sprites-art-shopkeepers-ts), [sprites/art/tower](#src-content-sprites-art-tower-ts) · tools: [sprites](tools.md#tools-sprites-ts), [validate-content](tools.md#tools-validate-content-ts)
+- Imported by: content: [sprites/art/garden](#src-content-sprites-art-garden-ts), [sprites/art/people](#src-content-sprites-art-people-ts), [sprites/art/shopkeepers](#src-content-sprites-art-shopkeepers-ts), [sprites/art/tower](#src-content-sprites-art-tower-ts) · tools: [sprites](tools.md#tools-sprites-ts), [validate-content](tools.md#tools-validate-content-ts)
 - Types used: **[core/ids/sprites](core.md#src-core-ids-sprites-ts)** [SpriteId](core.md#src-core-ids-sprites-ts--spriteid) · **[core/types/sprites](core.md#src-core-types-sprites-ts)** [GridSpriteDef](core.md#src-core-types-sprites-ts--gridspritedef), [SpriteDef](core.md#src-core-types-sprites-ts--spritedef)
 
 Declarations:
@@ -1600,7 +1598,7 @@ Declarations:
   - used by: here [isTodo](#src-content-sprites-placeholder-ts--istodo), [todo](#src-content-sprites-placeholder-ts--todo)
 - <a id="src-content-sprites-placeholder-ts--todo"></a>**todo** · *function* `<K extends SpriteId>(id: K, size: 24 | 32 = 24): GridSpriteDef & { id: K }` — A placeholder row for `id` (32×32 for bosses).
   - uses: here [Q24](#src-content-sprites-placeholder-ts--q24), [Q32](#src-content-sprites-placeholder-ts--q32)
-  - used by: **[content/sprites/art/bayou](#src-content-sprites-art-bayou-ts)** [BAYOU_ART](#src-content-sprites-art-bayou-ts--bayou-art) · **[content/sprites/art/cemetery](#src-content-sprites-art-cemetery-ts)** [CEMETERY_ART](#src-content-sprites-art-cemetery-ts--cemetery-art) · **[content/sprites/art/garden](#src-content-sprites-art-garden-ts)** [GARDEN_ART](#src-content-sprites-art-garden-ts--garden-art) · **[content/sprites/art/people](#src-content-sprites-art-people-ts)** [PEOPLE_ART](#src-content-sprites-art-people-ts--people-art) · **[content/sprites/art/shopkeepers](#src-content-sprites-art-shopkeepers-ts)** [SHOPKEEPER_ART](#src-content-sprites-art-shopkeepers-ts--shopkeeper-art) · **[content/sprites/art/tower](#src-content-sprites-art-tower-ts)** [TOWER_ART](#src-content-sprites-art-tower-ts--tower-art)
+  - used by: **[content/sprites/art/garden](#src-content-sprites-art-garden-ts)** [GARDEN_ART](#src-content-sprites-art-garden-ts--garden-art) · **[content/sprites/art/people](#src-content-sprites-art-people-ts)** [PEOPLE_ART](#src-content-sprites-art-people-ts--people-art) · **[content/sprites/art/shopkeepers](#src-content-sprites-art-shopkeepers-ts)** [SHOPKEEPER_ART](#src-content-sprites-art-shopkeepers-ts--shopkeeper-art) · **[content/sprites/art/tower](#src-content-sprites-art-tower-ts)** [TOWER_ART](#src-content-sprites-art-tower-ts--tower-art)
 - <a id="src-content-sprites-placeholder-ts--istodo"></a>**isTodo** · *function* `(def: SpriteDef): boolean` — Whether a row is still a placeholder (the validator skips those).
   - uses: here [Q24](#src-content-sprites-placeholder-ts--q24), [Q32](#src-content-sprites-placeholder-ts--q32)
   - used by: **[tools/sprites](tools.md#tools-sprites-ts)** [generateSpriteGallery](tools.md#tools-sprites-ts--generatespritegallery) · **[tools/validate-content](tools.md#tools-validate-content-ts)** [validateSprites](tools.md#tools-validate-content-ts--validatesprites)
