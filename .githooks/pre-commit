@@ -1,0 +1,18 @@
+#!/bin/sh
+# Before every commit: `npm run check` (types, lint, formatting, layer rules, and every Vitest suite,
+# including the completeness tests, the crawler, combat coverage and the playthrough). About 15 s.
+# A commit that touches nothing the game is built from only checks formatting.
+#
+# Skip once with `git commit --no-verify`. Installed by `npm install` (the `prepare` script sets
+# core.hooksPath to .githooks). The check runs on the working tree, not just what's staged.
+set -e
+if ! command -v npm >/dev/null 2>&1 && [ -s "$HOME/.nvm/nvm.sh" ]; then
+  . "$HOME/.nvm/nvm.sh"
+fi
+CODE='^(src|tools|tests|server|legacy|docs/reference|docs/vision/character-design\.md|package(-lock)?\.json|tsconfig[^/]*\.json|vite[^/]*\.ts|vitest[^/]*\.ts|eslint\.config\.js|playwright\.config\.ts|\.dependency-cruiser\.cjs|\.prettier)'
+if git diff --cached --name-only | grep -qE "$CODE"; then
+  echo "pre-commit: npm run check (skip once with git commit --no-verify)"
+  npm run -s check
+else
+  npm run -s format:check
+fi

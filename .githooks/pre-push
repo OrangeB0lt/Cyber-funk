@@ -1,0 +1,32 @@
+#!/bin/sh
+# Before every push: the Playwright suite in a 360×740 phone (`npm run e2e`, about a minute), when
+# the push carries anything the game is built from. Skip with `SKIP_E2E=1 git push` or `--no-verify`.
+#
+# It builds and serves its own copy on :4173 (never a server that's already running there).
+set -e
+if [ -n "$SKIP_E2E" ]; then
+  echo "pre-push: SKIP_E2E is set, not running e2e"
+  exit 0
+fi
+if ! command -v npm >/dev/null 2>&1 && [ -s "$HOME/.nvm/nvm.sh" ]; then
+  . "$HOME/.nvm/nvm.sh"
+fi
+CODE='^(src|tests|index\.html|public|package(-lock)?\.json|vite[^/]*\.ts|playwright\.config\.ts|tsconfig[^/]*\.json)'
+ZERO=0000000000000000000000000000000000000000
+run=no
+while read -r _local_ref local_sha _remote_ref remote_sha; do
+  [ "$local_sha" = "$ZERO" ] && continue # deleting a branch
+  if [ "$remote_sha" = "$ZERO" ]; then
+    run=yes # a new branch: test it
+  elif git diff --name-only "$remote_sha" "$local_sha" 2>/dev/null | grep -qE "$CODE"; then
+    run=yes
+  elif ! git cat-file -e "$remote_sha" 2>/dev/null; then
+    run=yes # the remote has commits we don't: can't tell, so test
+  fi
+done
+if [ "$run" = no ]; then
+  echo "pre-push: nothing the game is built from changed, skipping e2e"
+  exit 0
+fi
+echo "pre-push: npm run e2e (skip with SKIP_E2E=1 git push, or --no-verify)"
+CF_PREPUSH=1 npm run -s e2e

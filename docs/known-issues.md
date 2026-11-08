@@ -16,7 +16,7 @@ These go away by construction. Where the visible sequence changes, the change is
 | The title screen's settings object is the same object as the new save's settings | Settings copied, not aliased |
 | `towerFight` is missing from `newState`, so old saves never back-fill it | One typed `ResumePoint` |
 | The title-screen mute setting is ignored before a game exists | Audio reads the settings store, not the save |
-| `[[Hush\|the Hush]]` links nothing (the glossary key is `the hush`) | Content validator checks every `[[link]]` |
+| `[[Hush\|the Hush]]` links nothing (the glossary key is `the hush`) | `tools/completeness.ts` checks every `[[link]]`; this one is allowlisted there (`ALLOWED_UNLINKED`) until its P6 fix |
 | Street events' `G.xp` doesn't wait for the level-up popup; other XP grants do | One `s.xp()`, always awaited (allowlisted deviation) |
 
 ## To fix after parity

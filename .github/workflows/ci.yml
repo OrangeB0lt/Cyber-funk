@@ -1,10 +1,16 @@
-# Every push and PR: types, lint, layer rules, unit + integration + parity tests, build, e2e,
-# the server against PostgreSQL, and the Docker stack end to end.
+# Every push, on every branch: types, lint, formatting, layer rules, unit + integration + parity
+# tests (the completeness tests, the crawler, combat coverage, the playthrough), build, e2e, the
+# server against PostgreSQL, and the Docker stack end to end. A pull request shows the result of its
+# branch's latest push. Run it by hand from the Actions tab with "Run workflow".
 name: CI
 on:
   push:
-    branches: [main, 'refactor/**']
-  pull_request:
+    branches: ['**']
+  workflow_dispatch:
+# A newer push to the same branch cancels the run in progress (except on main, where every run counts).
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: ${{ github.ref != 'refs/heads/main' }}
 
 jobs:
   check:

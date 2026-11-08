@@ -11,7 +11,7 @@ CYBER FUNK is a phone-first text RPG. **It is mid-migration** from v1 (vanilla J
 ## Commands
 
 ```
-npm run check            # typecheck + lint + layer rules + tests (run before committing)
+npm run check            # typecheck + lint + format + layer rules + tests (the pre-commit hook runs it)
 npm test                 # Vitest project `game`: unit, integration, parity oracles (no database)
 npm run test:server      # Vitest project `server`: real Postgres (docker compose -f compose.dev.yaml up -d db)
 npm run dev              # Vite dev server (the v2 game; window.CF is the GameApp)
@@ -58,6 +58,8 @@ Details per phase: `docs/roadmap.md`.
 ## Claude Code setup (`.claude/`, `.mcp.json`)
 
 - **Rebuild hook** (`.claude/hooks/rebuild.js`): keeps `legacy/dist/` in sync when legacy sources change. It does nothing for `src/`.
+- **Check hook** (`.claude/hooks/check.js`, a Stop hook): when a turn changed code, it runs `npm run check` before handing back, and a failure sends Claude back to fix it. It skips unchanged code and gives up after 3 blocks in a row.
+- **Git hooks** (`.githooks/`, installed by `npm install`): pre-commit runs `npm run check`, pre-push runs `npm run e2e` (minutes; run `git push` in the background, or `SKIP_E2E=1` when e2e just ran).
 - **Playwright MCP**: serves `legacy/dist/cyberfunk.html` at `http://cyberfunk.local/` until P5 repoints it at the v2 build. See the `playtest` skill (it still describes v1's `data-act` ids). To see v2, run `npm run dev` and navigate to the dev server; v2 uses `data-testid` (conventions in `docs/architecture/ui.md`). `init-page.ts` must stay CommonJS (`.claude/package.json`); if the MCP reports "Cannot use import statement", restart the MCP server.
 - **Project skills** (`add-content`, `balance-check`, `playtest`) describe **v1**. They are rewritten in P5.
 - `.claude/package.json` and `legacy/package.json` mark those folders as CommonJS. The repo root is ESM.

@@ -8,21 +8,30 @@ Thanks for joining the band. Read [docs/README.md](docs/README.md) first; it has
 
 ```sh
 nvm use            # Node 24
-npm install
+npm install        # also turns on the git hooks in .githooks/
 npx playwright install chromium   # once, for e2e
 npm run dev        # http://localhost:5173
 ```
+
+`npm install` points git at `.githooks/` (the `prepare` script), so two checks run on their own:
+
+| When | What runs | Skip it once |
+|---|---|---|
+| `git commit` | `npm run check` (about 15 s); only `format:check` when no code is staged | `git commit --no-verify` |
+| `git push` | `npm run e2e` (about a minute), when the push changes the game | `SKIP_E2E=1 git push` or `git push --no-verify` |
+
+CI runs everything again on every push, on every branch.
 
 ## Workflow
 
 1. Branch from `main`: `feat/…`, `fix/…`, `content/…`, `refactor/…`, `docs/…`.
 2. Keep each PR to one kind of change: content, rules, UI, refactor or tooling. A refactor never changes behavior; a behavior change is never hidden inside a refactor.
-3. Run `npm run check` before you push. CI runs it too, plus the build and Playwright e2e.
+3. The pre-commit hook runs `npm run check` and the pre-push hook runs e2e. CI runs both again, plus the build, the server tests and the Docker stack, on every push.
 4. Open a PR using the template. One approving review merges it.
 
 ### Definition of done
 
-- [ ] `npm run check` is green: types, lint, layer rules, tests.
+- [ ] `npm run check` is green: types, lint, formatting, layer rules, tests (including the completeness tests and the crawler, which cover new places, options and content automatically).
 - [ ] Behavior changes come with a test:
   - engine rule → unit test
   - scene → headless scene test

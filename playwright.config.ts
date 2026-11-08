@@ -13,7 +13,8 @@ const stackUrl = process.env.E2E_STACK_URL;
 export default defineConfig({
   testDir: 'tests/e2e',
   fullyParallel: true,
-  forbidOnly: !!process.env.CI,
+  // CF_PREPUSH: the git pre-push hook (.githooks/pre-push) runs this suite like CI does.
+  forbidOnly: !!process.env.CI || !!process.env.CF_PREPUSH,
   retries: process.env.CI ? 1 : 0,
   reporter: process.env.CI ? [['github'], ['html', { open: 'never' }]] : 'list',
   use: {
@@ -37,7 +38,7 @@ export default defineConfig({
         command:
           'npx vite build --mode test --outDir dist-e2e && npx vite preview --outDir dist-e2e --port 4173 --strictPort',
         url: 'http://localhost:4173',
-        reuseExistingServer: !process.env.CI,
+        reuseExistingServer: !process.env.CI && !process.env.CF_PREPUSH,
         timeout: 120_000,
       },
 });
