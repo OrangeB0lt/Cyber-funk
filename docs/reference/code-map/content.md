@@ -1416,14 +1416,13 @@ Declarations:
 The French Quarter: its street enemies, its elite and Vox Perfecta. Specs: docs/vision/character-design.md (French Quarter, Vox Perfecta).
 
 - Source: [src/content/sprites/art/quarter.ts](../../../src/content/sprites/art/quarter.ts)
-- Imports: core: [types/index](core.md#src-core-types-index-ts) · content: [sprites/placeholder](#src-content-sprites-placeholder-ts)
+- Imports: core: [types/index](core.md#src-core-types-index-ts)
 - Imported by: content: [sprites/table](#src-content-sprites-table-ts)
 - Types used: **[core/types/sprites](core.md#src-core-types-sprites-ts)** [SpriteTable](core.md#src-core-types-sprites-ts--spritetable)
 
 Declarations:
 
 - <a id="src-content-sprites-art-quarter-ts--quarter-art"></a>**QUARTER_ART** · *const* `satisfies Partial<SpriteTable>`
-  - uses: **[content/sprites/placeholder](#src-content-sprites-placeholder-ts)** [todo](#src-content-sprites-placeholder-ts--todo)
   - used by: **[content/sprites/table](#src-content-sprites-table-ts)** [SPRITES](#src-content-sprites-table-ts--sprites)
 
 <a id="src-content-sprites-art-rivals-ts"></a>
@@ -1433,14 +1432,13 @@ Declarations:
 The three Cutting Contest rivals. Specs: docs/vision/character-design.md (Cutting Contest rivals).
 
 - Source: [src/content/sprites/art/rivals.ts](../../../src/content/sprites/art/rivals.ts)
-- Imports: core: [types/index](core.md#src-core-types-index-ts) · content: [sprites/placeholder](#src-content-sprites-placeholder-ts)
+- Imports: core: [types/index](core.md#src-core-types-index-ts)
 - Imported by: content: [sprites/table](#src-content-sprites-table-ts)
 - Types used: **[core/types/sprites](core.md#src-core-types-sprites-ts)** [SpriteTable](core.md#src-core-types-sprites-ts--spritetable)
 
 Declarations:
 
 - <a id="src-content-sprites-art-rivals-ts--rival-art"></a>**RIVAL_ART** · *const* `satisfies Partial<SpriteTable>`
-  - uses: **[content/sprites/placeholder](#src-content-sprites-placeholder-ts)** [todo](#src-content-sprites-placeholder-ts--todo)
   - used by: **[content/sprites/table](#src-content-sprites-table-ts)** [SPRITES](#src-content-sprites-table-ts--sprites)
 
 <a id="src-content-sprites-art-shopkeepers-ts"></a>
@@ -1467,14 +1465,13 @@ Declarations:
 Storyville: its street enemies, its elite and Mr. Ledger. Specs: docs/vision/character-design.md (Storyville, Mr. Ledger).
 
 - Source: [src/content/sprites/art/storyville.ts](../../../src/content/sprites/art/storyville.ts)
-- Imports: core: [types/index](core.md#src-core-types-index-ts) · content: [sprites/placeholder](#src-content-sprites-placeholder-ts)
+- Imports: core: [types/index](core.md#src-core-types-index-ts)
 - Imported by: content: [sprites/table](#src-content-sprites-table-ts)
 - Types used: **[core/types/sprites](core.md#src-core-types-sprites-ts)** [SpriteTable](core.md#src-core-types-sprites-ts--spritetable)
 
 Declarations:
 
 - <a id="src-content-sprites-art-storyville-ts--storyville-art"></a>**STORYVILLE_ART** · *const* `satisfies Partial<SpriteTable>`
-  - uses: **[content/sprites/placeholder](#src-content-sprites-placeholder-ts)** [todo](#src-content-sprites-placeholder-ts--todo)
   - used by: **[content/sprites/table](#src-content-sprites-table-ts)** [SPRITES](#src-content-sprites-table-ts--sprites)
 
 <a id="src-content-sprites-art-tower-ts"></a>
@@ -1591,7 +1588,7 @@ Stand-in art: a grey "?" bust that keeps the sprite table complete while the rea
 
 - Source: [src/content/sprites/placeholder.ts](../../../src/content/sprites/placeholder.ts)
 - Imports: core: [ids/sprites](core.md#src-core-ids-sprites-ts), [types/index](core.md#src-core-types-index-ts)
-- Imported by: content: [sprites/art/bayou](#src-content-sprites-art-bayou-ts), [sprites/art/cemetery](#src-content-sprites-art-cemetery-ts), [sprites/art/garden](#src-content-sprites-art-garden-ts), [sprites/art/people](#src-content-sprites-art-people-ts), [sprites/art/quarter](#src-content-sprites-art-quarter-ts), [sprites/art/rivals](#src-content-sprites-art-rivals-ts), [sprites/art/shopkeepers](#src-content-sprites-art-shopkeepers-ts), [sprites/art/storyville](#src-content-sprites-art-storyville-ts), [sprites/art/tower](#src-content-sprites-art-tower-ts) · tools: [sprites](tools.md#tools-sprites-ts), [validate-content](tools.md#tools-validate-content-ts)
+- Imported by: content: [sprites/art/bayou](#src-content-sprites-art-bayou-ts), [sprites/art/cemetery](#src-content-sprites-art-cemetery-ts), [sprites/art/garden](#src-content-sprites-art-garden-ts), [sprites/art/people](#src-content-sprites-art-people-ts), [sprites/art/shopkeepers](#src-content-sprites-art-shopkeepers-ts), [sprites/art/tower](#src-content-sprites-art-tower-ts) · tools: [sprites](tools.md#tools-sprites-ts), [validate-content](tools.md#tools-validate-content-ts)
 - Types used: **[core/ids/sprites](core.md#src-core-ids-sprites-ts)** [SpriteId](core.md#src-core-ids-sprites-ts--spriteid) · **[core/types/sprites](core.md#src-core-types-sprites-ts)** [GridSpriteDef](core.md#src-core-types-sprites-ts--gridspritedef), [SpriteDef](core.md#src-core-types-sprites-ts--spritedef)
 
 Declarations:
@@ -1603,7 +1600,7 @@ Declarations:
   - used by: here [isTodo](#src-content-sprites-placeholder-ts--istodo), [todo](#src-content-sprites-placeholder-ts--todo)
 - <a id="src-content-sprites-placeholder-ts--todo"></a>**todo** · *function* `<K extends SpriteId>(id: K, size: 24 | 32 = 24): GridSpriteDef & { id: K }` — A placeholder row for `id` (32×32 for bosses).
   - uses: here [Q24](#src-content-sprites-placeholder-ts--q24), [Q32](#src-content-sprites-placeholder-ts--q32)
-  - used by: **[content/sprites/art/bayou](#src-content-sprites-art-bayou-ts)** [BAYOU_ART](#src-content-sprites-art-bayou-ts--bayou-art) · **[content/sprites/art/cemetery](#src-content-sprites-art-cemetery-ts)** [CEMETERY_ART](#src-content-sprites-art-cemetery-ts--cemetery-art) · **[content/sprites/art/garden](#src-content-sprites-art-garden-ts)** [GARDEN_ART](#src-content-sprites-art-garden-ts--garden-art) · **[content/sprites/art/people](#src-content-sprites-art-people-ts)** [PEOPLE_ART](#src-content-sprites-art-people-ts--people-art) · **[content/sprites/art/quarter](#src-content-sprites-art-quarter-ts)** [QUARTER_ART](#src-content-sprites-art-quarter-ts--quarter-art) · **[content/sprites/art/rivals](#src-content-sprites-art-rivals-ts)** [RIVAL_ART](#src-content-sprites-art-rivals-ts--rival-art) · **[content/sprites/art/shopkeepers](#src-content-sprites-art-shopkeepers-ts)** [SHOPKEEPER_ART](#src-content-sprites-art-shopkeepers-ts--shopkeeper-art) · **[content/sprites/art/storyville](#src-content-sprites-art-storyville-ts)** [STORYVILLE_ART](#src-content-sprites-art-storyville-ts--storyville-art) · **[content/sprites/art/tower](#src-content-sprites-art-tower-ts)** [TOWER_ART](#src-content-sprites-art-tower-ts--tower-art)
+  - used by: **[content/sprites/art/bayou](#src-content-sprites-art-bayou-ts)** [BAYOU_ART](#src-content-sprites-art-bayou-ts--bayou-art) · **[content/sprites/art/cemetery](#src-content-sprites-art-cemetery-ts)** [CEMETERY_ART](#src-content-sprites-art-cemetery-ts--cemetery-art) · **[content/sprites/art/garden](#src-content-sprites-art-garden-ts)** [GARDEN_ART](#src-content-sprites-art-garden-ts--garden-art) · **[content/sprites/art/people](#src-content-sprites-art-people-ts)** [PEOPLE_ART](#src-content-sprites-art-people-ts--people-art) · **[content/sprites/art/shopkeepers](#src-content-sprites-art-shopkeepers-ts)** [SHOPKEEPER_ART](#src-content-sprites-art-shopkeepers-ts--shopkeeper-art) · **[content/sprites/art/tower](#src-content-sprites-art-tower-ts)** [TOWER_ART](#src-content-sprites-art-tower-ts--tower-art)
 - <a id="src-content-sprites-placeholder-ts--istodo"></a>**isTodo** · *function* `(def: SpriteDef): boolean` — Whether a row is still a placeholder (the validator skips those).
   - uses: here [Q24](#src-content-sprites-placeholder-ts--q24), [Q32](#src-content-sprites-placeholder-ts--q32)
   - used by: **[tools/sprites](tools.md#tools-sprites-ts)** [generateSpriteGallery](tools.md#tools-sprites-ts--generatespritegallery) · **[tools/validate-content](tools.md#tools-validate-content-ts)** [validateSprites](tools.md#tools-validate-content-ts--validatesprites)
