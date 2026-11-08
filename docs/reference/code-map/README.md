@@ -6,7 +6,7 @@ Every source file in `src/`, `server/`, `tools/` and `tests/`, with its declarat
 
 For how the pieces work together (boot, a story line, a battle, a save reaching Postgres), read the hand-written [guide](../../architecture/code-map.md) first.
 
-**222** source files · **25** test files · **957** top-level declarations · **402** members · **2452** "uses" edges
+**224** source files · **27** test files · **988** top-level declarations · **402** members · **2530** "uses" edges
 
 ## Pages
 
@@ -19,8 +19,8 @@ For how the pieces work together (boot, a story line, a battle, a save reaching 
 | [src/app](app.md) | 18 | Runs the game without React: GameApp (every command the UI can issue), Session, the SceneContext implementation, the battle controller, the presenters, the view store, saves, and cloud sync. |
 | [src/ui and src/main.tsx](ui.md) | 37 | React components that render the two stores (game and view) and call GameApp commands, plus the browser entry point src/main.tsx. |
 | [server](server.md) | 15 | The cloud-save API: the Fastify app, its routes, the PostgreSQL repository and Drizzle schema, migrations and player-code auth. |
-| [tools](tools.md) | 20 | Node scripts: the parity oracles against v1, the balance sim and fight trace, the content validator, the layer check, the one-time migration codegen, and this generator. |
-| [tests (and every test file)](tests.md) | 26 | The integration and e2e suites in tests/, plus every co-located *.test.ts and *.spec.ts file in the repo, each listed with what it covers. |
+| [tools](tools.md) | 21 | Node scripts: the parity oracles against v1, the balance sim and fight trace, the content validator, the layer check, the one-time migration codegen, and this generator. |
+| [tests (and every test file)](tests.md) | 29 | The integration and e2e suites in tests/, plus every co-located *.test.ts and *.spec.ts file in the repo, each listed with what it covers. |
 
 ## Layers
 
@@ -48,16 +48,16 @@ flowchart TD
   narrative -->|13| core
   server -->|8| app
   server -->|1| core
-  tests -->|25| app
-  tests -->|8| content
-  tests -->|41| core
-  tests -->|13| engine
-  tests -->|2| narrative
+  tests -->|31| app
+  tests -->|11| content
+  tests -->|54| core
+  tests -->|15| engine
+  tests -->|4| narrative
   tests -->|6| server
-  tests -->|22| tools
+  tests -->|24| tools
   tests -->|1| ui
-  tools -->|11| content
-  tools -->|30| core
+  tools -->|13| content
+  tools -->|35| core
   tools -->|4| engine
   ui -->|11| app
   ui -->|22| content
@@ -98,9 +98,9 @@ Interfaces with methods are where one part of the code calls into another withou
 | [KeyValue](app.md#src-app-save-storage-ts--keyvalue) (app/save/storage) | 3 | [app/save/storage](app.md#src-app-save-storage-ts) | [app/save/slots](app.md#src-app-save-slots-ts), [app/save/sync](app.md#src-app-save-sync-ts) |
 | [SaveStorage](app.md#src-app-save-storage-ts--savestorage) (app/save/storage) | 3 | [app/save/slots](app.md#src-app-save-slots-ts), [app/save/storage](app.md#src-app-save-storage-ts) | [app/game](app.md#src-app-game-ts), [app/save/slots](app.md#src-app-save-slots-ts), [app/save/sync](app.md#src-app-save-sync-ts), [app/session](app.md#src-app-session-ts) |
 | [SyncDeps](app.md#src-app-save-sync-ts--syncdeps) (app/save/sync) | 3 | [server/sync.test](tests.md#server-sync-test-ts), [app/game](app.md#src-app-game-ts), [app/save/sync.test](tests.md#src-app-save-sync-test-ts) | [app/save/sync](app.md#src-app-save-sync-ts) |
-| [SessionDeps](app.md#src-app-session-ts--sessiondeps) (app/session) | 4 | [app/game](app.md#src-app-game-ts), [tests/integration/slice.test](tests.md#tests-integration-slice-test-ts), [tools/parity/transcripts.test](tests.md#tools-parity-transcripts-test-ts) | [app/session](app.md#src-app-session-ts) |
+| [SessionDeps](app.md#src-app-session-ts--sessiondeps) (app/session) | 4 | [app/game](app.md#src-app-game-ts), [tests/integration/slice.test](tests.md#tests-integration-slice-test-ts), [tests/integration/support/crawl](tests.md#tests-integration-support-crawl-ts), [tools/parity/transcripts.test](tests.md#tools-parity-transcripts-test-ts) | [app/session](app.md#src-app-session-ts) |
 | [SessionPort](app.md#src-app-sessionport-ts--sessionport) (app/sessionPort) | 1 | [app/session](app.md#src-app-session-ts) | [app/battleController](app.md#src-app-battlecontroller-ts), [app/sceneContext](app.md#src-app-scenecontext-ts) |
-| [ScriptPolicy](app.md#src-app-testing-scriptedpresenter-ts--scriptpolicy) (app/testing/scriptedPresenter) | 6 | [tests/integration/slice.test](tests.md#tests-integration-slice-test-ts) | [app/testing/scriptedPresenter](app.md#src-app-testing-scriptedpresenter-ts) |
+| [ScriptPolicy](app.md#src-app-testing-scriptedpresenter-ts--scriptpolicy) (app/testing/scriptedPresenter) | 6 | [tests/integration/slice.test](tests.md#tests-integration-slice-test-ts), [tests/integration/support/crawl](tests.md#tests-integration-support-crawl-ts) | [app/testing/scriptedPresenter](app.md#src-app-testing-scriptedpresenter-ts) |
 | [Rng](core.md#src-core-rng-ts--rng) (core/rng) | 7 | [app/testing/rng](app.md#src-app-testing-rng-ts), [core/rng](core.md#src-core-rng-ts) | [app/battleController](app.md#src-app-battlecontroller-ts), [app/game](app.md#src-app-game-ts), [app/sceneContext](app.md#src-app-scenecontext-ts), [app/session](app.md#src-app-session-ts), [content/bosses/captain_hush](content.md#src-content-bosses-captain-hush-ts), [content/bosses/rougarou](content.md#src-content-bosses-rougarou-ts) … +17 |
 | [BossDef](core.md#src-core-types-content-ts--bossdef) (core/types/content) | 4 | [content/bosses/archivist](content.md#src-content-bosses-archivist-ts), [content/bosses/captain_hush](content.md#src-content-bosses-captain-hush-ts), [content/bosses/conductor](content.md#src-content-bosses-conductor-ts), [content/bosses/isolde](content.md#src-content-bosses-isolde-ts), [content/bosses/mr_ledger](content.md#src-content-bosses-mr-ledger-ts), [content/bosses/rougarou](content.md#src-content-bosses-rougarou-ts) … +2 | [engine/combat/resolve](engine.md#src-engine-combat-resolve-ts), [engine/combat/turns](engine.md#src-engine-combat-turns-ts) |
 | [SecondLineMemberDef](core.md#src-core-types-content-ts--secondlinememberdef) (core/types/content) | 1 | [content/band/secondLine](content.md#src-content-band-secondline-ts) | [tools/parity/tsAdapter](tools.md#tools-parity-tsadapter-ts) |
@@ -109,7 +109,7 @@ Interfaces with methods are where one part of the code calls into another withou
 | [EffectBase](core.md#src-core-types-effects-ts--effectbase) (core/types/effects) | 1 | [content/classes/trombone](content.md#src-content-classes-trombone-ts) | [engine/combat/resolve](engine.md#src-engine-combat-resolve-ts) |
 | [EffectOps](core.md#src-core-types-effects-ts--effectops) (core/types/effects) | 13 | [engine/combat/resolve](engine.md#src-engine-combat-resolve-ts) | [content/bosses/captain_hush](content.md#src-content-bosses-captain-hush-ts), [content/bosses/mr_ledger](content.md#src-content-bosses-mr-ledger-ts), [content/bosses/rougarou](content.md#src-content-bosses-rougarou-ts), [content/bosses/the_click](content.md#src-content-bosses-the-click-ts), [content/bosses/vox_perfecta](content.md#src-content-bosses-vox-perfecta-ts), [content/classes/trombone](content.md#src-content-classes-trombone-ts) … +3 |
 | [EventOption](narrative.md#src-narrative-define-ts--eventoption) (narrative/define) | 1 | [content/world/streetEvents.scene](content.md#src-content-world-streetevents-scene-ts) | [content/world/streets.scene](content.md#src-content-world-streets-scene-ts) |
-| [PlaceHelpers](narrative.md#src-narrative-define-ts--placehelpers) (narrative/define) | 3 | [app/session](app.md#src-app-session-ts) | [content/districts/treme/places.scene](content.md#src-content-districts-treme-places-scene-ts) |
+| [PlaceHelpers](narrative.md#src-narrative-define-ts--placehelpers) (narrative/define) | 3 | [app/session](app.md#src-app-session-ts), [tests/integration/explore.test](tests.md#tests-integration-explore-test-ts) | [content/districts/treme/places.scene](content.md#src-content-districts-treme-places-scene-ts) |
 | [PlaceScenes](narrative.md#src-narrative-define-ts--placescenes) (narrative/define) | 2 | [content/districts/treme/places.scene](content.md#src-content-districts-treme-places-scene-ts) | [app/session](app.md#src-app-session-ts) |
 | [DirectorConfig](narrative.md#src-narrative-director-ts--directorconfig) (narrative/director) | 4 | [app/session](app.md#src-app-session-ts), [narrative/director.test](tests.md#src-narrative-director-test-ts) | [narrative/director](narrative.md#src-narrative-director-ts) |
 | [BattlePresenter](narrative.md#src-narrative-types-ts--battlepresenter) (narrative/types) | 10 | [app/reactPresenter](app.md#src-app-reactpresenter-ts) | [app/battleController](app.md#src-app-battlecontroller-ts) |

@@ -188,14 +188,14 @@ Shortcuts that put a save at a point in the story: the start of an act, or the s
 
 - Source: [src/app/devStates.ts](../../../src/app/devStates.ts)
 - Imports: core: [ids/enemies](core.md#src-core-ids-enemies-ts), [ids/story](core.md#src-core-ids-story-ts), [ids/world](core.md#src-core-ids-world-ts), [types/index](core.md#src-core-types-index-ts) · content: [data](content.md#src-content-data-ts) · engine: [index](engine.md#src-engine-index-ts)
-- Imported by: app: [game](#src-app-game-ts)
+- Imported by: app: [game](#src-app-game-ts) · tests: [integration/support/crawl](tests.md#tests-integration-support-crawl-ts)
 - Types used: **[core/ids/enemies](core.md#src-core-ids-enemies-ts)** [BossId](core.md#src-core-ids-enemies-ts--bossid) · **[core/ids/story](core.md#src-core-ids-story-ts)** [ActId](core.md#src-core-ids-story-ts--actid), [StoryPosition](core.md#src-core-ids-story-ts--storyposition) · **[core/ids/world](core.md#src-core-ids-world-ts)** [DistrictId](core.md#src-core-ids-world-ts--districtid) · **[core/types/content](core.md#src-core-types-content-ts)** [StepDef](core.md#src-core-types-content-ts--stepdef) · **[core/types/state](core.md#src-core-types-state-ts)** [GameState](core.md#src-core-types-state-ts--gamestate)
 
 Declarations:
 
 - <a id="src-app-devstates-ts--setupact"></a>**setupAct** · *function* `(g: GameState, act: ActId): DistrictId` — Jump to the start of an act, as if every earlier boss were beaten: unlock the districts so far, set the story, record earlier bosses and their Blue Notes, and raise the level to the act's floor.
   - uses: **[content/bosses/index](content.md#src-content-bosses-index-ts)** [BOSSES](content.md#src-content-bosses-index-ts--bosses) · **[content/districts/index](content.md#src-content-districts-index-ts)** [DISTRICTS](content.md#src-content-districts-index-ts--districts) · **[core/ids/story](core.md#src-core-ids-story-ts)** [ACT_ORDER](core.md#src-core-ids-story-ts--act-order), [ACT_STEPS](core.md#src-core-ids-story-ts--act-steps) · **[engine/stats](engine.md#src-engine-stats-ts)** [fullRest](engine.md#src-engine-stats-ts--fullrest)
-  - used by: **[app/game](#src-app-game-ts)** [GameApp.dev](#src-app-game-ts--gameapp-dev)
+  - used by: **[app/game](#src-app-game-ts)** [GameApp.dev](#src-app-game-ts--gameapp-dev) · **[tests/integration/support/crawl](tests.md#tests-integration-support-crawl-ts)** [buildState](tests.md#tests-integration-support-crawl-ts--buildstate)
 - <a id="src-app-devstates-ts--bossstep"></a>**bossStep** · *function* `(id: BossId): StoryPosition` — The story step a boss is fought at: the last step whose hint place is the boss's place (Isolde's manor hosts both the Ball and the duel; the duel is the later step, as in v1's dev menu).
   - uses: **[content/bosses/index](content.md#src-content-bosses-index-ts)** [BOSSES](content.md#src-content-bosses-index-ts--bosses) · **[content/places](content.md#src-content-places-ts)** [PLACES](content.md#src-content-places-ts--places) · **[content/story/acts](content.md#src-content-story-acts-ts)** [ACTS](content.md#src-content-story-acts-ts--acts) · **[core/ids/story](core.md#src-core-ids-story-ts)** [ACT_STEPS](core.md#src-core-ids-story-ts--act-steps)
   - used by: **[app/game](#src-app-game-ts)** [GameApp.dev](#src-app-game-ts--gameapp-dev)
@@ -669,7 +669,7 @@ The save format, v2: an envelope `{format, version, savedAt, rng, game}`, valida
 - Source: [src/app/save/format.ts](../../../src/app/save/format.ts)
 - Imports: core: [ids/band](core.md#src-core-ids-band-ts), [ids/characters](core.md#src-core-ids-characters-ts), [ids/combat](core.md#src-core-ids-combat-ts), [ids/enemies](core.md#src-core-ids-enemies-ts), [ids/flags](core.md#src-core-ids-flags-ts), [ids/items](core.md#src-core-ids-items-ts), [ids/story](core.md#src-core-ids-story-ts), [ids/world](core.md#src-core-ids-world-ts), [rng](core.md#src-core-rng-ts), [types/index](core.md#src-core-types-index-ts)
 - Packages: `zod`
-- Imported by: app: [game](#src-app-game-ts), [save/slots](#src-app-save-slots-ts), [session](#src-app-session-ts), [view](#src-app-view-ts) · server: [db/schema](server.md#server-db-schema-ts), [repo/saves](server.md#server-repo-saves-ts), [routes/slots](server.md#server-routes-slots-ts)
+- Imported by: app: [game](#src-app-game-ts), [save/slots](#src-app-save-slots-ts), [session](#src-app-session-ts), [view](#src-app-view-ts) · server: [db/schema](server.md#server-db-schema-ts), [repo/saves](server.md#server-repo-saves-ts), [routes/slots](server.md#server-routes-slots-ts) · tests: [integration/support/crawl](tests.md#tests-integration-support-crawl-ts)
 - Tested by: [app.test](tests.md#server-app-test-ts), [sync.test](tests.md#server-sync-test-ts), [format.test](tests.md#src-app-save-format-test-ts), [slots.test](tests.md#src-app-save-slots-test-ts), [sync.test](tests.md#src-app-save-sync-test-ts), [cloud.spec](tests.md#tests-e2e-stack-cloud-spec-ts)
 - Types used: **[core/ids/characters](core.md#src-core-ids-characters-ts)** [ClassId](core.md#src-core-ids-characters-ts--classid) · **[core/ids/items](core.md#src-core-ids-items-ts)** [GearId](core.md#src-core-ids-items-ts--gearid) · **[core/ids/story](core.md#src-core-ids-story-ts)** [ActId](core.md#src-core-ids-story-ts--actid), [StoryPosition](core.md#src-core-ids-story-ts--storyposition) · **[core/ids/world](core.md#src-core-ids-world-ts)** [DistrictId](core.md#src-core-ids-world-ts--districtid) · **[core/rng](core.md#src-core-rng-ts)** [RngState](core.md#src-core-rng-ts--rngstate) · **[core/types/state](core.md#src-core-types-state-ts)** [GameState](core.md#src-core-types-state-ts--gamestate)
 
@@ -725,7 +725,7 @@ Declarations:
   - used by: **[app/session](#src-app-session-ts)** [Session.serialize](#src-app-session-ts--session-serialize) · tests: [app.test](tests.md#server-app-test-ts), [sync.test](tests.md#server-sync-test-ts), [format.test](tests.md#src-app-save-format-test-ts), [slots.test](tests.md#src-app-save-slots-test-ts), [sync.test](tests.md#src-app-save-sync-test-ts), [cloud.spec](tests.md#tests-e2e-stack-cloud-spec-ts)
 - <a id="src-app-save-format-ts--decodesave"></a>**decodeSave** · *function* `(raw: string | null): LoadedSave | LoadError` — Decode and validate a save.
   - uses: here [MIGRATIONS](#src-app-save-format-ts--migrations), [SAVE_VERSION](#src-app-save-format-ts--save-version), [envelopeSchema](#src-app-save-format-ts--envelopeschema), [gameStateSchema](#src-app-save-format-ts--gamestateschema)
-  - used by: **[server/routes/slots](server.md#server-routes-slots-ts)** [slotRoutes](server.md#server-routes-slots-ts--slotroutes) · **[app/game](#src-app-game-ts)** [GameApp.importSave](#src-app-game-ts--gameapp-importsave) · **[app/save/slots](#src-app-save-slots-ts)** [SaveSlots.info](#src-app-save-slots-ts--saveslots-info) · **[app/session](#src-app-session-ts)** [Session.load](#src-app-session-ts--session-load) · tests: [format.test](tests.md#src-app-save-format-test-ts), [sync.test](tests.md#src-app-save-sync-test-ts)
+  - used by: **[server/routes/slots](server.md#server-routes-slots-ts)** [slotRoutes](server.md#server-routes-slots-ts--slotroutes) · **[app/game](#src-app-game-ts)** [GameApp.importSave](#src-app-game-ts--gameapp-importsave) · **[app/save/slots](#src-app-save-slots-ts)** [SaveSlots.info](#src-app-save-slots-ts--saveslots-info) · **[app/session](#src-app-session-ts)** [Session.load](#src-app-session-ts--session-load) · **[tests/integration/support/crawl](tests.md#tests-integration-support-crawl-ts)** [runOnce](tests.md#tests-integration-support-crawl-ts--runonce) · tests: [format.test](tests.md#src-app-save-format-test-ts), [sync.test](tests.md#src-app-save-sync-test-ts)
 - <a id="src-app-save-format-ts--exportcode"></a>**exportCode** · *function* `(raw: string): string` — A save as a shareable text code (CF2:…).
   - uses: here [CODE_PREFIX](#src-app-save-format-ts--code-prefix)
   - used by: **[app/game](#src-app-game-ts)** [GameApp.exportSave](#src-app-game-ts--gameapp-exportsave) · tests: [format.test](tests.md#src-app-save-format-test-ts)
@@ -883,7 +883,7 @@ Declarations:
 Where save text lives on the device. `SaveStorage` is synchronous on purpose: the game saves at checkpoints in the middle of scenes and must never wait on a network. Cloud sync (sync.ts) runs behind it, reading what slots.ts wrote.
 
 - Source: [src/app/save/storage.ts](../../../src/app/save/storage.ts)
-- Imported by: app: [game](#src-app-game-ts), [save/slots](#src-app-save-slots-ts), [save/sync](#src-app-save-sync-ts), [session](#src-app-session-ts)
+- Imported by: app: [game](#src-app-game-ts), [save/slots](#src-app-save-slots-ts), [save/sync](#src-app-save-sync-ts), [session](#src-app-session-ts) · tests: [integration/support/crawl](tests.md#tests-integration-support-crawl-ts)
 - Tested by: [sync.test](tests.md#server-sync-test-ts), [slots.test](tests.md#src-app-save-slots-test-ts), [sync.test](tests.md#src-app-save-sync-test-ts), [slice.test](tests.md#tests-integration-slice-test-ts), [transcripts.test](tests.md#tools-parity-transcripts-test-ts)
 
 Declarations:
@@ -915,7 +915,7 @@ Declarations:
 - <a id="src-app-save-storage-ts--memorykv"></a>**memoryKv** · *function* `(initial: Record<string, string> = {}): KeyValue & { data: Map<string, string> }` — An in-memory key-value store for tests and headless runs.
   - used by: tests: [sync.test](tests.md#server-sync-test-ts), [slots.test](tests.md#src-app-save-slots-test-ts), [sync.test](tests.md#src-app-save-sync-test-ts)
 - <a id="src-app-save-storage-ts--memorysavestorage"></a>**memorySaveStorage** · *function* `(initial: string | null = null): SaveStorage & { raw: string | null }` — In-memory storage for one save (headless sessions and the transcript oracle).
-  - used by: tests: [slice.test](tests.md#tests-integration-slice-test-ts), [transcripts.test](tests.md#tools-parity-transcripts-test-ts)
+  - used by: **[tests/integration/support/crawl](tests.md#tests-integration-support-crawl-ts)** [runOnce](tests.md#tests-integration-support-crawl-ts--runonce) · tests: [slice.test](tests.md#tests-integration-slice-test-ts), [transcripts.test](tests.md#tools-parity-transcripts-test-ts)
 
 <a id="src-app-save-sync-ts"></a>
 
@@ -1069,7 +1069,7 @@ A play session: the live save (a Valtio proxy the UI renders from), the random s
 - Source: [src/app/session.ts](../../../src/app/session.ts)
 - Imports: core: [ids/characters](core.md#src-core-ids-characters-ts), [ids/enemies](core.md#src-core-ids-enemies-ts), [ids/world](core.md#src-core-ids-world-ts), [rng](core.md#src-core-rng-ts), [types/index](core.md#src-core-types-index-ts) · narrative: [define](narrative.md#src-narrative-define-ts), [director](narrative.md#src-narrative-director-ts), [types](narrative.md#src-narrative-types-ts) · content: [index](content.md#src-content-index-ts) · engine: [index](engine.md#src-engine-index-ts) · app: [save/format](#src-app-save-format-ts), [save/storage](#src-app-save-storage-ts), [sceneContext](#src-app-scenecontext-ts), [sessionPort](#src-app-sessionport-ts)
 - Packages: `valtio`
-- Imported by: app: [game](#src-app-game-ts)
+- Imported by: app: [game](#src-app-game-ts) · tests: [integration/support/crawl](tests.md#tests-integration-support-crawl-ts)
 - Tested by: [slice.test](tests.md#tests-integration-slice-test-ts), [transcripts.test](tests.md#tools-parity-transcripts-test-ts)
 - Types used: **[app/save/format](#src-app-save-format-ts)** [LoadError](#src-app-save-format-ts--loaderror) · **[app/save/storage](#src-app-save-storage-ts)** [SaveStorage](#src-app-save-storage-ts--savestorage) · **[app/sessionPort](#src-app-sessionport-ts)** [BattleOutcome](#src-app-sessionport-ts--battleoutcome), [SessionPort](#src-app-sessionport-ts--sessionport) · **[core/ids/characters](core.md#src-core-ids-characters-ts)** [ClassId](core.md#src-core-ids-characters-ts--classid), [RootsId](core.md#src-core-ids-characters-ts--rootsid) · **[core/ids/enemies](core.md#src-core-ids-enemies-ts)** [BossId](core.md#src-core-ids-enemies-ts--bossid) · **[core/ids/world](core.md#src-core-ids-world-ts)** [DistrictId](core.md#src-core-ids-world-ts--districtid), [PlaceId](core.md#src-core-ids-world-ts--placeid) · **[core/rng](core.md#src-core-rng-ts)** [Rng](core.md#src-core-rng-ts--rng) · **[core/types/state](core.md#src-core-types-state-ts)** [GameState](core.md#src-core-types-state-ts--gamestate), [Settings](core.md#src-core-types-state-ts--settings) · **[narrative/define](narrative.md#src-narrative-define-ts)** [PlaceHelpers](narrative.md#src-narrative-define-ts--placehelpers), [PlaceIntro](narrative.md#src-narrative-define-ts--placeintro), [PlaceOption](narrative.md#src-narrative-define-ts--placeoption) · **[narrative/director](narrative.md#src-narrative-director-ts)** [Director](narrative.md#src-narrative-director-ts--director) · **[narrative/types](narrative.md#src-narrative-types-ts)** [FightSpec](narrative.md#src-narrative-types-ts--fightspec), [Presenter](narrative.md#src-narrative-types-ts--presenter), [Route](narrative.md#src-narrative-types-ts--route), [RunResult](narrative.md#src-narrative-types-ts--runresult), [Scene](narrative.md#src-narrative-types-ts--scene)
 
@@ -1078,34 +1078,35 @@ Declarations:
 - <a id="src-app-session-ts--sessiondeps"></a>**SessionDeps** · *interface, capability* — What a session needs from its environment.
   - used by: here [Session.constructor](#src-app-session-ts--session-constructor)
   - <a id="src-app-session-ts--sessiondeps-seed"></a>**seed** · *interface member* `() => number` — Seed source for new games and cosmetic randomness (defaults to crypto randomness).
-    - implemented by: **[tests/integration/slice.test](tests.md#tests-integration-slice-test-ts)** · **[tools/parity/transcripts.test](tests.md#tools-parity-transcripts-test-ts)**
+    - implemented by: **[tests/integration/slice.test](tests.md#tests-integration-slice-test-ts)** · **[tests/integration/support/crawl](tests.md#tests-integration-support-crawl-ts)** [runOnce](tests.md#tests-integration-support-crawl-ts--runonce) · **[tools/parity/transcripts.test](tests.md#tools-parity-transcripts-test-ts)**
     - called from: here [Session.constructor](#src-app-session-ts--session-constructor), [Session.newGame](#src-app-session-ts--session-newgame)
   - <a id="src-app-session-ts--sessiondeps-onerror"></a>**onError** · *interface member* `(e: unknown) => void` — Report unexpected errors (defaults to console.error).
-    - implemented by: **[tools/parity/transcripts.test](tests.md#tools-parity-transcripts-test-ts)**
+    - implemented by: **[tests/integration/support/crawl](tests.md#tests-integration-support-crawl-ts)** [runOnce](tests.md#tests-integration-support-crawl-ts--runonce) · **[tools/parity/transcripts.test](tests.md#tools-parity-transcripts-test-ts)**
     - called from: here [Session.constructor](#src-app-session-ts--session-constructor)
   - <a id="src-app-session-ts--sessiondeps-onbusy"></a>**onBusy** · *interface member* `(busy: boolean) => void` — A scene started or finished (for a busy indicator).
     - implemented by: **[app/game](#src-app-game-ts)** [GameApp.constructor](#src-app-game-ts--gameapp-constructor)
     - called from: here [Session.constructor](#src-app-session-ts--session-constructor)
   - <a id="src-app-session-ts--sessiondeps-battle"></a>**battle** · *interface member* `(spec: FightSpec, opts: { boss?: BossId }) => Promise<BattleOutcome>` — Replace real battles (tests only): the transcript oracle stubs every fight as a win so it can compare scenes against v1 without battle noise.
-    - implemented by: **[tools/parity/transcripts.test](tests.md#tools-parity-transcripts-test-ts)**
+    - implemented by: **[tests/integration/support/crawl](tests.md#tests-integration-support-crawl-ts)** [runOnce](tests.md#tests-integration-support-crawl-ts--runonce) · **[tools/parity/transcripts.test](tests.md#tools-parity-transcripts-test-ts)**
 - <a id="src-app-session-ts--randomseed"></a>**randomSeed** · *function* `(): number` — A random 31-bit seed from the platform's crypto source.
   - used by: here [Session.constructor](#src-app-session-ts--session-constructor), [Session.newGame](#src-app-session-ts--session-newgame)
 - <a id="src-app-session-ts--session"></a>**Session** · *class* `implements SessionPort` — The live session.
-  - used by: **[app/game](#src-app-game-ts)** [GameApp.constructor](#src-app-game-ts--gameapp-constructor), [GameApp.session](#src-app-game-ts--gameapp-session) · tests: [slice.test](tests.md#tests-integration-slice-test-ts), [transcripts.test](tests.md#tools-parity-transcripts-test-ts)
+  - used by: **[app/game](#src-app-game-ts)** [GameApp.constructor](#src-app-game-ts--gameapp-constructor), [GameApp.session](#src-app-game-ts--gameapp-session) · **[tests/integration/support/crawl](tests.md#tests-integration-support-crawl-ts)** [runOnce](tests.md#tests-integration-support-crawl-ts--runonce) · tests: [slice.test](tests.md#tests-integration-slice-test-ts), [transcripts.test](tests.md#tools-parity-transcripts-test-ts)
   - <a id="src-app-session-ts--session-store"></a>**store** · *property* — The save, as a Valtio proxy: the engine mutates it, React renders snapshots of it.
-    - used by: **[app/game](#src-app-game-ts)** [GameApp.constructor](#src-app-game-ts--gameapp-constructor), [GameApp.settings](#src-app-game-ts--gameapp-settings), [GameApp.store](#src-app-game-ts--gameapp-store)
+    - used by: **[app/game](#src-app-game-ts)** [GameApp.constructor](#src-app-game-ts--gameapp-constructor), [GameApp.settings](#src-app-game-ts--gameapp-settings), [GameApp.store](#src-app-game-ts--gameapp-store) · **[tests/integration/support/crawl](tests.md#tests-integration-support-crawl-ts)** [runOnce](tests.md#tests-integration-support-crawl-ts--runonce)
   - <a id="src-app-session-ts--session-rng"></a>**rng** · *property* `: Rng` — The game's random stream (saved with the game).
     - uses: **[core/rng](core.md#src-core-rng-ts)** [createRng](core.md#src-core-rng-ts--createrng)
-    - used by: **[app/game](#src-app-game-ts)** [GameApp.useItem](#src-app-game-ts--gameapp-useitem) · tests: [transcripts.test](tests.md#tools-parity-transcripts-test-ts)
+    - used by: **[app/game](#src-app-game-ts)** [GameApp.useItem](#src-app-game-ts--gameapp-useitem) · **[tests/integration/support/crawl](tests.md#tests-integration-support-crawl-ts)** [runOnce](tests.md#tests-integration-support-crawl-ts--runonce) · tests: [transcripts.test](tests.md#tools-parity-transcripts-test-ts)
   - <a id="src-app-session-ts--session-cosmetic"></a>**cosmetic** · *property* `: Rng` — Randomness that only affects presentation (timing-bar placement).
     - used by: **[app/game](#src-app-game-ts)** [GameApp.createNext](#src-app-game-ts--gameapp-createnext)
   - <a id="src-app-session-ts--session-route"></a>**route** · *property* `: Route` — Where the player is when no scene runs.
+    - used by: **[tests/integration/support/crawl](tests.md#tests-integration-support-crawl-ts)** [runOnce](tests.md#tests-integration-support-crawl-ts--runonce)
   - <a id="src-app-session-ts--session-director"></a>**director** · *property* `: Director` — Runs scenes one at a time.
     - used by: **[app/game](#src-app-game-ts)** [GameApp.loadInto](#src-app-game-ts--gameapp-loadinto), [GameApp.settleConflicts](#src-app-game-ts--gameapp-settleconflicts)
   - <a id="src-app-session-ts--session-constructor"></a>**constructor** · *constructor* `(readonly deps: SessionDeps)`
     - uses: here [Session.afterCut](#src-app-session-ts--session-aftercut), [Session.showRoute](#src-app-session-ts--session-showroute), [SessionDeps.onBusy](#src-app-session-ts--sessiondeps-onbusy), [SessionDeps.onError](#src-app-session-ts--sessiondeps-onerror), [SessionDeps.seed](#src-app-session-ts--sessiondeps-seed), [randomSeed](#src-app-session-ts--randomseed) · **[app/sceneContext](#src-app-scenecontext-ts)** [createSceneContext](#src-app-scenecontext-ts--createscenecontext) · **[content/text](content.md#src-content-text-ts)** [TEXT](content.md#src-content-text-ts--text) · **[content/world/streets.scene](content.md#src-content-world-streets-scene-ts)** [wakeUpAtClub](content.md#src-content-world-streets-scene-ts--wakeupatclub) · **[core/rng](core.md#src-core-rng-ts)** [createRng](core.md#src-core-rng-ts--createrng) · **[narrative/director](narrative.md#src-narrative-director-ts)** [Director](narrative.md#src-narrative-director-ts--director) · **[narrative/types](narrative.md#src-narrative-types-ts)** [SceneContext.toast](narrative.md#src-narrative-types-ts--scenecontext-toast)
   - <a id="src-app-session-ts--session-game"></a>**game** · *getter* `: GameState` — The current save.
-    - used by: **[app/game](#src-app-game-ts)** [GameApp.buy](#src-app-game-ts--gameapp-buy), [GameApp.equip](#src-app-game-ts--gameapp-equip), [GameApp.sell](#src-app-game-ts--gameapp-sell), [GameApp.takeBounty](#src-app-game-ts--gameapp-takebounty), [GameApp.toggleBandmate](#src-app-game-ts--gameapp-togglebandmate), [GameApp.unequip](#src-app-game-ts--gameapp-unequip), [GameApp.useItem](#src-app-game-ts--gameapp-useitem) · tests: [slice.test](tests.md#tests-integration-slice-test-ts), [transcripts.test](tests.md#tools-parity-transcripts-test-ts)
+    - used by: **[app/game](#src-app-game-ts)** [GameApp.buy](#src-app-game-ts--gameapp-buy), [GameApp.equip](#src-app-game-ts--gameapp-equip), [GameApp.sell](#src-app-game-ts--gameapp-sell), [GameApp.takeBounty](#src-app-game-ts--gameapp-takebounty), [GameApp.toggleBandmate](#src-app-game-ts--gameapp-togglebandmate), [GameApp.unequip](#src-app-game-ts--gameapp-unequip), [GameApp.useItem](#src-app-game-ts--gameapp-useitem) · **[tests/integration/support/crawl](tests.md#tests-integration-support-crawl-ts)** [runOnce](tests.md#tests-integration-support-crawl-ts--runonce) · tests: [slice.test](tests.md#tests-integration-slice-test-ts), [transcripts.test](tests.md#tools-parity-transcripts-test-ts)
   - <a id="src-app-session-ts--session-newgame"></a>**newGame** · *method* `(name: string, roots: RootsId, cls: ClassId, settings?: Settings): void` — Start a new character (does not start the prologue).
     - uses: here [SessionDeps.seed](#src-app-session-ts--sessiondeps-seed), [randomSeed](#src-app-session-ts--randomseed) · **[core/rng](core.md#src-core-rng-ts)** [createRng](core.md#src-core-rng-ts--createrng) · **[engine/state](engine.md#src-engine-state-ts)** [newGame](engine.md#src-engine-state-ts--newgame)
     - used by: **[app/game](#src-app-game-ts)** [GameApp.createCharacter](#src-app-game-ts--gameapp-createcharacter) · tests: [slice.test](tests.md#tests-integration-slice-test-ts), [transcripts.test](tests.md#tools-parity-transcripts-test-ts)
@@ -1114,7 +1115,7 @@ Declarations:
     - used by: **[app/game](#src-app-game-ts)** [GameApp.loadInto](#src-app-game-ts--gameapp-loadinto), [GameApp.pickSlot](#src-app-game-ts--gameapp-pickslot), [GameApp.settleConflicts](#src-app-game-ts--gameapp-settleconflicts) · tests: [slice.test](tests.md#tests-integration-slice-test-ts)
   - <a id="src-app-session-ts--session-serialize"></a>**serialize** · *method* `(): string | null` — The current save as text (for export codes).
     - uses: **[app/save/format](#src-app-save-format-ts)** [encodeSave](#src-app-save-format-ts--encodesave) · **[core/rng](core.md#src-core-rng-ts)** [Rng.save](core.md#src-core-rng-ts--rng-save)
-    - used by: here [Session.save](#src-app-session-ts--session-save) · **[app/game](#src-app-game-ts)** [GameApp.exportSave](#src-app-game-ts--gameapp-exportsave)
+    - used by: here [Session.save](#src-app-session-ts--session-save) · **[app/game](#src-app-game-ts)** [GameApp.exportSave](#src-app-game-ts--gameapp-exportsave) · **[tests/integration/support/crawl](tests.md#tests-integration-support-crawl-ts)** [runOnce](tests.md#tests-integration-support-crawl-ts--runonce)
   - <a id="src-app-session-ts--session-save"></a>**save** · *method* `(manual = false): boolean` — Write the save.
     - uses: here [Session.serialize](#src-app-session-ts--session-serialize) · **[app/save/storage](#src-app-save-storage-ts)** [SaveStorage.write](#src-app-save-storage-ts--savestorage-write) · **[narrative/types](narrative.md#src-narrative-types-ts)** [Presenter.toast](narrative.md#src-narrative-types-ts--presenter-toast)
     - used by: here [Session.afterCut](#src-app-session-ts--session-aftercut) · **[app/game](#src-app-game-ts)** [GameApp.loadInto](#src-app-game-ts--gameapp-loadinto), [GameApp.save](#src-app-game-ts--gameapp-save), [GameApp.setSetting](#src-app-game-ts--gameapp-setsetting)
@@ -1123,7 +1124,7 @@ Declarations:
     - used by: **[app/game](#src-app-game-ts)** [GameApp.toTitle](#src-app-game-ts--gameapp-totitle)
   - <a id="src-app-session-ts--session-run"></a>**run** · *method* `(scene: Scene, name: string): Promise<RunResult>` — Run a scene (single flight; refused while another runs).
     - uses: **[narrative/director](narrative.md#src-narrative-director-ts)** [Director.run](narrative.md#src-narrative-director-ts--director-run)
-    - used by: here [Session.chooseOption](#src-app-session-ts--session-chooseoption), [Session.hitTheStreets](#src-app-session-ts--session-hitthestreets), [Session.resume](#src-app-session-ts--session-resume), [Session.startPrologue](#src-app-session-ts--session-startprologue), [Session.trackBounty](#src-app-session-ts--session-trackbounty), [Session.travel](#src-app-session-ts--session-travel) · **[app/game](#src-app-game-ts)** [GameApp.dev](#src-app-game-ts--gameapp-dev) · tests: [slice.test](tests.md#tests-integration-slice-test-ts), [transcripts.test](tests.md#tools-parity-transcripts-test-ts)
+    - used by: here [Session.chooseOption](#src-app-session-ts--session-chooseoption), [Session.hitTheStreets](#src-app-session-ts--session-hitthestreets), [Session.resume](#src-app-session-ts--session-resume), [Session.startPrologue](#src-app-session-ts--session-startprologue), [Session.trackBounty](#src-app-session-ts--session-trackbounty), [Session.travel](#src-app-session-ts--session-travel) · **[app/game](#src-app-game-ts)** [GameApp.dev](#src-app-game-ts--gameapp-dev) · **[tests/integration/support/crawl](tests.md#tests-integration-support-crawl-ts)** [runOnce](tests.md#tests-integration-support-crawl-ts--runonce) · tests: [slice.test](tests.md#tests-integration-slice-test-ts), [transcripts.test](tests.md#tools-parity-transcripts-test-ts)
   - <a id="src-app-session-ts--session-startprologue"></a>**startPrologue** · *method* `(): Promise<RunResult>` — The opening.
     - uses: here [Session.run](#src-app-session-ts--session-run) · **[content/story/prologue.scene](content.md#src-content-story-prologue-scene-ts)** [prologue](content.md#src-content-story-prologue-scene-ts--prologue)
     - used by: here [Session.resume](#src-app-session-ts--session-resume) · **[app/game](#src-app-game-ts)** [GameApp.beginPrologue](#src-app-game-ts--gameapp-beginprologue) · tests: [slice.test](tests.md#tests-integration-slice-test-ts), [transcripts.test](tests.md#tools-parity-transcripts-test-ts)
@@ -1153,7 +1154,7 @@ Declarations:
     - used by: **[app/game](#src-app-game-ts)** [GameApp.leavePlace](#src-app-game-ts--gameapp-leaveplace)
   - <a id="src-app-session-ts--session-chooseoption"></a>**chooseOption** · *method* `(place: PlaceId, key: string): Promise<RunResult> | null` — Choose an option at the current place.
     - uses: here [Session.placeOptions](#src-app-session-ts--session-placeoptions), [Session.run](#src-app-session-ts--session-run)
-    - used by: **[app/game](#src-app-game-ts)** [GameApp.chooseOption](#src-app-game-ts--gameapp-chooseoption) · tests: [slice.test](tests.md#tests-integration-slice-test-ts), [transcripts.test](tests.md#tools-parity-transcripts-test-ts)
+    - used by: **[app/game](#src-app-game-ts)** [GameApp.chooseOption](#src-app-game-ts--gameapp-chooseoption) · **[tests/integration/support/crawl](tests.md#tests-integration-support-crawl-ts)** [runOnce](tests.md#tests-integration-support-crawl-ts--runonce) · tests: [slice.test](tests.md#tests-integration-slice-test-ts), [transcripts.test](tests.md#tools-parity-transcripts-test-ts)
   - <a id="src-app-session-ts--session-hitthestreets"></a>**hitTheStreets** · *method* `(): Promise<RunResult>` — Hit the Streets.
     - uses: here [Session.run](#src-app-session-ts--session-run) · **[content/world/streets.scene](content.md#src-content-world-streets-scene-ts)** [hitTheStreets](content.md#src-content-world-streets-scene-ts--hitthestreets)
     - used by: **[app/game](#src-app-game-ts)** [GameApp.hitTheStreets](#src-app-game-ts--gameapp-hitthestreets) · tests: [slice.test](tests.md#tests-integration-slice-test-ts), [transcripts.test](tests.md#tools-parity-transcripts-test-ts)
@@ -1193,6 +1194,7 @@ Random streams for tests. Game code takes an `Rng`; these let a test decide exac
 
 - Source: [src/app/testing/rng.ts](../../../src/app/testing/rng.ts)
 - Imports: core: [rng](core.md#src-core-rng-ts)
+- Imported by: tests: [integration/support/crawl](tests.md#tests-integration-support-crawl-ts)
 - Tested by: [transcripts.test](tests.md#tools-parity-transcripts-test-ts)
 - Types used: **[core/rng](core.md#src-core-rng-ts)** [Rng](core.md#src-core-rng-ts--rng)
 
@@ -1201,9 +1203,9 @@ Declarations:
 - <a id="src-app-testing-rng-ts--constantrng"></a>**constantRng** · *function* `(c: number): Rng` — A random stream that always returns `c`, so every pick/chance lands the same way (the parity oracle uses it to keep v1 and 2.0 in step).
   - used by: tests: [transcripts.test](tests.md#tools-parity-transcripts-test-ts)
 - <a id="src-app-testing-rng-ts--pickrecord"></a>**PickRecord** · *interface* — One `pick` call seen by a scripted stream: the pool it chose from and the index it took.
-  - used by: here [scriptedRng](#src-app-testing-rng-ts--scriptedrng)
+  - used by: here [scriptedRng](#src-app-testing-rng-ts--scriptedrng) · **[tests/integration/support/crawl](tests.md#tests-integration-support-crawl-ts)** [RunOutcome](tests.md#tests-integration-support-crawl-ts--runoutcome), [runOnce](tests.md#tests-integration-support-crawl-ts--runonce)
 - <a id="src-app-testing-rng-ts--scriptedrng"></a>**scriptedRng** · *function* `(values: readonly number[], picks?: PickRecord[]): Rng` — A stream that returns `values` in order, then repeats the last one.
-  - *no references found*
+  - used by: **[tests/integration/support/crawl](tests.md#tests-integration-support-crawl-ts)** [runOnce](tests.md#tests-integration-support-crawl-ts--runonce)
 
 <a id="src-app-testing-scriptedpresenter-ts"></a>
 
@@ -1213,17 +1215,18 @@ A Presenter for tests and headless runs: answers every prompt instantly accordin
 
 - Source: [src/app/testing/scriptedPresenter.ts](../../../src/app/testing/scriptedPresenter.ts)
 - Imports: core: [helpers](core.md#src-core-helpers-ts), [ids/world](core.md#src-core-ids-world-ts), [types/index](core.md#src-core-types-index-ts) · narrative: [types](narrative.md#src-narrative-types-ts) · engine: [index](engine.md#src-engine-index-ts)
+- Imported by: tests: [integration/support/crawl](tests.md#tests-integration-support-crawl-ts)
 - Tested by: [slice.test](tests.md#tests-integration-slice-test-ts), [transcripts.test](tests.md#tools-parity-transcripts-test-ts)
 - Types used: **[core/ids/world](core.md#src-core-ids-world-ts)** [NpcId](core.md#src-core-ids-world-ts--npcid) · **[core/types/battle](core.md#src-core-types-battle-ts)** [Battle](core.md#src-core-types-battle-ts--battle), [LevelUp](core.md#src-core-types-battle-ts--levelup), [PlayerIntent](core.md#src-core-types-battle-ts--playerintent), [TimingSpec](core.md#src-core-types-battle-ts--timingspec), [VictorySummary](core.md#src-core-types-battle-ts--victorysummary) · **[core/types/content](core.md#src-core-types-content-ts)** [TimingGradeDef](core.md#src-core-types-content-ts--timinggradedef) · **[narrative/types](narrative.md#src-narrative-types-ts)** [ChoiceView](narrative.md#src-narrative-types-ts--choiceview), [Presenter](narrative.md#src-narrative-types-ts--presenter), [Route](narrative.md#src-narrative-types-ts--route), [SheetRequest](narrative.md#src-narrative-types-ts--sheetrequest), [SoundCue](narrative.md#src-narrative-types-ts--soundcue), [StoryLineSpec](narrative.md#src-narrative-types-ts--storylinespec)
 
 Declarations:
 
 - <a id="src-app-testing-scriptedpresenter-ts--transcriptentry"></a>**TranscriptEntry** · *type* `= union of 13` — One thing the player saw or did.
-  - used by: here [ScriptedPresenter.transcript](#src-app-testing-scriptedpresenter-ts--scriptedpresenter-transcript) · tests: [transcripts.test](tests.md#tools-parity-transcripts-test-ts)
+  - used by: here [ScriptedPresenter.transcript](#src-app-testing-scriptedpresenter-ts--scriptedpresenter-transcript) · **[tests/integration/support/crawl](tests.md#tests-integration-support-crawl-ts)** [RunOutcome](tests.md#tests-integration-support-crawl-ts--runoutcome), [transcriptText](tests.md#tests-integration-support-crawl-ts--transcripttext) · tests: [transcripts.test](tests.md#tools-parity-transcripts-test-ts)
 - <a id="src-app-testing-scriptedpresenter-ts--scriptpolicy"></a>**ScriptPolicy** · *interface, capability* — How the scripted player decides.
   - used by: here [ScriptedPresenter.constructor](#src-app-testing-scriptedpresenter-ts--scriptedpresenter-constructor)
   - <a id="src-app-testing-scriptedpresenter-ts--scriptpolicy-choose"></a>**choose** · *interface member* `(options: readonly ChoiceView[]): string` — Pick a choice key (default: the first option).
-    - implemented by: **[tests/integration/slice.test](tests.md#tests-integration-slice-test-ts)**
+    - implemented by: **[tests/integration/slice.test](tests.md#tests-integration-slice-test-ts)** · **[tests/integration/support/crawl](tests.md#tests-integration-support-crawl-ts)** [runOnce](tests.md#tests-integration-support-crawl-ts--runonce)
     - called from: here [ScriptedPresenter.choose](#src-app-testing-scriptedpresenter-ts--scriptedpresenter-choose)
   - <a id="src-app-testing-scriptedpresenter-ts--scriptpolicy-intent"></a>**intent** · *interface member* `(b: Battle): PlayerIntent` — Pick a battle action (default: a simple competent player).
     - implemented by: **[tests/integration/slice.test](tests.md#tests-integration-slice-test-ts)**
@@ -1231,8 +1234,10 @@ Declarations:
   - <a id="src-app-testing-scriptedpresenter-ts--scriptpolicy-timing"></a>**timing** · *interface member* `(spec: TimingSpec): number | null` — Where to tap the timing bar (default: dead center = ON THE ONE).
     - called from: here [ScriptedPresenter.battle](#src-app-testing-scriptedpresenter-ts--scriptedpresenter-battle)
   - <a id="src-app-testing-scriptedpresenter-ts--scriptpolicy-confirm"></a>**confirm** · *interface member* `(title: string): boolean` — Answer yes/no dialogs (default: yes).
+    - implemented by: **[tests/integration/support/crawl](tests.md#tests-integration-support-crawl-ts)** [runOnce](tests.md#tests-integration-support-crawl-ts--runonce)
     - called from: here [ScriptedPresenter.confirm](#src-app-testing-scriptedpresenter-ts--scriptedpresenter-confirm)
   - <a id="src-app-testing-scriptedpresenter-ts--scriptpolicy-sheet"></a>**sheet** · *interface member* `(req: SheetRequest): void` — Act inside a sheet before closing it (e.g.
+    - implemented by: **[tests/integration/support/crawl](tests.md#tests-integration-support-crawl-ts)** [runOnce](tests.md#tests-integration-support-crawl-ts--runonce)
     - called from: here [ScriptedPresenter.sheet](#src-app-testing-scriptedpresenter-ts--scriptedpresenter-sheet)
   - <a id="src-app-testing-scriptedpresenter-ts--scriptpolicy-defeat"></a>**defeat** · *interface member* `(): 'retry' | 'leave'` — After a lost boss fight: retry or leave (default: retry up to 3 times).
     - called from: here [ScriptedPresenter.battle](#src-app-testing-scriptedpresenter-ts--scriptedpresenter-battle)
@@ -1242,9 +1247,9 @@ Declarations:
   - uses: **[core/helpers](core.md#src-core-helpers-ts)** [livingEnemies](core.md#src-core-helpers-ts--livingenemies) · **[engine/combat/legal](engine.md#src-engine-combat-legal-ts)** [legalActions](engine.md#src-engine-combat-legal-ts--legalactions)
   - used by: here [ScriptedPresenter.battle](#src-app-testing-scriptedpresenter-ts--scriptedpresenter-battle)
 - <a id="src-app-testing-scriptedpresenter-ts--scriptedpresenter"></a>**ScriptedPresenter** · *class* `implements Presenter` — The scripted presenter.
-  - used by: tests: [slice.test](tests.md#tests-integration-slice-test-ts), [transcripts.test](tests.md#tools-parity-transcripts-test-ts)
+  - used by: **[tests/integration/support/crawl](tests.md#tests-integration-support-crawl-ts)** [runOnce](tests.md#tests-integration-support-crawl-ts--runonce) · tests: [slice.test](tests.md#tests-integration-slice-test-ts), [transcripts.test](tests.md#tools-parity-transcripts-test-ts)
   - <a id="src-app-testing-scriptedpresenter-ts--scriptedpresenter-transcript"></a>**transcript** · *property* `: TranscriptEntry[]`
-    - used by: tests: [slice.test](tests.md#tests-integration-slice-test-ts), [transcripts.test](tests.md#tools-parity-transcripts-test-ts)
+    - used by: **[tests/integration/support/crawl](tests.md#tests-integration-support-crawl-ts)** [runOnce](tests.md#tests-integration-support-crawl-ts--runonce) · tests: [slice.test](tests.md#tests-integration-slice-test-ts), [transcripts.test](tests.md#tools-parity-transcripts-test-ts)
   - <a id="src-app-testing-scriptedpresenter-ts--scriptedpresenter-retries"></a>**retries** · *property, private*
   - <a id="src-app-testing-scriptedpresenter-ts--scriptedpresenter-constructor"></a>**constructor** · *constructor* `(private readonly policy: ScriptPolicy = {})`
   - <a id="src-app-testing-scriptedpresenter-ts--scriptedpresenter-story"></a>**story** · *method* `(title: string | null): void` — Start a new story screen.

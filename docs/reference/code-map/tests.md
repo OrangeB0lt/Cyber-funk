@@ -26,8 +26,11 @@ Generated reference. Start with the [guide](../../architecture/code-map.md) for 
 | [tests/e2e/slice.spec.ts](#tests-e2e-slice-spec-ts) | The P2 vertical slice in a 360×740 touch phone: the prologue through the UI, every menu sheet, the pawn shop, a street fight, and Captain Hush. |
 | [tests/e2e/sprites.spec.ts](#tests-e2e-sprites-spec-ts) | Character sprites in the 360×740 phone: the dev gallery shows every sprite at both sizes, and sprites appear wherever a character does (battle cards, dialogue,… |
 | [tests/e2e/stack/cloud.spec.ts](#tests-e2e-stack-cloud-spec-ts) | Cloud saves against the real Docker stack (docker compose up): the production image, the API and Postgres. |
+| [tests/integration/explore.test.ts](#tests-integration-explore-test-ts) | The crawler: for every ported district (src/content/pending.ts), build saves at every step of its story, in three states of play, and press every option at eve… |
 | [tests/integration/slice.test.ts](#tests-integration-slice-test-ts) | The vertical slice, played headlessly: new game → prologue → Tremé → three street wins → Captain Hush → the Quarter unlocks. |
+| [tests/integration/support/crawl.ts](#tests-integration-support-crawl-ts) | The crawler's toolkit: build saves at every point of a district's story, run any scene in a fresh headless Session with a scripted player, and explore every br… |
 | [tools/codemap.test.ts](#tools-codemap-test-ts) | The generated code map (docs/reference/code-map/) must match the code. |
+| [tools/completeness.test.ts](#tools-completeness-test-ts) | The game is whole for every ported district (see src/content/pending.ts), enforced in CI. |
 | [tools/parity/content.test.ts](#tools-parity-content-test-ts) | Content oracle: every typed table, mapped back through the documented renames, deep-equals the legacy table it came from. |
 | [tools/parity/engine.test.ts](#tools-parity-engine-test-ts) | Engine parity: the TypeScript engine must replay the whole corpus draw-for-draw like legacy v1. |
 | [tools/parity/properties.test.ts](#tools-parity-properties-test-ts) | Properties of the TypeScript engine that the parity oracle doesn't cover: - determinism: the same seed replays the same fight, with no hidden global state; - p… |
@@ -217,6 +220,17 @@ Cloud saves against the real Docker stack (docker compose up): the production im
 - Imports: core: [rng](core.md#src-core-rng-ts) · engine: [index](engine.md#src-engine-index-ts) · app: [save/format](app.md#src-app-save-format-ts) · tests: [e2e/helpers](#tests-e2e-helpers-ts)
 - Packages: `@playwright/test`
 
+<a id="tests-integration-explore-test-ts"></a>
+
+### tests/integration/explore.test.ts
+
+The crawler: for every ported district (src/content/pending.ts), build saves at every step of its story, in three states of play, and press every option at every place down every branch of its choices. Then check, across the whole crawl, that every quest can be finished, every story step reached, every choice taken and every item obtained.
+
+- Source: [tests/integration/explore.test.ts](../../../tests/integration/explore.test.ts)
+- Imports: core: [ids/characters](core.md#src-core-ids-characters-ts), [ids/items](core.md#src-core-ids-items-ts), [ids/story](core.md#src-core-ids-story-ts), [ids/world](core.md#src-core-ids-world-ts), [types/index](core.md#src-core-types-index-ts) · narrative: [define](narrative.md#src-narrative-define-ts) · content: [index](content.md#src-content-index-ts), [pending](content.md#src-content-pending-ts) · engine: [index](engine.md#src-engine-index-ts) · tests: [integration/support/crawl](#tests-integration-support-crawl-ts)
+- Packages: `node:fs`, `node:path`, `vitest`
+- Suites: “story”, “street events”, “coverage”
+
 <a id="tests-integration-slice-test-ts"></a>
 
 ### tests/integration/slice.test.ts
@@ -228,6 +242,81 @@ The vertical slice, played headlessly: new game → prologue → Tremé → thre
 - Packages: `vitest`
 - Suites: “vertical slice: prologue → Tremé → Captain Hush”
 
+<a id="tests-integration-support-crawl-ts"></a>
+
+### tests/integration/support/crawl.ts
+
+The crawler's toolkit: build saves at every point of a district's story, run any scene in a fresh headless Session with a scripted player, and explore every branch of its choices.
+
+- Source: [tests/integration/support/crawl.ts](../../../tests/integration/support/crawl.ts)
+- Imports: core: [ids/band](core.md#src-core-ids-band-ts), [ids/characters](core.md#src-core-ids-characters-ts), [ids/enemies](core.md#src-core-ids-enemies-ts), [ids/flags](core.md#src-core-ids-flags-ts), [ids/items](core.md#src-core-ids-items-ts), [ids/story](core.md#src-core-ids-story-ts), [ids/world](core.md#src-core-ids-world-ts), [types/index](core.md#src-core-types-index-ts) · narrative: [types](narrative.md#src-narrative-types-ts) · content: [index](content.md#src-content-index-ts) · engine: [index](engine.md#src-engine-index-ts) · app: [devStates](app.md#src-app-devstates-ts), [save/format](app.md#src-app-save-format-ts), [save/storage](app.md#src-app-save-storage-ts), [session](app.md#src-app-session-ts), [testing/rng](app.md#src-app-testing-rng-ts), [testing/scriptedPresenter](app.md#src-app-testing-scriptedpresenter-ts) · tools: [completeness](tools.md#tools-completeness-ts)
+- Tested by: [explore.test](#tests-integration-explore-test-ts)
+- Types used: **[app/session](app.md#src-app-session-ts)** [Session](app.md#src-app-session-ts--session) · **[app/testing/rng](app.md#src-app-testing-rng-ts)** [PickRecord](app.md#src-app-testing-rng-ts--pickrecord) · **[app/testing/scriptedPresenter](app.md#src-app-testing-scriptedpresenter-ts)** [TranscriptEntry](app.md#src-app-testing-scriptedpresenter-ts--transcriptentry) · **[content/gear/index](content.md#src-content-gear-index-ts)** [GEAR](content.md#src-content-gear-index-ts--gear) · **[core/ids/flags](core.md#src-core-ids-flags-ts)** [StoryChoices](core.md#src-core-ids-flags-ts--storychoices) · **[core/ids/items](core.md#src-core-ids-items-ts)** [ItemId](core.md#src-core-ids-items-ts--itemid) · **[core/ids/story](core.md#src-core-ids-story-ts)** [ActId](core.md#src-core-ids-story-ts--actid), [StoryPosition](core.md#src-core-ids-story-ts--storyposition) · **[core/ids/world](core.md#src-core-ids-world-ts)** [DistrictId](core.md#src-core-ids-world-ts--districtid), [PlaceId](core.md#src-core-ids-world-ts--placeid) · **[core/types/state](core.md#src-core-types-state-ts)** [GameState](core.md#src-core-types-state-ts--gamestate) · **[narrative/types](narrative.md#src-narrative-types-ts)** [RunResult](narrative.md#src-narrative-types-ts--runresult), [Scene](narrative.md#src-narrative-types-ts--scene), [SheetRequest](narrative.md#src-narrative-types-ts--sheetrequest)
+
+Declarations:
+
+- <a id="tests-integration-support-crawl-ts--profile"></a>**Profile** · *type* `= 'fresh' | 'started' | 'busy' | 'done'` — How lived-in a save is: `fresh` (no quests, broke), `started` (the district's quests just taken, a little money), `busy` (quests ready to hand in, one of everything, flush), `done` (quests done, every flag, the whole ba…
+  - used by: here [buildState](#tests-integration-support-crawl-ts--buildstate), [districtStates](#tests-integration-support-crawl-ts--districtstates)
+- <a id="tests-integration-support-crawl-ts--crawlstate"></a>**CrawlState** · *interface* — A save to crawl from, with a name for failure messages.
+  - used by: here [buildState](#tests-integration-support-crawl-ts--buildstate), [districtStates](#tests-integration-support-crawl-ts--districtstates)
+- <a id="tests-integration-support-crawl-ts--settings"></a>**SETTINGS** · *const, internal* `= { … } (3 keys)`
+  - uses: **[engine/state](engine.md#src-engine-state-ts)** [defaultSettings](engine.md#src-engine-state-ts--defaultsettings)
+  - used by: here [buildState](#tests-integration-support-crawl-ts--buildstate)
+- <a id="tests-integration-support-crawl-ts--nextact"></a>**nextAct** · *function, internal* `(act: ActId): ActId` — The act after this one.
+  - uses: **[core/ids/story](core.md#src-core-ids-story-ts)** [ACT_ORDER](core.md#src-core-ids-story-ts--act-order)
+  - used by: here [buildState](#tests-integration-support-crawl-ts--buildstate)
+- <a id="tests-integration-support-crawl-ts--choicesfor"></a>**choicesFor** · *function, internal* `(g: GameState, flip: boolean): StoryChoices` — Choices for the bosses already beaten: one way or the other.
+  - used by: here [buildState](#tests-integration-support-crawl-ts--buildstate)
+- <a id="tests-integration-support-crawl-ts--buildstate"></a>**buildState** · *function* `(d: DistrictId, pos: StoryPosition | 'after' | 'late', profile: Profile, i: number): CrawlState` — A save in district `d` at story position `pos` (or, for `after`, with this district's boss beaten; for `late`, at the Tower), lived in according to `profile`.
+  - uses: here [SETTINGS](#tests-integration-support-crawl-ts--settings), [choicesFor](#tests-integration-support-crawl-ts--choicesfor), [nextAct](#tests-integration-support-crawl-ts--nextact) · **[app/devStates](app.md#src-app-devstates-ts)** [setupAct](app.md#src-app-devstates-ts--setupact) · **[content/bosses/index](content.md#src-content-bosses-index-ts)** [BOSSES](content.md#src-content-bosses-index-ts--bosses) · **[content/quests](content.md#src-content-quests-ts)** [QUESTS](content.md#src-content-quests-ts--quests) · **[core/ids/band](core.md#src-core-ids-band-ts)** [BANDMATE_IDS](core.md#src-core-ids-band-ts--bandmate-ids) · **[core/ids/characters](core.md#src-core-ids-characters-ts)** [CLASS_IDS](core.md#src-core-ids-characters-ts--class-ids), [ROOTS_IDS](core.md#src-core-ids-characters-ts--roots-ids) · **[core/ids/enemies](core.md#src-core-ids-enemies-ts)** [BOSS_IDS](core.md#src-core-ids-enemies-ts--boss-ids) · **[core/ids/flags](core.md#src-core-ids-flags-ts)** [FLAG_IDS](core.md#src-core-ids-flags-ts--flag-ids) · **[core/ids/items](core.md#src-core-ids-items-ts)** [ITEM_IDS](core.md#src-core-ids-items-ts--item-ids) · **[core/ids/world](core.md#src-core-ids-world-ts)** [QUEST_IDS](core.md#src-core-ids-world-ts--quest-ids) · **[engine/inventory](engine.md#src-engine-inventory-ts)** [addItem](engine.md#src-engine-inventory-ts--additem) · **[engine/state](engine.md#src-engine-state-ts)** [newGame](engine.md#src-engine-state-ts--newgame)
+  - used by: here [districtStates](#tests-integration-support-crawl-ts--districtstates) · tests: [explore.test](#tests-integration-explore-test-ts)
+- <a id="tests-integration-support-crawl-ts--districtstates"></a>**districtStates** · *function* `(d: DistrictId): CrawlState[]` — Every save to crawl a district from: each step of its act, after its boss and late game, × every profile.
+  - uses: here [buildState](#tests-integration-support-crawl-ts--buildstate) · **[core/ids/story](core.md#src-core-ids-story-ts)** [ACT_STEPS](core.md#src-core-ids-story-ts--act-steps)
+  - used by: tests: [explore.test](#tests-integration-explore-test-ts)
+- <a id="tests-integration-support-crawl-ts--battlemode"></a>**BattleMode** · *type* `= 'win' | 'fled' | 'lose' | 'cut'` — How stubbed fights end.
+  - used by: here [RunSpec](#tests-integration-support-crawl-ts--runspec)
+- <a id="tests-integration-support-crawl-ts--runspec"></a>**RunSpec** · *interface* — How to run a scene.
+  - used by: here [describeRun](#tests-integration-support-crawl-ts--describerun), [explore](#tests-integration-support-crawl-ts--explore), [runOnce](#tests-integration-support-crawl-ts--runonce), [runProblems](#tests-integration-support-crawl-ts--runproblems) · tests: [explore.test](#tests-integration-explore-test-ts)
+- <a id="tests-integration-support-crawl-ts--shopseen"></a>**ShopSeen** · *interface* — A shop the player was shown.
+  - used by: here [RunOutcome](#tests-integration-support-crawl-ts--runoutcome), [runOnce](#tests-integration-support-crawl-ts--runonce)
+- <a id="tests-integration-support-crawl-ts--runoutcome"></a>**RunOutcome** · *interface* — What happened.
+  - used by: here [explore](#tests-integration-support-crawl-ts--explore), [obtainedBy](#tests-integration-support-crawl-ts--obtainedby), [runOnce](#tests-integration-support-crawl-ts--runonce), [runProblems](#tests-integration-support-crawl-ts--runproblems) · tests: [explore.test](#tests-integration-explore-test-ts)
+- <a id="tests-integration-support-crawl-ts--plain"></a>**plain** · *function, internal* `<T>(x: T): T`
+  - used by: here [runOnce](#tests-integration-support-crawl-ts--runonce)
+- <a id="tests-integration-support-crawl-ts--runonce"></a>**runOnce** · *function* `(state: GameState, what: { scene: Scene; name: string } | { place: PlaceId; key: string }, spec: RunSpec = {}): Promise<RunOutcome>` — Run `scene` (or a place option) once from `state` in a fresh Session.
+  - uses: here [plain](#tests-integration-support-crawl-ts--plain) · **[app/save/format](app.md#src-app-save-format-ts)** [decodeSave](app.md#src-app-save-format-ts--decodesave) · **[app/save/storage](app.md#src-app-save-storage-ts)** [memorySaveStorage](app.md#src-app-save-storage-ts--memorysavestorage) · **[app/session](app.md#src-app-session-ts)** [Session](app.md#src-app-session-ts--session), [Session.chooseOption](app.md#src-app-session-ts--session-chooseoption), [Session.game](app.md#src-app-session-ts--session-game), [Session.rng](app.md#src-app-session-ts--session-rng), [Session.route](app.md#src-app-session-ts--session-route), [Session.run](app.md#src-app-session-ts--session-run), [Session.serialize](app.md#src-app-session-ts--session-serialize), [Session.store](app.md#src-app-session-ts--session-store) · **[app/testing/rng](app.md#src-app-testing-rng-ts)** [scriptedRng](app.md#src-app-testing-rng-ts--scriptedrng) · **[app/testing/scriptedPresenter](app.md#src-app-testing-scriptedpresenter-ts)** [ScriptedPresenter](app.md#src-app-testing-scriptedpresenter-ts--scriptedpresenter), [ScriptedPresenter.transcript](app.md#src-app-testing-scriptedpresenter-ts--scriptedpresenter-transcript) · **[engine/items](engine.md#src-engine-items-ts)** [buy](engine.md#src-engine-items-ts--buy), [sell](engine.md#src-engine-items-ts--sell) · … +3 more
+  - used by: here [explore](#tests-integration-support-crawl-ts--explore) · tests: [explore.test](#tests-integration-explore-test-ts)
+- <a id="tests-integration-support-crawl-ts--path-cap"></a>**PATH_CAP** · *const* — Most choice paths tried per scene and state.
+  - used by: here [explore](#tests-integration-support-crawl-ts--explore)
+- <a id="tests-integration-support-crawl-ts--explore"></a>**explore** · *function* `(state: GameState, what: Parameters<typeof runOnce>[1], place?: PlaceId): Promise<{ spec: RunSpec; out: RunOutcome }[]>` — Run a scene down every path through its choices (breadth first, up to PATH_CAP), then once more at the low and high ends of the random range, and once with fights fled.
+  - uses: here [PATH_CAP](#tests-integration-support-crawl-ts--path-cap), [runOnce](#tests-integration-support-crawl-ts--runonce)
+  - used by: tests: [explore.test](#tests-integration-explore-test-ts)
+- <a id="tests-integration-support-crawl-ts--broken"></a>**BROKEN** · *const, internal* — Text that means a template or lookup went wrong.
+  - used by: here [textProblem](#tests-integration-support-crawl-ts--textproblem)
+- <a id="tests-integration-support-crawl-ts--link"></a>**LINK** · *const, internal*
+  - used by: here [textProblem](#tests-integration-support-crawl-ts--textproblem)
+- <a id="tests-integration-support-crawl-ts--textproblem"></a>**textProblem** · *function* `(text: string | null | undefined): string | null` — Problems with one piece of player-visible text.
+  - uses: here [BROKEN](#tests-integration-support-crawl-ts--broken), [LINK](#tests-integration-support-crawl-ts--link) · **[content/glossary](content.md#src-content-glossary-ts)** [GLOSSARY](content.md#src-content-glossary-ts--glossary) · **[tools/completeness](tools.md#tools-completeness-ts)** [ALLOWED_UNLINKED](tools.md#tools-completeness-ts--allowed-unlinked)
+  - used by: here [runProblems](#tests-integration-support-crawl-ts--runproblems) · tests: [explore.test](#tests-integration-explore-test-ts)
+- <a id="tests-integration-support-crawl-ts--transcripttext"></a>**transcriptText** · *function* `(t: readonly TranscriptEntry[]): string[]` — Every piece of text in a transcript.
+  - used by: here [runProblems](#tests-integration-support-crawl-ts--runproblems)
+- <a id="tests-integration-support-crawl-ts--describerun"></a>**describeRun** · *function* `(where: string, spec: RunSpec): string` — What a run problem looks like in a failure message.
+  - used by: here [runProblems](#tests-integration-support-crawl-ts--runproblems)
+- <a id="tests-integration-support-crawl-ts--runproblems"></a>**runProblems** · *function* `(where: string, spec: RunSpec, out: RunOutcome, allow: { cut?: boolean } = {}): string[]` — Everything wrong with one run.
+  - uses: here [describeRun](#tests-integration-support-crawl-ts--describerun), [textProblem](#tests-integration-support-crawl-ts--textproblem), [transcriptText](#tests-integration-support-crawl-ts--transcripttext)
+  - used by: tests: [explore.test](#tests-integration-explore-test-ts)
+- <a id="tests-integration-support-crawl-ts--obtainablekey"></a>**ObtainableKey** · *type* `= string` — An item, a gear piece (instruments by tier: `inst:&lt;tier>`) or a sheet of music.
+  - used by: here [gains](#tests-integration-support-crawl-ts--gains), [obtainableKey](#tests-integration-support-crawl-ts--obtainablekey), [obtainedBy](#tests-integration-support-crawl-ts--obtainedby) · tests: [explore.test](#tests-integration-explore-test-ts)
+- <a id="tests-integration-support-crawl-ts--obtainablekey"></a>**obtainableKey** · *function* `(id: string): ObtainableKey` — Instruments are stocked per class, so count them by tier.
+  - uses: **[content/gear/index](content.md#src-content-gear-index-ts)** [GEAR](content.md#src-content-gear-index-ts--gear)
+  - used by: here [gains](#tests-integration-support-crawl-ts--gains), [obtainedBy](#tests-integration-support-crawl-ts--obtainedby) · tests: [explore.test](#tests-integration-explore-test-ts)
+- <a id="tests-integration-support-crawl-ts--gains"></a>**gains** · *function* `(before: GameState, after: GameState): Set<ObtainableKey>` — Items, gear, sheets and key items the save gained during a run.
+  - uses: here [obtainableKey](#tests-integration-support-crawl-ts--obtainablekey)
+  - used by: here [obtainedBy](#tests-integration-support-crawl-ts--obtainedby)
+- <a id="tests-integration-support-crawl-ts--obtainedby"></a>**obtainedBy** · *function* `(out: RunOutcome): Set<ObtainableKey>` — Everything a run makes obtainable: gains, stocked shop rows, and whole random pools that produced a gain.
+  - uses: here [gains](#tests-integration-support-crawl-ts--gains), [obtainableKey](#tests-integration-support-crawl-ts--obtainablekey) · **[content/gear/index](content.md#src-content-gear-index-ts)** [GEAR](content.md#src-content-gear-index-ts--gear) · **[content/items](content.md#src-content-items-ts)** [ITEMS](content.md#src-content-items-ts--items)
+  - used by: tests: [explore.test](#tests-integration-explore-test-ts)
+
 <a id="tools-codemap-test-ts"></a>
 
 ### tools/codemap.test.ts
@@ -238,6 +327,17 @@ The generated code map (docs/reference/code-map/) must match the code. When this
 - Imports: tools: [codemap](tools.md#tools-codemap-ts)
 - Packages: `vitest`
 - Suites: “code map”
+
+<a id="tools-completeness-test-ts"></a>
+
+### tools/completeness.test.ts
+
+The game is whole for every ported district (see src/content/pending.ts), enforced in CI.
+
+- Source: [tools/completeness.test.ts](../../../tools/completeness.test.ts)
+- Imports: tools: [completeness](tools.md#tools-completeness-ts)
+- Packages: `vitest`
+- Suites: “completeness”
 
 <a id="tools-parity-content-test-ts"></a>
 

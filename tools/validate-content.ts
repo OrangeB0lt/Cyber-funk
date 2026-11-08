@@ -11,6 +11,7 @@ import fs from 'node:fs';
 import path from 'node:path';
 import { pathToFileURL } from 'node:url';
 import { CLASS_IDS } from '@core/ids/characters';
+import { ASSIST_SKILL_IDS, CLASS_SKILL_IDS, ENEMY_SKILL_IDS } from '@core/ids/combat';
 import { BOSS_IDS, ENEMY_IDS, NOTE_IDS } from '@core/ids/enemies';
 import { PALETTE_IDS, PERSON_SPRITE_IDS, SPRITE_IDS, type SpriteId } from '@core/ids/sprites';
 import { DISTRICT_IDS } from '@core/ids/world';
@@ -19,6 +20,7 @@ import type { SpriteDef, StepDef } from '@core/types';
 import {
   ACTS,
   BANDMATES,
+  BASIC_ATTACK,
   BOSSES,
   CLASSES,
   DISTRICTS,
@@ -102,6 +104,22 @@ export function validateContent(): string[] {
 
   // Every skill says what it does.
   for (const sk of Object.values(SKILLS)) if (!sk.desc.trim()) fail(`Skill ${sk.id}: empty desc.`);
+
+  // Every skill has an owner, so nothing in the tables is dead: class skills belong to a class,
+  // enemy specials to an enemy, assists to a bandmate.
+  const classSkills = new Set(
+    CLASS_IDS.flatMap(c => [...CLASSES[c].skills, CLASSES[c].riff, CLASSES[c].solo]),
+  );
+  for (const id of CLASS_SKILL_IDS) if (!classSkills.has(id)) fail(`Skill ${id}: no class has it.`);
+  const specials = new Set<string | undefined>([
+    ...ENEMY_IDS.map(e => ENEMIES[e].special),
+    BASIC_ATTACK, // every enemy's (and some bosses') plain attack
+    'en_ticktick_release', // fired by en_ticktick's charge, a turn after the wind-up
+  ]);
+  for (const id of ENEMY_SKILL_IDS)
+    if (!specials.has(id)) fail(`Skill ${id}: no enemy uses it as its special.`);
+  const assists = new Set(Object.values(BANDMATES).map(b => b.assist));
+  for (const id of ASSIST_SKILL_IDS) if (!assists.has(id)) fail(`Skill ${id}: no bandmate assists with it.`);
 
   validateSprites(fail);
   return problems;

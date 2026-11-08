@@ -11,6 +11,7 @@ Generated reference. Start with the [guide](../../architecture/code-map.md) for 
 ```mermaid
 flowchart LR
   n_codemap["codemap"]
+  n_completeness["completeness"]
   n_depcruise["depcruise"]
   n_migrate_codegen_content["migrate/codegen-content"]
   n_migrate_codegen_ids["migrate/codegen-ids"]
@@ -32,6 +33,7 @@ flowchart LR
   n_validate_content["validate-content"]
   n_ext_content[["content"]]
   n_ext_engine[["engine"]]
+  n_completeness --> n_ext_content
   n_migrate_codegen_content --> n_migrate_serialize
   n_migrate_codegen_content --> n_parity_legacy
   n_migrate_codegen_ids --> n_migrate_serialize
@@ -68,6 +70,7 @@ flowchart LR
 | File | Purpose |
 |---|---|
 | [tools/codemap.ts](#tools-codemap-ts) | Generates the code map reference in docs/reference/code-map/: every source file, its declarations and class members, and who uses what, read from the TypeScrip… |
+| [tools/completeness.ts](#tools-completeness-ts) | Is the game whole? |
 | [tools/depcruise.ts](#tools-depcruise-ts) | Enforces the layer rules in .dependency-cruiser.cjs (see docs/adr/0002-layering.md). |
 | [tools/migrate/codegen-content.ts](#tools-migrate-codegen-content-ts) | One-time migration: writes the combat/data content files under src/content from the legacy tables, preserving every value and the legacy key order. |
 | [tools/migrate/codegen-ids.ts](#tools-migrate-codegen-ids-ts) | One-time migration: writes src/core/ids/*.ts from the legacy tables, preserving legacy key order (which the engine relies on for iteration). |
@@ -238,6 +241,38 @@ Declarations:
   - used by: here [(top level)](#tools-codemap-ts--top-level)
 - <a id="tools-codemap-ts--top-level"></a>**(top level)** · *module* — Statements that run when the module loads.
   - uses: here [OUT_DIR](#tools-codemap-ts--out-dir), [generateCodeMap](#tools-codemap-ts--generatecodemap), [isMain](#tools-codemap-ts--ismain), [staleCodeMapPages](#tools-codemap-ts--stalecodemappages), [writeCodeMap](#tools-codemap-ts--writecodemap)
+
+<a id="tools-completeness-ts"></a>
+
+### tools/completeness.ts
+
+Is the game whole? Checks that every place has something to do, every boss has its scenes, every story step points somewhere real and every [[lexicon]] link resolves, for every district that has been ported (src/content/pending.ts lists the ones that haven't). Runs in CI as a test (completeness.test.ts) and on demand:
+
+- Source: [tools/completeness.ts](../../../tools/completeness.ts)
+- Imports: core: [ids/enemies](core.md#src-core-ids-enemies-ts), [ids/story](core.md#src-core-ids-story-ts), [ids/world](core.md#src-core-ids-world-ts), [types/index](core.md#src-core-types-index-ts) · content: [index](content.md#src-content-index-ts), [pending](content.md#src-content-pending-ts)
+- Packages: `node:fs`, `node:path`, `node:url`
+- Imported by: tests: [integration/support/crawl](tests.md#tests-integration-support-crawl-ts)
+- Tested by: [completeness.test](tests.md#tools-completeness-test-ts)
+- Types used: **[core/ids/world](core.md#src-core-ids-world-ts)** [PlaceId](core.md#src-core-ids-world-ts--placeid) · **[core/types/content](core.md#src-core-types-content-ts)** [StepDef](core.md#src-core-types-content-ts--stepdef)
+
+Declarations:
+
+- <a id="tools-completeness-ts--allowed-unlinked"></a>**ALLOWED_UNLINKED** · *const* `: Record<string, string>` — [[links]] that knowingly name no glossary entry.
+  - used by: here [checkLexiconLinks](#tools-completeness-ts--checklexiconlinks) · **[tests/integration/support/crawl](tests.md#tests-integration-support-crawl-ts)** [textProblem](tests.md#tests-integration-support-crawl-ts--textproblem)
+- <a id="tools-completeness-ts--checkcompleteness"></a>**checkCompleteness** · *function* `(): string[]` — Every problem found, as a sentence a writer can act on.
+  - uses: here [checkLexiconLinks](#tools-completeness-ts--checklexiconlinks) · **[content/bosses/index](content.md#src-content-bosses-index-ts)** [BOSSES](content.md#src-content-bosses-index-ts--bosses) · **[content/districts/index](content.md#src-content-districts-index-ts)** [DISTRICTS](content.md#src-content-districts-index-ts--districts) · **[content/index](content.md#src-content-index-ts)** [BOSS_SCENES](content.md#src-content-index-ts--boss-scenes), [PLACE_SCENES](content.md#src-content-index-ts--place-scenes) · **[content/pending](content.md#src-content-pending-ts)** [PENDING_DISTRICTS](content.md#src-content-pending-ts--pending-districts), [isPendingAct](content.md#src-content-pending-ts--ispendingact), [isPendingDistrict](content.md#src-content-pending-ts--ispendingdistrict) · **[content/places](content.md#src-content-places-ts)** [PLACES](content.md#src-content-places-ts--places) · **[content/story/acts](content.md#src-content-story-acts-ts)** [ACTS](content.md#src-content-story-acts-ts--acts) · **[core/ids/enemies](core.md#src-core-ids-enemies-ts)** [BOSS_IDS](core.md#src-core-ids-enemies-ts--boss-ids) · **[core/ids/story](core.md#src-core-ids-story-ts)** [ACT_ORDER](core.md#src-core-ids-story-ts--act-order), [ACT_STEPS](core.md#src-core-ids-story-ts--act-steps) · **[core/ids/world](core.md#src-core-ids-world-ts)** [DISTRICT_IDS](core.md#src-core-ids-world-ts--district-ids), [PLACE_IDS](core.md#src-core-ids-world-ts--place-ids)
+  - used by: here [(top level)](#tools-completeness-ts--top-level) · tests: [completeness.test](tests.md#tools-completeness-test-ts)
+- <a id="tools-completeness-ts--link"></a>**LINK** · *const, internal* — The [[key]] / [[key|display]] markup the lexicon links (src/app/lexicon.ts).
+  - used by: here [checkLexiconLinks](#tools-completeness-ts--checklexiconlinks)
+- <a id="tools-completeness-ts--checklexiconlinks"></a>**checkLexiconLinks** · *function, internal* `(fail: (msg: string) => void): void` — Every explicit [[link]] in content source resolves to a glossary entry (else it renders as plain text).
+  - uses: here [ALLOWED_UNLINKED](#tools-completeness-ts--allowed-unlinked), [LINK](#tools-completeness-ts--link), [stripComments](#tools-completeness-ts--stripcomments) · **[content/glossary](content.md#src-content-glossary-ts)** [GLOSSARY](content.md#src-content-glossary-ts--glossary)
+  - used by: here [checkCompleteness](#tools-completeness-ts--checkcompleteness)
+- <a id="tools-completeness-ts--stripcomments"></a>**stripComments** · *function, internal* `(src: string): string` — Source with comments blanked out (kept line-for-line so line numbers stay right).
+  - used by: here [checkLexiconLinks](#tools-completeness-ts--checklexiconlinks)
+- <a id="tools-completeness-ts--ismain"></a>**isMain** · *const, internal*
+  - used by: here [(top level)](#tools-completeness-ts--top-level)
+- <a id="tools-completeness-ts--top-level"></a>**(top level)** · *module* — Statements that run when the module loads.
+  - uses: here [checkCompleteness](#tools-completeness-ts--checkcompleteness), [isMain](#tools-completeness-ts--ismain)
 
 <a id="tools-depcruise-ts"></a>
 
@@ -959,7 +994,7 @@ Declarations:
 Content checks the type system can't express. Runs in CI as a test (validate-content.test.ts) and on demand:
 
 - Source: [tools/validate-content.ts](../../../tools/validate-content.ts)
-- Imports: core: [ids/characters](core.md#src-core-ids-characters-ts), [ids/enemies](core.md#src-core-ids-enemies-ts), [ids/sprites](core.md#src-core-ids-sprites-ts), [ids/story](core.md#src-core-ids-story-ts), [ids/world](core.md#src-core-ids-world-ts), [types/index](core.md#src-core-types-index-ts) · content: [data](content.md#src-content-data-ts), [enemies/rivals](content.md#src-content-enemies-rivals-ts), [enemies/summons](content.md#src-content-enemies-summons-ts), [sprites/index](content.md#src-content-sprites-index-ts) · engine: [combat/resolve](engine.md#src-engine-combat-resolve-ts)
+- Imports: core: [ids/characters](core.md#src-core-ids-characters-ts), [ids/combat](core.md#src-core-ids-combat-ts), [ids/enemies](core.md#src-core-ids-enemies-ts), [ids/sprites](core.md#src-core-ids-sprites-ts), [ids/story](core.md#src-core-ids-story-ts), [ids/world](core.md#src-core-ids-world-ts), [types/index](core.md#src-core-types-index-ts) · content: [data](content.md#src-content-data-ts), [enemies/rivals](content.md#src-content-enemies-rivals-ts), [enemies/summons](content.md#src-content-enemies-summons-ts), [sprites/index](content.md#src-content-sprites-index-ts) · engine: [combat/resolve](engine.md#src-engine-combat-resolve-ts)
 - Packages: `node:fs`, `node:path`, `node:url`
 - Tested by: [validate-content.test](tests.md#tools-validate-content-test-ts)
 - Types used: **[content/sprites/compile](content.md#src-content-sprites-compile-ts)** [ResolvedSprite](content.md#src-content-sprites-compile-ts--resolvedsprite) · **[core/ids/sprites](core.md#src-core-ids-sprites-ts)** [SpriteId](core.md#src-core-ids-sprites-ts--spriteid) · **[core/types/content](core.md#src-core-types-content-ts)** [StepDef](core.md#src-core-types-content-ts--stepdef) · **[core/types/sprites](core.md#src-core-types-sprites-ts)** [SpriteDef](core.md#src-core-types-sprites-ts--spritedef)
@@ -967,7 +1002,7 @@ Content checks the type system can't express. Runs in CI as a test (validate-con
 Declarations:
 
 - <a id="tools-validate-content-ts--validatecontent"></a>**validateContent** · *function* `(): string[]`
-  - uses: here [validateSprites](#tools-validate-content-ts--validatesprites) · **[content/band/bandmates](content.md#src-content-band-bandmates-ts)** [BANDMATES](content.md#src-content-band-bandmates-ts--bandmates) · **[content/band/secondLine](content.md#src-content-band-secondline-ts)** [SECOND_LINE](content.md#src-content-band-secondline-ts--second-line) · **[content/bosses/index](content.md#src-content-bosses-index-ts)** [BOSSES](content.md#src-content-bosses-index-ts--bosses) · **[content/classes/index](content.md#src-content-classes-index-ts)** [CLASSES](content.md#src-content-classes-index-ts--classes) · **[content/combat/skills](content.md#src-content-combat-skills-ts)** [SKILLS](content.md#src-content-combat-skills-ts--skills) · **[content/combat/statuses](content.md#src-content-combat-statuses-ts)** [STATUSES](content.md#src-content-combat-statuses-ts--statuses) · **[content/districts/index](content.md#src-content-districts-index-ts)** [DISTRICTS](content.md#src-content-districts-index-ts--districts) · **[content/enemies/index](content.md#src-content-enemies-index-ts)** [ENEMIES](content.md#src-content-enemies-index-ts--enemies) · **[content/enemies/rivals](content.md#src-content-enemies-rivals-ts)** [RIVALS](content.md#src-content-enemies-rivals-ts--rivals) · **[content/enemies/summons](content.md#src-content-enemies-summons-ts)** [SUMMONS](content.md#src-content-enemies-summons-ts--summons) · **[content/items](content.md#src-content-items-ts)** [ITEMS](content.md#src-content-items-ts--items) · **[content/rules](content.md#src-content-rules-ts)** [SKILL_LEVELS](content.md#src-content-rules-ts--skill-levels) · **[content/story/acts](content.md#src-content-story-acts-ts)** [ACTS](content.md#src-content-story-acts-ts--acts) · **[core/ids/characters](core.md#src-core-ids-characters-ts)** [CLASS_IDS](core.md#src-core-ids-characters-ts--class-ids) · **[core/ids/enemies](core.md#src-core-ids-enemies-ts)** [BOSS_IDS](core.md#src-core-ids-enemies-ts--boss-ids) · … +6 more
+  - uses: here [validateSprites](#tools-validate-content-ts--validatesprites) · **[content/band/bandmates](content.md#src-content-band-bandmates-ts)** [BANDMATES](content.md#src-content-band-bandmates-ts--bandmates) · **[content/band/secondLine](content.md#src-content-band-secondline-ts)** [SECOND_LINE](content.md#src-content-band-secondline-ts--second-line) · **[content/bosses/index](content.md#src-content-bosses-index-ts)** [BOSSES](content.md#src-content-bosses-index-ts--bosses) · **[content/classes/index](content.md#src-content-classes-index-ts)** [CLASSES](content.md#src-content-classes-index-ts--classes) · **[content/combat/skills](content.md#src-content-combat-skills-ts)** [SKILLS](content.md#src-content-combat-skills-ts--skills) · **[content/combat/statuses](content.md#src-content-combat-statuses-ts)** [STATUSES](content.md#src-content-combat-statuses-ts--statuses) · **[content/districts/index](content.md#src-content-districts-index-ts)** [DISTRICTS](content.md#src-content-districts-index-ts--districts) · **[content/enemies/index](content.md#src-content-enemies-index-ts)** [ENEMIES](content.md#src-content-enemies-index-ts--enemies) · **[content/enemies/rivals](content.md#src-content-enemies-rivals-ts)** [RIVALS](content.md#src-content-enemies-rivals-ts--rivals) · **[content/enemies/summons](content.md#src-content-enemies-summons-ts)** [SUMMONS](content.md#src-content-enemies-summons-ts--summons) · **[content/items](content.md#src-content-items-ts)** [ITEMS](content.md#src-content-items-ts--items) · **[content/rules](content.md#src-content-rules-ts)** [BASIC_ATTACK](content.md#src-content-rules-ts--basic-attack), [SKILL_LEVELS](content.md#src-content-rules-ts--skill-levels) · **[content/story/acts](content.md#src-content-story-acts-ts)** [ACTS](content.md#src-content-story-acts-ts--acts) · **[core/ids/characters](core.md#src-core-ids-characters-ts)** [CLASS_IDS](core.md#src-core-ids-characters-ts--class-ids) · … +10 more
   - used by: here [(top level)](#tools-validate-content-ts--top-level) · tests: [validate-content.test](tests.md#tools-validate-content-test-ts)
 - <a id="tools-validate-content-ts--sprite-alphabet"></a>**SPRITE_ALPHABET** · *const, internal* — Characters a sprite grid may use: letters, digits and a few symbols ('.' and '_' are reserved).
   - used by: here [validateSprites](#tools-validate-content-ts--validatesprites)
