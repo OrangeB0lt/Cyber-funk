@@ -26,8 +26,11 @@ export type Screen = 'title' | 'create' | 'story' | 'district' | 'place' | 'batt
 export interface StoryLine {
   /** Id. */
   id: number;
-  /** Narration, a character's line, the player's echoed choice, or a choice prompt. */
-  kind: 'narr' | 'spoken' | 'you' | 'prompt';
+  /**
+   * Narration, a character's line, the player's echoed choice, a choice prompt, or a fixed-width
+   * board that redraws in place (the crawfish race).
+   */
+  kind: 'narr' | 'spoken' | 'you' | 'prompt' | 'board';
   /** Speaker name. */
   who?: string;
   /** Speaker color. */

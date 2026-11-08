@@ -1,6 +1,6 @@
 # Narrative runtime
 
-*How a story scene runs: from a tap on a place option, through narration, choices and fights, and back to the place. Status: the API is a **draft** until the vertical-slice playtest, after which it freezes as SceneContext v1 (ADR-0004).*
+*How a story scene runs: from a tap on a place option, through narration, choices and fights, and back to the place. Status: SceneContext v1 is accepted and frozen ([ADR-0004](../adr/0004-scene-api.md)); changes go through an ADR.*
 
 Code: [`src/narrative/`](../../src/narrative/) (interfaces, the Director, authoring helpers) and [`src/app/`](../../src/app/) (the implementations).
 
@@ -131,6 +131,6 @@ The Session saves at explicit moments, never on a store subscription: entering a
 
 ## Extending the runtime
 
-- **A new scene capability** (say, a minigame): add a member to `SceneContext` with a doc comment, implement it in `app/sceneContext.ts`, and add the presenter method to `Presenter`, `ReactPresenter` and `ScriptedPresenter`. The compiler lists every place left to update.
+- **A new scene capability** (as `timing` and `board` were for the sit-in and the crawfish race): write an ADR, add a member to `SceneContext` with a doc comment, implement it in `app/sceneContext.ts`, and add the presenter method to `Presenter`, `ReactPresenter` and `ScriptedPresenter`. The compiler lists every place left to update.
 - **A new interrupt kind** (say, `'arrested'`): add it to `SceneInterrupt['kind']`. The `DirectorConfig.onInterrupt` record then fails to compile until you give it a handler.
 - **A new authoring format** (Ink, say): compile it to `Scene` functions. Nothing below `narrative/` needs to change.

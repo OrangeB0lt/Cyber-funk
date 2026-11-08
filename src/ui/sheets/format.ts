@@ -1,6 +1,6 @@
 /** Display strings shared by several sheets. */
 import type { GearDef } from '@core/types';
-import { STAT_NAMES } from '../components/StatGrid';
+import { STAT_NAMES } from '@content/index';
 
 /** "Chops +3, ONE zone +5%…" for a gear piece. */
 export function gearStats(g: GearDef): string {

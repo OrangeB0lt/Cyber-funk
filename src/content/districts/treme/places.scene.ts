@@ -2,20 +2,14 @@
  * Tremé's places: the Lagniappe club, Mama Roux's kitchen, Ti-Jacques' pawn shop, Congo Square.
  * (v1: legacy/src/08_world.js PLACE_FLOWS club/kitchen/pawn/congo and mamaRouxTalk.)
  */
-import type { InstrumentTierId } from '@core/ids/items';
 import { definePlace } from '@narrative/define';
 import type { Scene, SceneContext } from '@narrative/types';
 import { CLASSES } from '../../classes';
 import { ENEMIES } from '../../enemies';
 import { PLACES } from '../../places';
 import { QUESTS } from '../../quests';
+import { instrumentStock } from '../../world/shared.scene';
 import { fmtD } from '../../world/streets.scene';
-
-/** Instruments a shop stocks for the player's class, up to a tier. */
-const instrumentStock = (cls: keyof typeof CLASSES, maxTier: number) =>
-  (['street', 'neon', 'chrome'] as InstrumentTierId[])
-    .slice(0, maxTier)
-    .map(t => ({ id: `inst_${cls}_${t}` as const }));
 
 /* ------------------------------------------------------------------ */
 /* Lagniappe Social Aid & Pleasure Club                                 */

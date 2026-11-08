@@ -40,6 +40,12 @@ export function StoryScreen() {
           // One portrait per run: a speaker's follow-up lines don't repeat it.
           const prev = v.lines[i - 1];
           const shown = sprite && !(prev && prev.kind === l.kind && portraitOf(prev, cls) === sprite);
+          if (l.kind === 'board')
+            return (
+              <pre key={l.id} className={s.board} data-testid="board">
+                {l.text}
+              </pre>
+            );
           return (
             <p key={l.id} className={`${s.line} ${s[l.kind]}`}>
               {shown && <Sprite id={sprite} scale={2} flip={l.kind === 'you'} className={s.portrait} />}

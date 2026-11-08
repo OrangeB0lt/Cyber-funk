@@ -139,6 +139,12 @@ export class ReactPresenter implements Presenter {
     if (line) line.typed = true;
   }
 
+  board(text: string): void {
+    // The board redraws in place while it's the newest line; anything said after it starts a new one.
+    const last = this.view.lines.at(-1);
+    if (last?.kind === 'board') last.text = text;
+    else this.view.lines.push({ id: this.nextId(), kind: 'board', text, typed: true });
+  }
   promptLine(text: string): void {
     this.view.lines.push({ id: this.nextId(), kind: 'prompt', text, typed: true });
   }

@@ -6,7 +6,7 @@ Every source file in `src/`, `server/`, `tools/` and `tests/`, with its declarat
 
 For how the pieces work together (boot, a story line, a battle, a save reaching Postgres), read the hand-written [guide](../../architecture/code-map.md) first.
 
-**224** source files · **30** test files · **988** top-level declarations · **402** members · **2531** "uses" edges
+**226** source files · **31** test files · **992** top-level declarations · **407** members · **2552** "uses" edges
 
 ## Pages
 
@@ -14,13 +14,13 @@ For how the pieces work together (boot, a story line, a battle, a save reaching 
 |---|---|---|
 | [src/core](core.md) | 18 | The floor layer: every id list, the shared types (GameState, Battle, Actor, content defs, effects), the seeded Rng and pure helpers. |
 | [src/narrative](narrative.md) | 3 | The scene API that story content is written against (Scene, SceneContext, Presenter), the Director that runs one scene at a time, and the place/event authoring helpers. |
-| [src/content](content.md) | 88 | Typed game data and story scripts: classes, skills, statuses, enemies, bosses (with their AI), items, gear, districts, acts, and the *.scene.ts files. |
+| [src/content](content.md) | 90 | Typed game data and story scripts: classes, skills, statuses, enemies, bosses (with their AI), items, gear, districts, acts, and the *.scene.ts files. |
 | [src/engine](engine.md) | 22 | The game rules as plain functions over GameState and Battle: stats, progression, inventory, shops, encounters, aftermath, and the combat loop. |
 | [src/app](app.md) | 18 | Runs the game without React: GameApp (every command the UI can issue), Session, the SceneContext implementation, the battle controller, the presenters, the view store, saves, and cloud sync. |
 | [src/ui and src/main.tsx](ui.md) | 37 | React components that render the two stores (game and view) and call GameApp commands, plus the browser entry point src/main.tsx. |
 | [server](server.md) | 15 | The cloud-save API: the Fastify app, its routes, the PostgreSQL repository and Drizzle schema, migrations and player-code auth. |
 | [tools](tools.md) | 21 | Node scripts: the parity oracles against v1, the balance sim and fight trace, the content validator, the layer check, the one-time migration codegen, and this generator. |
-| [tests (and every test file)](tests.md) | 32 | The integration and e2e suites in tests/, plus every co-located *.test.ts and *.spec.ts file in the repo, each listed with what it covers. |
+| [tests (and every test file)](tests.md) | 33 | The integration and e2e suites in tests/, plus every co-located *.test.ts and *.spec.ts file in the repo, each listed with what it covers. |
 
 ## Layers
 
@@ -41,17 +41,17 @@ flowchart TD
   app -->|59| core
   app -->|8| engine
   app -->|9| narrative
-  content -->|136| core
-  content -->|11| narrative
+  content -->|140| core
+  content -->|12| narrative
   engine -->|19| content
   engine -->|65| core
   narrative -->|13| core
   server -->|8| app
   server -->|1| core
-  tests -->|35| app
+  tests -->|38| app
   tests -->|15| content
-  tests -->|66| core
-  tests -->|19| engine
+  tests -->|67| core
+  tests -->|20| engine
   tests -->|4| narrative
   tests -->|6| server
   tests -->|24| tools
@@ -60,7 +60,7 @@ flowchart TD
   tools -->|35| core
   tools -->|4| engine
   ui -->|11| app
-  ui -->|22| content
+  ui -->|24| content
   ui -->|25| core
   ui -->|5| engine
   ui -->|1| narrative
@@ -93,7 +93,7 @@ Interfaces with methods are where one part of the code calls into another withou
 
 | Interface | Members | Implemented in | Called from |
 |---|---|---|---|
-| [ReactPresenterOptions](app.md#src-app-reactpresenter-ts--reactpresenteroptions) (app/reactPresenter) | 4 | [app/game](app.md#src-app-game-ts) | [app/reactPresenter](app.md#src-app-reactpresenter-ts) |
+| [ReactPresenterOptions](app.md#src-app-reactpresenter-ts--reactpresenteroptions) (app/reactPresenter) | 4 | [app/game](app.md#src-app-game-ts), [app/reactPresenter.test](tests.md#src-app-reactpresenter-test-ts) | [app/reactPresenter](app.md#src-app-reactpresenter-ts) |
 | [CloudClient](app.md#src-app-save-cloud-ts--cloudclient) (app/save/cloud) | 9 | [app/save/cloud](app.md#src-app-save-cloud-ts), [app/save/sync.test](tests.md#src-app-save-sync-test-ts) | [app/save/sync](app.md#src-app-save-sync-ts) |
 | [KeyValue](app.md#src-app-save-storage-ts--keyvalue) (app/save/storage) | 3 | [app/save/storage](app.md#src-app-save-storage-ts) | [app/save/slots](app.md#src-app-save-slots-ts), [app/save/sync](app.md#src-app-save-sync-ts) |
 | [SaveStorage](app.md#src-app-save-storage-ts--savestorage) (app/save/storage) | 3 | [app/save/slots](app.md#src-app-save-slots-ts), [app/save/storage](app.md#src-app-save-storage-ts) | [app/game](app.md#src-app-game-ts), [app/save/slots](app.md#src-app-save-slots-ts), [app/save/sync](app.md#src-app-save-sync-ts), [app/session](app.md#src-app-session-ts) |
@@ -101,7 +101,7 @@ Interfaces with methods are where one part of the code calls into another withou
 | [SessionDeps](app.md#src-app-session-ts--sessiondeps) (app/session) | 4 | [app/game](app.md#src-app-game-ts), [tests/integration/playthrough.test](tests.md#tests-integration-playthrough-test-ts), [tests/integration/slice.test](tests.md#tests-integration-slice-test-ts), [tests/integration/support/crawl](tests.md#tests-integration-support-crawl-ts), [tools/parity/transcripts.test](tests.md#tools-parity-transcripts-test-ts) | [app/session](app.md#src-app-session-ts) |
 | [SessionPort](app.md#src-app-sessionport-ts--sessionport) (app/sessionPort) | 1 | [app/session](app.md#src-app-session-ts) | [app/battleController](app.md#src-app-battlecontroller-ts), [app/sceneContext](app.md#src-app-scenecontext-ts) |
 | [ScriptPolicy](app.md#src-app-testing-scriptedpresenter-ts--scriptpolicy) (app/testing/scriptedPresenter) | 6 | [tests/integration/playthrough.test](tests.md#tests-integration-playthrough-test-ts), [tests/integration/slice.test](tests.md#tests-integration-slice-test-ts), [tests/integration/support/crawl](tests.md#tests-integration-support-crawl-ts) | [app/testing/scriptedPresenter](app.md#src-app-testing-scriptedpresenter-ts) |
-| [Rng](core.md#src-core-rng-ts--rng) (core/rng) | 7 | [app/testing/rng](app.md#src-app-testing-rng-ts), [core/rng](core.md#src-core-rng-ts) | [app/battleController](app.md#src-app-battlecontroller-ts), [app/game](app.md#src-app-game-ts), [app/sceneContext](app.md#src-app-scenecontext-ts), [app/session](app.md#src-app-session-ts), [content/bosses/captain_hush](content.md#src-content-bosses-captain-hush-ts), [content/bosses/rougarou](content.md#src-content-bosses-rougarou-ts) … +17 |
+| [Rng](core.md#src-core-rng-ts--rng) (core/rng) | 7 | [app/testing/rng](app.md#src-app-testing-rng-ts), [core/rng](core.md#src-core-rng-ts) | [app/battleController](app.md#src-app-battlecontroller-ts), [app/game](app.md#src-app-game-ts), [app/sceneContext](app.md#src-app-scenecontext-ts), [app/session](app.md#src-app-session-ts), [content/bosses/captain_hush](content.md#src-content-bosses-captain-hush-ts), [content/bosses/rougarou](content.md#src-content-bosses-rougarou-ts) … +18 |
 | [BossDef](core.md#src-core-types-content-ts--bossdef) (core/types/content) | 4 | [content/bosses/archivist](content.md#src-content-bosses-archivist-ts), [content/bosses/captain_hush](content.md#src-content-bosses-captain-hush-ts), [content/bosses/conductor](content.md#src-content-bosses-conductor-ts), [content/bosses/isolde](content.md#src-content-bosses-isolde-ts), [content/bosses/mr_ledger](content.md#src-content-bosses-mr-ledger-ts), [content/bosses/rougarou](content.md#src-content-bosses-rougarou-ts) … +2 | [engine/combat/resolve](engine.md#src-engine-combat-resolve-ts), [engine/combat/turns](engine.md#src-engine-combat-turns-ts) |
 | [SecondLineMemberDef](core.md#src-core-types-content-ts--secondlinememberdef) (core/types/content) | 1 | [content/band/secondLine](content.md#src-content-band-secondline-ts) | [tools/parity/tsAdapter](tools.md#tools-parity-tsadapter-ts) |
 | [CustomEffect](core.md#src-core-types-effects-ts--customeffect) (core/types/effects) | 1 | [content/classes/bassdrum](content.md#src-content-classes-bassdrum-ts), [content/classes/trombone](content.md#src-content-classes-trombone-ts), [content/combat/bossSkills](content.md#src-content-combat-bossskills-ts), [content/combat/enemySkills](content.md#src-content-combat-enemyskills-ts), [content/items](content.md#src-content-items-ts) | [engine/combat/resolve](engine.md#src-engine-combat-resolve-ts) |
@@ -112,9 +112,9 @@ Interfaces with methods are where one part of the code calls into another withou
 | [PlaceHelpers](narrative.md#src-narrative-define-ts--placehelpers) (narrative/define) | 3 | [app/session](app.md#src-app-session-ts), [tests/integration/explore.test](tests.md#tests-integration-explore-test-ts) | [content/districts/treme/places.scene](content.md#src-content-districts-treme-places-scene-ts) |
 | [PlaceScenes](narrative.md#src-narrative-define-ts--placescenes) (narrative/define) | 2 | [content/districts/treme/places.scene](content.md#src-content-districts-treme-places-scene-ts) | [app/session](app.md#src-app-session-ts) |
 | [DirectorConfig](narrative.md#src-narrative-director-ts--directorconfig) (narrative/director) | 4 | [app/session](app.md#src-app-session-ts), [narrative/director.test](tests.md#src-narrative-director-test-ts) | [narrative/director](narrative.md#src-narrative-director-ts) |
-| [BattlePresenter](narrative.md#src-narrative-types-ts--battlepresenter) (narrative/types) | 10 | [app/reactPresenter](app.md#src-app-reactpresenter-ts) | [app/battleController](app.md#src-app-battlecontroller-ts) |
-| [Presenter](narrative.md#src-narrative-types-ts--presenter) (narrative/types) | 12 | [app/reactPresenter](app.md#src-app-reactpresenter-ts), [app/testing/scriptedPresenter](app.md#src-app-testing-scriptedpresenter-ts) | [app/battleController](app.md#src-app-battlecontroller-ts), [app/sceneContext](app.md#src-app-scenecontext-ts), [app/session](app.md#src-app-session-ts) |
-| [SceneContext](narrative.md#src-narrative-types-ts--scenecontext) (narrative/types) | 36 | [app/sceneContext](app.md#src-app-scenecontext-ts) | [app/game](app.md#src-app-game-ts), [app/sceneContext](app.md#src-app-scenecontext-ts), [app/session](app.md#src-app-session-ts), [content/bosses/captain_hush.scene](content.md#src-content-bosses-captain-hush-scene-ts), [content/bosses/vox_perfecta.scene](content.md#src-content-bosses-vox-perfecta-scene-ts), [content/districts/quarter/cutting.scene](content.md#src-content-districts-quarter-cutting-scene-ts) … +5 |
+| [BattlePresenter](narrative.md#src-narrative-types-ts--battlepresenter) (narrative/types) | 10 | [app/reactPresenter](app.md#src-app-reactpresenter-ts) | [app/battleController](app.md#src-app-battlecontroller-ts), [app/sceneContext](app.md#src-app-scenecontext-ts) |
+| [Presenter](narrative.md#src-narrative-types-ts--presenter) (narrative/types) | 13 | [app/reactPresenter](app.md#src-app-reactpresenter-ts), [app/testing/scriptedPresenter](app.md#src-app-testing-scriptedpresenter-ts) | [app/battleController](app.md#src-app-battlecontroller-ts), [app/sceneContext](app.md#src-app-scenecontext-ts), [app/session](app.md#src-app-session-ts) |
+| [SceneContext](narrative.md#src-narrative-types-ts--scenecontext) (narrative/types) | 38 | [app/sceneContext](app.md#src-app-scenecontext-ts) | [app/game](app.md#src-app-game-ts), [app/sceneContext](app.md#src-app-scenecontext-ts), [app/session](app.md#src-app-session-ts), [content/bosses/captain_hush.scene](content.md#src-content-bosses-captain-hush-scene-ts), [content/bosses/vox_perfecta.scene](content.md#src-content-bosses-vox-perfecta-scene-ts), [content/districts/quarter/cutting.scene](content.md#src-content-districts-quarter-cutting-scene-ts) … +6 |
 | [SerializeOptions](tools.md#tools-migrate-serialize-ts--serializeoptions) (tools/migrate/serialize) | 3 | [tools/migrate/codegen-content](tools.md#tools-migrate-codegen-content-ts) | [tools/migrate/serialize](tools.md#tools-migrate-serialize-ts) |
 | [EngineAdapter](tools.md#tools-parity-driver-ts--engineadapter) (tools/parity/driver) | 17 | [tools/parity/legacyAdapter](tools.md#tools-parity-legacyadapter-ts), [tools/parity/properties.test](tests.md#tools-parity-properties-test-ts), [tools/parity/tsAdapter](tools.md#tools-parity-tsadapter-ts) | [tools/parity/driver](tools.md#tools-parity-driver-ts) |
 | [LegacyRuntime](tools.md#tools-parity-legacy-ts--legacyruntime) (tools/parity/legacy) | 2 | [tools/parity/legacy](tools.md#tools-parity-legacy-ts) | [tools/parity/legacyAdapter](tools.md#tools-parity-legacyadapter-ts) |

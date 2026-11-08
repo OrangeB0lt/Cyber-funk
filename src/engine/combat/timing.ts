@@ -5,7 +5,7 @@
  */
 import { clamp, hasStatus, livingEnemies } from '@core/helpers';
 import { NOTE_IDS } from '@core/ids/enemies';
-import type { Battle, PlayerIntent, TimingGradeDef, TimingSpec } from '@core/types';
+import type { Actor, Battle, PlayerIntent, TimingGradeDef, TimingSpec } from '@core/types';
 
 import { SKILLS, TIMING } from '@content/data';
 import { logLine } from './events';
@@ -28,8 +28,15 @@ export function needsTiming(intent: PlayerIntent): boolean {
  * `center` is chosen by the caller (the UI uses 0.5–0.8 from its presentation randomness).
  */
 export function timingSpec(b: Battle, center: number): TimingSpec {
-  const p = b.player;
   const maxLvl = Math.max(...livingEnemies(b).map(e => e.level), 1);
+  return playerTimingSpec(b.player, maxLvl, center);
+}
+
+/**
+ * The same geometry for any player actor: the marker crosses faster against stronger enemies
+ * (`maxLvl` is the highest enemy level; 1 outside battle, as v1's sit-in passes no enemies).
+ */
+export function playerTimingSpec(p: Actor, maxLvl: number, center: number): TimingSpec {
   const durationMs = Math.max(880, 1200 - 20 * (maxLvl - 1));
   let one = 0.06 * (p.oneZone || 1);
   if (hasStatus(p, 'pocket')) one *= 1.3;

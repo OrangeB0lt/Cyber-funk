@@ -6,7 +6,7 @@
  * docs/adr/0004-scene-api.md and docs/guides/writing-scenes.md.
  */
 import type { BandmateId } from '@core/ids/band';
-import type { CombatStatKey, StatKey } from '@core/ids/combat';
+import type { StatKey } from '@core/ids/combat';
 import type { BossId, EnemyId, NoteId, OpponentId } from '@core/ids/enemies';
 import type { FlagId, StoryChoices } from '@core/ids/flags';
 import type { GearId, ItemId, ShopItemId } from '@core/ids/items';
@@ -152,6 +152,16 @@ export interface SceneContext {
   sheet(req: SheetRequest): Promise<void>;
   /** Pause. */
   wait(ms: number): Promise<void>;
+  /**
+   * One On the One timing bar outside battle (the Feu Follet sit-in): the player taps it, or with
+   * auto rhythm it rolls. Resolves with the grade.
+   */
+  timing(): Promise<TimingGradeDef>;
+  /**
+   * A block of fixed-width text in the story that redraws in place each call (the crawfish race's
+   * track). The first call after a new screen adds it below the lines so far; later calls replace it.
+   */
+  board(text: string): void;
 
   /** Travel to a district: autosave, then its first-visit narration, then the district screen. */
   goto(district: DistrictId): Promise<void>;
@@ -184,8 +194,8 @@ export interface SceneContext {
   nextFight(mods: NextFightMods): void;
   /** Note a tip about an opponent in the Blue Book (shows its weakness early). */
   bookHint(id: OpponentId): void;
-  /** Permanently raise a stat. */
-  permStat(stat: CombatStatKey, n: number): void;
+  /** Permanently raise a stat (blessings, the traiteur's herbs, King Cake). Heart and Funk raise their maximums. */
+  permStat(stat: StatKey, n: number): void;
 
   /** One-time story beats. */
   readonly flags: {
@@ -292,6 +302,8 @@ export interface Presenter {
   sound(cue: SoundCue): void;
   /** Pause (honoring speed settings and the signal). */
   wait(ms: number, signal: AbortSignal): Promise<void>;
+  /** Show or redraw the fixed-width board in the story (see SceneContext.board). */
+  board(text: string): void;
   /** Show a route (district or place screen). */
   route(r: Route): void;
   /** Battle presentation. */

@@ -14,6 +14,8 @@ export type TranscriptEntry =
   | { t: 'title'; text: string | null }
   | { t: 'line'; who: string | null; text: string; npc?: NpcId }
   | { t: 'prompt'; text: string }
+  /** The board's text each time it's drawn. */
+  | { t: 'board'; text: string }
   | { t: 'choose'; options: string[]; picked: string; label: string }
   | { t: 'confirm'; title: string; answer: boolean }
   | { t: 'sheet'; req: SheetRequest }
@@ -78,6 +80,9 @@ export class ScriptedPresenter implements Presenter {
   }
   promptLine(text: string): void {
     this.transcript.push({ t: 'prompt', text });
+  }
+  board(text: string): void {
+    this.transcript.push({ t: 'board', text });
   }
   echo(): void {}
   async choose(options: readonly ChoiceView[], signal: AbortSignal): Promise<string> {

@@ -28,8 +28,12 @@ import {
   fullRest,
   funkPct,
   gainXp,
+  gradeTiming,
   healPct,
+  makePlayerActor,
+  playerTimingSpec,
   removeItem,
+  rollAutoTiming,
   storyIs,
   storyReached,
 } from '@engine/index';
@@ -76,6 +80,20 @@ export function createSceneContext(session: SessionPort, signal: AbortSignal): S
     toast: text => P.toast(text),
     sheet: req => P.sheet(req, signal),
     wait: ms => P.wait(ms, signal),
+    async timing() {
+      // v1: runTimingBar({ player, enemies: [] }) from the sit-in. Auto rhythm rolls on the game's
+      // stream; the bar's position comes from presentation randomness, as in battle.
+      if (g().settings.rhythm === 'auto') {
+        const grade = rollAutoTiming(session.rng);
+        await P.battle.autoTiming(grade, signal);
+        return grade;
+      }
+      const spec = playerTimingSpec(makePlayerActor(g()), 1, 0.5 + session.cosmetic.next() * 0.3);
+      const grade = gradeTiming(spec, await P.battle.timing(spec, signal));
+      await P.battle.timingResult(grade, signal);
+      return grade;
+    },
+    board: text => P.board(text),
 
     async goto(id) {
       const game = g();
@@ -135,6 +153,7 @@ export function createSceneContext(session: SessionPort, signal: AbortSignal): S
     },
     permStat(stat, n) {
       g().perm[stat] += n;
+      clampVitals(g());
     },
 
     flags: {

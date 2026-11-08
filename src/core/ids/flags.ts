@@ -18,6 +18,27 @@ export const FLAG_IDS = [
   'legendBuilt',
   /** Gus Thibodeaux has been freed from the Data Mausoleum (Archivist). He leads the second line. */
   'gusFreed',
+  /** Met Miss Odette at Club Feu Follet (first talk). Opens the Sit In option there. */
+  'metOdette',
+  /** Miss Odette told you about Vox Perfecta (her Blue Book hint is recorded once). */
+  'voxHint',
+  /** The Jackson Square licensing broadcaster is down (sabotage scene). Changes its "look" text. */
+  'broadcasterDone',
+  /** Met Madame Céleste at the Velvet Lantern (first talk). Opens the DJ in the corner booth. */
+  'metCeleste',
+  /** Céleste told you about Mr. Ledger (her Blue Book hint is recorded once). */
+  'ledgerHint',
+  /**
+   * Céleste already arranged your invitation to the Vane ball. PARITY: v1 reads this flag in
+   * celesteTalk but never sets it (getInvitation moves the story on instead, which closes the branch).
+   */
+  'celesteInvite',
+  /** Met Professor Theo at the Lantern's piano (first talk). */
+  'metTheo',
+  /** Met Grand-mère Clothilde at her cabin (first talk). */
+  'metClothilde',
+  /** Met Mambo Rosalie at her temple (first talk). Opens the Restless Haints quest. */
+  'metRosalie',
 ] as const;
 
 /** A one-time story beat. */

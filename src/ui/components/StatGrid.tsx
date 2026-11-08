@@ -1,15 +1,6 @@
 import { STAT_KEYS, type StatKey } from '@core/ids/combat';
+import { STAT_NAMES } from '@content/index';
 import s from './StatGrid.module.css';
-
-/** Display names for the six stats. */
-export const STAT_NAMES: Record<StatKey, string> = {
-  heart: 'Heart',
-  funk: 'Funk',
-  chops: 'Chops',
-  grit: 'Grit',
-  tempo: 'Tempo',
-  mojo: 'Mojo',
-};
 
 /** The six stats (or level-up gains when `gains`). */
 export function StatGrid({ stats, gains }: { stats: Partial<Record<StatKey, number>>; gains?: boolean }) {

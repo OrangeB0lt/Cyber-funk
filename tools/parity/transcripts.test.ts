@@ -12,12 +12,13 @@ import { ScriptedPresenter, type TranscriptEntry } from '@app/testing/scriptedPr
 import { constantRng } from '@app/testing/rng';
 import type { ClassId, RootsId } from '@core/ids/characters';
 import type { BossId, NoteId } from '@core/ids/enemies';
-import type { FlagId } from '@core/ids/flags';
-import type { ItemId } from '@core/ids/items';
-import type { ActId } from '@core/ids/story';
+import type { FlagId, StoryChoices } from '@core/ids/flags';
+import type { BandmateId } from '@core/ids/band';
+import type { ItemId, SheetMusicId } from '@core/ids/items';
+import { ACT_ORDER, type ActId } from '@core/ids/story';
 import type { DistrictId, PlaceId, QuestId } from '@core/ids/world';
 import type { GameState } from '@core/types';
-import { cuttingContest, runEvent, STREET_EVENTS, wakeUpAtClub } from '@content/index';
+import { BOSSES, DISTRICTS, cuttingContest, runEvent, STREET_EVENTS, wakeUpAtClub } from '@content/index';
 import { defaultSettings, storyFromIndex } from '@engine/index';
 import { firstDifference } from './driver';
 import { loadLegacyDom } from './legacyDom';
@@ -33,7 +34,8 @@ type Entry =
   | { t: 'sheet'; title: string }
   | { t: 'confirm'; title: string }
   | { t: 'fight'; context: string }
-  | { t: 'options'; labels: string[] };
+  | { t: 'options'; labels: string[] }
+  | { t: 'board'; text: string };
 
 const strip = (s: string) => s.replace(/\[\[([^\]|]+)(?:\|([^\]]+))?\]\]/g, (_m, a, b) => b || a);
 
@@ -82,8 +84,17 @@ function installRecorders() {
     rec({ t: 'fight', context: opts?.context || 'street' });
     return 'win';
   };
+  // No real waiting: the crawfish race sleeps between frames, the auto-rhythm bar holds its grade.
+  w.sleep = async () => {};
+  w.CF.UI.turbo = true;
 }
 installRecorders();
+
+/** The crawfish race's track as v1 left it (its <pre class="race"> in the story). */
+function legacyBoard(): Entry[] {
+  const pre = w.document.querySelector('#story pre.race');
+  return pre ? [{ t: 'board', text: pre.textContent ?? '' }] : [];
+}
 
 /* ------------------------------------------------------------------ */
 /* Cases                                                                */
@@ -103,6 +114,14 @@ interface CaseState {
   notes?: NoteId[];
   defeated?: BossId[];
   intros?: BossId[];
+  counters?: Record<string, number>;
+  day?: number;
+  sitInDay?: number;
+  choices?: StoryChoices;
+  blessings?: number;
+  recruited?: BandmateId[];
+  keyItems?: ItemId[];
+  sheet?: SheetMusicId[];
 }
 
 interface Case {
@@ -147,6 +166,24 @@ const T = (step: number, more: Partial<CaseState> = {}): CaseState => ({
   story: { act: 'treme', step },
   ...more,
 });
+
+/**
+ * A save in `act` at step index `step`, in that act's district, with every district so far unlocked
+ * and every earlier boss beaten (their Blue Notes held), as the dev menu's act jump sets it up.
+ */
+function inAct(act: DistrictId, step: number, more: Partial<CaseState> = {}): CaseState {
+  const upTo = ACT_ORDER.slice(0, ACT_ORDER.indexOf(act) + 1).filter((a): a is DistrictId => a in DISTRICTS);
+  const earlier = upTo.slice(0, -1).map(d => DISTRICTS[d].boss);
+  return {
+    story: { act, step },
+    district: act,
+    unlocked: upTo,
+    defeated: earlier,
+    notes: earlier.map(b => BOSSES[b].note).filter((n): n is NoteId => !!n),
+    level: Math.max(3, DISTRICTS[act].levels[0]),
+    ...more,
+  };
+}
 const cases: Case[] = [
   {
     name: 'prologue',
@@ -215,14 +252,14 @@ const cases: Case[] = [
   },
   {
     name: 'vox perfecta boss flow',
-    state: { story: { act: 'quarter', step: 2 }, district: 'quarter', unlocked: ['treme', 'quarter'] },
+    state: inAct('quarter', 2),
     legacy: () => w.bossFlow('vox_perfecta'),
     ts: s => s.run(c => c.boss('vox_perfecta').then(() => {}), 'vox'),
   },
   {
     name: 'vox perfecta boss flow (shutdown)',
     pick: 1,
-    state: { story: { act: 'quarter', step: 2 }, district: 'quarter', unlocked: ['treme', 'quarter'] },
+    state: inAct('quarter', 2),
     legacy: () => w.bossFlow('vox_perfecta'),
     ts: s => s.run(c => c.boss('vox_perfecta').then(() => {}), 'vox'),
   },
@@ -309,6 +346,14 @@ function setupLegacy(st: CaseState) {
   S.notes = [...(st.notes ?? [])];
   for (const b of st.defeated ?? []) S.flags['boss_' + b] = true;
   for (const b of st.intros ?? []) S.flags['bosspre_' + b] = true;
+  Object.assign(S.counters, st.counters ?? {});
+  if (st.day !== undefined) S.day = st.day;
+  if (st.sitInDay !== undefined) S.sitInDay = st.sitInDay;
+  for (const [k, v] of Object.entries(st.choices ?? {})) S.flags[k] = v;
+  if (st.blessings !== undefined) S.blessings = st.blessings;
+  S.band.recruited = [...(st.recruited ?? [])];
+  S.keyItems = [...(st.keyItems ?? [])];
+  S.sheet = [...(st.sheet ?? [])];
   w.CF.S = S;
   return S;
 }
@@ -328,6 +373,14 @@ function setupTs(session: Session, st: CaseState): GameState {
   g.notes = [...(st.notes ?? [])];
   g.bossesDefeated = [...(st.defeated ?? [])];
   g.bossIntros = [...(st.intros ?? [])];
+  Object.assign(g.counters, st.counters ?? {});
+  if (st.day !== undefined) g.day = st.day;
+  if (st.sitInDay !== undefined) g.sitInDay = st.sitInDay;
+  g.choices = { ...(st.choices ?? {}) };
+  if (st.blessings !== undefined) g.blessings = st.blessings;
+  g.band.recruited = [...(st.recruited ?? [])];
+  g.keyItems = [...(st.keyItems ?? [])];
+  g.sheet = [...(st.sheet ?? [])];
   return g;
 }
 
@@ -367,6 +420,10 @@ function legacyView(S: any) {
     choices: { vox: S.flags.vox, contracts: S.flags.contracts, lucien: S.flags.lucien },
     nextFight: S.nextFight,
     mealBuff: S.mealBuff,
+    dreamBuff: S.dreamBuff,
+    sheet: S.sheet,
+    blessings: S.blessings,
+    sitInDay: S.sitInDay,
     day: S.day,
     hp: S.hp,
     fp: S.fp,
@@ -397,6 +454,10 @@ function tsView(g: GameState) {
     choices: { vox: g.choices.vox, contracts: g.choices.contracts, lucien: g.choices.lucien },
     nextFight: g.nextFight,
     mealBuff: g.mealBuff,
+    dreamBuff: g.dreamBuff,
+    sheet: g.sheet,
+    blessings: g.blessings,
+    sitInDay: g.sitInDay,
     day: g.day,
     hp: g.hp,
     fp: g.fp,
@@ -412,7 +473,9 @@ function tsView(g: GameState) {
 
 function tsTranscript(p: ScriptedPresenter): Entry[] {
   const out: Entry[] = [];
+  let board: string | null = null;
   for (const e of p.transcript as TranscriptEntry[]) {
+    if (e.t === 'board') board = e.text;
     if (e.t === 'title') out.push({ t: 'title', text: e.text });
     else if (e.t === 'line') out.push({ t: 'line', who: e.who, text: e.text });
     else if (e.t === 'prompt') out.push({ t: 'prompt', text: e.text });
@@ -423,6 +486,8 @@ function tsTranscript(p: ScriptedPresenter): Entry[] {
     else if (e.t === 'confirm') out.push({ t: 'confirm', title: e.title });
     else if (e.t === 'fight') out.push({ t: 'fight', context: e.context });
   }
+  // v1 draws the board into the page; the oracle reads its final text after the scene.
+  if (board !== null) out.push({ t: 'board', text: board });
   return out;
 }
 
@@ -464,6 +529,7 @@ describe('scene transcripts match v1', () => {
         await c.ts(session);
         await c.legacy();
         await new Promise(r => setTimeout(r, 0));
+        legacyLog.push(...legacyBoard());
 
         const mine = [...tsExtra, ...tsTranscript(presenter)];
         const d = firstDifference(legacyLog, mine);

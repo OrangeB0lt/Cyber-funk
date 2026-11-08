@@ -12,6 +12,7 @@ Generated reference. Start with the [guide](../../architecture/code-map.md) for 
 |---|---|
 | [server/app.test.ts](#server-app-test-ts) | — |
 | [server/sync.test.ts](#server-sync-test-ts) | The browser's sync engine (src/app/save/sync.ts) over the real HTTP client against the real server and database: proves the client and server agree on the prot… |
+| [src/app/reactPresenter.test.ts](#src-app-reactpresenter-test-ts) | The React presenter's story view: what the screen holds as a scene runs. |
 | [src/app/save/format.test.ts](#src-app-save-format-test-ts) | — |
 | [src/app/save/slots.test.ts](#src-app-save-slots-test-ts) | — |
 | [src/app/save/sync.test.ts](#src-app-save-sync-test-ts) | — |
@@ -64,6 +65,17 @@ The browser's sync engine (src/app/save/sync.ts) over the real HTTP client again
 - Imports: core: [rng](core.md#src-core-rng-ts) · engine: [index](engine.md#src-engine-index-ts) · app: [save/cloud](app.md#src-app-save-cloud-ts), [save/format](app.md#src-app-save-format-ts), [save/slots](app.md#src-app-save-slots-ts), [save/storage](app.md#src-app-save-storage-ts), [save/sync](app.md#src-app-save-sync-ts) · server: [app](server.md#server-app-ts), [testing/db](server.md#server-testing-db-ts)
 - Packages: `fastify`, `vitest`
 - Suites: “sync against the real server”
+
+<a id="src-app-reactpresenter-test-ts"></a>
+
+### src/app/reactPresenter.test.ts
+
+The React presenter's story view: what the screen holds as a scene runs.
+
+- Source: [src/app/reactPresenter.test.ts](../../../src/app/reactPresenter.test.ts)
+- Imports: engine: [index](engine.md#src-engine-index-ts) · app: [audio/sfx](app.md#src-app-audio-sfx-ts), [reactPresenter](app.md#src-app-reactpresenter-ts), [view](app.md#src-app-view-ts)
+- Packages: `vitest`
+- Suites: “the board (crawfish race track)”
 
 <a id="src-app-save-format-test-ts"></a>
 
@@ -436,7 +448,7 @@ The TypeScript sim prints byte-identical output to legacy/sim/sim.js for the sam
 Transcript oracle: ported scenes show the player exactly what v1 showed and leave the save in the same state. v1 runs in jsdom with its UI functions replaced by recorders; both sides use a constant random value (so every pick/chance lands the same way) and fights stubbed as wins.
 
 - Source: [tools/parity/transcripts.test.ts](../../../tools/parity/transcripts.test.ts)
-- Imports: core: [ids/characters](core.md#src-core-ids-characters-ts), [ids/enemies](core.md#src-core-ids-enemies-ts), [ids/flags](core.md#src-core-ids-flags-ts), [ids/items](core.md#src-core-ids-items-ts), [ids/story](core.md#src-core-ids-story-ts), [ids/world](core.md#src-core-ids-world-ts), [types/index](core.md#src-core-types-index-ts) · content: [index](content.md#src-content-index-ts) · engine: [index](engine.md#src-engine-index-ts) · app: [save/storage](app.md#src-app-save-storage-ts), [session](app.md#src-app-session-ts), [testing/rng](app.md#src-app-testing-rng-ts), [testing/scriptedPresenter](app.md#src-app-testing-scriptedpresenter-ts) · tools: [parity/driver](tools.md#tools-parity-driver-ts), [parity/legacyDom](tools.md#tools-parity-legacydom-ts)
+- Imports: core: [ids/band](core.md#src-core-ids-band-ts), [ids/characters](core.md#src-core-ids-characters-ts), [ids/enemies](core.md#src-core-ids-enemies-ts), [ids/flags](core.md#src-core-ids-flags-ts), [ids/items](core.md#src-core-ids-items-ts), [ids/story](core.md#src-core-ids-story-ts), [ids/world](core.md#src-core-ids-world-ts), [types/index](core.md#src-core-types-index-ts) · content: [index](content.md#src-content-index-ts) · engine: [index](engine.md#src-engine-index-ts) · app: [save/storage](app.md#src-app-save-storage-ts), [session](app.md#src-app-session-ts), [testing/rng](app.md#src-app-testing-rng-ts), [testing/scriptedPresenter](app.md#src-app-testing-scriptedpresenter-ts) · tools: [parity/driver](tools.md#tools-parity-driver-ts), [parity/legacyDom](tools.md#tools-parity-legacydom-ts)
 - Packages: `vitest`
 - Suites: “scene transcripts match v1”
 

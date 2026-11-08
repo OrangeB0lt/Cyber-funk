@@ -23,6 +23,7 @@ export { PLACES } from './places';
 export { NPCS } from './npcs';
 export { QUESTS } from './quests';
 export { GLOSSARY } from './glossary';
+export { STAT_NAMES } from './stats';
 export {
   LEVEL_CAP,
   SKILL_LEVELS,

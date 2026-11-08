@@ -166,7 +166,7 @@ Declarations:
 - <a id="src-ui-gamecontext-tsx--useapp"></a>**useApp** · *function* `(): GameApp` — The game app (commands).
   - uses: here [GameContext](#src-ui-gamecontext-tsx--gamecontext)
   - used by: here [useGame](#src-ui-gamecontext-tsx--usegame), [useView](#src-ui-gamecontext-tsx--useview) · **[ui/App](#src-ui-app-tsx)** [Shell](#src-ui-app-tsx--shell) · **[ui/combat/BattleActions](#src-ui-combat-battleactions-tsx)** [BattleActions](#src-ui-combat-battleactions-tsx--battleactions) · **[ui/combat/TimingOverlay](#src-ui-combat-timingoverlay-tsx)** [BluesPads](#src-ui-combat-timingoverlay-tsx--bluespads), [TimingBar](#src-ui-combat-timingoverlay-tsx--timingbar) · **[ui/combat/targeting](#src-ui-combat-targeting-ts)** [useTargeting](#src-ui-combat-targeting-ts--usetargeting) · **[ui/components/Chips](#src-ui-components-chips-tsx)** [StatusChips](#src-ui-components-chips-tsx--statuschips) · **[ui/components/LexText](#src-ui-components-lextext-tsx)** [LexText](#src-ui-components-lextext-tsx--lextext) · **[ui/components/Typewriter](#src-ui-components-typewriter-tsx)** [Typewriter](#src-ui-components-typewriter-tsx--typewriter) · **[ui/layers/PopupLayer](#src-ui-layers-popuplayer-tsx)** [PopupLayer](#src-ui-layers-popuplayer-tsx--popuplayer) · **[ui/layers/Topbar](#src-ui-layers-topbar-tsx)** [Topbar](#src-ui-layers-topbar-tsx--topbar) · **[ui/screens/Create](#src-ui-screens-create-tsx)** [CreateActions](#src-ui-screens-create-tsx--createactions), [CreateScreen](#src-ui-screens-create-tsx--createscreen) · **[ui/screens/District](#src-ui-screens-district-tsx)** [DistrictActions](#src-ui-screens-district-tsx--districtactions), [DistrictScreen](#src-ui-screens-district-tsx--districtscreen) · … +23 more
-- <a id="src-ui-gamecontext-tsx--useview"></a>**useView** · *function* `(): { readonly screen: Screen; readonly title: string | null; readonly lines: readonly { readonly id: number; readonly kind: "narr" | "spoken" | "you" | "prompt"; readon…` — A snapshot of the presentation state.
+- <a id="src-ui-gamecontext-tsx--useview"></a>**useView** · *function* `(): { readonly screen: Screen; readonly title: string | null; readonly lines: readonly { readonly id: number; readonly kind: "narr" | "spoken" | "you" | "prompt" | "boar…` — A snapshot of the presentation state.
   - uses: here [useApp](#src-ui-gamecontext-tsx--useapp) · **[app/game](app.md#src-app-game-ts)** [GameApp.view](app.md#src-app-game-ts--gameapp-view)
   - used by: **[ui/App](#src-ui-app-tsx)** [Screen](#src-ui-app-tsx--screen), [Shell](#src-ui-app-tsx--shell) · **[ui/combat/BattleActions](#src-ui-combat-battleactions-tsx)** [BattleActions](#src-ui-combat-battleactions-tsx--battleactions) · **[ui/combat/BattleScreen](#src-ui-combat-battlescreen-tsx)** [BattleScreen](#src-ui-combat-battlescreen-tsx--battlescreen), [EnemyCard](#src-ui-combat-battlescreen-tsx--enemycard), [Floats](#src-ui-combat-battlescreen-tsx--floats), [useLastHit](#src-ui-combat-battlescreen-tsx--uselasthit) · **[ui/combat/TimingOverlay](#src-ui-combat-timingoverlay-tsx)** [BluesPads](#src-ui-combat-timingoverlay-tsx--bluespads), [TimingBar](#src-ui-combat-timingoverlay-tsx--timingbar), [TimingOverlay](#src-ui-combat-timingoverlay-tsx--timingoverlay) · **[ui/layers/ActionBar](#src-ui-layers-actionbar-tsx)** [ActionBar](#src-ui-layers-actionbar-tsx--actionbar) · **[ui/layers/PopupLayer](#src-ui-layers-popuplayer-tsx)** [PopupLayer](#src-ui-layers-popuplayer-tsx--popuplayer) · **[ui/layers/SheetLayer](#src-ui-layers-sheetlayer-tsx)** [SheetLayer](#src-ui-layers-sheetlayer-tsx--sheetlayer) · **[ui/layers/Toast](#src-ui-layers-toast-tsx)** [Toast](#src-ui-layers-toast-tsx--toast) · **[ui/screens/Create](#src-ui-screens-create-tsx)** [CreateActions](#src-ui-screens-create-tsx--createactions), [CreateScreen](#src-ui-screens-create-tsx--createscreen) · … +11 more
 - <a id="src-ui-gamecontext-tsx--usegame"></a>**useGame** · *function* `(): GameState | null` — A snapshot of the save (null on the title screen), typed as GameState so read-only engine queries (derivedStats, legalActions…) accept it.
@@ -416,17 +416,15 @@ Declarations:
 ### src/ui/components/StatGrid.tsx
 
 - Source: [src/ui/components/StatGrid.tsx](../../../src/ui/components/StatGrid.tsx)
-- Imports: core: [ids/combat](core.md#src-core-ids-combat-ts)
+- Imports: core: [ids/combat](core.md#src-core-ids-combat-ts) · content: [index](content.md#src-content-index-ts)
 - Styles: `StatGrid.module.css`
-- Imported by: ui: [layers/PopupLayer](#src-ui-layers-popuplayer-tsx), [sheets/MenuSheets](#src-ui-sheets-menusheets-tsx), [sheets/format](#src-ui-sheets-format-ts)
+- Imported by: ui: [layers/PopupLayer](#src-ui-layers-popuplayer-tsx), [sheets/MenuSheets](#src-ui-sheets-menusheets-tsx)
 - Types used: **[core/ids/combat](core.md#src-core-ids-combat-ts)** [StatKey](core.md#src-core-ids-combat-ts--statkey)
 
 Declarations:
 
-- <a id="src-ui-components-statgrid-tsx--stat-names"></a>**STAT_NAMES** · *const* `: Record<StatKey, string>` — Display names for the six stats.
-  - used by: here [StatGrid](#src-ui-components-statgrid-tsx--statgrid) · **[ui/sheets/format](#src-ui-sheets-format-ts)** [gearStats](#src-ui-sheets-format-ts--gearstats)
 - <a id="src-ui-components-statgrid-tsx--statgrid"></a>**StatGrid** · *component* `({ stats, gains }: { stats: Partial<Record<StatKey, number>>; gains?: boolean }): React.JSX.Element` — The six stats (or level-up gains when `gains`).
-  - uses: here [STAT_NAMES](#src-ui-components-statgrid-tsx--stat-names) · **[core/ids/combat](core.md#src-core-ids-combat-ts)** [STAT_KEYS](core.md#src-core-ids-combat-ts--stat-keys)
+  - uses: **[content/stats](content.md#src-content-stats-ts)** [STAT_NAMES](content.md#src-content-stats-ts--stat-names) · **[core/ids/combat](core.md#src-core-ids-combat-ts)** [STAT_KEYS](core.md#src-core-ids-combat-ts--stat-keys)
   - used by: **[ui/layers/PopupLayer](#src-ui-layers-popuplayer-tsx)** [PopupLayer](#src-ui-layers-popuplayer-tsx--popuplayer) · **[ui/sheets/MenuSheets](#src-ui-sheets-menusheets-tsx)** [GearSheet](#src-ui-sheets-menusheets-tsx--gearsheet), [StatusSheet](#src-ui-sheets-menusheets-tsx--statussheet)
 
 <a id="src-ui-components-tone-tsx"></a>
@@ -847,12 +845,12 @@ Declarations:
 Display strings shared by several sheets.
 
 - Source: [src/ui/sheets/format.ts](../../../src/ui/sheets/format.ts)
-- Imports: core: [types/index](core.md#src-core-types-index-ts) · ui: [components/StatGrid](#src-ui-components-statgrid-tsx)
+- Imports: core: [types/index](core.md#src-core-types-index-ts) · content: [index](content.md#src-content-index-ts)
 - Imported by: ui: [sheets/MenuSheets](#src-ui-sheets-menusheets-tsx), [sheets/ShopSheet](#src-ui-sheets-shopsheet-tsx)
-- Types used: **[core/types/content](core.md#src-core-types-content-ts)** [GearDef](core.md#src-core-types-content-ts--geardef) · **[ui/components/StatGrid](#src-ui-components-statgrid-tsx)** [STAT_NAMES](#src-ui-components-statgrid-tsx--stat-names)
+- Types used: **[content/stats](content.md#src-content-stats-ts)** [STAT_NAMES](content.md#src-content-stats-ts--stat-names) · **[core/types/content](core.md#src-core-types-content-ts)** [GearDef](core.md#src-core-types-content-ts--geardef)
 
 Declarations:
 
 - <a id="src-ui-sheets-format-ts--gearstats"></a>**gearStats** · *function* `(g: GearDef): string` — "Chops +3, ONE zone +5%…" for a gear piece.
-  - uses: **[ui/components/StatGrid](#src-ui-components-statgrid-tsx)** [STAT_NAMES](#src-ui-components-statgrid-tsx--stat-names)
+  - uses: **[content/stats](content.md#src-content-stats-ts)** [STAT_NAMES](content.md#src-content-stats-ts--stat-names)
   - used by: **[ui/sheets/MenuSheets](#src-ui-sheets-menusheets-tsx)** [GearSheet](#src-ui-sheets-menusheets-tsx--gearsheet), [SlotSheet](#src-ui-sheets-menusheets-tsx--slotsheet) · **[ui/sheets/ShopSheet](#src-ui-sheets-shopsheet-tsx)** [ShopSheet](#src-ui-sheets-shopsheet-tsx--shopsheet)

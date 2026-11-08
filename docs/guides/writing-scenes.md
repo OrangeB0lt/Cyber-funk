@@ -1,6 +1,6 @@
 # Writing scenes
 
-*A cookbook for story content: place options, NPC talks, events, boss scenes. Read [narrative-runtime.md](../architecture/narrative-runtime.md) for how it works underneath. The API is a draft until the vertical-slice playtest; after that it freezes as SceneContext v1, and changes go through an ADR.*
+*A cookbook for story content: place options, NPC talks, events, boss scenes. Read [narrative-runtime.md](../architecture/narrative-runtime.md) for how it works underneath. The API is SceneContext v1 ([ADR-0004](../adr/0004-scene-api.md)): changes go through an ADR.*
 
 ## The shape
 
@@ -114,6 +114,25 @@ await s.fight({ enemies: ['hush_sergeant'], level: 4, noFlee: true, ambush: true
 - **Losing a street fight never returns.** The player wakes at the club, and the code after the `await` doesn't run, as in v1. So write the win path straight after the fight, and handle `'fled'` if SPLIT is allowed.
 - **Bosses** use `await s.boss('captain_hush')`. It runs the boss's `pre` scene (first time), the fight with retries, then the `post` scene and the next act. Write `pre`/`post` in `content/bosses/<boss>.scene.ts` and register them in `BOSS_SCENES`.
 
+## Minigames
+
+```ts
+const grade = await s.timing();   // one On the One bar (auto rhythm rolls instead); grade.id is 'one' | 'pocket' | 'loose' | 'clams'
+s.board(rows.join('\n'));        // a fixed-width block in the story; each call redraws it in place
+await s.wait(220);                // between frames (instant in tests and turbo)
+```
+
+The sit-in at Club Feu Follet uses `timing` eight times. The crawfish race at the Thirsty Pelican redraws its track with `board`. Tarot, whispers and blessings are ordinary choices and `s.rng` rolls.
+
+## Shared helpers
+
+Several districts use `src/content/world/shared.scene.ts`:
+- `instrumentStock(cls, tiers)`: shop rows for the player's class instruments
+- `rumor`: a bar tip about the next boss
+- `getInvitation(s, how)`: the Vane ball invitation
+
+Put a helper there when a second district needs it.
+
 ## Sheets and travel
 
 ```ts
@@ -142,7 +161,7 @@ Register it in `PLACE_SCENES` (`content/index.ts`). Option keys become test ids 
 
 ## Checklist before you open a PR
 
-- [ ] `npm run check` passes (types, lint, layers, tests including the content validator).
+- [ ] `npm run check` passes: types, lint, layers, and tests. That includes the completeness tests and the crawler, which run every option of every ported place down every choice.
 - [ ] New choices and options have meaningful, stable keys.
 - [ ] Every new id (flag, step, item, NPC) is in its `core/ids` list with a doc comment.
 - [ ] The scene plays in the browser (`npm run dev`, and use the dev menu to jump there) at 360px.
