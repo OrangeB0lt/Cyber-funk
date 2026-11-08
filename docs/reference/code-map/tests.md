@@ -28,6 +28,7 @@ Generated reference. Start with the [guide](../../architecture/code-map.md) for 
 | [tests/e2e/sprites.spec.ts](#tests-e2e-sprites-spec-ts) | Character sprites in the 360×740 phone: the dev gallery shows every sprite at both sizes, and sprites appear wherever a character does (battle cards, dialogue,… |
 | [tests/e2e/stack/cloud.spec.ts](#tests-e2e-stack-cloud-spec-ts) | Cloud saves against the real Docker stack (docker compose up): the production image, the API and Postgres. |
 | [tests/integration/explore.test.ts](#tests-integration-explore-test-ts) | The crawler: for every ported district (src/content/pending.ts), build saves at every step of its story, in three states of play, and press every option at eve… |
+| [tests/integration/playthrough.test.ts](#tests-integration-playthrough-test-ts) | The whole game so far, played headlessly with real battles: new game → prologue → every ported district's story → its boss, down every branch of the big boss c… |
 | [tests/integration/slice.test.ts](#tests-integration-slice-test-ts) | The vertical slice, played headlessly: new game → prologue → Tremé → three street wins → Captain Hush → the Quarter unlocks. |
 | [tests/integration/support/crawl.ts](#tests-integration-support-crawl-ts) | The crawler's toolkit: build saves at every point of a district's story, run any scene in a fresh headless Session with a scripted player, and explore every br… |
 | [tools/codemap.test.ts](#tools-codemap-test-ts) | The generated code map (docs/reference/code-map/) must match the code. |
@@ -242,6 +243,17 @@ The crawler: for every ported district (src/content/pending.ts), build saves at 
 - Imports: core: [ids/characters](core.md#src-core-ids-characters-ts), [ids/items](core.md#src-core-ids-items-ts), [ids/story](core.md#src-core-ids-story-ts), [ids/world](core.md#src-core-ids-world-ts), [types/index](core.md#src-core-types-index-ts) · narrative: [define](narrative.md#src-narrative-define-ts) · content: [index](content.md#src-content-index-ts), [pending](content.md#src-content-pending-ts) · engine: [index](engine.md#src-engine-index-ts) · tests: [integration/support/crawl](#tests-integration-support-crawl-ts)
 - Packages: `node:fs`, `node:path`, `vitest`
 - Suites: “story”, “street events”, “coverage”
+
+<a id="tests-integration-playthrough-test-ts"></a>
+
+### tests/integration/playthrough.test.ts
+
+The whole game so far, played headlessly with real battles: new game → prologue → every ported district's story → its boss, down every branch of the big boss choices, until the story reaches a district that hasn't been ported yet (src/content/pending.ts). As districts are ported, this test plays further on its own.
+
+- Source: [tests/integration/playthrough.test.ts](../../../tests/integration/playthrough.test.ts)
+- Imports: core: [ids/enemies](core.md#src-core-ids-enemies-ts), [ids/world](core.md#src-core-ids-world-ts), [types/index](core.md#src-core-types-index-ts) · content: [index](content.md#src-content-index-ts), [pending](content.md#src-content-pending-ts) · engine: [index](engine.md#src-engine-index-ts) · app: [devStates](app.md#src-app-devstates-ts), [save/storage](app.md#src-app-save-storage-ts), [session](app.md#src-app-session-ts), [testing/scriptedPresenter](app.md#src-app-testing-scriptedpresenter-ts)
+- Packages: `vitest`
+- Suites: “playthrough”
 
 <a id="tests-integration-slice-test-ts"></a>
 
