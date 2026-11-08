@@ -31,7 +31,7 @@ Every sprite as the game draws it, at 4× on the surface it sits on in battle an
 | ![Lucien](lucien.svg)<br>`lucien`<br>Lucien | ![Mambo Rosalie](rosalie.svg)<br>`rosalie`<br>Mambo Rosalie | ![Brother Moses](moses.svg)<br>`moses`<br>Brother Moses | ![The Valet](tuxedo_valet.svg)<br>`tuxedo_valet`<br>The Valet |
 | ![Vending Machine](vendor.svg)<br>`vendor`<br>Vending Machine |   |   |   |
 
-## Shopkeepers (P3)
+## Shopkeepers
 
 | | | | |
 |---|---|---|---|

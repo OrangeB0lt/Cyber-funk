@@ -22,7 +22,7 @@ export {
 export {
   CLONE_RECOLOR,
   NPC_SPRITE,
-  RESERVED_P3,
+  SHOPKEEPERS,
   actorSprite,
   cloneSprite,
   heroSprite,

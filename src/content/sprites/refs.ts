@@ -1,12 +1,12 @@
 /**
  * Who is drawn with which sprite. Speakers map to their art through NPC_SPRITE (some reuse an
- * opponent's art); heroes and clones are derived from the class; shopkeepers in still-v1 places wait
- * in RESERVED_P3. The UI resolves sprites with these helpers; nothing below ui/ needs them.
+ * opponent's art); heroes and clones are derived from the class; shopkeepers who never speak are in
+ * SHOPKEEPERS. The UI resolves sprites with these helpers; nothing below ui/ needs them.
  */
 import type { ClassId } from '@core/ids/characters';
 import type { OpponentId } from '@core/ids/enemies';
 import type { CloneSpriteId, HeroSpriteId, PaletteId, PersonSpriteId, SpriteId } from '@core/ids/sprites';
-import type { NpcId } from '@core/ids/world';
+import type { NpcId, PlaceId } from '@core/ids/world';
 
 /** Each speaker's sprite. 'player' is the player's class hero. */
 export const NPC_SPRITE: Readonly<Record<NpcId, SpriteId | 'player'>> = {
@@ -42,15 +42,18 @@ export const NPC_SPRITE: Readonly<Record<NpcId, SpriteId | 'player'>> = {
   you: 'player',
 };
 
-/** Shopkeepers drawn now whose places are still v1-only. P3 passes them as their shop's `keeper`. */
-export const RESERVED_P3: readonly PersonSpriteId[] = [
-  'pelican_bartender',
-  'faisdodo_bartender',
-  'market_vendor',
-  'chop_surgeon',
-  'maison_clerk',
-  'tuxedo_maitre',
-];
+/**
+ * Shopkeepers who never speak, and the place whose shop they run. Their portrait shows beside the
+ * shop's title (the scene passes them as `keeper`); the crawler checks each one appears.
+ */
+export const SHOPKEEPERS: Readonly<Partial<Record<PersonSpriteId, PlaceId>>> = {
+  pelican_bartender: 'pelican',
+  faisdodo_bartender: 'faisdodo',
+  market_vendor: 'market',
+  chop_surgeon: 'chopshop',
+  maison_clerk: 'maison',
+  tuxedo_maitre: 'tuxedo',
+};
 
 /**
  * The Session Clone look: a hero in corporate chrome. Skin and hair go to chrome, every warm or neon

@@ -29,7 +29,7 @@ import { ALLOWED_UNLINKED } from '../../../tools/completeness';
 /* ------------------------------------------------------------------ */
 
 /**
- * How lived-in a save is: `fresh` (no quests, broke), `started` (the district's quests just taken,
+ * How lived-in a save is: `fresh` (no quests, broke), `started` (every quest so far just taken,
  * a little money), `busy` (quests ready to hand in, one of everything, flush), `done` (quests done,
  * every flag, the whole band, the other boss choices).
  */
@@ -79,7 +79,8 @@ export function buildState(
   g.district = d;
   if (!g.unlocked.includes(d)) g.unlocked.push(d);
   g.districtIntros = [...g.unlocked];
-  const quests = QUEST_IDS.filter(q => QUESTS[q].district === d);
+  // Every quest of every district reached so far: Mama Roux's red beans are bought in the Quarter.
+  const quests = QUEST_IDS.filter(q => g.unlocked.includes(QUESTS[q].district));
   if (profile === 'fresh') g.doubloons = 0;
   if (profile === 'started') {
     g.doubloons = 150;

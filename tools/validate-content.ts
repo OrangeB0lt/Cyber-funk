@@ -37,7 +37,7 @@ import {
   MAX_VARIANT_DEPTH,
   NPC_SPRITE,
   PALETTE,
-  RESERVED_P3,
+  SHOPKEEPERS,
   SPRITES,
   resolveSprite,
   type ResolvedSprite,
@@ -222,10 +222,10 @@ function validateSprites(fail: (msg: string) => void): void {
     if (resolved.has(id) && resolved.get(id)!.fx !== 'holo')
       fail(`Sprite ${id}: the opponent is a hologram, so fx must be 'holo'.`);
 
-  // Every person sprite belongs to someone: a speaker (NPC_SPRITE) or a shopkeeper waiting for P3.
-  const claimed = new Set<string>([...Object.values(NPC_SPRITE), ...RESERVED_P3]);
+  // Every person sprite belongs to someone: a speaker (NPC_SPRITE) or a shopkeeper (SHOPKEEPERS).
+  const claimed = new Set<string>([...Object.values(NPC_SPRITE), ...Object.keys(SHOPKEEPERS)]);
   for (const id of PERSON_SPRITE_IDS)
-    if (!claimed.has(id)) fail(`Sprite ${id}: no speaker uses it (NPC_SPRITE) and it isn't in RESERVED_P3.`);
+    if (!claimed.has(id)) fail(`Sprite ${id}: no speaker uses it (NPC_SPRITE) and it isn't in SHOPKEEPERS.`);
 
   // The design doc has a card for every sprite, and its palette table is exactly PALETTE.
   const doc = fs.readFileSync(path.resolve(DESIGN_DOC), 'utf8');

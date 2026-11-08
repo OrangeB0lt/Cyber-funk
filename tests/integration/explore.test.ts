@@ -40,6 +40,7 @@ import {
   travel,
 } from '@content/index';
 import { isPendingAct, isPendingDistrict, type PendingDistrict } from '@content/pending';
+import { SHOPKEEPERS } from '@content/sprites';
 import { newGame, priceFor, storyIs, storyReached } from '@engine/index';
 import type { PlaceHelpers } from '@narrative/define';
 import type { GameState } from '@core/types';
@@ -71,6 +72,7 @@ const seen = {
   optionKeys: new Set<string>(),
   obtainable: new Set<ObtainableKey>(),
   shopsWithoutKeeper: new Set<string>(),
+  keepers: new Set<string>(),
 };
 
 /**
@@ -85,7 +87,10 @@ function record(scope: string, out: RunOutcome, choices = true): void {
   if (choices) for (const k of out.offered) seen.offered.add(`${scope}|${k}`);
   for (const k of out.chosen) seen.chosen.add(`${scope}|${k}`);
   for (const x of obtainedBy(out)) seen.obtainable.add(x);
-  for (const s of out.shops) if (!s.req.keeper) seen.shopsWithoutKeeper.add(s.req.title);
+  for (const s of out.shops) {
+    if (!s.req.keeper) seen.shopsWithoutKeeper.add(s.req.title);
+    else seen.keepers.add(s.req.keeper);
+  }
 }
 
 /** Run every branch of a scene and collect problems. */
@@ -240,16 +245,6 @@ const NEVER: Partial<Record<ObtainableKey, string>> = {
  * The values are pending districts, so porting one turns its leftover entries into type errors.
  */
 const PENDING_SOURCES: Partial<Record<ObtainableKey, PendingDistrict>> = {
-  // The Thirsty Pelican's drinks, the French Market, Zinnia's charms, Jackson Square's quests, Vox.
-  chicory: 'quarter',
-  hurricane: 'quarter',
-  sazerac: 'quarter',
-  redbeans: 'quarter',
-  ch_medal: 'quarter',
-  ch_medallion: 'quarter',
-  ch_mouthpiece: 'quarter',
-  ch_evileye: 'quarter',
-  mod_pitch: 'quarter',
   // The Basin Street Chop Shop and Professor Theo's sheet music.
   mod_lungs: 'storyville',
   mod_jaw: 'storyville',
@@ -311,8 +306,13 @@ describe('coverage', () => {
     expect(missing).toEqual([]);
   });
 
-  it('every shop has a keeper (their portrait shows beside the title)', () => {
+  it('every shop has a keeper, and every shopkeeper of a ported district runs a shop', () => {
     expect([...seen.shopsWithoutKeeper]).toEqual([]);
+    const idle = Object.entries(SHOPKEEPERS)
+      .filter(([, place]) => !isPendingDistrict(PLACES[place].district))
+      .map(([id]) => id)
+      .filter(id => !seen.keepers.has(id));
+    expect(idle).toEqual([]);
   });
 
   it('every item, gear piece, instrument tier and sheet of music can be obtained', () => {

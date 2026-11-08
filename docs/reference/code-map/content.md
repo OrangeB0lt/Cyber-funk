@@ -15,7 +15,7 @@ flowchart LR
   n_classes_["classes/ (8)"]
   n_combat_["combat/ (7)"]
   n_data["data"]
-  n_districts_["districts/ (17)"]
+  n_districts_["districts/ (18)"]
   n_enemies_["enemies/ (3)"]
   n_format["format"]
   n_gear_["gear/ (5)"]
@@ -127,6 +127,7 @@ flowchart LR
 | [src/content/districts/quarter/cutting.scene.ts](#src-content-districts-quarter-cutting-scene-ts) | The Cutting Contest at Club Feu Follet: three rivals back to back. |
 | [src/content/districts/quarter/district.ts](#src-content-districts-quarter-district-ts) | French Quarter & Frenchmen. |
 | [src/content/districts/quarter/enemies.ts](#src-content-districts-quarter-enemies-ts) | French Quarter & Frenchmen: street enemies and the district elite. |
+| [src/content/districts/quarter/places.scene.ts](#src-content-districts-quarter-places-scene-ts) | The French Quarter's places: the Bourbon Strip, the Thirsty Pelican, Club Feu Follet, the French Market and Jackson Square, with Miss Odette, Madame Zinnia, th… |
 | [src/content/districts/storyville/district.ts](#src-content-districts-storyville-district-ts) | Storyville. |
 | [src/content/districts/storyville/enemies.ts](#src-content-districts-storyville-enemies-ts) | Storyville: street enemies and the district elite. |
 | [src/content/districts/tower/district.ts](#src-content-districts-tower-district-ts) | Central Business District. |
@@ -161,7 +162,7 @@ flowchart LR
 | [src/content/sprites/art/people.ts](#src-content-sprites-art-people-ts) | Speakers, guides, vendors and bandmates with art of their own. |
 | [src/content/sprites/art/quarter.ts](#src-content-sprites-art-quarter-ts) | The French Quarter: its street enemies, its elite and Vox Perfecta. |
 | [src/content/sprites/art/rivals.ts](#src-content-sprites-art-rivals-ts) | The three Cutting Contest rivals. |
-| [src/content/sprites/art/shopkeepers.ts](#src-content-sprites-art-shopkeepers-ts) | Shopkeepers in places P3 still has to port (no NpcId yet; see RESERVED_P3). |
+| [src/content/sprites/art/shopkeepers.ts](#src-content-sprites-art-shopkeepers-ts) | Shopkeepers who never speak (no NpcId; see SHOPKEEPERS). |
 | [src/content/sprites/art/storyville.ts](#src-content-sprites-art-storyville-ts) | Storyville: its street enemies, its elite and Mr. |
 | [src/content/sprites/art/tower.ts](#src-content-sprites-art-tower-ts) | The Central Business District: its street enemies, its elite, the Conductor and the Click. |
 | [src/content/sprites/art/treme.ts](#src-content-sprites-art-treme-ts) | Tremé: its street enemies, its elite and Captain Hush. |
@@ -805,7 +806,7 @@ The Cutting Contest at Club Feu Follet: three rivals back to back. Winning the f
 
 - Source: [src/content/districts/quarter/cutting.scene.ts](../../../src/content/districts/quarter/cutting.scene.ts)
 - Imports: core: [ids/enemies](core.md#src-core-ids-enemies-ts) · narrative: [types](narrative.md#src-narrative-types-ts) · content: [quests](#src-content-quests-ts), [world/streets.scene](#src-content-world-streets-scene-ts)
-- Imported by: content: [index](#src-content-index-ts)
+- Imported by: content: [districts/quarter/places.scene](#src-content-districts-quarter-places-scene-ts), [index](#src-content-index-ts)
 - Tested by: [transcripts.test](tests.md#tools-parity-transcripts-test-ts)
 - Types used: **[core/ids/enemies](core.md#src-core-ids-enemies-ts)** [EnemyId](core.md#src-core-ids-enemies-ts--enemyid) · **[narrative/types](narrative.md#src-narrative-types-ts)** [Scene](narrative.md#src-narrative-types-ts--scene)
 
@@ -819,7 +820,7 @@ Declarations:
   - used by: here [cuttingContest](#src-content-districts-quarter-cutting-scene-ts--cuttingcontest)
 - <a id="src-content-districts-quarter-cutting-scene-ts--cuttingcontest"></a>**cuttingContest** · *function* `(s): Promise<void>`
   - uses: here [BETWEEN](#src-content-districts-quarter-cutting-scene-ts--between), [INTROS](#src-content-districts-quarter-cutting-scene-ts--intros), [RIVALS](#src-content-districts-quarter-cutting-scene-ts--rivals) · **[content/quests](#src-content-quests-ts)** [QUESTS](#src-content-quests-ts--quests) · **[content/world/streets.scene](#src-content-world-streets-scene-ts)** [fmtD](#src-content-world-streets-scene-ts--fmtd) · **[narrative/types](narrative.md#src-narrative-types-ts)** [SceneContext.choose](narrative.md#src-narrative-types-ts--scenecontext-choose), [SceneContext.fight](narrative.md#src-narrative-types-ts--scenecontext-fight), [SceneContext.funk](narrative.md#src-narrative-types-ts--scenecontext-funk), [SceneContext.gold](narrative.md#src-narrative-types-ts--scenecontext-gold), [SceneContext.heal](narrative.md#src-narrative-types-ts--scenecontext-heal), [SceneContext.narrate](narrative.md#src-narrative-types-ts--scenecontext-narrate), [SceneContext.quest](narrative.md#src-narrative-types-ts--scenecontext-quest), [SceneContext.recruit](narrative.md#src-narrative-types-ts--scenecontext-recruit), [SceneContext.say](narrative.md#src-narrative-types-ts--scenecontext-say), [SceneContext.scaleGold](narrative.md#src-narrative-types-ts--scenecontext-scalegold), [SceneContext.setQuest](narrative.md#src-narrative-types-ts--scenecontext-setquest) · … +2 more
-  - used by: **[app/game](app.md#src-app-game-ts)** [GameApp.dev](app.md#src-app-game-ts--gameapp-dev) · tests: [transcripts.test](tests.md#tools-parity-transcripts-test-ts)
+  - used by: **[app/game](app.md#src-app-game-ts)** [GameApp.dev](app.md#src-app-game-ts--gameapp-dev) · **[content/districts/quarter/places.scene](#src-content-districts-quarter-places-scene-ts)** [feufollet](#src-content-districts-quarter-places-scene-ts--feufollet) · tests: [transcripts.test](tests.md#tools-parity-transcripts-test-ts)
 
 <a id="src-content-districts-quarter-district-ts"></a>
 
@@ -852,6 +853,58 @@ Declarations:
 
 - <a id="src-content-districts-quarter-enemies-ts--quarterenemies"></a>**quarterEnemies** · *const* `satisfies Partial<Table<EnemyId, EnemyDef>>`
   - used by: **[content/enemies/index](#src-content-enemies-index-ts)** [ENEMIES](#src-content-enemies-index-ts--enemies)
+
+<a id="src-content-districts-quarter-places-scene-ts"></a>
+
+### src/content/districts/quarter/places.scene.ts
+
+The French Quarter's places: the Bourbon Strip, the Thirsty Pelican, Club Feu Follet, the French Market and Jackson Square, with Miss Odette, Madame Zinnia, the busker, the broadcaster, the sit-in and the crawfish races. (v1: legacy/src/08_world.js PLACE_FLOWS strip/pelican/feufollet/market/ jackson, odetteTalk, zinniaTarot, lostEyeQuest, hornQuest, sitIn, crawfishRaces, and legacy/src/09_story.js broadcasterScene.)
+
+- Source: [src/content/districts/quarter/places.scene.ts](../../../src/content/districts/quarter/places.scene.ts)
+- Imports: narrative: [define](narrative.md#src-narrative-define-ts), [types](narrative.md#src-narrative-types-ts) · content: [districts/quarter/cutting.scene](#src-content-districts-quarter-cutting-scene-ts), [places](#src-content-places-ts), [quests](#src-content-quests-ts), [world/shared.scene](#src-content-world-shared-scene-ts), [world/streets.scene](#src-content-world-streets-scene-ts)
+- Imported by: content: [index](#src-content-index-ts)
+- Types used: **[narrative/types](narrative.md#src-narrative-types-ts)** [Scene](narrative.md#src-narrative-types-ts--scene), [SceneContext](narrative.md#src-narrative-types-ts--scenecontext)
+
+Declarations:
+
+- <a id="src-content-districts-quarter-places-scene-ts--odettetalk"></a>**odetteTalk** · *function* `(s): Promise<void>` — Talking to Miss Odette: the first time sets the act in motion; after that, the talk of Frenchmen.
+  - uses: **[core/rng](core.md#src-core-rng-ts)** [Rng.pick](core.md#src-core-rng-ts--rng-pick) · **[narrative/types](narrative.md#src-narrative-types-ts)** [SceneContext.bookHint](narrative.md#src-narrative-types-ts--scenecontext-bookhint), [SceneContext.quest](narrative.md#src-narrative-types-ts--scenecontext-quest), [SceneContext.say](narrative.md#src-narrative-types-ts--scenecontext-say), [SceneContext.setQuest](narrative.md#src-narrative-types-ts--scenecontext-setquest)
+  - used by: here [feufollet](#src-content-districts-quarter-places-scene-ts--feufollet)
+- <a id="src-content-districts-quarter-places-scene-ts--sitin"></a>**sitIn** · *function* `(s): Promise<void>` — Sitting in with the house band: eight bars On the One, paid by accuracy, once a day.
+  - uses: **[content/world/streets.scene](#src-content-world-streets-scene-ts)** [fmtD](#src-content-world-streets-scene-ts--fmtd) · **[narrative/types](narrative.md#src-narrative-types-ts)** [SceneContext.narrate](narrative.md#src-narrative-types-ts--scenecontext-narrate), [SceneContext.say](narrative.md#src-narrative-types-ts--scenecontext-say), [SceneContext.timing](narrative.md#src-narrative-types-ts--scenecontext-timing), [SceneContext.title](narrative.md#src-narrative-types-ts--scenecontext-title), [SceneContext.xp](narrative.md#src-narrative-types-ts--scenecontext-xp)
+  - used by: here [feufollet](#src-content-districts-quarter-places-scene-ts--feufollet)
+- <a id="src-content-districts-quarter-places-scene-ts--feufollet"></a>**feufollet** · *const*
+  - uses: here [odetteTalk](#src-content-districts-quarter-places-scene-ts--odettetalk), [sitIn](#src-content-districts-quarter-places-scene-ts--sitin) · **[content/districts/quarter/cutting.scene](#src-content-districts-quarter-cutting-scene-ts)** [cuttingContest](#src-content-districts-quarter-cutting-scene-ts--cuttingcontest) · **[content/places](#src-content-places-ts)** [PLACES](#src-content-places-ts--places) · **[narrative/define](narrative.md#src-narrative-define-ts)** [PlaceHelpers.is](narrative.md#src-narrative-define-ts--placehelpers-is), [definePlace](narrative.md#src-narrative-define-ts--defineplace) · **[narrative/types](narrative.md#src-narrative-types-ts)** [SceneContext.title](narrative.md#src-narrative-types-ts--scenecontext-title), [SceneContext.toast](narrative.md#src-narrative-types-ts--scenecontext-toast)
+  - used by: **[content/index](#src-content-index-ts)** [PLACE_SCENES](#src-content-index-ts--place-scenes)
+- <a id="src-content-districts-quarter-places-scene-ts--crawfish"></a>**CRAWFISH** · *const, internal* `= [ … ] as const (4 entries)`
+  - used by: here [crawfishRaces](#src-content-districts-quarter-places-scene-ts--crawfishraces)
+- <a id="src-content-districts-quarter-places-scene-ts--crawfishraces"></a>**crawfishRaces** · *function* `(s): Promise<void>` — Crawfish races behind the pool table: bet, watch the track, collect triple (or don't).
+  - uses: here [CRAWFISH](#src-content-districts-quarter-places-scene-ts--crawfish) · **[content/world/streets.scene](#src-content-world-streets-scene-ts)** [fmtD](#src-content-world-streets-scene-ts--fmtd) · **[core/rng](core.md#src-core-rng-ts)** [Rng.chance](core.md#src-core-rng-ts--rng-chance) · **[narrative/types](narrative.md#src-narrative-types-ts)** [SceneContext.board](narrative.md#src-narrative-types-ts--scenecontext-board), [SceneContext.choose](narrative.md#src-narrative-types-ts--scenecontext-choose), [SceneContext.narrate](narrative.md#src-narrative-types-ts--scenecontext-narrate), [SceneContext.title](narrative.md#src-narrative-types-ts--scenecontext-title), [SceneContext.wait](narrative.md#src-narrative-types-ts--scenecontext-wait)
+  - used by: here [pelican](#src-content-districts-quarter-places-scene-ts--pelican)
+- <a id="src-content-districts-quarter-places-scene-ts--pelican"></a>**pelican** · *const*
+  - uses: here [crawfishRaces](#src-content-districts-quarter-places-scene-ts--crawfishraces) · **[content/places](#src-content-places-ts)** [PLACES](#src-content-places-ts--places) · **[content/world/shared.scene](#src-content-world-shared-scene-ts)** [rumor](#src-content-world-shared-scene-ts--rumor) · **[narrative/define](narrative.md#src-narrative-define-ts)** [definePlace](narrative.md#src-narrative-define-ts--defineplace) · **[narrative/types](narrative.md#src-narrative-types-ts)** [SceneContext.sheet](narrative.md#src-narrative-types-ts--scenecontext-sheet), [SceneContext.title](narrative.md#src-narrative-types-ts--scenecontext-title)
+  - used by: **[content/index](#src-content-index-ts)** [PLACE_SCENES](#src-content-index-ts--place-scenes)
+- <a id="src-content-districts-quarter-places-scene-ts--market"></a>**market** · *const*
+  - uses: **[content/places](#src-content-places-ts)** [PLACES](#src-content-places-ts--places) · **[core/rng](core.md#src-core-rng-ts)** [Rng.pick](core.md#src-core-rng-ts--rng-pick) · **[narrative/define](narrative.md#src-narrative-define-ts)** [definePlace](narrative.md#src-narrative-define-ts--defineplace) · **[narrative/types](narrative.md#src-narrative-types-ts)** [SceneContext.narrate](narrative.md#src-narrative-types-ts--scenecontext-narrate), [SceneContext.sheet](narrative.md#src-narrative-types-ts--scenecontext-sheet), [SceneContext.title](narrative.md#src-narrative-types-ts--scenecontext-title)
+  - used by: **[content/index](#src-content-index-ts)** [PLACE_SCENES](#src-content-index-ts--place-scenes)
+- <a id="src-content-districts-quarter-places-scene-ts--zinniatarot"></a>**zinniaTarot** · *function* `(s): Promise<void>` — Madame Zinnia's data-tarot: Ð30 for a card that sets up your next fight (or a rumor).
+  - uses: **[content/world/shared.scene](#src-content-world-shared-scene-ts)** [rumor](#src-content-world-shared-scene-ts--rumor) · **[core/rng](core.md#src-core-rng-ts)** [Rng.next](core.md#src-core-rng-ts--rng-next) · **[narrative/types](narrative.md#src-narrative-types-ts)** [SceneContext.nextFight](narrative.md#src-narrative-types-ts--scenecontext-nextfight), [SceneContext.say](narrative.md#src-narrative-types-ts--scenecontext-say), [SceneContext.title](narrative.md#src-narrative-types-ts--scenecontext-title)
+  - used by: here [jackson](#src-content-districts-quarter-places-scene-ts--jackson)
+- <a id="src-content-districts-quarter-places-scene-ts--losteyequest"></a>**lostEyeQuest** · *function* `(s): Promise<void>` — The Lost Eye: a Neon Mime walked off with Zinnia's eye.
+  - uses: **[content/quests](#src-content-quests-ts)** [QUESTS](#src-content-quests-ts--quests) · **[narrative/types](narrative.md#src-narrative-types-ts)** [SceneContext.fight](narrative.md#src-narrative-types-ts--scenecontext-fight), [SceneContext.gainGear](narrative.md#src-narrative-types-ts--scenecontext-gaingear), [SceneContext.gold](narrative.md#src-narrative-types-ts--scenecontext-gold), [SceneContext.narrate](narrative.md#src-narrative-types-ts--scenecontext-narrate), [SceneContext.quest](narrative.md#src-narrative-types-ts--scenecontext-quest), [SceneContext.say](narrative.md#src-narrative-types-ts--scenecontext-say), [SceneContext.setQuest](narrative.md#src-narrative-types-ts--scenecontext-setquest), [SceneContext.title](narrative.md#src-narrative-types-ts--scenecontext-title), [SceneContext.xp](narrative.md#src-narrative-types-ts--scenecontext-xp)
+  - used by: here [jackson](#src-content-districts-quarter-places-scene-ts--jackson)
+- <a id="src-content-districts-quarter-places-scene-ts--hornquest"></a>**hornQuest** · *function* `(s): Promise<void>` — The busker on the bench: the Hush took his trumpet; beat three Patrolmen to get it back.
+  - uses: **[content/quests](#src-content-quests-ts)** [QUESTS](#src-content-quests-ts--quests) · **[narrative/types](narrative.md#src-narrative-types-ts)** [SceneContext.counter](narrative.md#src-narrative-types-ts--scenecontext-counter), [SceneContext.gainGear](narrative.md#src-narrative-types-ts--scenecontext-gaingear), [SceneContext.gold](narrative.md#src-narrative-types-ts--scenecontext-gold), [SceneContext.quest](narrative.md#src-narrative-types-ts--scenecontext-quest), [SceneContext.say](narrative.md#src-narrative-types-ts--scenecontext-say), [SceneContext.setQuest](narrative.md#src-narrative-types-ts--scenecontext-setquest), [SceneContext.title](narrative.md#src-narrative-types-ts--scenecontext-title), [SceneContext.xp](narrative.md#src-narrative-types-ts--scenecontext-xp)
+  - used by: here [jackson](#src-content-districts-quarter-places-scene-ts--jackson)
+- <a id="src-content-districts-quarter-places-scene-ts--broadcasterscene"></a>**broadcasterScene** · *function* `(s): Promise<void>` — Killing the licensing broadcaster's signal: the drones, then one of three ways to do it.
+  - uses: **[narrative/types](narrative.md#src-narrative-types-ts)** [SceneContext.choose](narrative.md#src-narrative-types-ts--scenecontext-choose), [SceneContext.fight](narrative.md#src-narrative-types-ts--scenecontext-fight), [SceneContext.narrate](narrative.md#src-narrative-types-ts--scenecontext-narrate), [SceneContext.nextFight](narrative.md#src-narrative-types-ts--scenecontext-nextfight), [SceneContext.title](narrative.md#src-narrative-types-ts--scenecontext-title), [SceneContext.xp](narrative.md#src-narrative-types-ts--scenecontext-xp)
+  - used by: here [jackson](#src-content-districts-quarter-places-scene-ts--jackson)
+- <a id="src-content-districts-quarter-places-scene-ts--jackson"></a>**jackson** · *const*
+  - uses: here [broadcasterScene](#src-content-districts-quarter-places-scene-ts--broadcasterscene), [hornQuest](#src-content-districts-quarter-places-scene-ts--hornquest), [lostEyeQuest](#src-content-districts-quarter-places-scene-ts--losteyequest), [zinniaTarot](#src-content-districts-quarter-places-scene-ts--zinniatarot) · **[content/places](#src-content-places-ts)** [PLACES](#src-content-places-ts--places) · **[narrative/define](narrative.md#src-narrative-define-ts)** [PlaceHelpers.is](narrative.md#src-narrative-define-ts--placehelpers-is), [definePlace](narrative.md#src-narrative-define-ts--defineplace) · **[narrative/types](narrative.md#src-narrative-types-ts)** [SceneContext.narrate](narrative.md#src-narrative-types-ts--scenecontext-narrate), [SceneContext.sheet](narrative.md#src-narrative-types-ts--scenecontext-sheet), [SceneContext.title](narrative.md#src-narrative-types-ts--scenecontext-title)
+  - used by: **[content/index](#src-content-index-ts)** [PLACE_SCENES](#src-content-index-ts--place-scenes)
+- <a id="src-content-districts-quarter-places-scene-ts--strip"></a>**strip** · *const*
+  - uses: **[content/places](#src-content-places-ts)** [PLACES](#src-content-places-ts--places) · **[narrative/define](narrative.md#src-narrative-define-ts)** [PlaceHelpers.is](narrative.md#src-narrative-define-ts--placehelpers-is), [definePlace](narrative.md#src-narrative-define-ts--defineplace) · **[narrative/types](narrative.md#src-narrative-types-ts)** [SceneContext.boss](narrative.md#src-narrative-types-ts--scenecontext-boss), [SceneContext.narrate](narrative.md#src-narrative-types-ts--scenecontext-narrate), [SceneContext.nextFight](narrative.md#src-narrative-types-ts--scenecontext-nextfight), [SceneContext.title](narrative.md#src-narrative-types-ts--scenecontext-title)
+  - used by: **[content/index](#src-content-index-ts)** [PLACE_SCENES](#src-content-index-ts--place-scenes)
 
 <a id="src-content-districts-storyville-district-ts"></a>
 
@@ -1158,7 +1211,7 @@ Declarations:
 All content as the app sees it: the data (content/data.ts) plus every scene. The engine and the sim never import this file (they use data.ts), which keeps prose out of their module graph.
 
 - Source: [src/content/index.ts](../../../src/content/index.ts)
-- Imports: core: [ids/enemies](core.md#src-core-ids-enemies-ts), [ids/world](core.md#src-core-ids-world-ts) · narrative: [define](narrative.md#src-narrative-define-ts), [types](narrative.md#src-narrative-types-ts) · content: [bosses/captain_hush.scene](#src-content-bosses-captain-hush-scene-ts), [bosses/vox_perfecta.scene](#src-content-bosses-vox-perfecta-scene-ts), [data](#src-content-data-ts), [districts/quarter/cutting.scene](#src-content-districts-quarter-cutting-scene-ts), [districts/treme/places.scene](#src-content-districts-treme-places-scene-ts), [format](#src-content-format-ts), [story/prologue.scene](#src-content-story-prologue-scene-ts), [text](#src-content-text-ts), [world/arrivals.scene](#src-content-world-arrivals-scene-ts), [world/streetEvents.scene](#src-content-world-streetevents-scene-ts), [world/streets.scene](#src-content-world-streets-scene-ts)
+- Imports: core: [ids/enemies](core.md#src-core-ids-enemies-ts), [ids/world](core.md#src-core-ids-world-ts) · narrative: [define](narrative.md#src-narrative-define-ts), [types](narrative.md#src-narrative-types-ts) · content: [bosses/captain_hush.scene](#src-content-bosses-captain-hush-scene-ts), [bosses/vox_perfecta.scene](#src-content-bosses-vox-perfecta-scene-ts), [data](#src-content-data-ts), [districts/quarter/cutting.scene](#src-content-districts-quarter-cutting-scene-ts), [districts/quarter/places.scene](#src-content-districts-quarter-places-scene-ts), [districts/treme/places.scene](#src-content-districts-treme-places-scene-ts), [format](#src-content-format-ts), [story/prologue.scene](#src-content-story-prologue-scene-ts), [text](#src-content-text-ts), [world/arrivals.scene](#src-content-world-arrivals-scene-ts), [world/streetEvents.scene](#src-content-world-streetevents-scene-ts), [world/streets.scene](#src-content-world-streets-scene-ts)
 - Re-exports: `* from './data'`, `{ TEXT } from './text'`, `{ fmtDoubloons } from './format'`, `{ STREET_EVENTS } from './world/streetEvents.scene'`, `{ hitTheStreets, pralineLady, trackBounty, travel, wakeUpAtClub, runEvent, fmtD } from './world/streets.scene'`, `{ ARRIVALS } from './world/arrivals.scene'`, `{ prologue, prologueEnd, resumeTutorial } from './story/prologue.scene'`, `{ cuttingContest } from './districts/quarter/cutting.scene'`, `{ mamaRouxTalk } from './districts/treme/places.scene'`
 - Imported by: app: [battleController](app.md#src-app-battlecontroller-ts), [game](app.md#src-app-game-ts), [lexicon](app.md#src-app-lexicon-ts), [reactPresenter](app.md#src-app-reactpresenter-ts), [sceneContext](app.md#src-app-scenecontext-ts), [session](app.md#src-app-session-ts) · ui: [combat/BattleActions](ui.md#src-ui-combat-battleactions-tsx), [combat/BattleScreen](ui.md#src-ui-combat-battlescreen-tsx), [combat/TimingOverlay](ui.md#src-ui-combat-timingoverlay-tsx), [components/Chips](ui.md#src-ui-components-chips-tsx), [components/Notes](ui.md#src-ui-components-notes-tsx), [components/StatGrid](ui.md#src-ui-components-statgrid-tsx), [layers/PopupLayer](ui.md#src-ui-layers-popuplayer-tsx), [layers/Topbar](ui.md#src-ui-layers-topbar-tsx), [screens/Create](ui.md#src-ui-screens-create-tsx), [screens/District](ui.md#src-ui-screens-district-tsx), [screens/Place](ui.md#src-ui-screens-place-tsx), [sheets/HistorySheet](ui.md#src-ui-sheets-historysheet-tsx), [sheets/MenuSheets](ui.md#src-ui-sheets-menusheets-tsx), [sheets/SavesSheet](ui.md#src-ui-sheets-savessheet-tsx), [sheets/ShopSheet](ui.md#src-ui-sheets-shopsheet-tsx), [sheets/SpritesSheet](ui.md#src-ui-sheets-spritessheet-tsx), [sheets/WorldSheets](ui.md#src-ui-sheets-worldsheets-tsx), [sheets/format](ui.md#src-ui-sheets-format-ts) · tools: [completeness](tools.md#tools-completeness-ts) · tests: [integration/support/crawl](tests.md#tests-integration-support-crawl-ts)
 - Tested by: [explore.test](tests.md#tests-integration-explore-test-ts), [playthrough.test](tests.md#tests-integration-playthrough-test-ts), [transcripts.test](tests.md#tools-parity-transcripts-test-ts)
@@ -1169,7 +1222,7 @@ Declarations:
 - <a id="src-content-index-ts--boss-scenes"></a>**BOSS_SCENES** · *const* `: Partial<Record<BossId, { pre: Scene; post: Scene }>>` — Each boss's scenes: `pre` plays the first time you go in, `post` after you win.
   - used by: **[app/sceneContext](app.md#src-app-scenecontext-ts)** [createSceneContext](app.md#src-app-scenecontext-ts--createscenecontext) · **[tools/completeness](tools.md#tools-completeness-ts)** [checkCompleteness](tools.md#tools-completeness-ts--checkcompleteness) · tests: [playthrough.test](tests.md#tests-integration-playthrough-test-ts)
 - <a id="src-content-index-ts--place-scenes"></a>**PLACE_SCENES** · *const* `: Partial<Record<PlaceId, PlaceScenes>>` — What you can do at each place.
-  - uses: **[content/districts/treme/places.scene](#src-content-districts-treme-places-scene-ts)** [club](#src-content-districts-treme-places-scene-ts--club), [congo](#src-content-districts-treme-places-scene-ts--congo), [kitchen](#src-content-districts-treme-places-scene-ts--kitchen), [pawn](#src-content-districts-treme-places-scene-ts--pawn)
+  - uses: **[content/districts/quarter/places.scene](#src-content-districts-quarter-places-scene-ts)** [feufollet](#src-content-districts-quarter-places-scene-ts--feufollet), [jackson](#src-content-districts-quarter-places-scene-ts--jackson), [market](#src-content-districts-quarter-places-scene-ts--market), [pelican](#src-content-districts-quarter-places-scene-ts--pelican), [strip](#src-content-districts-quarter-places-scene-ts--strip) · **[content/districts/treme/places.scene](#src-content-districts-treme-places-scene-ts)** [club](#src-content-districts-treme-places-scene-ts--club), [congo](#src-content-districts-treme-places-scene-ts--congo), [kitchen](#src-content-districts-treme-places-scene-ts--kitchen), [pawn](#src-content-districts-treme-places-scene-ts--pawn)
   - used by: **[app/session](app.md#src-app-session-ts)** [Session.placeIntro](app.md#src-app-session-ts--session-placeintro), [Session.placeOptions](app.md#src-app-session-ts--session-placeoptions) · **[tools/completeness](tools.md#tools-completeness-ts)** [checkCompleteness](tools.md#tools-completeness-ts--checkcompleteness) · tests: [explore.test](tests.md#tests-integration-explore-test-ts)
 
 <a id="src-content-items-ts"></a>
@@ -1257,14 +1310,14 @@ Places inside districts. What you can do at each one is its scene (districts/&lt
 
 - Source: [src/content/places.ts](../../../src/content/places.ts)
 - Imports: core: [ids/world](core.md#src-core-ids-world-ts), [types/index](core.md#src-core-types-index-ts)
-- Imported by: content: [data](#src-content-data-ts), [districts/treme/places.scene](#src-content-districts-treme-places-scene-ts)
+- Imported by: content: [data](#src-content-data-ts), [districts/quarter/places.scene](#src-content-districts-quarter-places-scene-ts), [districts/treme/places.scene](#src-content-districts-treme-places-scene-ts)
 - Tested by: [explore.test](tests.md#tests-integration-explore-test-ts), [playthrough.test](tests.md#tests-integration-playthrough-test-ts), [content.test](tests.md#tools-parity-content-test-ts)
 - Types used: **[core/ids/world](core.md#src-core-ids-world-ts)** [PlaceId](core.md#src-core-ids-world-ts--placeid) · **[core/types/content](core.md#src-core-types-content-ts)** [PlaceDef](core.md#src-core-types-content-ts--placedef), [Table](core.md#src-core-types-content-ts--table)
 
 Declarations:
 
 - <a id="src-content-places-ts--places"></a>**PLACES** · *const* `: Table<PlaceId, PlaceDef>`
-  - used by: **[app/devStates](app.md#src-app-devstates-ts)** [bossStep](app.md#src-app-devstates-ts--bossstep) · **[app/sceneContext](app.md#src-app-scenecontext-ts)** [createSceneContext](app.md#src-app-scenecontext-ts--createscenecontext) · **[content/districts/treme/places.scene](#src-content-districts-treme-places-scene-ts)** [congo](#src-content-districts-treme-places-scene-ts--congo), [kitchen](#src-content-districts-treme-places-scene-ts--kitchen), [pawn](#src-content-districts-treme-places-scene-ts--pawn) · **[ui/screens/District](ui.md#src-ui-screens-district-tsx)** [DistrictScreen](ui.md#src-ui-screens-district-tsx--districtscreen) · **[ui/screens/Place](ui.md#src-ui-screens-place-tsx)** [PlaceScreen](ui.md#src-ui-screens-place-tsx--placescreen) · **[tools/completeness](tools.md#tools-completeness-ts)** [checkCompleteness](tools.md#tools-completeness-ts--checkcompleteness) · tests: [explore.test](tests.md#tests-integration-explore-test-ts), [playthrough.test](tests.md#tests-integration-playthrough-test-ts), [content.test](tests.md#tools-parity-content-test-ts)
+  - used by: **[app/devStates](app.md#src-app-devstates-ts)** [bossStep](app.md#src-app-devstates-ts--bossstep) · **[app/sceneContext](app.md#src-app-scenecontext-ts)** [createSceneContext](app.md#src-app-scenecontext-ts--createscenecontext) · **[content/districts/quarter/places.scene](#src-content-districts-quarter-places-scene-ts)** [feufollet](#src-content-districts-quarter-places-scene-ts--feufollet), [jackson](#src-content-districts-quarter-places-scene-ts--jackson), [market](#src-content-districts-quarter-places-scene-ts--market), [pelican](#src-content-districts-quarter-places-scene-ts--pelican), [strip](#src-content-districts-quarter-places-scene-ts--strip) · **[content/districts/treme/places.scene](#src-content-districts-treme-places-scene-ts)** [congo](#src-content-districts-treme-places-scene-ts--congo), [kitchen](#src-content-districts-treme-places-scene-ts--kitchen), [pawn](#src-content-districts-treme-places-scene-ts--pawn) · **[ui/screens/District](ui.md#src-ui-screens-district-tsx)** [DistrictScreen](ui.md#src-ui-screens-district-tsx--districtscreen) · **[ui/screens/Place](ui.md#src-ui-screens-place-tsx)** [PlaceScreen](ui.md#src-ui-screens-place-tsx--placescreen) · **[tools/completeness](tools.md#tools-completeness-ts)** [checkCompleteness](tools.md#tools-completeness-ts--checkcompleteness) · tests: [explore.test](tests.md#tests-integration-explore-test-ts), [playthrough.test](tests.md#tests-integration-playthrough-test-ts), [content.test](tests.md#tools-parity-content-test-ts)
 
 <a id="src-content-quests-ts"></a>
 
@@ -1274,14 +1327,14 @@ Side quests as the journal shows them. Each quest's logic lives in its giver's s
 
 - Source: [src/content/quests.ts](../../../src/content/quests.ts)
 - Imports: core: [ids/world](core.md#src-core-ids-world-ts), [types/index](core.md#src-core-types-index-ts)
-- Imported by: content: [data](#src-content-data-ts), [districts/quarter/cutting.scene](#src-content-districts-quarter-cutting-scene-ts), [districts/treme/places.scene](#src-content-districts-treme-places-scene-ts)
+- Imported by: content: [data](#src-content-data-ts), [districts/quarter/cutting.scene](#src-content-districts-quarter-cutting-scene-ts), [districts/quarter/places.scene](#src-content-districts-quarter-places-scene-ts), [districts/treme/places.scene](#src-content-districts-treme-places-scene-ts)
 - Tested by: [explore.test](tests.md#tests-integration-explore-test-ts), [content.test](tests.md#tools-parity-content-test-ts)
 - Types used: **[core/ids/world](core.md#src-core-ids-world-ts)** [QuestId](core.md#src-core-ids-world-ts--questid) · **[core/types/content](core.md#src-core-types-content-ts)** [QuestDef](core.md#src-core-types-content-ts--questdef), [Table](core.md#src-core-types-content-ts--table)
 
 Declarations:
 
 - <a id="src-content-quests-ts--quests"></a>**QUESTS** · *const* `: Table<QuestId, QuestDef>`
-  - used by: **[content/districts/quarter/cutting.scene](#src-content-districts-quarter-cutting-scene-ts)** [cuttingContest](#src-content-districts-quarter-cutting-scene-ts--cuttingcontest) · **[content/districts/treme/places.scene](#src-content-districts-treme-places-scene-ts)** [kitchen](#src-content-districts-treme-places-scene-ts--kitchen) · **[ui/sheets/MenuSheets](ui.md#src-ui-sheets-menusheets-tsx)** [JournalSheet](ui.md#src-ui-sheets-menusheets-tsx--journalsheet) · **[tests/integration/support/crawl](tests.md#tests-integration-support-crawl-ts)** [buildState](tests.md#tests-integration-support-crawl-ts--buildstate) · tests: [explore.test](tests.md#tests-integration-explore-test-ts), [content.test](tests.md#tools-parity-content-test-ts)
+  - used by: **[content/districts/quarter/cutting.scene](#src-content-districts-quarter-cutting-scene-ts)** [cuttingContest](#src-content-districts-quarter-cutting-scene-ts--cuttingcontest) · **[content/districts/quarter/places.scene](#src-content-districts-quarter-places-scene-ts)** [hornQuest](#src-content-districts-quarter-places-scene-ts--hornquest), [lostEyeQuest](#src-content-districts-quarter-places-scene-ts--losteyequest) · **[content/districts/treme/places.scene](#src-content-districts-treme-places-scene-ts)** [kitchen](#src-content-districts-treme-places-scene-ts--kitchen) · **[ui/sheets/MenuSheets](ui.md#src-ui-sheets-menusheets-tsx)** [JournalSheet](ui.md#src-ui-sheets-menusheets-tsx--journalsheet) · **[tests/integration/support/crawl](tests.md#tests-integration-support-crawl-ts)** [buildState](tests.md#tests-integration-support-crawl-ts--buildstate) · tests: [explore.test](tests.md#tests-integration-explore-test-ts), [content.test](tests.md#tools-parity-content-test-ts)
 
 <a id="src-content-roots-ts"></a>
 
@@ -1470,7 +1523,7 @@ Declarations:
 
 ### src/content/sprites/art/shopkeepers.ts
 
-Shopkeepers in places P3 still has to port (no NpcId yet; see RESERVED_P3). Specs: docs/vision/character-design.md (Shopkeepers (P3)).
+Shopkeepers who never speak (no NpcId; see SHOPKEEPERS). Specs: docs/vision/character-design.md (Shopkeepers).
 
 - Source: [src/content/sprites/art/shopkeepers.ts](../../../src/content/sprites/art/shopkeepers.ts)
 - Imports: core: [types/index](core.md#src-core-types-index-ts)
@@ -1574,8 +1627,9 @@ Character art, for the UI and tools only. The engine, app, scenes and the rest o
 
 - Source: [src/content/sprites/index.ts](../../../src/content/sprites/index.ts)
 - Imports: core: [ids/sprites](core.md#src-core-ids-sprites-ts) · content: [sprites/compile](#src-content-sprites-compile-ts), [sprites/palette](#src-content-sprites-palette-ts), [sprites/refs](#src-content-sprites-refs-ts), [sprites/table](#src-content-sprites-table-ts)
-- Re-exports: `{ PALETTE } from './palette'`, `{ SPRITES } from './table'`, `{ MAX_VARIANT_DEPTH, compileSprite, resolveSprite, spriteSvg, type CompiledSprite, type Palette, type ResolvedSprite } from './compile'`, `{ CLONE_RECOLOR, NPC_SPRITE, RESERVED_P3, actorSprite, cloneSprite, heroSprite, npcSprite, opponentSprite } from './refs'`
+- Re-exports: `{ PALETTE } from './palette'`, `{ SPRITES } from './table'`, `{ MAX_VARIANT_DEPTH, compileSprite, resolveSprite, spriteSvg, type CompiledSprite, type Palette, type ResolvedSprite } from './compile'`, `{ CLONE_RECOLOR, NPC_SPRITE, SHOPKEEPERS, actorSprite, cloneSprite, heroSprite, npcSprite, opponentSprite } from './refs'`
 - Imported by: ui: [combat/BattleScreen](ui.md#src-ui-combat-battlescreen-tsx), [components/Sprite](ui.md#src-ui-components-sprite-tsx), [screens/Create](ui.md#src-ui-screens-create-tsx), [screens/Story](ui.md#src-ui-screens-story-tsx), [sheets/MenuSheets](ui.md#src-ui-sheets-menusheets-tsx), [sheets/WorldSheets](ui.md#src-ui-sheets-worldsheets-tsx) · tools: [sprites](tools.md#tools-sprites-ts), [validate-content](tools.md#tools-validate-content-ts)
+- Tested by: [explore.test](tests.md#tests-integration-explore-test-ts)
 - Types used: **[content/sprites/compile](#src-content-sprites-compile-ts)** [CompiledSprite](#src-content-sprites-compile-ts--compiledsprite) · **[core/ids/sprites](core.md#src-core-ids-sprites-ts)** [SpriteId](core.md#src-core-ids-sprites-ts--spriteid)
 
 Declarations:
@@ -1607,19 +1661,20 @@ Declarations:
 
 ### src/content/sprites/refs.ts
 
-Who is drawn with which sprite. Speakers map to their art through NPC_SPRITE (some reuse an opponent's art); heroes and clones are derived from the class; shopkeepers in still-v1 places wait in RESERVED_P3. The UI resolves sprites with these helpers; nothing below ui/ needs them.
+Who is drawn with which sprite. Speakers map to their art through NPC_SPRITE (some reuse an opponent's art); heroes and clones are derived from the class; shopkeepers who never speak are in SHOPKEEPERS. The UI resolves sprites with these helpers; nothing below ui/ needs them.
 
 - Source: [src/content/sprites/refs.ts](../../../src/content/sprites/refs.ts)
 - Imports: core: [ids/characters](core.md#src-core-ids-characters-ts), [ids/enemies](core.md#src-core-ids-enemies-ts), [ids/sprites](core.md#src-core-ids-sprites-ts), [ids/world](core.md#src-core-ids-world-ts)
 - Imported by: content: [sprites/index](#src-content-sprites-index-ts), [sprites/table](#src-content-sprites-table-ts)
-- Types used: **[core/ids/characters](core.md#src-core-ids-characters-ts)** [ClassId](core.md#src-core-ids-characters-ts--classid) · **[core/ids/enemies](core.md#src-core-ids-enemies-ts)** [OpponentId](core.md#src-core-ids-enemies-ts--opponentid) · **[core/ids/sprites](core.md#src-core-ids-sprites-ts)** [CloneSpriteId](core.md#src-core-ids-sprites-ts--clonespriteid), [HeroSpriteId](core.md#src-core-ids-sprites-ts--herospriteid), [PaletteId](core.md#src-core-ids-sprites-ts--paletteid), [PersonSpriteId](core.md#src-core-ids-sprites-ts--personspriteid), [SpriteId](core.md#src-core-ids-sprites-ts--spriteid) · **[core/ids/world](core.md#src-core-ids-world-ts)** [NpcId](core.md#src-core-ids-world-ts--npcid)
+- Tested by: [explore.test](tests.md#tests-integration-explore-test-ts)
+- Types used: **[core/ids/characters](core.md#src-core-ids-characters-ts)** [ClassId](core.md#src-core-ids-characters-ts--classid) · **[core/ids/enemies](core.md#src-core-ids-enemies-ts)** [OpponentId](core.md#src-core-ids-enemies-ts--opponentid) · **[core/ids/sprites](core.md#src-core-ids-sprites-ts)** [CloneSpriteId](core.md#src-core-ids-sprites-ts--clonespriteid), [HeroSpriteId](core.md#src-core-ids-sprites-ts--herospriteid), [PaletteId](core.md#src-core-ids-sprites-ts--paletteid), [PersonSpriteId](core.md#src-core-ids-sprites-ts--personspriteid), [SpriteId](core.md#src-core-ids-sprites-ts--spriteid) · **[core/ids/world](core.md#src-core-ids-world-ts)** [NpcId](core.md#src-core-ids-world-ts--npcid), [PlaceId](core.md#src-core-ids-world-ts--placeid)
 
 Declarations:
 
 - <a id="src-content-sprites-refs-ts--npc-sprite"></a>**NPC_SPRITE** · *const* `: Readonly<Record<NpcId, SpriteId | 'player'>>` — Each speaker's sprite.
   - used by: here [npcSprite](#src-content-sprites-refs-ts--npcsprite) · **[tools/sprites](tools.md#tools-sprites-ts)** [nameOf](tools.md#tools-sprites-ts--nameof) · **[tools/validate-content](tools.md#tools-validate-content-ts)** [validateSprites](tools.md#tools-validate-content-ts--validatesprites)
-- <a id="src-content-sprites-refs-ts--reserved-p3"></a>**RESERVED_P3** · *const* `: readonly PersonSpriteId[]` — Shopkeepers drawn now whose places are still v1-only.
-  - used by: **[tools/sprites](tools.md#tools-sprites-ts)** [groups](tools.md#tools-sprites-ts--groups) · **[tools/validate-content](tools.md#tools-validate-content-ts)** [validateSprites](tools.md#tools-validate-content-ts--validatesprites)
+- <a id="src-content-sprites-refs-ts--shopkeepers"></a>**SHOPKEEPERS** · *const* `: Readonly<Partial<Record<PersonSpriteId, PlaceId>>>` — Shopkeepers who never speak, and the place whose shop they run.
+  - used by: **[tools/sprites](tools.md#tools-sprites-ts)** [groups](tools.md#tools-sprites-ts--groups) · **[tools/validate-content](tools.md#tools-validate-content-ts)** [validateSprites](tools.md#tools-validate-content-ts--validatesprites) · tests: [explore.test](tests.md#tests-integration-explore-test-ts)
 - <a id="src-content-sprites-refs-ts--clone-recolor"></a>**CLONE_RECOLOR** · *const* `: Readonly<Partial<Record<PaletteId, PaletteId>>>` — The Session Clone look: a hero in corporate chrome.
   - used by: **[content/sprites/table](#src-content-sprites-table-ts)** [CLONE_ART](#src-content-sprites-table-ts--clone-art)
 - <a id="src-content-sprites-refs-ts--herosprite"></a>**heroSprite** · *function* `(cls: ClassId): HeroSpriteId` — A class's hero sprite.
@@ -1762,7 +1817,7 @@ Scenes and helpers more than one district uses: instrument stock for shops, bar 
 
 - Source: [src/content/world/shared.scene.ts](../../../src/content/world/shared.scene.ts)
 - Imports: core: [ids/enemies](core.md#src-core-ids-enemies-ts), [ids/items](core.md#src-core-ids-items-ts), [ids/story](core.md#src-core-ids-story-ts), [ids/world](core.md#src-core-ids-world-ts) · narrative: [types](narrative.md#src-narrative-types-ts) · content: [classes/index](#src-content-classes-index-ts), [districts/index](#src-content-districts-index-ts)
-- Imported by: content: [districts/treme/places.scene](#src-content-districts-treme-places-scene-ts)
+- Imported by: content: [districts/quarter/places.scene](#src-content-districts-quarter-places-scene-ts), [districts/treme/places.scene](#src-content-districts-treme-places-scene-ts)
 - Types used: **[content/classes/index](#src-content-classes-index-ts)** [CLASSES](#src-content-classes-index-ts--classes) · **[core/ids/enemies](core.md#src-core-ids-enemies-ts)** [BossId](core.md#src-core-ids-enemies-ts--bossid) · **[core/ids/items](core.md#src-core-ids-items-ts)** [InstrumentTierId](core.md#src-core-ids-items-ts--instrumenttierid) · **[core/ids/world](core.md#src-core-ids-world-ts)** [DistrictId](core.md#src-core-ids-world-ts--districtid) · **[narrative/types](narrative.md#src-narrative-types-ts)** [Scene](narrative.md#src-narrative-types-ts--scene), [SceneContext](narrative.md#src-narrative-types-ts--scenecontext), [ShopStock](narrative.md#src-narrative-types-ts--shopstock)
 
 Declarations:
@@ -1773,7 +1828,7 @@ Declarations:
   - used by: here [rumor](#src-content-world-shared-scene-ts--rumor)
 - <a id="src-content-world-shared-scene-ts--rumor"></a>**rumor** · *function* `(s): Promise<void>` — A tip about the next boss you haven't beaten (recorded in the Blue Book), and a bit of gossip.
   - uses: here [BOSS_RUMORS](#src-content-world-shared-scene-ts--boss-rumors) · **[content/districts/index](#src-content-districts-index-ts)** [DISTRICTS](#src-content-districts-index-ts--districts) · **[core/ids/story](core.md#src-core-ids-story-ts)** [ACT_ORDER](core.md#src-core-ids-story-ts--act-order) · **[core/rng](core.md#src-core-rng-ts)** [Rng.pick](core.md#src-core-rng-ts--rng-pick) · **[narrative/types](narrative.md#src-narrative-types-ts)** [SceneContext.bookHint](narrative.md#src-narrative-types-ts--scenecontext-bookhint), [SceneContext.narrate](narrative.md#src-narrative-types-ts--scenecontext-narrate)
-  - *no references found*
+  - used by: **[content/districts/quarter/places.scene](#src-content-districts-quarter-places-scene-ts)** [pelican](#src-content-districts-quarter-places-scene-ts--pelican), [zinniaTarot](#src-content-districts-quarter-places-scene-ts--zinniatarot)
 - <a id="src-content-world-shared-scene-ts--getinvitation"></a>**getInvitation** · *function* `(s: SceneContext, how: 'celeste' | 'static' | 'valet'): Promise<void>` — The invitation to the Vane ball, from Céleste, Static or the valet: the key item, and the Ball opens.
   - uses: **[narrative/types](narrative.md#src-narrative-types-ts)** [SceneContext.keyItem](narrative.md#src-narrative-types-ts--scenecontext-keyitem), [SceneContext.narrate](narrative.md#src-narrative-types-ts--scenecontext-narrate), [SceneContext.toast](narrative.md#src-narrative-types-ts--scenecontext-toast)
   - *no references found*
@@ -1804,7 +1859,7 @@ The streets: what happens when you Hit the Streets, the Praline Lady, bounty hun
 
 - Source: [src/content/world/streets.scene.ts](../../../src/content/world/streets.scene.ts)
 - Imports: core: [ids/world](core.md#src-core-ids-world-ts) · narrative: [types](narrative.md#src-narrative-types-ts) · content: [districts/index](#src-content-districts-index-ts), [enemies/index](#src-content-enemies-index-ts), [format](#src-content-format-ts), [items](#src-content-items-ts), [world/streetEvents.scene](#src-content-world-streetevents-scene-ts)
-- Imported by: content: [districts/quarter/cutting.scene](#src-content-districts-quarter-cutting-scene-ts), [districts/treme/places.scene](#src-content-districts-treme-places-scene-ts), [index](#src-content-index-ts)
+- Imported by: content: [districts/quarter/cutting.scene](#src-content-districts-quarter-cutting-scene-ts), [districts/quarter/places.scene](#src-content-districts-quarter-places-scene-ts), [districts/treme/places.scene](#src-content-districts-treme-places-scene-ts), [index](#src-content-index-ts)
 - Tested by: [explore.test](tests.md#tests-integration-explore-test-ts), [transcripts.test](tests.md#tools-parity-transcripts-test-ts)
 - Types used: **[core/ids/world](core.md#src-core-ids-world-ts)** [DistrictId](core.md#src-core-ids-world-ts--districtid) · **[narrative/types](narrative.md#src-narrative-types-ts)** [Scene](narrative.md#src-narrative-types-ts--scene), [SceneContext](narrative.md#src-narrative-types-ts--scenecontext)
 
@@ -1812,7 +1867,7 @@ Declarations:
 
 - <a id="src-content-world-streets-scene-ts--fmtd"></a>**fmtD** · *const* — Doubloons as the game prints them: Ð1,250.
   - uses: **[content/format](#src-content-format-ts)** [fmtDoubloons](#src-content-format-ts--fmtdoubloons)
-  - used by: here [hitTheStreets](#src-content-world-streets-scene-ts--hitthestreets), [trackBounty](#src-content-world-streets-scene-ts--trackbounty) · **[content/districts/quarter/cutting.scene](#src-content-districts-quarter-cutting-scene-ts)** [cuttingContest](#src-content-districts-quarter-cutting-scene-ts--cuttingcontest) · **[content/districts/treme/places.scene](#src-content-districts-treme-places-scene-ts)** [kitchen](#src-content-districts-treme-places-scene-ts--kitchen), [pawn](#src-content-districts-treme-places-scene-ts--pawn)
+  - used by: here [hitTheStreets](#src-content-world-streets-scene-ts--hitthestreets), [trackBounty](#src-content-world-streets-scene-ts--trackbounty) · **[content/districts/quarter/cutting.scene](#src-content-districts-quarter-cutting-scene-ts)** [cuttingContest](#src-content-districts-quarter-cutting-scene-ts--cuttingcontest) · **[content/districts/quarter/places.scene](#src-content-districts-quarter-places-scene-ts)** [crawfishRaces](#src-content-districts-quarter-places-scene-ts--crawfishraces), [sitIn](#src-content-districts-quarter-places-scene-ts--sitin) · **[content/districts/treme/places.scene](#src-content-districts-treme-places-scene-ts)** [kitchen](#src-content-districts-treme-places-scene-ts--kitchen), [pawn](#src-content-districts-treme-places-scene-ts--pawn)
 - <a id="src-content-world-streets-scene-ts--runevent"></a>**runEvent** · *function* `(s: SceneContext, forceId?: string): Promise<void>` — Run a random street event for the current district (or a specific one).
   - uses: **[content/world/streetEvents.scene](#src-content-world-streetevents-scene-ts)** [STREET_EVENTS](#src-content-world-streetevents-scene-ts--street-events) · **[core/rng](core.md#src-core-rng-ts)** [Rng.pick](core.md#src-core-rng-ts--rng-pick) · **[narrative/define](narrative.md#src-narrative-define-ts)** [EventOption.when](narrative.md#src-narrative-define-ts--eventoption-when) · **[narrative/types](narrative.md#src-narrative-types-ts)** [SceneContext.choose](narrative.md#src-narrative-types-ts--scenecontext-choose), [SceneContext.narrate](narrative.md#src-narrative-types-ts--scenecontext-narrate), [SceneContext.title](narrative.md#src-narrative-types-ts--scenecontext-title)
   - used by: here [hitTheStreets](#src-content-world-streets-scene-ts--hitthestreets) · tests: [explore.test](tests.md#tests-integration-explore-test-ts), [transcripts.test](tests.md#tools-parity-transcripts-test-ts)

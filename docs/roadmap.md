@@ -23,7 +23,7 @@
 
 - **Districts:** French Quarter, Storyville, Bayou, Cemetery, Garden District. For each: places, NPCs, quests, street events, the boss and its pre/post scenes. One commit per district.
 - **Sprites:** every character already has art (ADR-0007, [character design](vision/character-design.md)). When a district's places arrive:
-  - give each shop its `keeper`, using the reserved shopkeepers in `RESERVED_P3` where nobody else runs the shop
+  - give each shop its `keeper`, using the shopkeepers in `SHOPKEEPERS` (`src/content/sprites/refs.ts`) where nobody else runs the shop
   - draw the Restless Haints ghosts with `speak(…, 'haint')`
 - **Minigames:** crawfish races, sit-in, tarot, blessing, whispers.
 - **An accessibility pass.**

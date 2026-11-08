@@ -706,7 +706,7 @@ export class GameApp {
       const target = setupAct(g, act);
       void this.session.run(s => s.goto(target), `dev:act:${act}`);
     },
-    /** Play the Cutting Contest (its place arrives with the Quarter in P3). */
+    /** Jump into the Cutting Contest at Club Feu Follet (offering it first if needed). */
     cutting: () => {
       const g = this.store.game;
       if (!g) return;

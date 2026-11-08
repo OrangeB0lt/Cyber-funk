@@ -1,4 +1,4 @@
-/** Shopkeepers in places P3 still has to port (no NpcId yet; see RESERVED_P3). Specs: docs/vision/character-design.md (Shopkeepers (P3)). */
+/** Shopkeepers who never speak (no NpcId; see SHOPKEEPERS). Specs: docs/vision/character-design.md (Shopkeepers). */
 import type { SpriteTable } from '@core/types';
 
 export const SHOPKEEPER_ART = {

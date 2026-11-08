@@ -263,7 +263,7 @@ The world walk: in a 360×740 phone, visit every place of every ported district 
 The crawler: for every ported district (src/content/pending.ts), build saves at every step of its story, in three states of play, and press every option at every place down every branch of its choices. Then check, across the whole crawl, that every quest can be finished, every story step reached, every choice taken and every item obtained.
 
 - Source: [tests/integration/explore.test.ts](../../../tests/integration/explore.test.ts)
-- Imports: core: [ids/characters](core.md#src-core-ids-characters-ts), [ids/items](core.md#src-core-ids-items-ts), [ids/story](core.md#src-core-ids-story-ts), [ids/world](core.md#src-core-ids-world-ts), [types/index](core.md#src-core-types-index-ts) · narrative: [define](narrative.md#src-narrative-define-ts) · content: [index](content.md#src-content-index-ts), [pending](content.md#src-content-pending-ts) · engine: [index](engine.md#src-engine-index-ts) · tests: [integration/support/crawl](#tests-integration-support-crawl-ts)
+- Imports: core: [ids/characters](core.md#src-core-ids-characters-ts), [ids/items](core.md#src-core-ids-items-ts), [ids/story](core.md#src-core-ids-story-ts), [ids/world](core.md#src-core-ids-world-ts), [types/index](core.md#src-core-types-index-ts) · narrative: [define](narrative.md#src-narrative-define-ts) · content: [index](content.md#src-content-index-ts), [pending](content.md#src-content-pending-ts), [sprites/index](content.md#src-content-sprites-index-ts) · engine: [index](engine.md#src-engine-index-ts) · tests: [integration/support/crawl](#tests-integration-support-crawl-ts)
 - Packages: `node:fs`, `node:path`, `vitest`
 - Suites: “story”, “street events”, “coverage”
 
@@ -302,7 +302,7 @@ The crawler's toolkit: build saves at every point of a district's story, run any
 
 Declarations:
 
-- <a id="tests-integration-support-crawl-ts--profile"></a>**Profile** · *type* `= 'fresh' | 'started' | 'busy' | 'done'` — How lived-in a save is: `fresh` (no quests, broke), `started` (the district's quests just taken, a little money), `busy` (quests ready to hand in, one of everything, flush), `done` (quests done, every flag, the whole ba…
+- <a id="tests-integration-support-crawl-ts--profile"></a>**Profile** · *type* `= 'fresh' | 'started' | 'busy' | 'done'` — How lived-in a save is: `fresh` (no quests, broke), `started` (every quest so far just taken, a little money), `busy` (quests ready to hand in, one of everything, flush), `done` (quests done, every flag, the whole band,…
   - used by: here [buildState](#tests-integration-support-crawl-ts--buildstate), [districtStates](#tests-integration-support-crawl-ts--districtstates)
 - <a id="tests-integration-support-crawl-ts--crawlstate"></a>**CrawlState** · *interface* — A save to crawl from, with a name for failure messages.
   - used by: here [buildState](#tests-integration-support-crawl-ts--buildstate), [districtStates](#tests-integration-support-crawl-ts--districtstates)

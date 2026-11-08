@@ -72,7 +72,7 @@ Every character's pixel-art sprite lives in `content/sprites/`. The spec for eac
 - **Who is drawn with what.** `NPC_SPRITE` (`content/sprites/refs.ts`) maps every NpcId to its sprite, and the compiler requires a row per speaker:
   - Some speakers reuse an opponent's art (`hush` → `captain_hush`).
   - `you` is the player's hero.
-  - Shopkeepers in places P3 hasn't ported are in `RESERVED_P3`.
+  - Shopkeepers who never speak are in `SHOPKEEPERS`, with the place whose shop they run.
 - **Only the UI and tools load it.** A depcruise rule forbids importing `content/sprites/` from core, narrative, engine, app or other content, and nothing re-exports it from `content/index.ts` or `content/data.ts`, so the engine, the sim and headless tests never load art.
 - **Checks.** `tools/validate-content.ts` enforces these rules from the design doc:
   - grid size, keys, and the pixel alphabet

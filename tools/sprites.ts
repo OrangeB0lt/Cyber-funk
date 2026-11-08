@@ -26,7 +26,7 @@ import { DISTRICT_IDS, NPC_IDS } from '@core/ids/world';
 import { BOSSES, CLASSES, DISTRICTS, ENEMIES, NPCS } from '@content/data';
 import { RIVALS } from '@content/enemies/rivals';
 import { SUMMONS } from '@content/enemies/summons';
-import { NPC_SPRITE, PALETTE, RESERVED_P3, SPRITES, compileSprite, spriteSvg } from '@content/sprites';
+import { NPC_SPRITE, PALETTE, SHOPKEEPERS, SPRITES, compileSprite, spriteSvg } from '@content/sprites';
 
 const ROOT = process.cwd();
 const OUT_DIR = 'docs/reference/sprites';
@@ -67,8 +67,8 @@ function groups(): { title: string; ids: SpriteId[] }[] {
   const out = [
     { title: 'Heroes', ids: take(HERO_SPRITE_IDS) },
     { title: 'Session Clones', ids: take(CLONE_SPRITE_IDS) },
-    { title: 'People', ids: take(PERSON_SPRITE_IDS.filter(id => !RESERVED_P3.includes(id))) },
-    { title: 'Shopkeepers (P3)', ids: take(RESERVED_P3) },
+    { title: 'People', ids: take(PERSON_SPRITE_IDS.filter(id => !(id in SHOPKEEPERS))) },
+    { title: 'Shopkeepers', ids: take(PERSON_SPRITE_IDS.filter(id => id in SHOPKEEPERS)) },
     ...DISTRICT_IDS.map(d => ({
       title: `${DISTRICTS[d].name} enemies`,
       ids: take([

@@ -213,7 +213,7 @@ The Session Clones and the Hush ranks are variants.
 | [Heroes](#heroes) | `hero_trumpet` `hero_trombone` `hero_sousaphone` `hero_saxophone` `hero_clarinet` `hero_snare` `hero_bassdrum` |
 | [Session Clones](#session-clones) | `clone_trumpet` `clone_trombone` `clone_sousaphone` `clone_saxophone` `clone_clarinet` `clone_snare` `clone_bassdrum` |
 | [People](#people) | `mamaroux` `tijacques` `gus` `pralinelady` `stranger` `busker` `preacher` `odette` `sugar` `zinnia` `celeste` `theo` `static` `clothilde` `remy` `boudreaux` `lucien` `rosalie` `moses` `tuxedo_valet` `vendor` |
-| [Shopkeepers (P3)](#shopkeepers-p3) | `pelican_bartender` `faisdodo_bartender` `market_vendor` `chop_surgeon` `maison_clerk` `tuxedo_maitre` |
+| [Shopkeepers](#shopkeepers) | `pelican_bartender` `faisdodo_bartender` `market_vendor` `chop_surgeon` `maison_clerk` `tuxedo_maitre` |
 | [Tremé enemies](#tremé) | `hush_patrol` `click_drone` `nutria` `hustler` `hush_sergeant` |
 | [French Quarter enemies](#french-quarter) | `gocup_golem` `neon_mime` `busker_bot` `barker` `hooligan` |
 | [Storyville enemies](#storyville) | `enforcer` `bouncer` `absinthe` `repo_drone` `bagman` |
@@ -1735,9 +1735,9 @@ Bosses are 32×32 and appear at 96px in battle. The six who speak in scenes show
 
 ---
 
-## Shopkeepers (P3)
+## Shopkeepers
 
-These six run shops in districts that are still v1-only, and none of them has an NpcId. Their art is made now and listed in `RESERVED_P3`. P3 connects them by passing `keeper` when it opens their shop.
+These six run shops and never speak, so none of them has an NpcId. They're listed in `SHOPKEEPERS` with the place whose shop they run, and the scene passes them as `keeper` when it opens that shop. The crawler checks each one appears once its district is ported.
 
 ### Thirsty Pelican bartender · `pelican_bartender`
 

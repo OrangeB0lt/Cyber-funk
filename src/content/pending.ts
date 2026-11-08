@@ -13,7 +13,6 @@ import type { ActId } from '@core/ids/story';
 import type { DistrictId } from '@core/ids/world';
 
 export const PENDING_DISTRICTS = [
-  'quarter',
   'storyville',
   'bayou',
   'cemetery',

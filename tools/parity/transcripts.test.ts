@@ -48,6 +48,8 @@ const w = dom.w;
 afterAll(() => dom.close());
 let legacyLog: Entry[] = [];
 let legacyPick = 0;
+/** The text of v1's crawfish-race <pre>, captured when the result is narrated. */
+let legacyRace: string | null = null;
 
 function installRecorders() {
   const rec = (e: Entry) => legacyLog.push(e);
@@ -56,7 +58,12 @@ function installRecorders() {
     rec({ t: 'title', text: title || null });
     origStory(title);
   };
-  w.line = async (who: string | null, text: string) => rec({ t: 'line', who: who || null, text });
+  w.line = async (who: string | null, text: string) => {
+    // The race's <pre> is gone once v1 redraws the place, so read it when the result is narrated.
+    const pre = w.document.querySelector('#story pre.race');
+    if (pre) legacyRace = pre.textContent ?? '';
+    rec({ t: 'line', who: who || null, text });
+  };
   const choose = async (options: any[], prompt?: string) => {
     const opts = options.filter(o => o && (o.cond === undefined || o.cond));
     if (prompt) rec({ t: 'prompt', text: prompt });
@@ -90,10 +97,11 @@ function installRecorders() {
 }
 installRecorders();
 
-/** The crawfish race's track as v1 left it (its <pre class="race"> in the story). */
+/** The crawfish race's track as v1 last drew it (its <pre class="race"> in the story). */
 function legacyBoard(): Entry[] {
-  const pre = w.document.querySelector('#story pre.race');
-  return pre ? [{ t: 'board', text: pre.textContent ?? '' }] : [];
+  const text = legacyRace;
+  legacyRace = null;
+  return text === null ? [] : [{ t: 'board', text }];
 }
 
 /* ------------------------------------------------------------------ */
@@ -250,6 +258,144 @@ const cases: Case[] = [
     legacy: () => w.hitTheStreets(),
     ts: s => s.hitTheStreets(),
   },
+  // ---- The French Quarter ----
+  placeCase('feufollet talk, first time', 'feufollet', 'talk', inAct('quarter', 0)),
+  placeCase('feufollet talk, first time, later step', 'feufollet', 'talk', inAct('quarter', 2)),
+  placeCase('feufollet talk', 'feufollet', 'talk', inAct('quarter', 1, { flags: ['metRoux', 'metOdette'] })),
+  placeCase(
+    'feufollet talk after the cutting contest and Vox (reprogrammed)',
+    'feufollet',
+    'talk',
+    inAct('storyville', 0, {
+      district: 'quarter',
+      flags: ['metRoux', 'metOdette', 'voxHint'],
+      quests: { cutting: 'done' },
+      choices: { vox: 'reprogrammed' },
+    }),
+  ),
+  placeCase(
+    'feufollet talk after Vox (shutdown)',
+    'feufollet',
+    'talk',
+    inAct('storyville', 0, {
+      district: 'quarter',
+      flags: ['metRoux', 'metOdette'],
+      choices: { vox: 'shutdown' },
+    }),
+  ),
+  ...[0, 1].map(pick =>
+    placeCase(
+      `feufollet cutting contest (${pick})`,
+      'feufollet',
+      'cutting',
+      inAct('quarter', 1, { flags: ['metRoux', 'metOdette'], quests: { cutting: 'active' } }),
+      pick,
+    ),
+  ),
+  placeCase(
+    'feufollet sit in',
+    'feufollet',
+    'sitin',
+    inAct('quarter', 1, { flags: ['metRoux', 'metOdette'], day: 3, sitInDay: 1 }),
+  ),
+  placeCase(
+    'feufollet sit in, level 9',
+    'feufollet',
+    'sitin',
+    inAct('quarter', 2, { flags: ['metRoux', 'metOdette'], level: 9 }),
+  ),
+  placeCase(
+    'feufollet sit in, already today',
+    'feufollet',
+    'sitin',
+    inAct('quarter', 1, { flags: ['metRoux', 'metOdette'], day: 2, sitInDay: 2 }),
+  ),
+  placeCase('pelican drinks', 'pelican', 'drinks', inAct('quarter', 1)),
+  placeCase('pelican rumors', 'pelican', 'rumors', inAct('quarter', 1)),
+  placeCase('pelican rumors, later', 'pelican', 'rumors', inAct('cemetery', 0, { district: 'quarter' })),
+  placeCase('pelican rumors, all beaten', 'pelican', 'rumors', {
+    ...inAct('tower', 1, { district: 'quarter' }),
+    defeated: ['captain_hush', 'vox_perfecta', 'mr_ledger', 'rougarou', 'archivist', 'isolde', 'conductor'],
+  }),
+  placeCase('pelican bounty board', 'pelican', 'bounties', inAct('quarter', 1)),
+  ...[0, 1, 2, 3].map(pick =>
+    placeCase(
+      `pelican crawfish races (${pick})`,
+      'pelican',
+      'crawfish',
+      inAct('quarter', 1, { doubloons: 200 }),
+      pick,
+    ),
+  ),
+  placeCase(
+    'pelican crawfish races, broke',
+    'pelican',
+    'crawfish',
+    inAct('quarter', 1, { doubloons: 15 }),
+    1,
+  ),
+  placeCase('market stalls', 'market', 'stalls', inAct('quarter', 1)),
+  placeCase(
+    'market stalls with red beans on the list',
+    'market',
+    'stalls',
+    inAct('quarter', 1, { quests: { redbeans: 'active' } }),
+  ),
+  placeCase('market vendors', 'market', 'vendors', inAct('quarter', 1)),
+  placeCase('jackson tarot', 'jackson', 'tarot', inAct('quarter', 1, { doubloons: 100 })),
+  placeCase('jackson tarot, broke', 'jackson', 'tarot', inAct('quarter', 1, { doubloons: 20 })),
+  placeCase('jackson charms', 'jackson', 'charms', inAct('quarter', 1)),
+  placeCase('jackson lost eye, asked', 'jackson', 'losteye', inAct('quarter', 1)),
+  placeCase(
+    'jackson lost eye, found',
+    'jackson',
+    'losteye',
+    inAct('quarter', 1, { quests: { lost_eye: 'active' } }),
+  ),
+  placeCase('jackson busker, asked', 'jackson', 'busker', inAct('quarter', 1)),
+  placeCase(
+    'jackson busker, two more',
+    'jackson',
+    'busker',
+    inAct('quarter', 1, { quests: { horn: 'active' }, counters: { hornFights: 1 } }),
+  ),
+  placeCase(
+    'jackson busker, horn back',
+    'jackson',
+    'busker',
+    inAct('quarter', 2, { quests: { horn: 'active' }, counters: { hornFights: 3 } }),
+  ),
+  ...[0, 1, 2].map(pick =>
+    placeCase(
+      `jackson broadcaster (${pick})`,
+      'jackson',
+      'broadcaster',
+      inAct('quarter', 1, { flags: ['metRoux', 'metOdette'] }),
+      pick,
+    ),
+  ),
+  placeCase('jackson look, before', 'jackson', 'look', inAct('quarter', 0)),
+  placeCase(
+    'jackson look, after',
+    'jackson',
+    'look',
+    inAct('quarter', 2, { flags: ['metRoux', 'broadcasterDone'] }),
+  ),
+  placeCase('strip walk', 'strip', 'walk', inAct('quarter', 1)),
+  ...[0, 1].map(pick => placeCase(`strip boss (${pick})`, 'strip', 'boss', inAct('quarter', 2), pick)),
+  placeCase('strip boss (again)', 'strip', 'boss', inAct('quarter', 2, { intros: ['vox_perfecta'] })),
+  placeCase(
+    'strip listen (reprogrammed)',
+    'strip',
+    'listen',
+    inAct('storyville', 0, { district: 'quarter', choices: { vox: 'reprogrammed' } }),
+  ),
+  placeCase(
+    'strip listen (shutdown)',
+    'strip',
+    'listen',
+    inAct('storyville', 0, { district: 'quarter', choices: { vox: 'shutdown' } }),
+  ),
   {
     name: 'vox perfecta boss flow',
     state: inAct('quarter', 2),

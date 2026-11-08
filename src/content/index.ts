@@ -14,6 +14,7 @@ import type { Scene } from '@narrative/types';
 import * as captainHush from './bosses/captain_hush.scene';
 import * as voxPerfecta from './bosses/vox_perfecta.scene';
 import { club, congo, kitchen, pawn } from './districts/treme/places.scene';
+import { feufollet, jackson, market, pelican, strip } from './districts/quarter/places.scene';
 
 export * from './data';
 export { TEXT } from './text';
@@ -40,4 +41,14 @@ export const BOSS_SCENES: Partial<Record<BossId, { pre: Scene; post: Scene }>> =
 };
 
 /** What you can do at each place. */
-export const PLACE_SCENES: Partial<Record<PlaceId, PlaceScenes>> = { club, kitchen, pawn, congo };
+export const PLACE_SCENES: Partial<Record<PlaceId, PlaceScenes>> = {
+  club,
+  kitchen,
+  pawn,
+  congo,
+  strip,
+  pelican,
+  feufollet,
+  market,
+  jackson,
+};
