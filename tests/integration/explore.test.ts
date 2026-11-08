@@ -245,18 +245,6 @@ const NEVER: Partial<Record<ObtainableKey, string>> = {
  * The values are pending districts, so porting one turns its leftover entries into type errors.
  */
 const PENDING_SOURCES: Partial<Record<ObtainableKey, PendingDistrict>> = {
-  // The Basin Street Chop Shop and Professor Theo's sheet music.
-  mod_lungs: 'storyville',
-  mod_jaw: 'storyville',
-  mod_tempo: 'storyville',
-  mod_ribcage: 'storyville',
-  mod_eyes: 'storyville',
-  mod_swing: 'storyville',
-  sm_circular: 'storyville',
-  sm_secondwind: 'storyville',
-  sm_swing: 'storyville',
-  sm_rubato: 'storyville',
-  sm_ghost: 'storyville',
   // The Rougarou's Chrome Fang; the Archivist's Regalia.
   ch_fang: 'bayou',
   thr_regalia: 'cemetery',

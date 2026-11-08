@@ -13,8 +13,10 @@ import type { PlaceScenes } from '@narrative/define';
 import type { Scene } from '@narrative/types';
 import * as captainHush from './bosses/captain_hush.scene';
 import * as voxPerfecta from './bosses/vox_perfecta.scene';
+import * as mrLedger from './bosses/mr_ledger.scene';
 import { club, congo, kitchen, pawn } from './districts/treme/places.scene';
 import { feufollet, jackson, market, pelican, strip } from './districts/quarter/places.scene';
+import { chopshop, counting, lantern } from './districts/storyville/places.scene';
 
 export * from './data';
 export { TEXT } from './text';
@@ -38,6 +40,7 @@ export { mamaRouxTalk } from './districts/treme/places.scene';
 export const BOSS_SCENES: Partial<Record<BossId, { pre: Scene; post: Scene }>> = {
   captain_hush: captainHush,
   vox_perfecta: voxPerfecta,
+  mr_ledger: mrLedger,
 };
 
 /** What you can do at each place. */
@@ -51,4 +54,7 @@ export const PLACE_SCENES: Partial<Record<PlaceId, PlaceScenes>> = {
   feufollet,
   market,
   jackson,
+  lantern,
+  chopshop,
+  counting,
 };

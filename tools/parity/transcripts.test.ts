@@ -396,6 +396,171 @@ const cases: Case[] = [
     'listen',
     inAct('storyville', 0, { district: 'quarter', choices: { vox: 'shutdown' } }),
   ),
+  // ---- Storyville ----
+  placeCase('lantern talk, first time', 'lantern', 'talk', inAct('storyville', 0)),
+  placeCase('lantern talk, first time, later step', 'lantern', 'talk', inAct('storyville', 2)),
+  placeCase('lantern talk', 'lantern', 'talk', inAct('storyville', 1, { flags: ['metRoux', 'metCeleste'] })),
+  ...(['burned', 'kept'] as const).map(contracts =>
+    placeCase(
+      `lantern talk after Ledger (${contracts})`,
+      'lantern',
+      'talk',
+      inAct('bayou', 1, {
+        district: 'storyville',
+        flags: ['metRoux', 'metCeleste', 'ledgerHint'],
+        choices: { contracts },
+      }),
+    ),
+  ),
+  placeCase(
+    'lantern talk calls in the ball invitation',
+    'lantern',
+    'talk',
+    inAct('garden', 0, {
+      district: 'storyville',
+      flags: ['metRoux', 'metCeleste'],
+      choices: { contracts: 'burned' },
+    }),
+  ),
+  placeCase(
+    'lantern talk, ball, contracts kept',
+    'lantern',
+    'talk',
+    inAct('garden', 0, {
+      district: 'storyville',
+      flags: ['metRoux', 'metCeleste'],
+      choices: { contracts: 'kept' },
+    }),
+  ),
+  placeCase('lantern deluxe rest', 'lantern', 'rest', inAct('storyville', 1, { doubloons: 100, day: 4 })),
+  placeCase('lantern deluxe rest, broke', 'lantern', 'rest', inAct('storyville', 1, { doubloons: 50 })),
+  placeCase(
+    'lantern deluxe rest, free',
+    'lantern',
+    'rest',
+    inAct('bayou', 0, { district: 'storyville', doubloons: 10, choices: { contracts: 'burned' } }),
+  ),
+  ...[0, 1].map(pick =>
+    placeCase(
+      `lantern whispers, the vault (${pick})`,
+      'lantern',
+      'whispers',
+      inAct('storyville', 2, { doubloons: 100, bag: { ledgerpage: 3 } }),
+      pick,
+    ),
+  ),
+  placeCase(
+    'lantern whispers, the vault, broke',
+    'lantern',
+    'whispers',
+    inAct('storyville', 2, { doubloons: 30, bag: { ledgerpage: 3 } }),
+  ),
+  ...[0, 2, 6].map(pick =>
+    placeCase(
+      `lantern whispers, a boss (${pick})`,
+      'lantern',
+      'whispers',
+      inAct('storyville', 1, { doubloons: 200 }),
+      pick,
+    ),
+  ),
+  placeCase(
+    'lantern whispers, a boss, broke',
+    'lantern',
+    'whispers',
+    inAct('storyville', 1, { doubloons: 50 }),
+  ),
+  placeCase('lantern whispers, nobody left', 'lantern', 'whispers', {
+    ...inAct('tower', 1, { district: 'storyville', doubloons: 200 }),
+    defeated: ['captain_hush', 'vox_perfecta', 'mr_ledger', 'rougarou', 'archivist', 'isolde', 'conductor'],
+  }),
+  placeCase('lantern theo, first time', 'lantern', 'theo', inAct('storyville', 1)),
+  placeCase(
+    'lantern theo, rolls being found',
+    'lantern',
+    'theo',
+    inAct('storyville', 1, {
+      flags: ['metRoux', 'metTheo'],
+      quests: { rolls: 'active' },
+      bag: { pianoroll: 1 },
+    }),
+  ),
+  ...[0, 3].map(pick =>
+    placeCase(
+      `lantern theo, all three rolls (${pick})`,
+      'lantern',
+      'theo',
+      inAct('storyville', 2, {
+        flags: ['metRoux', 'metTheo'],
+        quests: { rolls: 'active' },
+        bag: { pianoroll: 3 },
+        sheet: ['sm_swing'],
+      }),
+      pick,
+    ),
+  ),
+  placeCase(
+    'lantern theo, rolls done',
+    'lantern',
+    'theo',
+    inAct('storyville', 3, { flags: ['metRoux', 'metTheo'], quests: { rolls: 'done' } }),
+  ),
+  ...[0, 1].map(pick =>
+    placeCase(
+      `lantern static, asked (${pick})`,
+      'lantern',
+      'static',
+      inAct('storyville', 1, { flags: ['metRoux', 'metCeleste'] }),
+      pick,
+    ),
+  ),
+  placeCase(
+    'lantern static, the walk',
+    'lantern',
+    'static',
+    inAct('storyville', 1, { flags: ['metRoux', 'metCeleste'], quests: { static_contract: 'active' } }),
+  ),
+  placeCase(
+    'lantern static, in the band',
+    'lantern',
+    'static',
+    inAct('storyville', 2, {
+      flags: ['metRoux', 'metCeleste'],
+      quests: { static_contract: 'done' },
+      recruited: ['static'],
+    }),
+  ),
+  placeCase(
+    'lantern static forges the ball invitation',
+    'lantern',
+    'static',
+    inAct('garden', 0, {
+      district: 'storyville',
+      flags: ['metRoux', 'metCeleste'],
+      quests: { static_contract: 'done' },
+      recruited: ['static'],
+    }),
+  ),
+  placeCase(
+    'chopshop cyberware',
+    'chopshop',
+    'cyberware',
+    inAct('storyville', 1, { level: 8, doubloons: 900 }),
+  ),
+  placeCase('chopshop surgeon', 'chopshop', 'surgeon', inAct('storyville', 1)),
+  placeCase('counting case', 'counting', 'case', inAct('storyville', 2)),
+  ...[0, 1].map(pick =>
+    placeCase(`counting boss (${pick})`, 'counting', 'boss', inAct('storyville', 3), pick),
+  ),
+  placeCase('counting boss (again)', 'counting', 'boss', inAct('storyville', 3, { intros: ['mr_ledger'] })),
+  ...(['burned', 'kept'] as const).map(contracts =>
+    placeCase(
+      `counting look (${contracts})`,
+      'counting',
+      'look',
+      inAct('bayou', 1, { district: 'storyville', choices: { contracts } }),
+    ),
+  ),
   {
     name: 'vox perfecta boss flow',
     state: inAct('quarter', 2),

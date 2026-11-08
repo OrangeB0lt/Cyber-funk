@@ -30,7 +30,7 @@ import { ALLOWED_UNLINKED } from '../../../tools/completeness';
 
 /**
  * How lived-in a save is: `fresh` (no quests, broke), `started` (every quest so far just taken,
- * a little money), `busy` (quests ready to hand in, one of everything, flush), `done` (quests done,
+ * a little money), `busy` (everyone met, quests ready to hand in, one of everything, flush), `done` (quests done,
  * every flag, the whole band, the other boss choices).
  */
 export type Profile = 'fresh' | 'started' | 'busy' | 'done';
@@ -88,6 +88,9 @@ export function buildState(
   }
   if (profile === 'busy') {
     g.doubloons = 5000;
+    // Everyone met (their one-time introductions are covered by fresh and started), so options
+    // gated on a first meeting are offered with quests ready to hand in.
+    for (const f of FLAG_IDS) if (f.startsWith('met')) g.flags[f] = true;
     for (const id of ITEM_IDS) addItem(g, id, 1);
     for (const q of quests) {
       g.quests[q] = 'active';

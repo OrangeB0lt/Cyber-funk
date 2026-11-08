@@ -166,8 +166,12 @@ async function drive(p: Player, stopBefore: (b: BossId) => boolean): Promise<Sto
       ...g.unlocked.flatMap(d => (isPendingDistrict(d) ? [] : DISTRICTS[d].places)),
     ];
     let progressed = false;
-    for (const place of new Set(places)) {
-      const opts = s.placeOptions(place).filter(o => o.hint || o.key === 'boss');
+    for (const [i, place] of [...new Set(places)].entries()) {
+      // Hinted options first; at the step's own hint place, then everything else there too (v1
+      // doesn't highlight every story option: Céleste's Whispers move Storyville on unmarked).
+      const all = s.placeOptions(place);
+      const hinted = all.filter(o => o.hint || o.key === 'boss');
+      const opts = i === 0 && def.hintPlace ? [...hinted, ...all.filter(o => !hinted.includes(o))] : hinted;
       for (const o of opts) {
         await goTo(p, PLACES[place].district);
         s.enterPlace(place);

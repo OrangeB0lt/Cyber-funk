@@ -302,7 +302,7 @@ The crawler's toolkit: build saves at every point of a district's story, run any
 
 Declarations:
 
-- <a id="tests-integration-support-crawl-ts--profile"></a>**Profile** · *type* `= 'fresh' | 'started' | 'busy' | 'done'` — How lived-in a save is: `fresh` (no quests, broke), `started` (every quest so far just taken, a little money), `busy` (quests ready to hand in, one of everything, flush), `done` (quests done, every flag, the whole band,…
+- <a id="tests-integration-support-crawl-ts--profile"></a>**Profile** · *type* `= 'fresh' | 'started' | 'busy' | 'done'` — How lived-in a save is: `fresh` (no quests, broke), `started` (every quest so far just taken, a little money), `busy` (everyone met, quests ready to hand in, one of everything, flush), `done` (quests done, every flag, t…
   - used by: here [buildState](#tests-integration-support-crawl-ts--buildstate), [districtStates](#tests-integration-support-crawl-ts--districtstates)
 - <a id="tests-integration-support-crawl-ts--crawlstate"></a>**CrawlState** · *interface* — A save to crawl from, with a name for failure messages.
   - used by: here [buildState](#tests-integration-support-crawl-ts--buildstate), [districtStates](#tests-integration-support-crawl-ts--districtstates)

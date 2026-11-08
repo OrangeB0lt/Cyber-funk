@@ -28,10 +28,7 @@ export const FLAG_IDS = [
   'metCeleste',
   /** Céleste told you about Mr. Ledger (her Blue Book hint is recorded once). */
   'ledgerHint',
-  /**
-   * Céleste already arranged your invitation to the Vane ball. PARITY: v1 reads this flag in
-   * celesteTalk but never sets it (getInvitation moves the story on instead, which closes the branch).
-   */
+  /** Céleste called in Isolde Vane's debt for your invitation to the ball (her talk, burned contracts). */
   'celesteInvite',
   /** Met Professor Theo at the Lantern's piano (first talk). */
   'metTheo',
