@@ -18,6 +18,7 @@ Generated reference. Start with the [guide](../../architecture/code-map.md) for 
 | [src/content/sprites/compile.test.ts](#src-content-sprites-compile-test-ts) | Sprite compilation: grids and variants resolve to the right pixels, and runs draw them back exactly. |
 | [src/core/rng.test.ts](#src-core-rng-test-ts) | — |
 | [src/engine/combat/combat.test.ts](#src-engine-combat-combat-test-ts) | Combat mechanics, one behavior per test. |
+| [src/engine/combat/coverage.test.ts](#src-engine-combat-coverage-test-ts) | Everything in combat, once each: every skill, boss move, assist, status, item, gear piece, sheet of music, enemy and boss. |
 | [src/engine/rules.test.ts](#src-engine-rules-test-ts) | Stats, progression, prices, timing and Blues scoring. |
 | [src/narrative/director.test.ts](#src-narrative-director-test-ts) | — |
 | [src/ui/components/Sprite.test.tsx](#src-ui-components-sprite-test-tsx) | The Sprite component: crisp, decorative SVG at whole-number scales; hits replay the flash. |
@@ -119,6 +120,17 @@ Combat mechanics, one behavior per test. These double as executable documentatio
 - Imports: core: [helpers](core.md#src-core-helpers-ts), [ids/characters](core.md#src-core-ids-characters-ts), [ids/enemies](core.md#src-core-ids-enemies-ts), [rng](core.md#src-core-rng-ts), [types/index](core.md#src-core-types-index-ts) · content: [data](content.md#src-content-data-ts) · engine: [combat/statuses](engine.md#src-engine-combat-statuses-ts), [combat/turns](engine.md#src-engine-combat-turns-ts), [index](engine.md#src-engine-index-ts)
 - Packages: `vitest`
 - Suites: “riffs and skills”, “statuses”, “items in battle”, “bosses”, “the pull loop”
+
+<a id="src-engine-combat-coverage-test-ts"></a>
+
+### src/engine/combat/coverage.test.ts
+
+Everything in combat, once each: every skill, boss move, assist, status, item, gear piece, sheet of music, enemy and boss. The mechanics tests (combat.test.ts) check *what* each rule does; this file checks that *nothing* in the tables breaks: no throw, no NaN, no runaway fight, no "undefined" in the battle log. It reads every id list, so new content is covered the moment it's added.
+
+- Source: [src/engine/combat/coverage.test.ts](../../../src/engine/combat/coverage.test.ts)
+- Imports: core: [helpers](core.md#src-core-helpers-ts), [ids/band](core.md#src-core-ids-band-ts), [ids/characters](core.md#src-core-ids-characters-ts), [ids/combat](core.md#src-core-ids-combat-ts), [ids/enemies](core.md#src-core-ids-enemies-ts), [ids/items](core.md#src-core-ids-items-ts), [rng](core.md#src-core-rng-ts), [types/index](core.md#src-core-types-index-ts) · content: [data](content.md#src-content-data-ts) · engine: [combat/statuses](engine.md#src-engine-combat-statuses-ts), [combat/turns](engine.md#src-engine-combat-turns-ts), [index](engine.md#src-engine-index-ts)
+- Packages: `vitest`
+- Suites: “every skill”, “every status”, “every item”, “every gear piece and sheet of music”, “every opponent”
 
 <a id="src-engine-rules-test-ts"></a>
 

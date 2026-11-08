@@ -6,7 +6,7 @@ Every source file in `src/`, `server/`, `tools/` and `tests/`, with its declarat
 
 For how the pieces work together (boot, a story line, a battle, a save reaching Postgres), read the hand-written [guide](../../architecture/code-map.md) first.
 
-**224** source files · **27** test files · **988** top-level declarations · **402** members · **2531** "uses" edges
+**224** source files · **28** test files · **988** top-level declarations · **402** members · **2531** "uses" edges
 
 ## Pages
 
@@ -20,7 +20,7 @@ For how the pieces work together (boot, a story line, a battle, a save reaching 
 | [src/ui and src/main.tsx](ui.md) | 37 | React components that render the two stores (game and view) and call GameApp commands, plus the browser entry point src/main.tsx. |
 | [server](server.md) | 15 | The cloud-save API: the Fastify app, its routes, the PostgreSQL repository and Drizzle schema, migrations and player-code auth. |
 | [tools](tools.md) | 21 | Node scripts: the parity oracles against v1, the balance sim and fight trace, the content validator, the layer check, the one-time migration codegen, and this generator. |
-| [tests (and every test file)](tests.md) | 29 | The integration and e2e suites in tests/, plus every co-located *.test.ts and *.spec.ts file in the repo, each listed with what it covers. |
+| [tests (and every test file)](tests.md) | 30 | The integration and e2e suites in tests/, plus every co-located *.test.ts and *.spec.ts file in the repo, each listed with what it covers. |
 
 ## Layers
 
@@ -49,9 +49,9 @@ flowchart TD
   server -->|8| app
   server -->|1| core
   tests -->|31| app
-  tests -->|11| content
-  tests -->|54| core
-  tests -->|15| engine
+  tests -->|12| content
+  tests -->|62| core
+  tests -->|18| engine
   tests -->|4| narrative
   tests -->|6| server
   tests -->|24| tools
