@@ -53,6 +53,8 @@ async function arrive(page: Page, d: string): Promise<void> {
       app.dev.act(dist);
       const g = app.store.game;
       g.level = 15;
+      // The timing bar has its own spec; here it would only make every fight slow.
+      g.settings.rhythm = 'auto';
       app.dev.gear();
       app.dev.gold();
       app.dev.items();
@@ -88,18 +90,29 @@ for (const d of PORTED) {
       await enter();
       await expectNoOverflow(page, `${d} ${place}`);
       await expect(tid(page, 'not-built'), `${place} says it isn't built`).toHaveCount(0);
-      for (const key of await ids(page, 'opt:')) {
-        if (FIGHT_KEYS.has(key)) continue;
+      // Options change as you use them (talking to someone opens their quest), so look again
+      // after each pass and tap whatever is new.
+      const done = new Set<string>();
+      for (let pass = 0; pass < 3; pass++) {
         if ((await at(page)).place !== place) await enter();
-        const opt = tid(page, `opt:${key}`);
-        if (!(await opt.count())) continue; // an earlier option changed what's on offer
-        await opt.click();
-        tapped++;
-        await playUntil(page, () => atRest(page), {
-          closeSheets: true,
-          onSheet: () => expectNoOverflow(page, `${d} ${place}:${key} sheet`),
-          onScreen: sc => expectNoOverflow(page, `${d} ${place}:${key} ${sc}`),
-        });
+        const fresh = (await ids(page, 'opt:')).filter(k => !done.has(k) && !FIGHT_KEYS.has(k));
+        if (!fresh.length) break;
+        for (const key of fresh) {
+          done.add(key);
+          if ((await at(page)).place !== place) await enter();
+          const opt = tid(page, `opt:${key}`);
+          if (!(await opt.count())) continue; // an earlier option changed what's on offer
+          await opt.click();
+          tapped++;
+          await playUntil(page, () => atRest(page), {
+            // Where a scene offers "later" (the Ball's duel, a quest's next step), take it: the
+            // crawler plays both branches headlessly; this walk is about the screens.
+            choose: 'later',
+            closeSheets: true,
+            onSheet: () => expectNoOverflow(page, `${d} ${place}:${key} sheet`),
+            onScreen: sc => expectNoOverflow(page, `${d} ${place}:${key} ${sc}`),
+          });
+        }
       }
       if ((await at(page)).screen === 'place') await tid(page, 'leave').click();
     }
