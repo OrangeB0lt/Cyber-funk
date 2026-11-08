@@ -13,7 +13,7 @@ Start here if you're new. Suggested reading order:
 
 | Folder | What's in it |
 |---|---|
-| [vision/](vision/) | Pillars, world bible, tone and voice, engineering principles |
+| [vision/](vision/) | Pillars, world bible, tone and voice, character design, engineering principles |
 | [architecture/](architecture/) | How the code is built: layers, engine, content model, narrative runtime, UI, state and saves, platform |
 | [systems/](systems/) | How the game works as a game: combat, progression, economy, gear, band, story and quests, exploration |
 | [guides/](guides/) | Step-by-step how-tos |
@@ -28,6 +28,7 @@ Start here if you're new. Suggested reading order:
 | Doc | What it covers |
 |---|---|
 | [vision/engineering-principles.md](vision/engineering-principles.md) | The six rules |
+| [vision/character-design.md](vision/character-design.md) | Art direction, the master palette, the sprite spec, and a design card for every character |
 | [architecture/code-map.md](architecture/code-map.md) | The code map: runtime objects, wiring, and traces of boot, story, battles, saves and sync |
 | [reference/code-map/](reference/code-map/README.md) | Generated: every file, declaration and call edge in `src/`, `server/`, `tools/`, `tests/` |
 | [architecture/core-and-engine.md](architecture/core-and-engine.md) | Core types, the Rng, the engine's modules and combat loop |
