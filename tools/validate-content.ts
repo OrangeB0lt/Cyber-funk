@@ -7,12 +7,15 @@
  * Each check returns human-readable problems. To add a check, push to `problems` with enough detail
  * that a writer can fix the data without reading this file.
  */
+import fs from 'node:fs';
+import path from 'node:path';
 import { pathToFileURL } from 'node:url';
 import { CLASS_IDS } from '@core/ids/characters';
 import { BOSS_IDS, ENEMY_IDS, NOTE_IDS } from '@core/ids/enemies';
+import { PALETTE_IDS, PERSON_SPRITE_IDS, SPRITE_IDS, type SpriteId } from '@core/ids/sprites';
 import { DISTRICT_IDS } from '@core/ids/world';
 import { ACT_ORDER, ACT_STEPS } from '@core/ids/story';
-import type { StepDef } from '@core/types';
+import type { SpriteDef, StepDef } from '@core/types';
 import {
   ACTS,
   BANDMATES,
@@ -28,6 +31,16 @@ import {
 } from '@content/data';
 import { RIVALS } from '@content/enemies/rivals';
 import { SUMMONS } from '@content/enemies/summons';
+import {
+  MAX_VARIANT_DEPTH,
+  NPC_SPRITE,
+  PALETTE,
+  RESERVED_P3,
+  SPRITES,
+  resolveSprite,
+  type ResolvedSprite,
+} from '@content/sprites';
+import { isTodo } from '@content/sprites/placeholder';
 import { MECHANIC_STATUSES } from '@engine/combat/resolve';
 
 export function validateContent(): string[] {
@@ -91,7 +104,123 @@ export function validateContent(): string[] {
   // Every skill says what it does.
   for (const sk of Object.values(SKILLS)) if (!sk.desc.trim()) fail(`Skill ${sk.id}: empty desc.`);
 
+  validateSprites(fail);
   return problems;
+}
+
+/** Characters a sprite grid may use: letters, digits and a few symbols ('.' and '_' are reserved). */
+const SPRITE_ALPHABET = /^[A-Za-z0-9#*+=@%&~^!?<>|-]$/;
+/** The character design doc: one card per sprite, and the master palette table. */
+const DESIGN_DOC = 'docs/vision/character-design.md';
+
+/** Sprite rules from docs/vision/character-design.md that the types can't express. */
+function validateSprites(fail: (msg: string) => void): void {
+  const bosses = new Set<string>(BOSS_IDS);
+  // A sprite whose chain ends in a placeholder is still waiting for its art; skip it until then.
+  const pending = (id: SpriteId): boolean => {
+    let def: SpriteDef = SPRITES[id];
+    for (let hops = 0; 'from' in def && hops <= 10; hops++) def = SPRITES[def.from];
+    return isTodo(def);
+  };
+  const resolved = new Map<SpriteId, ResolvedSprite>();
+  for (const id of SPRITE_IDS) {
+    if (pending(id)) continue;
+    const def = SPRITES[id];
+    const size = bosses.has(id) ? 32 : 24;
+    const at = `Sprite ${id}`;
+    const checkGrid = (
+      rows: readonly string[],
+      keys: Readonly<Record<string, string>>,
+      what: string,
+      overlay: boolean,
+    ) => {
+      if (rows.length !== size) fail(`${at}: ${what} has ${rows.length} rows, expected ${size}.`);
+      const used = new Set<string>();
+      rows.forEach((row, y) => {
+        if (row.length !== size) fail(`${at}: ${what} row ${y} is ${row.length} wide, expected ${size}.`);
+        for (const ch of row) {
+          if (ch === '.' || (overlay && ch === '_')) continue;
+          if (ch === '_') fail(`${at}: '_' (erase) belongs only in variant overlays.`);
+          else if (!SPRITE_ALPHABET.test(ch))
+            fail(`${at}: '${ch}' in ${what} row ${y} isn't in the pixel alphabet.`);
+          else if (!keys[ch]) fail(`${at}: '${ch}' in ${what} row ${y} has no key.`);
+          used.add(ch);
+        }
+      });
+      for (const k of Object.keys(keys)) if (!used.has(k)) fail(`${at}: key '${k}' is never used.`);
+    };
+    if ('from' in def) {
+      const chain: SpriteId[] = [id];
+      let cur: SpriteDef = def;
+      while ('from' in cur) {
+        if (chain.includes(cur.from)) break; // resolveSprite reports the cycle below
+        chain.push(cur.from);
+        cur = SPRITES[cur.from];
+      }
+      if (chain.length - 1 > MAX_VARIANT_DEPTH)
+        fail(`${at}: variant chain ${chain.join(' → ')} is too deep (at most ${MAX_VARIANT_DEPTH}).`);
+      if (def.overlay) checkGrid(def.overlay, def.keys ?? {}, 'overlay', true);
+      else if (def.keys) fail(`${at}: has keys but no overlay.`);
+      if (!def.overlay && !def.recolor) fail(`${at}: a variant needs a recolor, an overlay, or both.`);
+    } else {
+      checkGrid(def.rows, def.keys, 'grid', false);
+    }
+    let r: ResolvedSprite;
+    try {
+      r = resolveSprite(id, SPRITES);
+    } catch (e) {
+      fail(`${at}: ${(e as Error).message}`);
+      continue;
+    }
+    const painted = r.px.filter(Boolean).length;
+    if (painted < r.px.length * 0.15)
+      fail(`${at}: only ${painted} of ${r.px.length} pixels are painted (at least 15%).`);
+    const colours = new Set(r.px.filter(Boolean)).size;
+    const most = size === 32 ? 20 : 16;
+    if (colours > most) fail(`${at}: uses ${colours} colours (at most ${most}).`);
+    if ('from' in def && resolveSprite(def.from, SPRITES).px.every((c, i) => c === r.px[i]))
+      fail(`${at}: the variant doesn't change a single pixel of ${def.from}.`);
+    resolved.set(id, r);
+  }
+
+  // No two sprites are pixel-for-pixel the same.
+  const byPixels = new Map<string, SpriteId>();
+  for (const [id, r] of resolved) {
+    const twin = byPixels.get(r.px.join(','));
+    if (twin) fail(`Sprite ${id}: identical to ${twin}.`);
+    else byPixels.set(r.px.join(','), id);
+  }
+
+  // Opponents flagged as holograms are drawn as holograms.
+  const holograms = [
+    ...ENEMY_IDS.filter(id => ENEMIES[id].hologram),
+    ...BOSS_IDS.filter(id => BOSSES[id].hologram),
+  ] as SpriteId[];
+  for (const id of holograms)
+    if (resolved.has(id) && resolved.get(id)!.fx !== 'holo')
+      fail(`Sprite ${id}: the opponent is a hologram, so fx must be 'holo'.`);
+
+  // Every person sprite belongs to someone: a speaker (NPC_SPRITE) or a shopkeeper waiting for P3.
+  const claimed = new Set<string>([...Object.values(NPC_SPRITE), ...RESERVED_P3]);
+  for (const id of PERSON_SPRITE_IDS)
+    if (!claimed.has(id)) fail(`Sprite ${id}: no speaker uses it (NPC_SPRITE) and it isn't in RESERVED_P3.`);
+
+  // The design doc has a card for every sprite, and its palette table is exactly PALETTE.
+  const doc = fs.readFileSync(path.resolve(DESIGN_DOC), 'utf8');
+  const cards = new Set([...doc.matchAll(/^#{3,4} .*`([a-z0-9_]+)`\s*$/gm)].map(m => m[1]));
+  for (const id of SPRITE_IDS)
+    if (!cards.has(id)) fail(`${DESIGN_DOC}: no card for sprite ${id} (a heading ending in \`${id}\`).`);
+  const rows = new Map(
+    [...doc.matchAll(/^\| `([a-z0-9_]+)` \| `(#[0-9a-f]{6})` \|/gm)].map(m => [m[1]!, m[2]!]),
+  );
+  for (const id of PALETTE_IDS)
+    if (rows.get(id) !== PALETTE[id])
+      fail(
+        `${DESIGN_DOC}: palette row for ${id} is ${rows.get(id) ?? 'missing'}, but PALETTE says ${PALETTE[id]}.`,
+      );
+  for (const name of rows.keys())
+    if (!(PALETTE_IDS as readonly string[]).includes(name))
+      fail(`${DESIGN_DOC}: palette row ${name} isn't in PALETTE_IDS.`);
 }
 
 const isMain = process.argv[1] && import.meta.url === pathToFileURL(process.argv[1]).href;

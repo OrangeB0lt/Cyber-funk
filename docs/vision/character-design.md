@@ -62,7 +62,7 @@ Sprites use only these 80 colours. The validator checks that every colour in thi
 | Name | Hex | Use |
 |---|---|---|
 | `ink` | `#0a0412` | outer outline, pupils |
-| `shadow` | `#2b1a40` | deepest interior shade |
+| `shadow` | `#2b1a40` | deepest interior shade; hero pupils (the clone recolour turns them cyan) |
 | `skin1_hi` | `#fde7d6` | skin, porcelain: light |
 | `skin1` | `#f2c9ad` | skin, porcelain |
 | `skin1_lo` | `#d29a7e` | skin, porcelain: shade, freckles |
@@ -372,7 +372,7 @@ The Session Clone fights in the Tower and copies the player's class when it spaw
 - brass goes to chrome
 - cloth goes to greys
 
-The eyes become `cyan` LEDs. The result is the same pose with no warmth. Glow `cyan`. These sprites are generated variants with no grid of their own. In the Blue Book, the Session Clone entry shows the clone of the player's own class.
+The eyes become `cyan` LEDs: hero pupils are drawn in `shadow`, which heroes use for nothing else, and the recolour maps `shadow` to `cyan`. The result is the same pose with no warmth. Glow `cyan`. These sprites are generated variants with no grid of their own. In the Blue Book, the Session Clone entry shows the clone of the player's own class.
 
 ### Session Clone (Trumpet) · `clone_trumpet`
 

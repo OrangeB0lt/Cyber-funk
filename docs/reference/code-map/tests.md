@@ -15,6 +15,7 @@ Generated reference. Start with the [guide](../../architecture/code-map.md) for 
 | [src/app/save/format.test.ts](#src-app-save-format-test-ts) | — |
 | [src/app/save/slots.test.ts](#src-app-save-slots-test-ts) | — |
 | [src/app/save/sync.test.ts](#src-app-save-sync-test-ts) | — |
+| [src/content/sprites/compile.test.ts](#src-content-sprites-compile-test-ts) | Sprite compilation: grids and variants resolve to the right pixels, and runs draw them back exactly. |
 | [src/core/rng.test.ts](#src-core-rng-test-ts) | — |
 | [src/engine/combat/combat.test.ts](#src-engine-combat-combat-test-ts) | Combat mechanics, one behavior per test. |
 | [src/engine/rules.test.ts](#src-engine-rules-test-ts) | Stats, progression, prices, timing and Blues scoring. |
@@ -81,6 +82,17 @@ The browser's sync engine (src/app/save/sync.ts) over the real HTTP client again
 - Imports: core: [ids/saves](core.md#src-core-ids-saves-ts), [rng](core.md#src-core-rng-ts) · engine: [index](engine.md#src-engine-index-ts) · app: [save/cloud](app.md#src-app-save-cloud-ts), [save/format](app.md#src-app-save-format-ts), [save/protocol](app.md#src-app-save-protocol-ts), [save/slots](app.md#src-app-save-slots-ts), [save/storage](app.md#src-app-save-storage-ts), [save/sync](app.md#src-app-save-sync-ts)
 - Packages: `vitest`
 - Suites: “cloud sync”
+
+<a id="src-content-sprites-compile-test-ts"></a>
+
+### src/content/sprites/compile.test.ts
+
+Sprite compilation: grids and variants resolve to the right pixels, and runs draw them back exactly.
+
+- Source: [src/content/sprites/compile.test.ts](../../../src/content/sprites/compile.test.ts)
+- Imports: core: [ids/sprites](core.md#src-core-ids-sprites-ts), [types/index](core.md#src-core-types-index-ts) · content: [sprites/compile](content.md#src-content-sprites-compile-ts), [sprites/palette](content.md#src-content-sprites-palette-ts), [sprites/table](content.md#src-content-sprites-table-ts)
+- Packages: `vitest`
+- Suites: “resolveSprite”, “compileSprite”, “spriteSvg”
 
 <a id="src-core-rng-test-ts"></a>
 

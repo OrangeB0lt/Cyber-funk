@@ -29,6 +29,7 @@ flowchart LR
   n_roots["roots"]
   n_rules["rules"]
   n_sheetMusic["sheetMusic"]
+  n_sprites_["sprites/ (17)"]
   n_story_["story/ (2)"]
   n_text["text"]
   n_world_["world/ (3)"]
@@ -148,6 +149,23 @@ flowchart LR
 | [src/content/roots.ts](#src-content-roots-ts) | Character roots: where you grew up. |
 | [src/content/rules.ts](#src-content-rules-ts) | Game rules that are content decisions rather than engine mechanics: level cap, skill unlock levels, the basic enemy attack, loot, and quest-item drops. |
 | [src/content/sheetMusic.ts](#src-content-sheetmusic-ts) | Sheet music: techniques bought once and always on. |
+| [src/content/sprites/art/bayou.ts](#src-content-sprites-art-bayou-ts) | Manchac Swamp: its street enemies, its elite and Le Rougarou Chromé. |
+| [src/content/sprites/art/cemetery.ts](#src-content-sprites-art-cemetery-ts) | Cities of the Dead: its street enemies, its elite, the Ghost Track summon and the Archivist. |
+| [src/content/sprites/art/garden.ts](#src-content-sprites-art-garden-ts) | The Garden District: its street enemies, its elite and Isolde Vane. |
+| [src/content/sprites/art/heroes.ts](#src-content-sprites-art-heroes-ts) | The seven class heroes, one fixed hero per instrument. |
+| [src/content/sprites/art/people.ts](#src-content-sprites-art-people-ts) | Speakers, guides, vendors and bandmates with art of their own. |
+| [src/content/sprites/art/quarter.ts](#src-content-sprites-art-quarter-ts) | The French Quarter: its street enemies, its elite and Vox Perfecta. |
+| [src/content/sprites/art/rivals.ts](#src-content-sprites-art-rivals-ts) | The three Cutting Contest rivals. |
+| [src/content/sprites/art/shopkeepers.ts](#src-content-sprites-art-shopkeepers-ts) | Shopkeepers in places P3 still has to port (no NpcId yet; see RESERVED_P3). |
+| [src/content/sprites/art/storyville.ts](#src-content-sprites-art-storyville-ts) | Storyville: its street enemies, its elite and Mr. |
+| [src/content/sprites/art/tower.ts](#src-content-sprites-art-tower-ts) | The Central Business District: its street enemies, its elite, the Conductor and the Click. |
+| [src/content/sprites/art/treme.ts](#src-content-sprites-art-treme-ts) | Tremé: its street enemies, its elite and Captain Hush. |
+| [src/content/sprites/compile.ts](#src-content-sprites-compile-ts) | Turns sprite rows into drawable data. |
+| [src/content/sprites/index.ts](#src-content-sprites-index-ts) | Character art, for the UI and tools only. |
+| [src/content/sprites/palette.ts](#src-content-sprites-palette-ts) | The master palette: every colour a sprite may use. |
+| [src/content/sprites/placeholder.ts](#src-content-sprites-placeholder-ts) | Stand-in art: a grey "?" bust that keeps the sprite table complete while the real art lands, one batch at a time. |
+| [src/content/sprites/refs.ts](#src-content-sprites-refs-ts) | Who is drawn with which sprite. |
+| [src/content/sprites/table.ts](#src-content-sprites-table-ts) | Every sprite in one table: the art files, plus a generated Session Clone row per class. |
 | [src/content/story/acts.ts](#src-content-story-acts-ts) | The main quest, step by step: what the journal says, which place gets the "!" hint, and how a step completes on its own after battles. |
 | [src/content/story/prologue.scene.ts](#src-content-story-prologue-scene-ts) | Prologue: The Dirge. |
 | [src/content/text.ts](#src-content-text-ts) | The game's system copy: lines the app shows around scenes and battles (recovering a Blue Note, unlocking a district, escaping, victory and defeat screens). |
@@ -276,7 +294,7 @@ Declarations:
 
 - <a id="src-content-bosses-index-ts--bosses"></a>**BOSSES** · *const* `: Table<BossId, BossDef>`
   - uses: **[content/bosses/archivist](#src-content-bosses-archivist-ts)** [archivist](#src-content-bosses-archivist-ts--archivist) · **[content/bosses/captain_hush](#src-content-bosses-captain-hush-ts)** [captainHush](#src-content-bosses-captain-hush-ts--captainhush) · **[content/bosses/conductor](#src-content-bosses-conductor-ts)** [conductor](#src-content-bosses-conductor-ts--conductor) · **[content/bosses/isolde](#src-content-bosses-isolde-ts)** [isolde](#src-content-bosses-isolde-ts--isolde) · **[content/bosses/mr_ledger](#src-content-bosses-mr-ledger-ts)** [mrLedger](#src-content-bosses-mr-ledger-ts--mrledger) · **[content/bosses/rougarou](#src-content-bosses-rougarou-ts)** [rougarou](#src-content-bosses-rougarou-ts--rougarou) · **[content/bosses/the_click](#src-content-bosses-the-click-ts)** [theClick](#src-content-bosses-the-click-ts--theclick) · **[content/bosses/vox_perfecta](#src-content-bosses-vox-perfecta-ts)** [voxPerfecta](#src-content-bosses-vox-perfecta-ts--voxperfecta)
-  - used by: **[app/game](app.md#src-app-game-ts)** [GameApp.dev](app.md#src-app-game-ts--gameapp-dev), [bossStep](app.md#src-app-game-ts--bossstep) · **[app/reactPresenter](app.md#src-app-reactpresenter-ts)** [actorView](app.md#src-app-reactpresenter-ts--actorview) · **[app/sceneContext](app.md#src-app-scenecontext-ts)** [createSceneContext](app.md#src-app-scenecontext-ts--createscenecontext) · **[engine/aftermath](engine.md#src-engine-aftermath-ts)** [resolveVictory](engine.md#src-engine-aftermath-ts--resolvevictory) · **[engine/combat/actors](engine.md#src-engine-combat-actors-ts)** [isBossId](engine.md#src-engine-combat-actors-ts--isbossid), [makeEnemy](engine.md#src-engine-combat-actors-ts--makeenemy) · **[engine/combat/battle](engine.md#src-engine-combat-battle-ts)** [createBattle](engine.md#src-engine-combat-battle-ts--createbattle) · **[engine/combat/legal](engine.md#src-engine-combat-legal-ts)** [legalActions](engine.md#src-engine-combat-legal-ts--legalactions) · **[engine/combat/player](engine.md#src-engine-combat-player-ts)** [playTheBlues](engine.md#src-engine-combat-player-ts--playtheblues) · **[engine/combat/resolve](engine.md#src-engine-combat-resolve-ts)** [bossHpHooks](engine.md#src-engine-combat-resolve-ts--bosshphooks), [checkDeath](engine.md#src-engine-combat-resolve-ts--checkdeath) · **[engine/combat/turns](engine.md#src-engine-combat-turns-ts)** [beginTurn](engine.md#src-engine-combat-turns-ts--beginturn), [enemyAct](engine.md#src-engine-combat-turns-ts--enemyact) · **[ui/sheets/MenuSheets](ui.md#src-ui-sheets-menusheets-tsx)** [BookSheet](ui.md#src-ui-sheets-menusheets-tsx--booksheet) · **[ui/sheets/WorldSheets](ui.md#src-ui-sheets-worldsheets-tsx)** [DevSheet](ui.md#src-ui-sheets-worldsheets-tsx--devsheet) · … +4 more · tests: [content.test](tests.md#tools-parity-content-test-ts)
+  - used by: **[app/game](app.md#src-app-game-ts)** [GameApp.dev](app.md#src-app-game-ts--gameapp-dev), [bossStep](app.md#src-app-game-ts--bossstep) · **[app/reactPresenter](app.md#src-app-reactpresenter-ts)** [actorView](app.md#src-app-reactpresenter-ts--actorview) · **[app/sceneContext](app.md#src-app-scenecontext-ts)** [createSceneContext](app.md#src-app-scenecontext-ts--createscenecontext) · **[engine/aftermath](engine.md#src-engine-aftermath-ts)** [resolveVictory](engine.md#src-engine-aftermath-ts--resolvevictory) · **[engine/combat/actors](engine.md#src-engine-combat-actors-ts)** [isBossId](engine.md#src-engine-combat-actors-ts--isbossid), [makeEnemy](engine.md#src-engine-combat-actors-ts--makeenemy) · **[engine/combat/battle](engine.md#src-engine-combat-battle-ts)** [createBattle](engine.md#src-engine-combat-battle-ts--createbattle) · **[engine/combat/legal](engine.md#src-engine-combat-legal-ts)** [legalActions](engine.md#src-engine-combat-legal-ts--legalactions) · **[engine/combat/player](engine.md#src-engine-combat-player-ts)** [playTheBlues](engine.md#src-engine-combat-player-ts--playtheblues) · **[engine/combat/resolve](engine.md#src-engine-combat-resolve-ts)** [bossHpHooks](engine.md#src-engine-combat-resolve-ts--bosshphooks), [checkDeath](engine.md#src-engine-combat-resolve-ts--checkdeath) · **[engine/combat/turns](engine.md#src-engine-combat-turns-ts)** [beginTurn](engine.md#src-engine-combat-turns-ts--beginturn), [enemyAct](engine.md#src-engine-combat-turns-ts--enemyact) · **[ui/sheets/MenuSheets](ui.md#src-ui-sheets-menusheets-tsx)** [BookSheet](ui.md#src-ui-sheets-menusheets-tsx--booksheet) · **[ui/sheets/WorldSheets](ui.md#src-ui-sheets-worldsheets-tsx)** [DevSheet](ui.md#src-ui-sheets-worldsheets-tsx--devsheet) · … +5 more · tests: [content.test](tests.md#tools-parity-content-test-ts)
 
 <a id="src-content-bosses-isolde-ts"></a>
 
@@ -975,7 +993,7 @@ Declarations:
 
 - <a id="src-content-enemies-index-ts--enemies"></a>**ENEMIES** · *const* `: Table<EnemyId, EnemyDef>`
   - uses: **[content/districts/bayou/enemies](#src-content-districts-bayou-enemies-ts)** [bayouEnemies](#src-content-districts-bayou-enemies-ts--bayouenemies) · **[content/districts/cemetery/enemies](#src-content-districts-cemetery-enemies-ts)** [cemeteryEnemies](#src-content-districts-cemetery-enemies-ts--cemeteryenemies) · **[content/districts/garden/enemies](#src-content-districts-garden-enemies-ts)** [gardenEnemies](#src-content-districts-garden-enemies-ts--gardenenemies) · **[content/districts/quarter/enemies](#src-content-districts-quarter-enemies-ts)** [quarterEnemies](#src-content-districts-quarter-enemies-ts--quarterenemies) · **[content/districts/storyville/enemies](#src-content-districts-storyville-enemies-ts)** [storyvilleEnemies](#src-content-districts-storyville-enemies-ts--storyvilleenemies) · **[content/districts/tower/enemies](#src-content-districts-tower-enemies-ts)** [towerEnemies](#src-content-districts-tower-enemies-ts--towerenemies) · **[content/districts/treme/enemies](#src-content-districts-treme-enemies-ts)** [tremeEnemies](#src-content-districts-treme-enemies-ts--tremeenemies) · **[content/enemies/rivals](#src-content-enemies-rivals-ts)** [RIVALS](#src-content-enemies-rivals-ts--rivals) · **[content/enemies/summons](#src-content-enemies-summons-ts)** [SUMMONS](#src-content-enemies-summons-ts--summons)
-  - used by: **[app/game](app.md#src-app-game-ts)** [GameApp.takeBounty](app.md#src-app-game-ts--gameapp-takebounty) · **[app/reactPresenter](app.md#src-app-reactpresenter-ts)** [actorView](app.md#src-app-reactpresenter-ts--actorview) · **[content/districts/treme/places.scene](#src-content-districts-treme-places-scene-ts)** [spar](#src-content-districts-treme-places-scene-ts--spar) · **[content/world/streets.scene](#src-content-world-streets-scene-ts)** [hitTheStreets](#src-content-world-streets-scene-ts--hitthestreets), [trackBounty](#src-content-world-streets-scene-ts--trackbounty) · **[engine/aftermath](engine.md#src-engine-aftermath-ts)** [resolveVictory](engine.md#src-engine-aftermath-ts--resolvevictory) · **[engine/combat/actors](engine.md#src-engine-combat-actors-ts)** [makeEnemy](engine.md#src-engine-combat-actors-ts--makeenemy) · **[engine/encounters](engine.md#src-engine-encounters-ts)** [buildEnemies](engine.md#src-engine-encounters-ts--buildenemies), [randomStreetGroup](engine.md#src-engine-encounters-ts--randomstreetgroup) · **[ui/sheets/MenuSheets](ui.md#src-ui-sheets-menusheets-tsx)** [BookSheet](ui.md#src-ui-sheets-menusheets-tsx--booksheet), [JournalSheet](ui.md#src-ui-sheets-menusheets-tsx--journalsheet) · **[ui/sheets/WorldSheets](ui.md#src-ui-sheets-worldsheets-tsx)** [BountySheet](ui.md#src-ui-sheets-worldsheets-tsx--bountysheet) · **[tools/sim](tools.md#tools-sim-ts)** [runSim](tools.md#tools-sim-ts--runsim) · **[tools/validate-content](tools.md#tools-validate-content-ts)** [validateContent](tools.md#tools-validate-content-ts--validatecontent) · tests: [content.test](tests.md#tools-parity-content-test-ts), [rules.test](tests.md#tools-parity-rules-test-ts)
+  - used by: **[app/game](app.md#src-app-game-ts)** [GameApp.takeBounty](app.md#src-app-game-ts--gameapp-takebounty) · **[app/reactPresenter](app.md#src-app-reactpresenter-ts)** [actorView](app.md#src-app-reactpresenter-ts--actorview) · **[content/districts/treme/places.scene](#src-content-districts-treme-places-scene-ts)** [spar](#src-content-districts-treme-places-scene-ts--spar) · **[content/world/streets.scene](#src-content-world-streets-scene-ts)** [hitTheStreets](#src-content-world-streets-scene-ts--hitthestreets), [trackBounty](#src-content-world-streets-scene-ts--trackbounty) · **[engine/aftermath](engine.md#src-engine-aftermath-ts)** [resolveVictory](engine.md#src-engine-aftermath-ts--resolvevictory) · **[engine/combat/actors](engine.md#src-engine-combat-actors-ts)** [makeEnemy](engine.md#src-engine-combat-actors-ts--makeenemy) · **[engine/encounters](engine.md#src-engine-encounters-ts)** [buildEnemies](engine.md#src-engine-encounters-ts--buildenemies), [randomStreetGroup](engine.md#src-engine-encounters-ts--randomstreetgroup) · **[ui/sheets/MenuSheets](ui.md#src-ui-sheets-menusheets-tsx)** [BookSheet](ui.md#src-ui-sheets-menusheets-tsx--booksheet), [JournalSheet](ui.md#src-ui-sheets-menusheets-tsx--journalsheet) · **[ui/sheets/WorldSheets](ui.md#src-ui-sheets-worldsheets-tsx)** [BountySheet](ui.md#src-ui-sheets-worldsheets-tsx--bountysheet) · **[tools/sim](tools.md#tools-sim-ts)** [runSim](tools.md#tools-sim-ts--runsim) · **[tools/validate-content](tools.md#tools-validate-content-ts)** [validateContent](tools.md#tools-validate-content-ts--validatecontent), [validateSprites](tools.md#tools-validate-content-ts--validatesprites) · tests: [content.test](tests.md#tools-parity-content-test-ts), [rules.test](tests.md#tools-parity-rules-test-ts)
 
 <a id="src-content-enemies-rivals-ts"></a>
 
@@ -1306,6 +1324,345 @@ Declarations:
 
 - <a id="src-content-sheetmusic-ts--sheet-music"></a>**SHEET_MUSIC** · *const* `: Table<SheetMusicId, SheetMusicDef>`
   - used by: **[engine/items](engine.md#src-engine-items-ts)** [buy](engine.md#src-engine-items-ts--buy), [shopKind](engine.md#src-engine-items-ts--shopkind), [shopRow](engine.md#src-engine-items-ts--shoprow) · **[engine/stats](engine.md#src-engine-stats-ts)** [activePassives](engine.md#src-engine-stats-ts--activepassives) · **[ui/sheets/MenuSheets](ui.md#src-ui-sheets-menusheets-tsx)** [StatusSheet](ui.md#src-ui-sheets-menusheets-tsx--statussheet) · **[ui/sheets/ShopSheet](ui.md#src-ui-sheets-shopsheet-tsx)** [ShopSheet](ui.md#src-ui-sheets-shopsheet-tsx--shopsheet) · tests: [content.test](tests.md#tools-parity-content-test-ts), [rules.test](tests.md#tools-parity-rules-test-ts)
+
+<a id="src-content-sprites-art-bayou-ts"></a>
+
+### src/content/sprites/art/bayou.ts
+
+Manchac Swamp: its street enemies, its elite and Le Rougarou Chromé. Specs: docs/vision/character-design.md (Manchac Swamp, Le Rougarou Chromé).
+
+- Source: [src/content/sprites/art/bayou.ts](../../../src/content/sprites/art/bayou.ts)
+- Imports: core: [types/index](core.md#src-core-types-index-ts) · content: [sprites/placeholder](#src-content-sprites-placeholder-ts)
+- Imported by: content: [sprites/table](#src-content-sprites-table-ts)
+- Types used: **[core/types/sprites](core.md#src-core-types-sprites-ts)** [SpriteTable](core.md#src-core-types-sprites-ts--spritetable)
+
+Declarations:
+
+- <a id="src-content-sprites-art-bayou-ts--bayou-art"></a>**BAYOU_ART** · *const* `satisfies Partial<SpriteTable>`
+  - uses: **[content/sprites/placeholder](#src-content-sprites-placeholder-ts)** [todo](#src-content-sprites-placeholder-ts--todo)
+  - used by: **[content/sprites/table](#src-content-sprites-table-ts)** [SPRITES](#src-content-sprites-table-ts--sprites)
+
+<a id="src-content-sprites-art-cemetery-ts"></a>
+
+### src/content/sprites/art/cemetery.ts
+
+Cities of the Dead: its street enemies, its elite, the Ghost Track summon and the Archivist. Specs: docs/vision/character-design.md (Cities of the Dead, The Archivist).
+
+- Source: [src/content/sprites/art/cemetery.ts](../../../src/content/sprites/art/cemetery.ts)
+- Imports: core: [types/index](core.md#src-core-types-index-ts) · content: [sprites/placeholder](#src-content-sprites-placeholder-ts)
+- Imported by: content: [sprites/table](#src-content-sprites-table-ts)
+- Types used: **[core/types/sprites](core.md#src-core-types-sprites-ts)** [SpriteTable](core.md#src-core-types-sprites-ts--spritetable)
+
+Declarations:
+
+- <a id="src-content-sprites-art-cemetery-ts--cemetery-art"></a>**CEMETERY_ART** · *const* `satisfies Partial<SpriteTable>`
+  - uses: **[content/sprites/placeholder](#src-content-sprites-placeholder-ts)** [todo](#src-content-sprites-placeholder-ts--todo)
+  - used by: **[content/sprites/table](#src-content-sprites-table-ts)** [SPRITES](#src-content-sprites-table-ts--sprites)
+
+<a id="src-content-sprites-art-garden-ts"></a>
+
+### src/content/sprites/art/garden.ts
+
+The Garden District: its street enemies, its elite and Isolde Vane. Specs: docs/vision/character-design.md (Garden District, Isolde Vane).
+
+- Source: [src/content/sprites/art/garden.ts](../../../src/content/sprites/art/garden.ts)
+- Imports: core: [types/index](core.md#src-core-types-index-ts) · content: [sprites/placeholder](#src-content-sprites-placeholder-ts)
+- Imported by: content: [sprites/table](#src-content-sprites-table-ts)
+- Types used: **[core/types/sprites](core.md#src-core-types-sprites-ts)** [SpriteTable](core.md#src-core-types-sprites-ts--spritetable)
+
+Declarations:
+
+- <a id="src-content-sprites-art-garden-ts--garden-art"></a>**GARDEN_ART** · *const* `satisfies Partial<SpriteTable>`
+  - uses: **[content/sprites/placeholder](#src-content-sprites-placeholder-ts)** [todo](#src-content-sprites-placeholder-ts--todo)
+  - used by: **[content/sprites/table](#src-content-sprites-table-ts)** [SPRITES](#src-content-sprites-table-ts--sprites)
+
+<a id="src-content-sprites-art-heroes-ts"></a>
+
+### src/content/sprites/art/heroes.ts
+
+The seven class heroes, one fixed hero per instrument. Specs: docs/vision/character-design.md (Heroes).
+
+- Source: [src/content/sprites/art/heroes.ts](../../../src/content/sprites/art/heroes.ts)
+- Imports: core: [types/index](core.md#src-core-types-index-ts) · content: [sprites/placeholder](#src-content-sprites-placeholder-ts)
+- Imported by: content: [sprites/table](#src-content-sprites-table-ts)
+- Types used: **[core/types/sprites](core.md#src-core-types-sprites-ts)** [SpriteTable](core.md#src-core-types-sprites-ts--spritetable)
+
+Declarations:
+
+- <a id="src-content-sprites-art-heroes-ts--hero-art"></a>**HERO_ART** · *const* `satisfies Partial<SpriteTable>`
+  - uses: **[content/sprites/placeholder](#src-content-sprites-placeholder-ts)** [todo](#src-content-sprites-placeholder-ts--todo)
+  - used by: **[content/sprites/table](#src-content-sprites-table-ts)** [SPRITES](#src-content-sprites-table-ts--sprites)
+
+<a id="src-content-sprites-art-people-ts"></a>
+
+### src/content/sprites/art/people.ts
+
+Speakers, guides, vendors and bandmates with art of their own. Specs: docs/vision/character-design.md (People).
+
+- Source: [src/content/sprites/art/people.ts](../../../src/content/sprites/art/people.ts)
+- Imports: core: [types/index](core.md#src-core-types-index-ts) · content: [sprites/placeholder](#src-content-sprites-placeholder-ts)
+- Imported by: content: [sprites/table](#src-content-sprites-table-ts)
+- Types used: **[core/types/sprites](core.md#src-core-types-sprites-ts)** [SpriteTable](core.md#src-core-types-sprites-ts--spritetable)
+
+Declarations:
+
+- <a id="src-content-sprites-art-people-ts--people-art"></a>**PEOPLE_ART** · *const* `satisfies Partial<SpriteTable>`
+  - uses: **[content/sprites/placeholder](#src-content-sprites-placeholder-ts)** [todo](#src-content-sprites-placeholder-ts--todo)
+  - used by: **[content/sprites/table](#src-content-sprites-table-ts)** [SPRITES](#src-content-sprites-table-ts--sprites)
+
+<a id="src-content-sprites-art-quarter-ts"></a>
+
+### src/content/sprites/art/quarter.ts
+
+The French Quarter: its street enemies, its elite and Vox Perfecta. Specs: docs/vision/character-design.md (French Quarter, Vox Perfecta).
+
+- Source: [src/content/sprites/art/quarter.ts](../../../src/content/sprites/art/quarter.ts)
+- Imports: core: [types/index](core.md#src-core-types-index-ts) · content: [sprites/placeholder](#src-content-sprites-placeholder-ts)
+- Imported by: content: [sprites/table](#src-content-sprites-table-ts)
+- Types used: **[core/types/sprites](core.md#src-core-types-sprites-ts)** [SpriteTable](core.md#src-core-types-sprites-ts--spritetable)
+
+Declarations:
+
+- <a id="src-content-sprites-art-quarter-ts--quarter-art"></a>**QUARTER_ART** · *const* `satisfies Partial<SpriteTable>`
+  - uses: **[content/sprites/placeholder](#src-content-sprites-placeholder-ts)** [todo](#src-content-sprites-placeholder-ts--todo)
+  - used by: **[content/sprites/table](#src-content-sprites-table-ts)** [SPRITES](#src-content-sprites-table-ts--sprites)
+
+<a id="src-content-sprites-art-rivals-ts"></a>
+
+### src/content/sprites/art/rivals.ts
+
+The three Cutting Contest rivals. Specs: docs/vision/character-design.md (Cutting Contest rivals).
+
+- Source: [src/content/sprites/art/rivals.ts](../../../src/content/sprites/art/rivals.ts)
+- Imports: core: [types/index](core.md#src-core-types-index-ts) · content: [sprites/placeholder](#src-content-sprites-placeholder-ts)
+- Imported by: content: [sprites/table](#src-content-sprites-table-ts)
+- Types used: **[core/types/sprites](core.md#src-core-types-sprites-ts)** [SpriteTable](core.md#src-core-types-sprites-ts--spritetable)
+
+Declarations:
+
+- <a id="src-content-sprites-art-rivals-ts--rival-art"></a>**RIVAL_ART** · *const* `satisfies Partial<SpriteTable>`
+  - uses: **[content/sprites/placeholder](#src-content-sprites-placeholder-ts)** [todo](#src-content-sprites-placeholder-ts--todo)
+  - used by: **[content/sprites/table](#src-content-sprites-table-ts)** [SPRITES](#src-content-sprites-table-ts--sprites)
+
+<a id="src-content-sprites-art-shopkeepers-ts"></a>
+
+### src/content/sprites/art/shopkeepers.ts
+
+Shopkeepers in places P3 still has to port (no NpcId yet; see RESERVED_P3). Specs: docs/vision/character-design.md (Shopkeepers (P3)).
+
+- Source: [src/content/sprites/art/shopkeepers.ts](../../../src/content/sprites/art/shopkeepers.ts)
+- Imports: core: [types/index](core.md#src-core-types-index-ts) · content: [sprites/placeholder](#src-content-sprites-placeholder-ts)
+- Imported by: content: [sprites/table](#src-content-sprites-table-ts)
+- Types used: **[core/types/sprites](core.md#src-core-types-sprites-ts)** [SpriteTable](core.md#src-core-types-sprites-ts--spritetable)
+
+Declarations:
+
+- <a id="src-content-sprites-art-shopkeepers-ts--shopkeeper-art"></a>**SHOPKEEPER_ART** · *const* `satisfies Partial<SpriteTable>`
+  - uses: **[content/sprites/placeholder](#src-content-sprites-placeholder-ts)** [todo](#src-content-sprites-placeholder-ts--todo)
+  - used by: **[content/sprites/table](#src-content-sprites-table-ts)** [SPRITES](#src-content-sprites-table-ts--sprites)
+
+<a id="src-content-sprites-art-storyville-ts"></a>
+
+### src/content/sprites/art/storyville.ts
+
+Storyville: its street enemies, its elite and Mr. Ledger. Specs: docs/vision/character-design.md (Storyville, Mr. Ledger).
+
+- Source: [src/content/sprites/art/storyville.ts](../../../src/content/sprites/art/storyville.ts)
+- Imports: core: [types/index](core.md#src-core-types-index-ts) · content: [sprites/placeholder](#src-content-sprites-placeholder-ts)
+- Imported by: content: [sprites/table](#src-content-sprites-table-ts)
+- Types used: **[core/types/sprites](core.md#src-core-types-sprites-ts)** [SpriteTable](core.md#src-core-types-sprites-ts--spritetable)
+
+Declarations:
+
+- <a id="src-content-sprites-art-storyville-ts--storyville-art"></a>**STORYVILLE_ART** · *const* `satisfies Partial<SpriteTable>`
+  - uses: **[content/sprites/placeholder](#src-content-sprites-placeholder-ts)** [todo](#src-content-sprites-placeholder-ts--todo)
+  - used by: **[content/sprites/table](#src-content-sprites-table-ts)** [SPRITES](#src-content-sprites-table-ts--sprites)
+
+<a id="src-content-sprites-art-tower-ts"></a>
+
+### src/content/sprites/art/tower.ts
+
+The Central Business District: its street enemies, its elite, the Conductor and the Click. Specs: docs/vision/character-design.md (Central Business District, The Conductor, THE CLICK).
+
+- Source: [src/content/sprites/art/tower.ts](../../../src/content/sprites/art/tower.ts)
+- Imports: core: [types/index](core.md#src-core-types-index-ts) · content: [sprites/placeholder](#src-content-sprites-placeholder-ts)
+- Imported by: content: [sprites/table](#src-content-sprites-table-ts)
+- Types used: **[core/types/sprites](core.md#src-core-types-sprites-ts)** [SpriteTable](core.md#src-core-types-sprites-ts--spritetable)
+
+Declarations:
+
+- <a id="src-content-sprites-art-tower-ts--tower-art"></a>**TOWER_ART** · *const* `satisfies Partial<SpriteTable>`
+  - uses: **[content/sprites/placeholder](#src-content-sprites-placeholder-ts)** [todo](#src-content-sprites-placeholder-ts--todo)
+  - used by: **[content/sprites/table](#src-content-sprites-table-ts)** [SPRITES](#src-content-sprites-table-ts--sprites)
+
+<a id="src-content-sprites-art-treme-ts"></a>
+
+### src/content/sprites/art/treme.ts
+
+Tremé: its street enemies, its elite and Captain Hush. Specs: docs/vision/character-design.md (Tremé, Captain Hush).
+
+- Source: [src/content/sprites/art/treme.ts](../../../src/content/sprites/art/treme.ts)
+- Imports: core: [types/index](core.md#src-core-types-index-ts) · content: [sprites/placeholder](#src-content-sprites-placeholder-ts)
+- Imported by: content: [sprites/table](#src-content-sprites-table-ts)
+- Types used: **[core/types/sprites](core.md#src-core-types-sprites-ts)** [SpriteTable](core.md#src-core-types-sprites-ts--spritetable)
+
+Declarations:
+
+- <a id="src-content-sprites-art-treme-ts--treme-art"></a>**TREME_ART** · *const* `satisfies Partial<SpriteTable>`
+  - uses: **[content/sprites/placeholder](#src-content-sprites-placeholder-ts)** [todo](#src-content-sprites-placeholder-ts--todo)
+  - used by: **[content/sprites/table](#src-content-sprites-table-ts)** [SPRITES](#src-content-sprites-table-ts--sprites)
+
+<a id="src-content-sprites-compile-ts"></a>
+
+### src/content/sprites/compile.ts
+
+Turns sprite rows into drawable data. resolveSprite follows variants down to one palette colour per pixel; compileSprite merges each colour's pixels into horizontal runs, giving one SVG path per colour. Pure: the table and palette come in as arguments (index.ts binds the real ones), so this file never imports the art and tests can feed it tiny tables.
+
+- Source: [src/content/sprites/compile.ts](../../../src/content/sprites/compile.ts)
+- Imports: core: [ids/sprites](core.md#src-core-ids-sprites-ts), [types/index](core.md#src-core-types-index-ts)
+- Imported by: content: [sprites/index](#src-content-sprites-index-ts)
+- Tested by: [compile.test](tests.md#src-content-sprites-compile-test-ts)
+- Types used: **[core/ids/sprites](core.md#src-core-ids-sprites-ts)** [PaletteId](core.md#src-core-ids-sprites-ts--paletteid), [SpriteId](core.md#src-core-ids-sprites-ts--spriteid) · **[core/types/sprites](core.md#src-core-types-sprites-ts)** [SpriteFx](core.md#src-core-types-sprites-ts--spritefx), [SpriteTable](core.md#src-core-types-sprites-ts--spritetable)
+
+Declarations:
+
+- <a id="src-content-sprites-compile-ts--palette"></a>**Palette** · *type* `= Readonly<Record<PaletteId, string>>` — The master palette's hex values.
+  - used by: here [compileSprite](#src-content-sprites-compile-ts--compilesprite)
+- <a id="src-content-sprites-compile-ts--resolvedsprite"></a>**ResolvedSprite** · *interface* — A sprite resolved to one palette colour (or nothing) per pixel, row by row.
+  - used by: here [resolve](#src-content-sprites-compile-ts--resolve), [resolveSprite](#src-content-sprites-compile-ts--resolvesprite) · **[tools/validate-content](tools.md#tools-validate-content-ts)** [validateSprites](tools.md#tools-validate-content-ts--validatesprites)
+- <a id="src-content-sprites-compile-ts--compiledsprite"></a>**CompiledSprite** · *interface* — A sprite ready to draw: one path per colour, in pixel units (viewBox 0 0 w h).
+  - used by: here [compileSprite](#src-content-sprites-compile-ts--compilesprite), [spriteSvg](#src-content-sprites-compile-ts--spritesvg) · **[content/sprites/index](#src-content-sprites-index-ts)** [cache](#src-content-sprites-index-ts--cache), [compiled](#src-content-sprites-index-ts--compiled) · tests: [compile.test](tests.md#src-content-sprites-compile-test-ts)
+- <a id="src-content-sprites-compile-ts--max-variant-depth"></a>**MAX_VARIANT_DEPTH** · *const* — How deep variants may nest (a variant of a variant of a variant).
+  - used by: **[tools/validate-content](tools.md#tools-validate-content-ts)** [validateSprites](tools.md#tools-validate-content-ts--validatesprites)
+- <a id="src-content-sprites-compile-ts--resolvesprite"></a>**resolveSprite** · *function* `(id: SpriteId, table: SpriteTable): ResolvedSprite` — Resolves a sprite (following `from` through variants) to one palette colour per pixel.
+  - uses: here [resolve](#src-content-sprites-compile-ts--resolve)
+  - used by: here [compileSprite](#src-content-sprites-compile-ts--compilesprite) · **[tools/validate-content](tools.md#tools-validate-content-ts)** [validateSprites](tools.md#tools-validate-content-ts--validatesprites) · tests: [compile.test](tests.md#src-content-sprites-compile-test-ts)
+- <a id="src-content-sprites-compile-ts--resolve"></a>**resolve** · *function, internal* `(id: SpriteId, table: SpriteTable, chain: readonly SpriteId[]): ResolvedSprite`
+  - uses: here [colorOf](#src-content-sprites-compile-ts--colorof)
+  - used by: here [resolveSprite](#src-content-sprites-compile-ts--resolvesprite)
+- <a id="src-content-sprites-compile-ts--colorof"></a>**colorOf** · *function, internal* `(id: SpriteId, keys: Readonly<Record<string, PaletteId>>, ch: string): PaletteId`
+  - used by: here [resolve](#src-content-sprites-compile-ts--resolve)
+- <a id="src-content-sprites-compile-ts--compilesprite"></a>**compileSprite** · *function* `(id: SpriteId, table: SpriteTable, palette: Palette): CompiledSprite` — Compiles a sprite to SVG paths: each colour's pixels merged into horizontal runs.
+  - uses: here [resolveSprite](#src-content-sprites-compile-ts--resolvesprite)
+  - used by: **[content/sprites/index](#src-content-sprites-index-ts)** [compiled](#src-content-sprites-index-ts--compiled) · tests: [compile.test](tests.md#src-content-sprites-compile-test-ts)
+- <a id="src-content-sprites-compile-ts--spritesvg"></a>**spriteSvg** · *function* `(c: CompiledSprite, o: { scale: number; background?: string }): string` — A standalone SVG file for a compiled sprite (the docs gallery).
+  - used by: tests: [compile.test](tests.md#src-content-sprites-compile-test-ts)
+
+<a id="src-content-sprites-index-ts"></a>
+
+### src/content/sprites/index.ts
+
+Character art, for the UI and tools only. The engine, app, scenes and the rest of content never import it (depcruise rule `sprites-ui-and-tools-only`), so the sim and headless sessions never load the art. Spec: docs/vision/character-design.md.
+
+- Source: [src/content/sprites/index.ts](../../../src/content/sprites/index.ts)
+- Imports: core: [ids/sprites](core.md#src-core-ids-sprites-ts) · content: [sprites/compile](#src-content-sprites-compile-ts), [sprites/palette](#src-content-sprites-palette-ts), [sprites/refs](#src-content-sprites-refs-ts), [sprites/table](#src-content-sprites-table-ts)
+- Re-exports: `{ PALETTE } from './palette'`, `{ SPRITES } from './table'`, `{ MAX_VARIANT_DEPTH, compileSprite, resolveSprite, spriteSvg, type CompiledSprite, type Palette, type ResolvedSprite } from './compile'`, `{ CLONE_RECOLOR, NPC_SPRITE, RESERVED_P3, actorSprite, cloneSprite, heroSprite, npcSprite, opponentSprite } from './refs'`
+- Imported by: tools: [validate-content](tools.md#tools-validate-content-ts)
+- Types used: **[content/sprites/compile](#src-content-sprites-compile-ts)** [CompiledSprite](#src-content-sprites-compile-ts--compiledsprite) · **[core/ids/sprites](core.md#src-core-ids-sprites-ts)** [SpriteId](core.md#src-core-ids-sprites-ts--spriteid)
+
+Declarations:
+
+- <a id="src-content-sprites-index-ts--cache"></a>**cache** · *const, internal* `= new Map(…)`
+  - used by: here [compiled](#src-content-sprites-index-ts--compiled)
+- <a id="src-content-sprites-index-ts--compiled"></a>**compiled** · *function* `(id: SpriteId): CompiledSprite` — A sprite ready to draw, compiled on first use and cached.
+  - uses: here [cache](#src-content-sprites-index-ts--cache) · **[content/sprites/compile](#src-content-sprites-compile-ts)** [compileSprite](#src-content-sprites-compile-ts--compilesprite) · **[content/sprites/palette](#src-content-sprites-palette-ts)** [PALETTE](#src-content-sprites-palette-ts--palette) · **[content/sprites/table](#src-content-sprites-table-ts)** [SPRITES](#src-content-sprites-table-ts--sprites)
+  - *no references found*
+
+<a id="src-content-sprites-palette-ts"></a>
+
+### src/content/sprites/palette.ts
+
+The master palette: every colour a sprite may use. The palette table in docs/vision/character-design.md must match it exactly (checked by tools/validate-content.ts). The neon entries and `white` are the values in src/ui/styles/tokens.css.
+
+- Source: [src/content/sprites/palette.ts](../../../src/content/sprites/palette.ts)
+- Imports: core: [ids/sprites](core.md#src-core-ids-sprites-ts)
+- Imported by: content: [sprites/index](#src-content-sprites-index-ts)
+- Tested by: [compile.test](tests.md#src-content-sprites-compile-test-ts)
+- Types used: **[core/ids/sprites](core.md#src-core-ids-sprites-ts)** [PaletteId](core.md#src-core-ids-sprites-ts--paletteid)
+
+Declarations:
+
+- <a id="src-content-sprites-palette-ts--palette"></a>**PALETTE** · *const* `: Readonly<Record<PaletteId, string>>`
+  - used by: **[content/sprites/index](#src-content-sprites-index-ts)** [compiled](#src-content-sprites-index-ts--compiled) · **[tools/validate-content](tools.md#tools-validate-content-ts)** [validateSprites](tools.md#tools-validate-content-ts--validatesprites) · tests: [compile.test](tests.md#src-content-sprites-compile-test-ts)
+
+<a id="src-content-sprites-placeholder-ts"></a>
+
+### src/content/sprites/placeholder.ts
+
+Stand-in art: a grey "?" bust that keeps the sprite table complete while the real art lands, one batch at a time. The last art batch deletes this file, so any sprite still using it stops compiling.
+
+- Source: [src/content/sprites/placeholder.ts](../../../src/content/sprites/placeholder.ts)
+- Imports: core: [ids/sprites](core.md#src-core-ids-sprites-ts), [types/index](core.md#src-core-types-index-ts)
+- Imported by: content: [sprites/art/bayou](#src-content-sprites-art-bayou-ts), [sprites/art/cemetery](#src-content-sprites-art-cemetery-ts), [sprites/art/garden](#src-content-sprites-art-garden-ts), [sprites/art/heroes](#src-content-sprites-art-heroes-ts), [sprites/art/people](#src-content-sprites-art-people-ts), [sprites/art/quarter](#src-content-sprites-art-quarter-ts), [sprites/art/rivals](#src-content-sprites-art-rivals-ts), [sprites/art/shopkeepers](#src-content-sprites-art-shopkeepers-ts), [sprites/art/storyville](#src-content-sprites-art-storyville-ts), [sprites/art/tower](#src-content-sprites-art-tower-ts), [sprites/art/treme](#src-content-sprites-art-treme-ts) · tools: [validate-content](tools.md#tools-validate-content-ts)
+- Types used: **[core/ids/sprites](core.md#src-core-ids-sprites-ts)** [SpriteId](core.md#src-core-ids-sprites-ts--spriteid) · **[core/types/sprites](core.md#src-core-types-sprites-ts)** [GridSpriteDef](core.md#src-core-types-sprites-ts--gridspritedef), [SpriteDef](core.md#src-core-types-sprites-ts--spritedef)
+
+Declarations:
+
+- <a id="src-content-sprites-placeholder-ts--q24"></a>**Q24** · *const, internal* `: readonly string[]`
+  - used by: here [Q32](#src-content-sprites-placeholder-ts--q32), [isTodo](#src-content-sprites-placeholder-ts--istodo), [todo](#src-content-sprites-placeholder-ts--todo)
+- <a id="src-content-sprites-placeholder-ts--q32"></a>**Q32** · *const, internal* `: readonly string[]`
+  - uses: here [Q24](#src-content-sprites-placeholder-ts--q24)
+  - used by: here [isTodo](#src-content-sprites-placeholder-ts--istodo), [todo](#src-content-sprites-placeholder-ts--todo)
+- <a id="src-content-sprites-placeholder-ts--todo"></a>**todo** · *function* `<K extends SpriteId>(id: K, size: 24 | 32 = 24): GridSpriteDef & { id: K }` — A placeholder row for `id` (32×32 for bosses).
+  - uses: here [Q24](#src-content-sprites-placeholder-ts--q24), [Q32](#src-content-sprites-placeholder-ts--q32)
+  - used by: **[content/sprites/art/bayou](#src-content-sprites-art-bayou-ts)** [BAYOU_ART](#src-content-sprites-art-bayou-ts--bayou-art) · **[content/sprites/art/cemetery](#src-content-sprites-art-cemetery-ts)** [CEMETERY_ART](#src-content-sprites-art-cemetery-ts--cemetery-art) · **[content/sprites/art/garden](#src-content-sprites-art-garden-ts)** [GARDEN_ART](#src-content-sprites-art-garden-ts--garden-art) · **[content/sprites/art/heroes](#src-content-sprites-art-heroes-ts)** [HERO_ART](#src-content-sprites-art-heroes-ts--hero-art) · **[content/sprites/art/people](#src-content-sprites-art-people-ts)** [PEOPLE_ART](#src-content-sprites-art-people-ts--people-art) · **[content/sprites/art/quarter](#src-content-sprites-art-quarter-ts)** [QUARTER_ART](#src-content-sprites-art-quarter-ts--quarter-art) · **[content/sprites/art/rivals](#src-content-sprites-art-rivals-ts)** [RIVAL_ART](#src-content-sprites-art-rivals-ts--rival-art) · **[content/sprites/art/shopkeepers](#src-content-sprites-art-shopkeepers-ts)** [SHOPKEEPER_ART](#src-content-sprites-art-shopkeepers-ts--shopkeeper-art) · **[content/sprites/art/storyville](#src-content-sprites-art-storyville-ts)** [STORYVILLE_ART](#src-content-sprites-art-storyville-ts--storyville-art) · **[content/sprites/art/tower](#src-content-sprites-art-tower-ts)** [TOWER_ART](#src-content-sprites-art-tower-ts--tower-art) · **[content/sprites/art/treme](#src-content-sprites-art-treme-ts)** [TREME_ART](#src-content-sprites-art-treme-ts--treme-art)
+- <a id="src-content-sprites-placeholder-ts--istodo"></a>**isTodo** · *function* `(def: SpriteDef): boolean` — Whether a row is still a placeholder (the validator skips those).
+  - uses: here [Q24](#src-content-sprites-placeholder-ts--q24), [Q32](#src-content-sprites-placeholder-ts--q32)
+  - used by: **[tools/validate-content](tools.md#tools-validate-content-ts)** [validateSprites](tools.md#tools-validate-content-ts--validatesprites)
+
+<a id="src-content-sprites-refs-ts"></a>
+
+### src/content/sprites/refs.ts
+
+Who is drawn with which sprite. Speakers map to their art through NPC_SPRITE (some reuse an opponent's art); heroes and clones are derived from the class; shopkeepers in still-v1 places wait in RESERVED_P3. The UI resolves sprites with these helpers; nothing below ui/ needs them.
+
+- Source: [src/content/sprites/refs.ts](../../../src/content/sprites/refs.ts)
+- Imports: core: [ids/characters](core.md#src-core-ids-characters-ts), [ids/enemies](core.md#src-core-ids-enemies-ts), [ids/sprites](core.md#src-core-ids-sprites-ts), [ids/world](core.md#src-core-ids-world-ts)
+- Imported by: content: [sprites/index](#src-content-sprites-index-ts), [sprites/table](#src-content-sprites-table-ts)
+- Types used: **[core/ids/characters](core.md#src-core-ids-characters-ts)** [ClassId](core.md#src-core-ids-characters-ts--classid) · **[core/ids/enemies](core.md#src-core-ids-enemies-ts)** [OpponentId](core.md#src-core-ids-enemies-ts--opponentid) · **[core/ids/sprites](core.md#src-core-ids-sprites-ts)** [CloneSpriteId](core.md#src-core-ids-sprites-ts--clonespriteid), [HeroSpriteId](core.md#src-core-ids-sprites-ts--herospriteid), [PaletteId](core.md#src-core-ids-sprites-ts--paletteid), [PersonSpriteId](core.md#src-core-ids-sprites-ts--personspriteid), [SpriteId](core.md#src-core-ids-sprites-ts--spriteid) · **[core/ids/world](core.md#src-core-ids-world-ts)** [NpcId](core.md#src-core-ids-world-ts--npcid)
+
+Declarations:
+
+- <a id="src-content-sprites-refs-ts--npc-sprite"></a>**NPC_SPRITE** · *const* `: Readonly<Record<NpcId, SpriteId | 'player'>>` — Each speaker's sprite.
+  - used by: here [npcSprite](#src-content-sprites-refs-ts--npcsprite) · **[tools/validate-content](tools.md#tools-validate-content-ts)** [validateSprites](tools.md#tools-validate-content-ts--validatesprites)
+- <a id="src-content-sprites-refs-ts--reserved-p3"></a>**RESERVED_P3** · *const* `: readonly PersonSpriteId[]` — Shopkeepers drawn now whose places are still v1-only.
+  - used by: **[tools/validate-content](tools.md#tools-validate-content-ts)** [validateSprites](tools.md#tools-validate-content-ts--validatesprites)
+- <a id="src-content-sprites-refs-ts--clone-recolor"></a>**CLONE_RECOLOR** · *const* `: Readonly<Partial<Record<PaletteId, PaletteId>>>` — The Session Clone look: a hero in corporate chrome.
+  - used by: **[content/sprites/table](#src-content-sprites-table-ts)** [CLONE_ART](#src-content-sprites-table-ts--clone-art)
+- <a id="src-content-sprites-refs-ts--herosprite"></a>**heroSprite** · *function* `(cls: ClassId): HeroSpriteId` — A class's hero sprite.
+  - used by: here [actorSprite](#src-content-sprites-refs-ts--actorsprite), [npcSprite](#src-content-sprites-refs-ts--npcsprite) · **[content/sprites/table](#src-content-sprites-table-ts)** [CLONE_ART](#src-content-sprites-table-ts--clone-art)
+- <a id="src-content-sprites-refs-ts--clonesprite"></a>**cloneSprite** · *function* `(cls: ClassId): CloneSpriteId` — A class's Session Clone sprite.
+  - used by: here [actorSprite](#src-content-sprites-refs-ts--actorsprite), [opponentSprite](#src-content-sprites-refs-ts--opponentsprite) · **[content/sprites/table](#src-content-sprites-table-ts)** [CLONE_ART](#src-content-sprites-table-ts--clone-art)
+- <a id="src-content-sprites-refs-ts--npcsprite"></a>**npcSprite** · *function* `(id: NpcId, playerCls: ClassId): SpriteId` — A speaker's sprite.
+  - uses: here [NPC_SPRITE](#src-content-sprites-refs-ts--npc-sprite), [heroSprite](#src-content-sprites-refs-ts--herosprite)
+  - *no references found*
+- <a id="src-content-sprites-refs-ts--opponentsprite"></a>**opponentSprite** · *function* `(id: OpponentId, playerCls: ClassId): SpriteId` — An opponent's sprite outside battle (the Blue Book).
+  - uses: here [cloneSprite](#src-content-sprites-refs-ts--clonesprite)
+  - used by: here [actorSprite](#src-content-sprites-refs-ts--actorsprite)
+- <a id="src-content-sprites-refs-ts--actorsprite"></a>**actorSprite** · *function* `(a: { defId: OpponentId | 'player'; clone: boolean; cls: ClassId | null }, playerCls: ClassId): SpriteId` — A battle actor's sprite.
+  - uses: here [cloneSprite](#src-content-sprites-refs-ts--clonesprite), [heroSprite](#src-content-sprites-refs-ts--herosprite), [opponentSprite](#src-content-sprites-refs-ts--opponentsprite)
+  - *no references found*
+
+<a id="src-content-sprites-table-ts"></a>
+
+### src/content/sprites/table.ts
+
+Every sprite in one table: the art files, plus a generated Session Clone row per class.
+
+- Source: [src/content/sprites/table.ts](../../../src/content/sprites/table.ts)
+- Imports: core: [ids/characters](core.md#src-core-ids-characters-ts), [ids/sprites](core.md#src-core-ids-sprites-ts), [types/index](core.md#src-core-types-index-ts) · content: [sprites/art/bayou](#src-content-sprites-art-bayou-ts), [sprites/art/cemetery](#src-content-sprites-art-cemetery-ts), [sprites/art/garden](#src-content-sprites-art-garden-ts), [sprites/art/heroes](#src-content-sprites-art-heroes-ts), [sprites/art/people](#src-content-sprites-art-people-ts), [sprites/art/quarter](#src-content-sprites-art-quarter-ts), [sprites/art/rivals](#src-content-sprites-art-rivals-ts), [sprites/art/shopkeepers](#src-content-sprites-art-shopkeepers-ts), [sprites/art/storyville](#src-content-sprites-art-storyville-ts), [sprites/art/tower](#src-content-sprites-art-tower-ts), [sprites/art/treme](#src-content-sprites-art-treme-ts), [sprites/refs](#src-content-sprites-refs-ts)
+- Imported by: content: [sprites/index](#src-content-sprites-index-ts)
+- Tested by: [compile.test](tests.md#src-content-sprites-compile-test-ts)
+- Types used: **[core/ids/sprites](core.md#src-core-ids-sprites-ts)** [CloneSpriteId](core.md#src-core-ids-sprites-ts--clonespriteid) · **[core/types/sprites](core.md#src-core-types-sprites-ts)** [SpriteTable](core.md#src-core-types-sprites-ts--spritetable), [VariantSpriteDef](core.md#src-core-types-sprites-ts--variantspritedef)
+
+Declarations:
+
+- <a id="src-content-sprites-table-ts--clone-art"></a>**CLONE_ART** · *const, internal* — Each class's Session Clone: its hero in corporate chrome, glowing Metronome cyan.
+  - uses: **[content/sprites/refs](#src-content-sprites-refs-ts)** [CLONE_RECOLOR](#src-content-sprites-refs-ts--clone-recolor), [cloneSprite](#src-content-sprites-refs-ts--clonesprite), [heroSprite](#src-content-sprites-refs-ts--herosprite) · **[core/ids/characters](core.md#src-core-ids-characters-ts)** [CLASS_IDS](core.md#src-core-ids-characters-ts--class-ids)
+  - used by: here [SPRITES](#src-content-sprites-table-ts--sprites)
+- <a id="src-content-sprites-table-ts--sprites"></a>**SPRITES** · *const* `: SpriteTable`
+  - uses: here [CLONE_ART](#src-content-sprites-table-ts--clone-art) · **[content/sprites/art/bayou](#src-content-sprites-art-bayou-ts)** [BAYOU_ART](#src-content-sprites-art-bayou-ts--bayou-art) · **[content/sprites/art/cemetery](#src-content-sprites-art-cemetery-ts)** [CEMETERY_ART](#src-content-sprites-art-cemetery-ts--cemetery-art) · **[content/sprites/art/garden](#src-content-sprites-art-garden-ts)** [GARDEN_ART](#src-content-sprites-art-garden-ts--garden-art) · **[content/sprites/art/heroes](#src-content-sprites-art-heroes-ts)** [HERO_ART](#src-content-sprites-art-heroes-ts--hero-art) · **[content/sprites/art/people](#src-content-sprites-art-people-ts)** [PEOPLE_ART](#src-content-sprites-art-people-ts--people-art) · **[content/sprites/art/quarter](#src-content-sprites-art-quarter-ts)** [QUARTER_ART](#src-content-sprites-art-quarter-ts--quarter-art) · **[content/sprites/art/rivals](#src-content-sprites-art-rivals-ts)** [RIVAL_ART](#src-content-sprites-art-rivals-ts--rival-art) · **[content/sprites/art/shopkeepers](#src-content-sprites-art-shopkeepers-ts)** [SHOPKEEPER_ART](#src-content-sprites-art-shopkeepers-ts--shopkeeper-art) · **[content/sprites/art/storyville](#src-content-sprites-art-storyville-ts)** [STORYVILLE_ART](#src-content-sprites-art-storyville-ts--storyville-art) · **[content/sprites/art/tower](#src-content-sprites-art-tower-ts)** [TOWER_ART](#src-content-sprites-art-tower-ts--tower-art) · **[content/sprites/art/treme](#src-content-sprites-art-treme-ts)** [TREME_ART](#src-content-sprites-art-treme-ts--treme-art)
+  - used by: **[content/sprites/index](#src-content-sprites-index-ts)** [compiled](#src-content-sprites-index-ts--compiled) · **[tools/validate-content](tools.md#tools-validate-content-ts)** [validateSprites](tools.md#tools-validate-content-ts--validatesprites) · tests: [compile.test](tests.md#src-content-sprites-compile-test-ts)
 
 <a id="src-content-story-acts-ts"></a>
 

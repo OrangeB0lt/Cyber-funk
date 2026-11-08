@@ -3,3 +3,4 @@ export type * from './battle';
 export type * from './content';
 export type * from './effects';
 export type * from './state';
+export type * from './sprites';

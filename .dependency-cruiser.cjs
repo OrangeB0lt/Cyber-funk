@@ -52,6 +52,14 @@ module.exports = {
       to: { path: '^src/content/(index|data)\\.ts$' },
     },
     {
+      name: 'sprites-ui-and-tools-only',
+      comment:
+        'Character art is for the UI and tools. The engine, app, scenes and other content never load it (docs/adr/0007-character-sprites.md).',
+      severity: 'error',
+      from: { path: '^src/(core|narrative|engine|app)/|^src/content/(?!sprites/)' },
+      to: { path: '^src/content/sprites/' },
+    },
+    {
       name: 'engine-no-scenes',
       severity: 'error',
       from: { path: '^src/engine/' },

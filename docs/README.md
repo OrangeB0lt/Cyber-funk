@@ -43,7 +43,7 @@ Start here if you're new. Suggested reading order:
 | [guides/testing.md](guides/testing.md) | Unit, oracles, server tests, headless playthroughs, e2e |
 | [guides/docker.md](guides/docker.md) | Running the stack, developing in Docker, the database |
 | [roadmap.md](roadmap.md) | The phases of the 2.0 rebuild and what's left |
-| [adr/](adr/) | 0001 stack · 0002 layering · 0003 determinism and parity · 0004 scene API (draft) · 0005 UI state and styling · 0006 server and cloud saves |
+| [adr/](adr/) | 0001 stack · 0002 layering · 0003 determinism and parity · 0004 scene API (draft) · 0005 UI state and styling · 0006 server and cloud saves · 0007 character sprites |
 
 Links to docs not yet written point to their planned location; they arrive with later phases.
 
