@@ -157,7 +157,10 @@ export function DevSheet() {
         {b('items', 'Stock the bag', d.items)}
         {b('gear', 'Best gear', d.gear)}
       </div>
-      <div className={s.row}>{b('cutting', 'Cutting Contest', d.cutting)}</div>
+      <div className={s.row}>
+        {b('cutting', 'Cutting Contest', d.cutting)}
+        {b('sprites', 'Sprite gallery', () => app.openSheet({ kind: 'sprites' }))}
+      </div>
       <h4>Jump to boss</h4>
       <div className={s.row}>{d.bosses.map(id => b(`boss:${id}`, BOSSES[id].name, () => d.boss(id)))}</div>
       <h4>Jump to act</h4>

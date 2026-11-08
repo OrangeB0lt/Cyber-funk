@@ -13,11 +13,11 @@ flowchart LR
   n_App["App"]
   n_GameContext["GameContext"]
   n_combat_["combat/ (4)"]
-  n_components_["components/ (10)"]
+  n_components_["components/ (11)"]
   n_layers_["layers/ (5)"]
   n_main["main"]
   n_screens_["screens/ (5)"]
-  n_sheets_["sheets/ (8)"]
+  n_sheets_["sheets/ (9)"]
   n_ext_app[["app"]]
   n_ext_content[["content"]]
   n_ext_engine[["engine"]]
@@ -78,6 +78,7 @@ flowchart LR
 | [src/ui/components/LexText.tsx](#src-ui-components-lextext-tsx) | — |
 | [src/ui/components/Notes.tsx](#src-ui-components-notes-tsx) | — |
 | [src/ui/components/Segmented.tsx](#src-ui-components-segmented-tsx) | — |
+| [src/ui/components/Sprite.tsx](#src-ui-components-sprite-tsx) | A character's pixel-art sprite, drawn as inline SVG at a whole-number scale so every pixel stays crisp. |
 | [src/ui/components/StatGrid.tsx](#src-ui-components-statgrid-tsx) | — |
 | [src/ui/components/Tone.tsx](#src-ui-components-tone-tsx) | — |
 | [src/ui/components/Typewriter.tsx](#src-ui-components-typewriter-tsx) | — |
@@ -97,6 +98,7 @@ flowchart LR
 | [src/ui/sheets/SettingsSheet.tsx](#src-ui-sheets-settingssheet-tsx) | — |
 | [src/ui/sheets/Sheet.tsx](#src-ui-sheets-sheet-tsx) | — |
 | [src/ui/sheets/ShopSheet.tsx](#src-ui-sheets-shopsheet-tsx) | — |
+| [src/ui/sheets/SpritesSheet.tsx](#src-ui-sheets-spritessheet-tsx) | Dev: the sprite gallery. |
 | [src/ui/sheets/WorldSheets.tsx](#src-ui-sheets-worldsheets-tsx) | Travel, the bounty board, How to Play and the dev menu. |
 | [src/ui/sheets/format.ts](#src-ui-sheets-format-ts) | Display strings shared by several sheets. |
 
@@ -370,14 +372,36 @@ Declarations:
 
 - Source: [src/ui/components/Segmented.tsx](../../../src/ui/components/Segmented.tsx)
 - Styles: `Segmented.module.css`
-- Imported by: ui: [sheets/SettingsSheet](#src-ui-sheets-settingssheet-tsx)
+- Imported by: ui: [sheets/SettingsSheet](#src-ui-sheets-settingssheet-tsx), [sheets/SpritesSheet](#src-ui-sheets-spritessheet-tsx)
 
 Declarations:
 
 - <a id="src-ui-components-segmented-tsx--props"></a>**Props** · *interface, internal*
   - used by: here [Segmented](#src-ui-components-segmented-tsx--segmented)
 - <a id="src-ui-components-segmented-tsx--segmented"></a>**Segmented** · *component* `<V extends string | boolean>({ label, testId, options, value, onChange }: Props<V>): React.JSX.Element` — A labeled row of mutually exclusive options (settings).
-  - used by: **[ui/sheets/SettingsSheet](#src-ui-sheets-settingssheet-tsx)** [Row](#src-ui-sheets-settingssheet-tsx--row)
+  - used by: **[ui/sheets/SettingsSheet](#src-ui-sheets-settingssheet-tsx)** [Row](#src-ui-sheets-settingssheet-tsx--row) · **[ui/sheets/SpritesSheet](#src-ui-sheets-spritessheet-tsx)** [SpritesSheet](#src-ui-sheets-spritessheet-tsx--spritessheet)
+
+<a id="src-ui-components-sprite-tsx"></a>
+
+### src/ui/components/Sprite.tsx
+
+A character's pixel-art sprite, drawn as inline SVG at a whole-number scale so every pixel stays crisp. Decorative: the character's name is always shown as text beside it, so the art is hidden from screen readers. Only spans and an svg, so it can sit inside a &lt;p> or a &lt;button>. The art and the spec for every character: src/content/sprites/, docs/vision/character-design.md.
+
+- Source: [src/ui/components/Sprite.tsx](../../../src/ui/components/Sprite.tsx)
+- Imports: core: [ids/sprites](core.md#src-core-ids-sprites-ts) · content: [sprites/index](content.md#src-content-sprites-index-ts)
+- Packages: `react`
+- Styles: `Sprite.module.css`
+- Imported by: ui: [sheets/SpritesSheet](#src-ui-sheets-spritessheet-tsx)
+- Tested by: [Sprite.test](tests.md#src-ui-components-sprite-test-tsx)
+- Types used: **[core/ids/sprites](core.md#src-core-ids-sprites-ts)** [SpriteId](core.md#src-core-ids-sprites-ts--spriteid)
+
+Declarations:
+
+- <a id="src-ui-components-sprite-tsx--bob-ms"></a>**BOB_MS** · *const, internal* — Idle bob cycle (ms); `phase` offsets each sprite within it so a group doesn't bob in unison.
+  - used by: here [Sprite](#src-ui-components-sprite-tsx--sprite)
+- <a id="src-ui-components-sprite-tsx--sprite"></a>**Sprite** · *component* `({ id, scale, idle, flip, hit, phase = 0, className, }: { /** Which sprite. */ id: SpriteId; /** Pixel size in CSS px: 3 in battle and on the create screen, 2 for portra…`
+  - uses: here [BOB_MS](#src-ui-components-sprite-tsx--bob-ms) · **[content/sprites/index](content.md#src-content-sprites-index-ts)** [compiled](content.md#src-content-sprites-index-ts--compiled)
+  - used by: **[ui/sheets/SpritesSheet](#src-ui-sheets-spritessheet-tsx)** [SpritesSheet](#src-ui-sheets-spritessheet-tsx--spritessheet) · tests: [Sprite.test](tests.md#src-ui-components-sprite-test-tsx)
 
 <a id="src-ui-components-statgrid-tsx"></a>
 
@@ -466,13 +490,13 @@ Declarations:
 ### src/ui/layers/SheetLayer.tsx
 
 - Source: [src/ui/layers/SheetLayer.tsx](../../../src/ui/layers/SheetLayer.tsx)
-- Imports: ui: [GameContext](#src-ui-gamecontext-tsx), [sheets/HistorySheet](#src-ui-sheets-historysheet-tsx), [sheets/MenuSheets](#src-ui-sheets-menusheets-tsx), [sheets/SavesSheet](#src-ui-sheets-savessheet-tsx), [sheets/SettingsSheet](#src-ui-sheets-settingssheet-tsx), [sheets/ShopSheet](#src-ui-sheets-shopsheet-tsx), [sheets/WorldSheets](#src-ui-sheets-worldsheets-tsx)
+- Imports: ui: [GameContext](#src-ui-gamecontext-tsx), [sheets/HistorySheet](#src-ui-sheets-historysheet-tsx), [sheets/MenuSheets](#src-ui-sheets-menusheets-tsx), [sheets/SavesSheet](#src-ui-sheets-savessheet-tsx), [sheets/SettingsSheet](#src-ui-sheets-settingssheet-tsx), [sheets/ShopSheet](#src-ui-sheets-shopsheet-tsx), [sheets/SpritesSheet](#src-ui-sheets-spritessheet-tsx), [sheets/WorldSheets](#src-ui-sheets-worldsheets-tsx)
 - Imported by: ui: [App](#src-ui-app-tsx)
 
 Declarations:
 
-- <a id="src-ui-layers-sheetlayer-tsx--sheetlayer"></a>**SheetLayer** · *component* `(): React.JSX.Element | null | undefined` — The open bottom sheet, if any.
-  - uses: **[ui/GameContext](#src-ui-gamecontext-tsx)** [useGame](#src-ui-gamecontext-tsx--usegame), [useView](#src-ui-gamecontext-tsx--useview) · **[ui/sheets/HistorySheet](#src-ui-sheets-historysheet-tsx)** [HistorySheet](#src-ui-sheets-historysheet-tsx--historysheet) · **[ui/sheets/MenuSheets](#src-ui-sheets-menusheets-tsx)** [BagSheet](#src-ui-sheets-menusheets-tsx--bagsheet), [BandSheet](#src-ui-sheets-menusheets-tsx--bandsheet), [BookSheet](#src-ui-sheets-menusheets-tsx--booksheet), [GearSheet](#src-ui-sheets-menusheets-tsx--gearsheet), [JournalSheet](#src-ui-sheets-menusheets-tsx--journalsheet), [LexiconSheet](#src-ui-sheets-menusheets-tsx--lexiconsheet), [MenuSheet](#src-ui-sheets-menusheets-tsx--menusheet), [SlotSheet](#src-ui-sheets-menusheets-tsx--slotsheet), [StatusSheet](#src-ui-sheets-menusheets-tsx--statussheet) · **[ui/sheets/SavesSheet](#src-ui-sheets-savessheet-tsx)** [SavesSheet](#src-ui-sheets-savessheet-tsx--savessheet) · **[ui/sheets/SettingsSheet](#src-ui-sheets-settingssheet-tsx)** [SettingsSheet](#src-ui-sheets-settingssheet-tsx--settingssheet) · **[ui/sheets/ShopSheet](#src-ui-sheets-shopsheet-tsx)** [ShopSheet](#src-ui-sheets-shopsheet-tsx--shopsheet) · **[ui/sheets/WorldSheets](#src-ui-sheets-worldsheets-tsx)** [BountySheet](#src-ui-sheets-worldsheets-tsx--bountysheet) · … +3 more
+- <a id="src-ui-layers-sheetlayer-tsx--sheetlayer"></a>**SheetLayer** · *component* `(): React.JSX.Element | null` — The open bottom sheet, if any.
+  - uses: **[ui/GameContext](#src-ui-gamecontext-tsx)** [useGame](#src-ui-gamecontext-tsx--usegame), [useView](#src-ui-gamecontext-tsx--useview) · **[ui/sheets/HistorySheet](#src-ui-sheets-historysheet-tsx)** [HistorySheet](#src-ui-sheets-historysheet-tsx--historysheet) · **[ui/sheets/MenuSheets](#src-ui-sheets-menusheets-tsx)** [BagSheet](#src-ui-sheets-menusheets-tsx--bagsheet), [BandSheet](#src-ui-sheets-menusheets-tsx--bandsheet), [BookSheet](#src-ui-sheets-menusheets-tsx--booksheet), [GearSheet](#src-ui-sheets-menusheets-tsx--gearsheet), [JournalSheet](#src-ui-sheets-menusheets-tsx--journalsheet), [LexiconSheet](#src-ui-sheets-menusheets-tsx--lexiconsheet), [MenuSheet](#src-ui-sheets-menusheets-tsx--menusheet), [SlotSheet](#src-ui-sheets-menusheets-tsx--slotsheet), [StatusSheet](#src-ui-sheets-menusheets-tsx--statussheet) · **[ui/sheets/SavesSheet](#src-ui-sheets-savessheet-tsx)** [SavesSheet](#src-ui-sheets-savessheet-tsx--savessheet) · **[ui/sheets/SettingsSheet](#src-ui-sheets-settingssheet-tsx)** [SettingsSheet](#src-ui-sheets-settingssheet-tsx--settingssheet) · **[ui/sheets/ShopSheet](#src-ui-sheets-shopsheet-tsx)** [ShopSheet](#src-ui-sheets-shopsheet-tsx--shopsheet) · **[ui/sheets/SpritesSheet](#src-ui-sheets-spritessheet-tsx)** [SpritesSheet](#src-ui-sheets-spritessheet-tsx--spritessheet) · … +4 more
   - used by: **[ui/App](#src-ui-app-tsx)** [Shell](#src-ui-app-tsx--shell)
 
 <a id="src-ui-layers-toast-tsx"></a>
@@ -725,7 +749,7 @@ Declarations:
 - Imports: ui: [GameContext](#src-ui-gamecontext-tsx), [components/Button](#src-ui-components-button-tsx)
 - Packages: `react`
 - Styles: `Sheet.module.css`
-- Imported by: ui: [sheets/HistorySheet](#src-ui-sheets-historysheet-tsx), [sheets/MenuSheets](#src-ui-sheets-menusheets-tsx), [sheets/SavesSheet](#src-ui-sheets-savessheet-tsx), [sheets/SettingsSheet](#src-ui-sheets-settingssheet-tsx), [sheets/ShopSheet](#src-ui-sheets-shopsheet-tsx), [sheets/WorldSheets](#src-ui-sheets-worldsheets-tsx)
+- Imported by: ui: [sheets/HistorySheet](#src-ui-sheets-historysheet-tsx), [sheets/MenuSheets](#src-ui-sheets-menusheets-tsx), [sheets/SavesSheet](#src-ui-sheets-savessheet-tsx), [sheets/SettingsSheet](#src-ui-sheets-settingssheet-tsx), [sheets/ShopSheet](#src-ui-sheets-shopsheet-tsx), [sheets/SpritesSheet](#src-ui-sheets-spritessheet-tsx), [sheets/WorldSheets](#src-ui-sheets-worldsheets-tsx)
 
 Declarations:
 
@@ -733,7 +757,7 @@ Declarations:
   - used by: here [Sheet](#src-ui-sheets-sheet-tsx--sheet)
 - <a id="src-ui-sheets-sheet-tsx--sheet"></a>**Sheet** · *component* `({ title, back, foot, children }: Props): React.JSX.Element` — The bottom-sheet frame: a modal dialog with a heading, back and close buttons, a scrolling body and an optional footer.
   - uses: **[app/game](app.md#src-app-game-ts)** [GameApp.closeSheet](app.md#src-app-game-ts--gameapp-closesheet), [GameApp.openSheet](app.md#src-app-game-ts--gameapp-opensheet) · **[ui/GameContext](#src-ui-gamecontext-tsx)** [useApp](#src-ui-gamecontext-tsx--useapp) · **[ui/components/Button](#src-ui-components-button-tsx)** [Button](#src-ui-components-button-tsx--button)
-  - used by: **[ui/sheets/HistorySheet](#src-ui-sheets-historysheet-tsx)** [HistorySheet](#src-ui-sheets-historysheet-tsx--historysheet) · **[ui/sheets/MenuSheets](#src-ui-sheets-menusheets-tsx)** [BagSheet](#src-ui-sheets-menusheets-tsx--bagsheet), [BandSheet](#src-ui-sheets-menusheets-tsx--bandsheet), [BookSheet](#src-ui-sheets-menusheets-tsx--booksheet), [GearSheet](#src-ui-sheets-menusheets-tsx--gearsheet), [JournalSheet](#src-ui-sheets-menusheets-tsx--journalsheet), [LexiconSheet](#src-ui-sheets-menusheets-tsx--lexiconsheet), [MenuSheet](#src-ui-sheets-menusheets-tsx--menusheet), [SlotSheet](#src-ui-sheets-menusheets-tsx--slotsheet), [StatusSheet](#src-ui-sheets-menusheets-tsx--statussheet) · **[ui/sheets/SavesSheet](#src-ui-sheets-savessheet-tsx)** [SavesSheet](#src-ui-sheets-savessheet-tsx--savessheet) · **[ui/sheets/SettingsSheet](#src-ui-sheets-settingssheet-tsx)** [SettingsSheet](#src-ui-sheets-settingssheet-tsx--settingssheet) · **[ui/sheets/ShopSheet](#src-ui-sheets-shopsheet-tsx)** [ShopSheet](#src-ui-sheets-shopsheet-tsx--shopsheet) · **[ui/sheets/WorldSheets](#src-ui-sheets-worldsheets-tsx)** [BountySheet](#src-ui-sheets-worldsheets-tsx--bountysheet), [DevSheet](#src-ui-sheets-worldsheets-tsx--devsheet), [HowToSheet](#src-ui-sheets-worldsheets-tsx--howtosheet) · … +1 more
+  - used by: **[ui/sheets/HistorySheet](#src-ui-sheets-historysheet-tsx)** [HistorySheet](#src-ui-sheets-historysheet-tsx--historysheet) · **[ui/sheets/MenuSheets](#src-ui-sheets-menusheets-tsx)** [BagSheet](#src-ui-sheets-menusheets-tsx--bagsheet), [BandSheet](#src-ui-sheets-menusheets-tsx--bandsheet), [BookSheet](#src-ui-sheets-menusheets-tsx--booksheet), [GearSheet](#src-ui-sheets-menusheets-tsx--gearsheet), [JournalSheet](#src-ui-sheets-menusheets-tsx--journalsheet), [LexiconSheet](#src-ui-sheets-menusheets-tsx--lexiconsheet), [MenuSheet](#src-ui-sheets-menusheets-tsx--menusheet), [SlotSheet](#src-ui-sheets-menusheets-tsx--slotsheet), [StatusSheet](#src-ui-sheets-menusheets-tsx--statussheet) · **[ui/sheets/SavesSheet](#src-ui-sheets-savessheet-tsx)** [SavesSheet](#src-ui-sheets-savessheet-tsx--savessheet) · **[ui/sheets/SettingsSheet](#src-ui-sheets-settingssheet-tsx)** [SettingsSheet](#src-ui-sheets-settingssheet-tsx--settingssheet) · **[ui/sheets/ShopSheet](#src-ui-sheets-shopsheet-tsx)** [ShopSheet](#src-ui-sheets-shopsheet-tsx--shopsheet) · **[ui/sheets/SpritesSheet](#src-ui-sheets-spritessheet-tsx)** [SpritesSheet](#src-ui-sheets-spritessheet-tsx--spritessheet) · **[ui/sheets/WorldSheets](#src-ui-sheets-worldsheets-tsx)** [BountySheet](#src-ui-sheets-worldsheets-tsx--bountysheet), [DevSheet](#src-ui-sheets-worldsheets-tsx--devsheet) · … +2 more
 
 <a id="src-ui-sheets-shopsheet-tsx"></a>
 
@@ -755,6 +779,28 @@ Declarations:
 - <a id="src-ui-sheets-shopsheet-tsx--selllist"></a>**SellList** · *component, internal* `(): React.JSX.Element`
   - uses: **[app/game](app.md#src-app-game-ts)** [GameApp.sell](app.md#src-app-game-ts--gameapp-sell) · **[content/format](content.md#src-content-format-ts)** [fmtDoubloons](content.md#src-content-format-ts--fmtdoubloons) · **[engine/items](engine.md#src-engine-items-ts)** [sellables](engine.md#src-engine-items-ts--sellables) · **[ui/GameContext](#src-ui-gamecontext-tsx)** [useApp](#src-ui-gamecontext-tsx--useapp), [useGame](#src-ui-gamecontext-tsx--usegame) · **[ui/components/Button](#src-ui-components-button-tsx)** [Button](#src-ui-components-button-tsx--button) · **[ui/components/ItemRow](#src-ui-components-itemrow-tsx)** [ItemRow](#src-ui-components-itemrow-tsx--itemrow)
   - used by: here [ShopSheet](#src-ui-sheets-shopsheet-tsx--shopsheet)
+
+<a id="src-ui-sheets-spritessheet-tsx"></a>
+
+### src/ui/sheets/SpritesSheet.tsx
+
+Dev: the sprite gallery. Every sprite at battle size, grouped by who they are and where they live, for checking art on a real phone. Opened from the dev menu; works without a game.
+
+- Source: [src/ui/sheets/SpritesSheet.tsx](../../../src/ui/sheets/SpritesSheet.tsx)
+- Imports: core: [ids/sprites](core.md#src-core-ids-sprites-ts), [ids/world](core.md#src-core-ids-world-ts) · content: [index](content.md#src-content-index-ts) · ui: [components/Segmented](#src-ui-components-segmented-tsx), [components/Sprite](#src-ui-components-sprite-tsx), [sheets/Sheet](#src-ui-sheets-sheet-tsx)
+- Packages: `react`
+- Styles: `SpritesSheet.module.css`
+- Imported by: ui: [layers/SheetLayer](#src-ui-layers-sheetlayer-tsx)
+- Types used: **[core/ids/sprites](core.md#src-core-ids-sprites-ts)** [SpriteId](core.md#src-core-ids-sprites-ts--spriteid)
+
+Declarations:
+
+- <a id="src-ui-sheets-spritessheet-tsx--groups"></a>**groups** · *function, internal* `(): { title: string; ids: SpriteId[] }[]` — Every sprite exactly once, grouped.
+  - uses: **[content/districts/index](content.md#src-content-districts-index-ts)** [DISTRICTS](content.md#src-content-districts-index-ts--districts) · **[core/ids/sprites](core.md#src-core-ids-sprites-ts)** [CLONE_SPRITE_IDS](core.md#src-core-ids-sprites-ts--clone-sprite-ids), [HERO_SPRITE_IDS](core.md#src-core-ids-sprites-ts--hero-sprite-ids), [PERSON_SPRITE_IDS](core.md#src-core-ids-sprites-ts--person-sprite-ids), [SPRITE_IDS](core.md#src-core-ids-sprites-ts--sprite-ids) · **[core/ids/world](core.md#src-core-ids-world-ts)** [DISTRICT_IDS](core.md#src-core-ids-world-ts--district-ids)
+  - used by: here [SpritesSheet](#src-ui-sheets-spritessheet-tsx--spritessheet)
+- <a id="src-ui-sheets-spritessheet-tsx--spritessheet"></a>**SpritesSheet** · *component* `(): React.JSX.Element`
+  - uses: here [groups](#src-ui-sheets-spritessheet-tsx--groups) · **[core/ids/sprites](core.md#src-core-ids-sprites-ts)** [SPRITE_IDS](core.md#src-core-ids-sprites-ts--sprite-ids) · **[ui/components/Segmented](#src-ui-components-segmented-tsx)** [Segmented](#src-ui-components-segmented-tsx--segmented) · **[ui/components/Sprite](#src-ui-components-sprite-tsx)** [Sprite](#src-ui-components-sprite-tsx--sprite) · **[ui/sheets/Sheet](#src-ui-sheets-sheet-tsx)** [Sheet](#src-ui-sheets-sheet-tsx--sheet)
+  - used by: **[ui/layers/SheetLayer](#src-ui-layers-sheetlayer-tsx)** [SheetLayer](#src-ui-layers-sheetlayer-tsx--sheetlayer)
 
 <a id="src-ui-sheets-worldsheets-tsx"></a>
 
@@ -779,7 +825,7 @@ Declarations:
   - uses: **[app/game](app.md#src-app-game-ts)** [GameApp.beginPrologue](app.md#src-app-game-ts--gameapp-beginprologue) · **[ui/GameContext](#src-ui-gamecontext-tsx)** [useApp](#src-ui-gamecontext-tsx--useapp) · **[ui/components/Button](#src-ui-components-button-tsx)** [Button](#src-ui-components-button-tsx--button) · **[ui/components/Tone](#src-ui-components-tone-tsx)** [Tone](#src-ui-components-tone-tsx--tone) · **[ui/sheets/Sheet](#src-ui-sheets-sheet-tsx)** [Sheet](#src-ui-sheets-sheet-tsx--sheet)
   - used by: **[ui/layers/SheetLayer](#src-ui-layers-sheetlayer-tsx)** [SheetLayer](#src-ui-layers-sheetlayer-tsx--sheetlayer)
 - <a id="src-ui-sheets-worldsheets-tsx--devsheet"></a>**DevSheet** · *component* `(): React.JSX.Element`
-  - uses: **[app/game](app.md#src-app-game-ts)** [GameApp.dev](app.md#src-app-game-ts--gameapp-dev) · **[content/bosses/index](content.md#src-content-bosses-index-ts)** [BOSSES](content.md#src-content-bosses-index-ts--bosses) · **[ui/GameContext](#src-ui-gamecontext-tsx)** [useApp](#src-ui-gamecontext-tsx--useapp), [useGame](#src-ui-gamecontext-tsx--usegame) · **[ui/components/Button](#src-ui-components-button-tsx)** [Button](#src-ui-components-button-tsx--button) · **[ui/sheets/Sheet](#src-ui-sheets-sheet-tsx)** [Sheet](#src-ui-sheets-sheet-tsx--sheet)
+  - uses: **[app/game](app.md#src-app-game-ts)** [GameApp.dev](app.md#src-app-game-ts--gameapp-dev), [GameApp.openSheet](app.md#src-app-game-ts--gameapp-opensheet) · **[content/bosses/index](content.md#src-content-bosses-index-ts)** [BOSSES](content.md#src-content-bosses-index-ts--bosses) · **[ui/GameContext](#src-ui-gamecontext-tsx)** [useApp](#src-ui-gamecontext-tsx--useapp), [useGame](#src-ui-gamecontext-tsx--usegame) · **[ui/components/Button](#src-ui-components-button-tsx)** [Button](#src-ui-components-button-tsx--button) · **[ui/sheets/Sheet](#src-ui-sheets-sheet-tsx)** [Sheet](#src-ui-sheets-sheet-tsx--sheet)
   - used by: **[ui/layers/SheetLayer](#src-ui-layers-sheetlayer-tsx)** [SheetLayer](#src-ui-layers-sheetlayer-tsx--sheetlayer)
 
 <a id="src-ui-sheets-format-ts"></a>

@@ -20,9 +20,11 @@ Generated reference. Start with the [guide](../../architecture/code-map.md) for 
 | [src/engine/combat/combat.test.ts](#src-engine-combat-combat-test-ts) | Combat mechanics, one behavior per test. |
 | [src/engine/rules.test.ts](#src-engine-rules-test-ts) | Stats, progression, prices, timing and Blues scoring. |
 | [src/narrative/director.test.ts](#src-narrative-director-test-ts) | — |
+| [src/ui/components/Sprite.test.tsx](#src-ui-components-sprite-test-tsx) | The Sprite component: crisp, decorative SVG at whole-number scales; hits replay the flash. |
 | [tests/e2e/helpers.ts](#tests-e2e-helpers-ts) | Shared e2e helpers. |
 | [tests/e2e/saves.spec.ts](#tests-e2e-saves-spec-ts) | Save slots on one device: autosave into the slot you picked, continue from the slot picker, start a second character in another slot, import a code into a slot… |
 | [tests/e2e/slice.spec.ts](#tests-e2e-slice-spec-ts) | The P2 vertical slice in a 360×740 touch phone: the prologue through the UI, every menu sheet, the pawn shop, a street fight, and Captain Hush. |
+| [tests/e2e/sprites.spec.ts](#tests-e2e-sprites-spec-ts) | Character sprites in the 360×740 phone: the dev gallery shows every sprite at both sizes, and sprites appear wherever a character does (battle cards, dialogue,… |
 | [tests/e2e/stack/cloud.spec.ts](#tests-e2e-stack-cloud-spec-ts) | Cloud saves against the real Docker stack (docker compose up): the production image, the API and Postgres. |
 | [tests/integration/slice.test.ts](#tests-integration-slice-test-ts) | The vertical slice, played headlessly: new game → prologue → Tremé → three street wins → Captain Hush → the Quarter unlocks. |
 | [tools/codemap.test.ts](#tools-codemap-test-ts) | The generated code map (docs/reference/code-map/) must match the code. |
@@ -135,6 +137,17 @@ Stats, progression, prices, timing and Blues scoring.
 - Packages: `vitest`
 - Suites: “Director”
 
+<a id="src-ui-components-sprite-test-tsx"></a>
+
+### src/ui/components/Sprite.test.tsx
+
+The Sprite component: crisp, decorative SVG at whole-number scales; hits replay the flash.
+
+- Source: [src/ui/components/Sprite.test.tsx](../../../src/ui/components/Sprite.test.tsx)
+- Imports: ui: [components/Sprite](ui.md#src-ui-components-sprite-tsx)
+- Packages: `@testing-library/react`, `vitest`
+- Suites: “Sprite”
+
 <a id="tests-e2e-helpers-ts"></a>
 
 ### tests/e2e/helpers.ts
@@ -143,16 +156,16 @@ Shared e2e helpers. Tests reach states through the UI where that's what's being 
 
 - Source: [tests/e2e/helpers.ts](../../../tests/e2e/helpers.ts)
 - Packages: `@playwright/test`
-- Tested by: [saves.spec](#tests-e2e-saves-spec-ts), [slice.spec](#tests-e2e-slice-spec-ts), [cloud.spec](#tests-e2e-stack-cloud-spec-ts)
+- Tested by: [saves.spec](#tests-e2e-saves-spec-ts), [slice.spec](#tests-e2e-slice-spec-ts), [sprites.spec](#tests-e2e-sprites-spec-ts), [cloud.spec](#tests-e2e-stack-cloud-spec-ts)
 
 Declarations:
 
 - <a id="tests-e2e-helpers-ts--tid"></a>**tid** · *function* `(page: Page, id: string): Locator` — Click by data-testid.
-  - used by: here [playUntil](#tests-e2e-helpers-ts--playuntil) · tests: [saves.spec](#tests-e2e-saves-spec-ts), [slice.spec](#tests-e2e-slice-spec-ts), [cloud.spec](#tests-e2e-stack-cloud-spec-ts)
+  - used by: here [playUntil](#tests-e2e-helpers-ts--playuntil) · tests: [saves.spec](#tests-e2e-saves-spec-ts), [slice.spec](#tests-e2e-slice-spec-ts), [sprites.spec](#tests-e2e-sprites-spec-ts), [cloud.spec](#tests-e2e-stack-cloud-spec-ts)
 - <a id="tests-e2e-helpers-ts--watcherrors"></a>**watchErrors** · *function* `(page: Page): string[]` — Collect console errors and uncaught exceptions; assert none at the end of a test.
-  - used by: tests: [saves.spec](#tests-e2e-saves-spec-ts), [slice.spec](#tests-e2e-slice-spec-ts)
+  - used by: tests: [saves.spec](#tests-e2e-saves-spec-ts), [slice.spec](#tests-e2e-slice-spec-ts), [sprites.spec](#tests-e2e-sprites-spec-ts)
 - <a id="tests-e2e-helpers-ts--expectnooverflow"></a>**expectNoOverflow** · *function* `(page: Page, label: string): Promise<void>` — Fail if anything sticks out past the 360px viewport.
-  - used by: tests: [saves.spec](#tests-e2e-saves-spec-ts), [slice.spec](#tests-e2e-slice-spec-ts), [cloud.spec](#tests-e2e-stack-cloud-spec-ts)
+  - used by: tests: [saves.spec](#tests-e2e-saves-spec-ts), [slice.spec](#tests-e2e-slice-spec-ts), [sprites.spec](#tests-e2e-sprites-spec-ts), [cloud.spec](#tests-e2e-stack-cloud-spec-ts)
 - <a id="tests-e2e-helpers-ts--cf"></a>**cf** · *function* `<T, A = undefined>(page: Page, fn: (app: any, arg: A) => T, arg?: A): Promise<T>` — Run app code in the page: `fn(app, arg)` where app is the GameApp (window.CF).
   - used by: here [quickStart](#tests-e2e-helpers-ts--quickstart) · tests: [saves.spec](#tests-e2e-saves-spec-ts), [slice.spec](#tests-e2e-slice-spec-ts)
 - <a id="tests-e2e-helpers-ts--screenof"></a>**screenOf** · *function* `(page: Page): Promise<string | null>` — The current screen (data-screen on the app root).
@@ -182,6 +195,16 @@ The P2 vertical slice in a 360×740 touch phone: the prologue through the UI, ev
 
 - Source: [tests/e2e/slice.spec.ts](../../../tests/e2e/slice.spec.ts)
 - Imports: tests: [e2e/helpers](#tests-e2e-helpers-ts)
+- Packages: `@playwright/test`
+
+<a id="tests-e2e-sprites-spec-ts"></a>
+
+### tests/e2e/sprites.spec.ts
+
+Character sprites in the 360×740 phone: the dev gallery shows every sprite at both sizes, and sprites appear wherever a character does (battle cards, dialogue, shops, character creation) without overflowing the screen.
+
+- Source: [tests/e2e/sprites.spec.ts](../../../tests/e2e/sprites.spec.ts)
+- Imports: core: [ids/sprites](core.md#src-core-ids-sprites-ts) · tests: [e2e/helpers](#tests-e2e-helpers-ts)
 - Packages: `@playwright/test`
 
 <a id="tests-e2e-stack-cloud-spec-ts"></a>

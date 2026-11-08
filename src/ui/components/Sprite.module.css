@@ -1,0 +1,134 @@
+/* A sprite: inline SVG at a whole-number scale. --px is one sprite pixel in CSS px.
+   Every keyframe is defined here: CSS Modules rename the names a module's `animation` uses.
+   Reduce motion stops all of these; each effect also has a static look that stays. */
+.sprite {
+  display: inline-block;
+  flex: none;
+  line-height: 0;
+  vertical-align: bottom;
+}
+.sprite svg {
+  display: block;
+}
+.still,
+.ghost,
+.holo,
+.glitch {
+  display: block;
+}
+
+/* The accent glow: keeps ink outlines readable on near-black cards. */
+.glow {
+  filter: drop-shadow(0 0 var(--px) var(--glow));
+}
+
+/* A two-frame idle bob: one sprite pixel up for half the cycle. */
+.idle {
+  animation: bob 1.6s steps(1, end) infinite;
+  animation-delay: var(--phase, 0s);
+}
+@keyframes bob {
+  0% {
+    transform: none;
+  }
+  50% {
+    transform: translateY(calc(-1 * var(--px)));
+  }
+}
+
+/* Hit: the silhouette flashes white twice. */
+.hit {
+  animation: hit 0.3s steps(1, end);
+}
+@keyframes hit {
+  0% {
+    filter: brightness(0) invert(1);
+  }
+  33% {
+    filter: none;
+  }
+  66% {
+    filter: brightness(0) invert(1);
+  }
+  100% {
+    filter: none;
+  }
+}
+
+.flip {
+  transform: scaleX(-1);
+}
+
+/* Spirits: translucent, drifting. */
+.ghost {
+  opacity: 0.72;
+  animation: drift 3.2s ease-in-out infinite;
+}
+@keyframes drift {
+  50% {
+    opacity: 0.5;
+    transform: translateY(calc(-1 * var(--px)));
+  }
+}
+
+/* Holograms: scanlines every other sprite pixel, and an occasional flicker. */
+.holo {
+  -webkit-mask-image: repeating-linear-gradient(
+    to bottom,
+    #000 0,
+    #000 var(--px),
+    rgba(0, 0, 0, 0.55) var(--px),
+    rgba(0, 0, 0, 0.55) calc(2 * var(--px))
+  );
+  mask-image: repeating-linear-gradient(
+    to bottom,
+    #000 0,
+    #000 var(--px),
+    rgba(0, 0, 0, 0.55) var(--px),
+    rgba(0, 0, 0, 0.55) calc(2 * var(--px))
+  );
+  animation: flicker 2.4s steps(1, end) infinite;
+}
+@keyframes flicker {
+  0%,
+  86% {
+    opacity: 1;
+  }
+  88% {
+    opacity: 0.45;
+  }
+  92% {
+    opacity: 0.9;
+  }
+  94% {
+    opacity: 0.4;
+  }
+  96% {
+    opacity: 1;
+  }
+}
+
+/* Corrupted data: a colour split that stays, and a stepped jitter. */
+.glitch {
+  filter: drop-shadow(var(--px) 0 0 rgba(255, 43, 214, 0.55))
+    drop-shadow(calc(-1 * var(--px)) 0 0 rgba(0, 229, 255, 0.55));
+  animation: jitter 1.8s steps(1, end) infinite;
+}
+@keyframes jitter {
+  0%,
+  78% {
+    transform: none;
+  }
+  80% {
+    transform: translateX(var(--px));
+  }
+  84% {
+    transform: translateX(calc(-1 * var(--px)));
+  }
+  88% {
+    transform: translate(var(--px), var(--px));
+  }
+  90% {
+    transform: none;
+  }
+}

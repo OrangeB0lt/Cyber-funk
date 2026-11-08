@@ -6,7 +6,7 @@ Every source file in `src/`, `server/`, `tools/` and `tests/`, with its declarat
 
 For how the pieces work together (boot, a story line, a battle, a save reaching Postgres), read the hand-written [guide](../../architecture/code-map.md) first.
 
-**218** source files · **23** test files · **945** top-level declarations · **402** members · **2422** "uses" edges
+**220** source files · **25** test files · **949** top-level declarations · **402** members · **2437** "uses" edges
 
 ## Pages
 
@@ -17,10 +17,10 @@ For how the pieces work together (boot, a story line, a battle, a save reaching 
 | [src/content](content.md) | 88 | Typed game data and story scripts: classes, skills, statuses, enemies, bosses (with their AI), items, gear, districts, acts, and the *.scene.ts files. |
 | [src/engine](engine.md) | 22 | The game rules as plain functions over GameState and Battle: stats, progression, inventory, shops, encounters, aftermath, and the combat loop. |
 | [src/app](app.md) | 16 | Runs the game without React: GameApp (every command the UI can issue), Session, the SceneContext implementation, the battle controller, the presenters, the view store, saves, and cloud sync. |
-| [src/ui and src/main.tsx](ui.md) | 35 | React components that render the two stores (game and view) and call GameApp commands, plus the browser entry point src/main.tsx. |
+| [src/ui and src/main.tsx](ui.md) | 37 | React components that render the two stores (game and view) and call GameApp commands, plus the browser entry point src/main.tsx. |
 | [server](server.md) | 15 | The cloud-save API: the Fastify app, its routes, the PostgreSQL repository and Drizzle schema, migrations and player-code auth. |
 | [tools](tools.md) | 20 | Node scripts: the parity oracles against v1, the balance sim and fight trace, the content validator, the layer check, the one-time migration codegen, and this generator. |
-| [tests (and every test file)](tests.md) | 24 | The integration and e2e suites in tests/, plus every co-located *.test.ts and *.spec.ts file in the repo, each listed with what it covers. |
+| [tests (and every test file)](tests.md) | 26 | The integration and e2e suites in tests/, plus every co-located *.test.ts and *.spec.ts file in the repo, each listed with what it covers. |
 
 ## Layers
 
@@ -50,17 +50,18 @@ flowchart TD
   server -->|1| core
   tests -->|24| app
   tests -->|8| content
-  tests -->|41| core
+  tests -->|42| core
   tests -->|13| engine
   tests -->|2| narrative
   tests -->|6| server
   tests -->|22| tools
+  tests -->|1| ui
   tools -->|13| content
   tools -->|30| core
   tools -->|4| engine
   ui -->|10| app
-  ui -->|15| content
-  ui -->|19| core
+  ui -->|17| content
+  ui -->|22| core
   ui -->|5| engine
   ui -->|1| narrative
 ```
