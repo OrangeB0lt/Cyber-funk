@@ -51,7 +51,13 @@
 .menu > * {
   text-align: center;
 }
+/* The hero on the Status sheet, top right of the card. */
+.heroArt {
+  float: right;
+  margin: 0 0 4px 8px;
+}
 .card2 {
+  display: flow-root;
   background: var(--bg3);
   border: 1px solid var(--line);
   border-radius: var(--radius);

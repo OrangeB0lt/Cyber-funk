@@ -22,10 +22,12 @@ import {
   STATUSES,
   fmtDoubloons,
 } from '@content/index';
+import { heroSprite, npcSprite, opponentSprite } from '@content/sprites';
 import { currentStep, displayStats, gearForSlot, questProgress, xpToNext } from '@engine/index';
 import { Bar } from '../components/Bar';
 import { Button } from '../components/Button';
 import { ItemRow } from '../components/ItemRow';
+import { Sprite } from '../components/Sprite';
 import { Notes } from '../components/Notes';
 import { StatGrid } from '../components/StatGrid';
 import { Tone } from '../components/Tone';
@@ -112,6 +114,7 @@ export function StatusSheet() {
   return (
     <Sheet title="Status & Skills" back>
       <div className={s.card2}>
+        <Sprite id={heroSprite(g.cls)} scale={3} className={s.heroArt} />
         <div>
           <b>{g.name}</b> · {c.name} ({c.title}) · {r.name}
         </div>
@@ -321,6 +324,7 @@ export function BandSheet() {
             <ItemRow
               key={id}
               equipped={on}
+              lead={<Sprite id={npcSprite(id, g.cls)} scale={2} />}
               action={
                 <Button
                   testId={`tog:${id}`}
@@ -412,7 +416,7 @@ export function BookSheet() {
           const lv = enemy ? `L${enemy.levels[0]}–${enemy.levels[1]}` : `L${boss!.level}`;
           const known = bk.weak || bk.hint;
           return (
-            <ItemRow key={id}>
+            <ItemRow key={id} lead={<Sprite id={opponentSprite(id, g.cls)} scale={2} />}>
               <b>{d.name}</b>{' '}
               <span className="dim small">
                 {lv}

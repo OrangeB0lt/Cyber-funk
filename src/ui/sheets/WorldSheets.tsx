@@ -1,7 +1,9 @@
 /** Travel, the bounty board, How to Play and the dev menu. */
 import { BOSSES, DISTRICTS, ENEMIES, fmtDoubloons } from '@content/index';
+import { opponentSprite } from '@content/sprites';
 import { Button } from '../components/Button';
 import { ItemRow } from '../components/ItemRow';
+import { Sprite } from '../components/Sprite';
 import { Tone } from '../components/Tone';
 import { useApp, useGame } from '../GameContext';
 import { Sheet } from './Sheet';
@@ -59,6 +61,7 @@ export function BountySheet() {
         return (
           <ItemRow
             key={id}
+            lead={<Sprite id={opponentSprite(d.elite, g.cls)} scale={2} />}
             action={
               done ? (
                 <span className="good small">COLLECTED</span>

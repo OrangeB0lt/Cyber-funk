@@ -1,7 +1,9 @@
 import { useEffect, useRef } from 'react';
 import { CLASS_IDS, ROOTS_IDS } from '@core/ids/characters';
 import { CLASSES, ROOTS, SKILLS } from '@content/index';
+import { heroSprite } from '@content/sprites';
 import { Button } from '../components/Button';
+import { Sprite } from '../components/Sprite';
 import { Tone } from '../components/Tone';
 import { useApp, useView } from '../GameContext';
 import s from './Create.module.css';
@@ -75,6 +77,7 @@ export function CreateScreen() {
                 aria-pressed={c.cls === id}
                 onClick={() => app.editCreate({ cls: id })}
               >
+                <Sprite id={heroSprite(id)} scale={3} className={s.hero} />
                 <b style={{ color: cl.color }}>{cl.name}</b>{' '}
                 <span className="dim small">
                   “{cl.title}” · {cl.role}

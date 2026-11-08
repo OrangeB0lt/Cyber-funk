@@ -63,3 +63,18 @@ test('speakers get portraits in dialogue, and shopkeepers in their shop', async 
   await expectNoOverflow(page, 'shop with its keeper');
   expect(errors).toEqual([]);
 });
+
+test('character creation shows every class hero', async ({ page }) => {
+  const errors = watchErrors(page);
+  await page.goto('/');
+  await tid(page, 'new').click();
+  await tid(page, 'save:1').click();
+  await page.getByLabel('Your name').fill('Dawlin');
+  await tid(page, 'next').click();
+  await tid(page, 'pick:yat').click();
+  await tid(page, 'next').click();
+  for (const cls of ['trumpet', 'trombone', 'sousaphone', 'saxophone', 'clarinet', 'snare', 'bassdrum'])
+    await expect(tid(page, `pick:${cls}`).getByTestId(`sprite:hero_${cls}`)).toBeAttached();
+  await expectNoOverflow(page, 'create: instrument with heroes');
+  expect(errors).toEqual([]);
+});

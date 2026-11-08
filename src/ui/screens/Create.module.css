@@ -6,6 +6,11 @@
 .card {
   display: block;
 }
+/* Each class card shows its hero, top right; the text wraps beside and then under it. */
+.hero {
+  float: right;
+  margin: 0 0 4px 8px;
+}
 .card b {
   font-size: 1.05em;
 }
