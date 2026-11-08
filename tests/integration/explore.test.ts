@@ -244,14 +244,7 @@ const NEVER: Partial<Record<ObtainableKey, string>> = {
  * Obtainable only from a district that isn't ported yet (v1's shops and scenes in legacy/src/08_world.js).
  * The values are pending districts, so porting one turns its leftover entries into type errors.
  */
-const PENDING_SOURCES: Partial<Record<ObtainableKey, PendingDistrict>> = {
-  // Maison Chrome and the invitation to the Ball.
-  invitation: 'garden',
-  thr_kevlar: 'garden',
-  mod_titanjaw: 'garden',
-  mod_overdrive: 'garden',
-  'inst:chrome': 'garden',
-};
+const PENDING_SOURCES: Partial<Record<ObtainableKey, PendingDistrict>> = {};
 
 describe('coverage', () => {
   it('every quest of a ported district can be finished', () => {

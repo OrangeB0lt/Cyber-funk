@@ -719,6 +719,37 @@ const cases: Case[] = [
   placeCase('mausoleum boss', 'mausoleum', 'boss', inAct('cemetery', 2)),
   placeCase('mausoleum boss (again)', 'mausoleum', 'boss', inAct('cemetery', 2, { intros: ['archivist'] })),
   placeCase('mausoleum listen', 'mausoleum', 'listen', inAct('garden', 0, { district: 'cemetery' })),
+  // ---- The Garden District ----
+  placeCase(
+    'maison gear',
+    'maison',
+    'gear',
+    inAct('garden', 1, { level: 13, doubloons: 3000, cls: 'clarinet' }),
+  ),
+  placeCase('maison browse', 'maison', 'browse', inAct('garden', 0)),
+  placeCase('tuxedo buffs', 'tuxedo', 'buffs', inAct('garden', 0, { doubloons: 500 })),
+  placeCase('tuxedo rumors', 'tuxedo', 'rumors', inAct('garden', 0)),
+  ...[0, 1].map(pick =>
+    placeCase(`tuxedo valet (${pick})`, 'tuxedo', 'valet', inAct('garden', 0, { doubloons: 400 }), pick),
+  ),
+  placeCase('tuxedo valet, broke', 'tuxedo', 'valet', inAct('garden', 0, { doubloons: 100 })),
+  placeCase('tuxedo quartet', 'tuxedo', 'quartet', inAct('garden', 0)),
+  placeCase('manor gate', 'manor', 'gate', inAct('garden', 0)),
+  placeCase('manor gate, before the Garden', 'manor', 'gate', inAct('cemetery', 1, { district: 'garden' })),
+  ...(['yat', 'creole', 'cajun'] as const).flatMap(roots =>
+    [0, 1, 2, 3].map(pick =>
+      placeCase(
+        `manor ball (${roots}, ${pick})`,
+        'manor',
+        'ball',
+        inAct('garden', 1, { roots, keyItems: ['invitation'] }),
+        pick,
+      ),
+    ),
+  ),
+  placeCase('manor boss', 'manor', 'boss', inAct('garden', 2, { keyItems: ['invitation'] })),
+  placeCase('manor boss (again)', 'manor', 'boss', inAct('garden', 2, { intros: ['isolde'] })),
+  placeCase('manor grounds', 'manor', 'grounds', inAct('tower', 0, { district: 'garden' })),
   {
     name: 'vox perfecta boss flow',
     state: inAct('quarter', 2),

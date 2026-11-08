@@ -16,11 +16,13 @@ import * as voxPerfecta from './bosses/vox_perfecta.scene';
 import * as mrLedger from './bosses/mr_ledger.scene';
 import * as rougarou from './bosses/rougarou.scene';
 import * as archivist from './bosses/archivist.scene';
+import * as isolde from './bosses/isolde.scene';
 import { club, congo, kitchen, pawn } from './districts/treme/places.scene';
 import { feufollet, jackson, market, pelican, strip } from './districts/quarter/places.scene';
 import { chopshop, counting, lantern } from './districts/storyville/places.scene';
 import { boudin, cabin, faisdodo, pump } from './districts/bayou/places.scene';
 import { crypts, mausoleum, temple } from './districts/cemetery/places.scene';
+import { maison, manor, tuxedo } from './districts/garden/places.scene';
 
 export * from './data';
 export { TEXT } from './text';
@@ -47,6 +49,7 @@ export const BOSS_SCENES: Partial<Record<BossId, { pre: Scene; post: Scene }>> =
   mr_ledger: mrLedger,
   rougarou,
   archivist,
+  isolde,
 };
 
 /** What you can do at each place. */
@@ -70,4 +73,7 @@ export const PLACE_SCENES: Partial<Record<PlaceId, PlaceScenes>> = {
   temple,
   crypts,
   mausoleum,
+  maison,
+  tuxedo,
+  manor,
 };
