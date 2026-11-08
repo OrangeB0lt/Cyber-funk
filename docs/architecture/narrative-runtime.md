@@ -64,7 +64,7 @@ The full API, with a doc comment on every member, is the `SceneContext` interfac
 
 | Group | Members |
 |---|---|
-| Showing | `title`, `narrate`, `say(npcId, …)`, `speak(name, color, …)`, `choose({ key: label })`, `confirm`, `toast`, `sheet`, `wait` |
+| Showing | `title`, `narrate`, `say(npcId, …)`, `speak(name, color, text, sprite?)`, `choose({ key: label })`, `confirm`, `toast`, `sheet`, `wait` |
 | Moving | `goto(district)`, `returnTo(route)` |
 | Inventory and money | `give`, `take`, `count`, `gold`, `keyItem`, `gainGear`, `recruit`, `giveNote` |
 | Character | `xp` (awaits level-up popups), `heal`, `funk`, `rest`, `check(stat, base)`, `permStat`, `nextFight`, `bookHint`, `scaleXp`, `scaleGold` |
@@ -76,6 +76,7 @@ Design rules:
 
 - **Choices are keyed.** `choose({ spare: 'Spare him.', finish: 'Finish him.' })` resolves to `'spare' | 'finish'`. The buttons get `data-testid="choice:spare"`. Rewording or reordering options doesn't change behavior or break tests. An option can be `{ label, when?, hint?, silent? }`: `when: false` hides it, `hint` highlights it, `silent` skips echoing the label as the player's line.
 - **Ids are typed.** `say('mamaroux', …)`, `give('gumbo')` and `flags.set('metRoux')` only accept ids that exist, so a typo doesn't compile.
+- **Portraits follow the speaker.** `say` passes its NpcId on the line (`StoryLineSpec.npc`), and the UI draws that character's sprite (`NPC_SPRITE` in `content/sprites/refs.ts`). `speak` takes an optional sprite for speakers outside the NPC table. A shop sheet names who runs it with `keeper` (`s.sheet({ kind: 'shop', title, keeper: 'tijacques', stock })`), and their portrait shows beside the title. These fields are presentation only: the transcript oracle compares who and text, and shops by title. See [ADR-0007](../adr/0007-character-sprites.md).
 - **Randomness comes from `s.rng`.** It's the game's seeded stream and is saved with the game. ESLint bans `Math.random` in content.
 - **Losing never returns.** `fight()` resolves on a win or an escape. A street loss throws `SceneInterrupt('cut')`, and the code after `await s.fight(...)` never runs, as in v1.
 - **`boss(id)` is the whole sequence:** the pre-scene (first time only) or "you go back in", an autosave, the fight (a loss offers *Run it back*, which restores your pre-fight state and retries), then on a win the post-scene, the next act and district unlock, and an autosave.

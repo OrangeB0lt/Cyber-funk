@@ -4,6 +4,7 @@
  * playthroughs run in Vitest in milliseconds.
  */
 import { livingEnemies } from '@core/helpers';
+import type { NpcId } from '@core/ids/world';
 import type { Battle, LevelUp, PlayerIntent, TimingGradeDef, TimingSpec, VictorySummary } from '@core/types';
 import { BLUES_STEP_MS, legalActions } from '@engine/index';
 import type { ChoiceView, Presenter, Route, SheetRequest, SoundCue, StoryLineSpec } from '@narrative/types';
@@ -11,7 +12,7 @@ import type { ChoiceView, Presenter, Route, SheetRequest, SoundCue, StoryLineSpe
 /** One thing the player saw or did. */
 export type TranscriptEntry =
   | { t: 'title'; text: string | null }
-  | { t: 'line'; who: string | null; text: string }
+  | { t: 'line'; who: string | null; text: string; npc?: NpcId }
   | { t: 'prompt'; text: string }
   | { t: 'choose'; options: string[]; picked: string; label: string }
   | { t: 'confirm'; title: string; answer: boolean }
@@ -73,7 +74,7 @@ export class ScriptedPresenter implements Presenter {
   }
   async line(l: StoryLineSpec, signal: AbortSignal): Promise<void> {
     abortable(signal);
-    this.transcript.push({ t: 'line', who: l.who, text: l.text });
+    this.transcript.push({ t: 'line', who: l.who, text: l.text, ...(l.npc && { npc: l.npc }) });
   }
   promptLine(text: string): void {
     this.transcript.push({ t: 'prompt', text });

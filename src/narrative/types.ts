@@ -10,6 +10,7 @@ import type { CombatStatKey, StatKey } from '@core/ids/combat';
 import type { BossId, EnemyId, NoteId, OpponentId } from '@core/ids/enemies';
 import type { FlagId, StoryChoices } from '@core/ids/flags';
 import type { GearId, ItemId, ShopItemId } from '@core/ids/items';
+import type { SpriteId } from '@core/ids/sprites';
 import type { StoryPosition } from '@core/ids/story';
 import type { DistrictId, NpcId, PlaceId, QuestId } from '@core/ids/world';
 import type { Rng } from '@core/rng';
@@ -66,6 +67,8 @@ export type SheetRequest =
       stock: readonly ShopStock[];
       /** Hide the Sell tab. */
       noSell?: boolean;
+      /** Who runs the shop: their portrait shows beside the title. */
+      keeper?: SpriteId;
     }
   | {
       /** Bandmate swapping. */
@@ -132,10 +135,13 @@ export interface SceneContext {
   title(text?: string | null): void;
   /** Narration: typed out, then the player taps Continue. */
   narrate(text: string): Promise<void>;
-  /** A character speaks. */
+  /** A character speaks. Their portrait shows beside the line. */
   say(who: NpcId, text: string): Promise<void>;
-  /** Someone outside the NPC table speaks, with an explicit name color. */
-  speak(name: string, color: string, text: string): Promise<void>;
+  /**
+   * Someone outside the NPC table speaks, with an explicit name color and, optionally, a portrait
+   * (for example the Restless Haints ghosts, drawn as `'haint'`).
+   */
+  speak(name: string, color: string, text: string, sprite?: SpriteId): Promise<void>;
   /** Offer choices; resolves with the chosen key. The label is echoed as the player's line. */
   choose<K extends string>(options: ChoiceOptions<K>, prompt?: string): Promise<K>;
   /** A yes/no dialog. */
@@ -246,6 +252,10 @@ export interface StoryLineSpec {
   color?: string;
   /** The text (may contain [[lexicon]] markup). */
   text: string;
+  /** Who is speaking, when it's someone from the NPC table (the UI shows their portrait). */
+  npc?: NpcId;
+  /** The portrait for a speaker outside the NPC table (`speak` with a sprite). */
+  sprite?: SpriteId;
 }
 
 /** A choice as the presenter shows it. */

@@ -30,6 +30,27 @@ describe('vertical slice: prologue → Tremé → Captain Hush', () => {
     expect(presenter.transcript.at(-1)).toEqual({ t: 'route', route: { kind: 'district' } });
   });
 
+  it('tells the UI who is speaking and who runs each shop (for their portraits)', async () => {
+    const { session, presenter } = newSession();
+    await session.startPrologue();
+    expect(presenter.transcript).toContainEqual(
+      expect.objectContaining({ t: 'line', who: 'Mama Roux', npc: 'mamaroux' }),
+    );
+    session.enterPlace('kitchen');
+    await session.chooseOption('kitchen', 'food');
+    session.enterPlace('pawn');
+    await session.chooseOption('pawn', 'gear');
+    await session.chooseOption('pawn', 'accessories');
+    const shops = presenter.transcript.flatMap(e =>
+      e.t === 'sheet' && e.req.kind === 'shop' ? [[e.req.title, e.req.keeper]] : [],
+    );
+    expect(shops).toEqual([
+      ["Mama Roux's Kitchen", 'mamaroux'],
+      ["Ti-Jacques' Pawn & Horn", 'tijacques'],
+      ["Ti-Jacques' Accessories", 'tijacques'],
+    ]);
+  });
+
   it('wins street fights until Congo Square opens, then beats Captain Hush', async () => {
     const { session, presenter, storage } = newSession(11);
     await session.startPrologue();

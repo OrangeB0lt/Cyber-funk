@@ -106,6 +106,7 @@ export const pralineLady: Scene = async s => {
   await s.sheet({
     kind: 'shop',
     title: 'The Praline Lady',
+    keeper: 'pralinelady',
     noSell: true,
     stock: [
       { id: 'kingcake', price: 80 },

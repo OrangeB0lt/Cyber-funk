@@ -471,7 +471,7 @@ Declarations:
 
 Declarations:
 
-- <a id="src-ui-layers-sheetlayer-tsx--sheetlayer"></a>**SheetLayer** · *component* `(): React.JSX.Element | null` — The open bottom sheet, if any.
+- <a id="src-ui-layers-sheetlayer-tsx--sheetlayer"></a>**SheetLayer** · *component* `(): React.JSX.Element | null | undefined` — The open bottom sheet, if any.
   - uses: **[ui/GameContext](#src-ui-gamecontext-tsx)** [useGame](#src-ui-gamecontext-tsx--usegame), [useView](#src-ui-gamecontext-tsx--useview) · **[ui/sheets/HistorySheet](#src-ui-sheets-historysheet-tsx)** [HistorySheet](#src-ui-sheets-historysheet-tsx--historysheet) · **[ui/sheets/MenuSheets](#src-ui-sheets-menusheets-tsx)** [BagSheet](#src-ui-sheets-menusheets-tsx--bagsheet), [BandSheet](#src-ui-sheets-menusheets-tsx--bandsheet), [BookSheet](#src-ui-sheets-menusheets-tsx--booksheet), [GearSheet](#src-ui-sheets-menusheets-tsx--gearsheet), [JournalSheet](#src-ui-sheets-menusheets-tsx--journalsheet), [LexiconSheet](#src-ui-sheets-menusheets-tsx--lexiconsheet), [MenuSheet](#src-ui-sheets-menusheets-tsx--menusheet), [SlotSheet](#src-ui-sheets-menusheets-tsx--slotsheet), [StatusSheet](#src-ui-sheets-menusheets-tsx--statussheet) · **[ui/sheets/SavesSheet](#src-ui-sheets-savessheet-tsx)** [SavesSheet](#src-ui-sheets-savessheet-tsx--savessheet) · **[ui/sheets/SettingsSheet](#src-ui-sheets-settingssheet-tsx)** [SettingsSheet](#src-ui-sheets-settingssheet-tsx--settingssheet) · **[ui/sheets/ShopSheet](#src-ui-sheets-shopsheet-tsx)** [ShopSheet](#src-ui-sheets-shopsheet-tsx--shopsheet) · **[ui/sheets/WorldSheets](#src-ui-sheets-worldsheets-tsx)** [BountySheet](#src-ui-sheets-worldsheets-tsx--bountysheet) · … +3 more
   - used by: **[ui/App](#src-ui-app-tsx)** [Shell](#src-ui-app-tsx--shell)
 

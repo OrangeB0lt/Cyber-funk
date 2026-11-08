@@ -38,14 +38,14 @@ flowchart TD
   tools["tools"]
   tests["tests (and every test file)"]
   app -->|6| content
-  app -->|51| core
+  app -->|54| core
   app -->|7| engine
   app -->|9| narrative
   content -->|136| core
   content -->|11| narrative
   engine -->|19| content
   engine -->|65| core
-  narrative -->|12| core
+  narrative -->|13| core
   server -->|8| app
   server -->|1| core
   tests -->|24| app

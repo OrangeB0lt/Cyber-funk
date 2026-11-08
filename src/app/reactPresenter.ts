@@ -30,7 +30,7 @@ import type {
   StoryLineSpec,
 } from '@narrative/types';
 import type { Sfx } from './audio/sfx';
-import type { ActorView, BattleView, SheetSpec, SheetView, ViewState } from './view';
+import type { ActorView, BattleView, Float, SheetSpec, SheetView, ViewState } from './view';
 
 /** Options for the presenter. */
 export interface ReactPresenterOptions {
@@ -107,6 +107,8 @@ export class ReactPresenter implements Presenter {
       kind: l.who ? 'spoken' : 'narr',
       who: l.who ?? undefined,
       color: l.color,
+      npc: l.npc,
+      sprite: l.sprite,
       text: l.text,
       typed: this.o.settings().textSpeed === 'instant',
     });
@@ -209,6 +211,7 @@ export class ReactPresenter implements Presenter {
         stock: req.stock.filter(s => s.when !== false).map(s => ({ ...s })),
         noSell: !!req.noSell,
         tab: 'buy',
+        keeper: req.keeper ?? null,
       };
     }
     return { id, awaited: true, kind: req.kind };
@@ -439,9 +442,9 @@ export class ReactPresenter implements Presenter {
     const bv = this.view.battle;
     if (!bv) return 0;
     const actor = (id: string) => (id === bv.player.id ? bv.player : bv.enemies.find(e => e.id === id));
-    const float = (target: string, text: string, color: string, big = false) => {
+    const float = (kind: Float['kind'], target: string, text: string, color: string, big = false) => {
       const id = this.nextId();
-      bv.floats.push({ id, target, text, color, big, x: 20 + ((id * 37) % 50) });
+      bv.floats.push({ id, target, kind, text, color, big, x: 20 + ((id * 37) % 50) });
       setTimeout(() => {
         const i = bv.floats.findIndex(f => f.id === id);
         if (i >= 0) bv.floats.splice(i, 1);
@@ -459,7 +462,7 @@ export class ReactPresenter implements Presenter {
         const text = ev.silent
           ? '0'
           : (ev.crit ? '✦' : '') + ev.amount + (ev.weak ? ' WEAK!' : ev.resisted ? ' resisted' : '');
-        float(ev.target, text, color, !!(ev.crit || ev.weak));
+        float('dmg', ev.target, text, color, !!(ev.crit || ev.weak));
         if (ev.crit && !this.o.settings().reduceMotion) bv.shake++;
         if (ev.crit) this.o.sfx.crit();
         else this.o.sfx.hit(ev.tone);
@@ -469,7 +472,7 @@ export class ReactPresenter implements Presenter {
       case 'heal': {
         const a = actor(ev.target);
         if (a) a.hp = ev.hpAfter;
-        float(ev.target, '+' + ev.amount, '#ff6ad5');
+        float('heal', ev.target, '+' + ev.amount, '#ff6ad5');
         syncActors(bv, b);
         return 220;
       }
@@ -479,7 +482,7 @@ export class ReactPresenter implements Presenter {
         return 0;
       }
       case 'dodge':
-        float(ev.target, 'dodge', '#cfcfcf');
+        float('dodge', ev.target, 'dodge', '#cfcfcf');
         return 200;
       case 'status':
         syncActors(bv, b);
@@ -525,7 +528,9 @@ function actorView(_b: Battle, a: Battle['player']): ActorView {
       : null;
   return {
     id: a.id,
-    defId: String(a.defId ?? ''),
+    defId: a.defId ?? 'player',
+    cls: a.cls ?? null,
+    clone: !!a.clone,
     name: a.name,
     level: a.level,
     hp: a.hp,

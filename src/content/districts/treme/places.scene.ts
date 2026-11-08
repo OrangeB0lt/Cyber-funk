@@ -139,6 +139,7 @@ export const kitchen = definePlace('kitchen', {
           s.sheet({
             kind: 'shop',
             title: "Mama Roux's Kitchen",
+            keeper: 'mamaroux',
             stock: [
               { id: 'beignet' },
               { id: 'cafe' },
@@ -251,6 +252,7 @@ export const pawn = definePlace('pawn', {
           s.sheet({
             kind: 'shop',
             title: "Ti-Jacques' Pawn & Horn",
+            keeper: 'tijacques',
             stock: [
               ...instrumentStock(g.cls, 2),
               { id: 'thr_thrift' },
@@ -270,6 +272,7 @@ export const pawn = definePlace('pawn', {
           s.sheet({
             kind: 'shop',
             title: "Ti-Jacques' Accessories",
+            keeper: 'tijacques',
             stock: [
               { id: 'discobead' },
               { id: 'cayenne' },

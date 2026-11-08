@@ -57,8 +57,8 @@ export function createSceneContext(session: SessionPort, signal: AbortSignal): S
 
     title: text => P.story(text ?? null),
     narrate: text => P.line({ who: null, text }, signal),
-    say: (who, text) => P.line({ who: NPCS[who].name, color: NPCS[who].color, text }, signal),
-    speak: (name, color, text) => P.line({ who: name, color, text }, signal),
+    say: (who, text) => P.line({ who: NPCS[who].name, color: NPCS[who].color, text, npc: who }, signal),
+    speak: (name, color, text, sprite) => P.line({ who: name, color, text, sprite }, signal),
     async choose(options, prompt) {
       const entries = Object.entries(options)
         .map(([key, v]) => ({ key, ...(typeof v === 'string' ? { label: v } : (v as ChoiceOption)) }))

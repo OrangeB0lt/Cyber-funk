@@ -5,7 +5,9 @@
 import { proxy } from 'valtio/vanilla';
 import type { StatusId, TimingId, ToneId } from '@core/ids/combat';
 import type { GearSlot } from '@core/ids/items';
-import type { DistrictId, GlossaryId } from '@core/ids/world';
+import type { OpponentId } from '@core/ids/enemies';
+import type { SpriteId } from '@core/ids/sprites';
+import type { DistrictId, GlossaryId, NpcId } from '@core/ids/world';
 import type { ClassId, RootsId } from '@core/ids/characters';
 import type { LevelUp, LogClass, Settings, TimingGradeDef, TimingSpec } from '@core/types';
 import type { LegalActions } from '@engine/index';
@@ -30,6 +32,10 @@ export interface StoryLine {
   who?: string;
   /** Speaker color. */
   color?: string;
+  /** The speaker, when it's someone from the NPC table (for their portrait). */
+  npc?: NpcId;
+  /** The portrait for a speaker outside the NPC table. */
+  sprite?: SpriteId;
   /** The text (may contain [[lexicon]] markup). */
   text: string;
   /** Fully revealed (typewriter finished or skipped). */
@@ -71,10 +77,19 @@ export type SheetView = { id: number; awaited?: boolean } & (
   | { kind: 'book' }
   | { kind: 'lexicon' }
   | { kind: 'settings'; fromTitle: boolean }
-  | { kind: 'shop'; title: string; stock: ShopStock[]; noSell: boolean; tab: 'buy' | 'sell' }
+  | {
+      kind: 'shop';
+      title: string;
+      stock: ShopStock[];
+      noSell: boolean;
+      tab: 'buy' | 'sell';
+      /** Who runs the shop (portrait beside the title). */
+      keeper: SpriteId | null;
+    }
   | { kind: 'travel' }
   | { kind: 'howto'; start: boolean }
   | { kind: 'dev' }
+  | { kind: 'sprites' }
   | { kind: 'bounties' }
   | { kind: 'saves'; mode: SlotPick; raw?: string }
   | { kind: 'history'; slot: SaveSlotId }
@@ -129,8 +144,12 @@ export type SheetSpec = SheetView extends infer T ? (T extends unknown ? Omit<T,
 export interface ActorView {
   /** Battle actor id. */
   id: string;
-  /** Content id (bestiary lookups). */
-  defId: string;
+  /** Content id: the opponent (Blue Book lookups, its sprite), or 'player'. */
+  defId: OpponentId | 'player';
+  /** The class it plays: the player, a Session Clone (the class it copied), a Cutting Contest rival. */
+  cls: ClassId | null;
+  /** A Session Clone (drawn as the clone of `cls`). */
+  clone: boolean;
   /** Name. */
   name: string;
   /** Level. */
@@ -171,6 +190,8 @@ export interface Float {
   id: number;
   /** Actor id. */
   target: string;
+  /** What happened: damage (the target's sprite flashes), a heal, or a dodge. */
+  kind: 'dmg' | 'heal' | 'dodge';
   /** Text. */
   text: string;
   /** Color. */
