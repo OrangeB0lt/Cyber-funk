@@ -2,75 +2,130 @@
 
 *A Neon Orleans Jazz-Punk RPG.* "The city that care forgot never forgot how to play."
 
-A complete text-based RPG in one self-contained HTML file, built for a phone. NEON ORLEANS, 2084: pick a New Orleans brass-band instrument, fight with music, tap On the One, take back the six Blue Notes from Metronome Corporation's lieutenants, and lead a second line on Metronome Tower to break the Click.
+A text RPG built for a phone. NEON ORLEANS, 2084: pick a New Orleans brass-band instrument, fight with music, tap On the One, take back the six Blue Notes from Metronome Corporation's lieutenants, and lead a second line up Metronome Tower to break the Click.
 
-Vanilla JS, no frameworks, no images, no audio files. Sound is synthesized with the Web Audio API.
+No images and no audio files: every sound is synthesized with the Web Audio API.
 
-## 2.0 (in progress): run it with Docker
+> **Version 2.0 is in progress.** The game is being rebuilt in TypeScript and React as an installable web app, with cloud saves in PostgreSQL.
+> - **What 2.0 plays so far:** the prologue, Tremé and Captain Hush (plus Vox's choice and the Cutting Contest, through the dev menu).
+> - **The full game:** v1, in [`legacy/`](legacy/), playable until 2.0 matches it exactly.
+>
+> The phases are in [docs/roadmap.md](docs/roadmap.md).
 
-The game is being rebuilt in TypeScript and React (`src/`), with cloud saves in PostgreSQL (`server/`). Start the whole thing, game, API and database, with:
+## Play it
+
+**With Docker** (the game, its save server and the database):
 
 ```bash
 docker compose up --build -d --wait     # then open http://localhost:8080
+docker compose down                     # stop; saves are kept in a Docker volume
 ```
 
-To develop inside Docker with hot reload, run `docker compose -f compose.dev.yaml up --build` and open http://localhost:5173. See [docs/guides/docker.md](docs/guides/docker.md), and [docs/README.md](docs/README.md) for the documentation. The rest of this README describes v1, which now lives in `legacy/` and stays playable until the rebuild reaches parity.
+To play on your phone, open `http://<your computer's LAN IP>:8080` on the same Wi-Fi. Settings live in `.env` (copy [`.env.example`](.env.example)). Before running it anywhere but your own machine, change the database password.
 
-## Play it (v1)
+**v1:** open `legacy/dist/cyberfunk.html` in a browser. It's one self-contained file.
 
-Open `dist/cyberfunk.html` in a browser. That's the whole game. Progress autosaves to `localStorage` (key `cyberfunk_save_v1`); Settings also has Export/Import Save as a text code.
+**Dev menu:** in either version, tap the version number on the title screen five times.
 
-Hidden dev menu: tap the version number on the title screen five times.
+### Saves
+
+- **Three slots.** Continue, New Game and Import Save each ask which slot.
+- **Saved on the phone first, always.** The game never waits on the network. When the server is reachable, each save also uploads in the background. With no signal you keep playing, and the save uploads when the connection is back.
+- **No account.** The first upload gives the device a **player code** (`CFP-XXXX-XXXX-…`, shown in Settings → Cloud saves).
+  - Enter the code on another device to continue there, or to get your saves back if the browser forgets them.
+  - Write it down: it's the only key to your cloud saves.
+- **Conflicts.** If two devices changed the same slot, the game asks which one to keep. It never asks mid-battle.
+- **History.** The server keeps the last 20 saves of each slot, and any of them can be restored from the slot picker.
+- **Export codes.** Settings → Export Save gives a `CF2:` code that works without the server.
+
+Design and rules: [docs/architecture/server.md](docs/architecture/server.md), and [ADR-0006](docs/adr/0006-server-and-cloud-saves.md) for why.
+
+## Develop
+
+**Everything in Docker**, no Node needed on your machine:
+
+```bash
+docker compose -f compose.dev.yaml up --build         # game with hot reload on :5173, API on :8787, Postgres
+docker compose -f compose.dev.yaml run --rm tools     # typecheck, lint, layer rules, all tests (npm run docker:check)
+docker compose -f compose.dev.yaml run --rm e2e       # Playwright at 360×740             (npm run docker:e2e)
+```
+
+**Or on your machine** with Node 24 (`.nvmrc`):
+
+```bash
+npm install
+npx playwright install chromium            # once, for e2e
+docker compose -f compose.dev.yaml up -d db                          # Postgres for the API and server tests
+DATABASE_URL=postgres://cyberfunk:cyberfunk@localhost:5432/cyberfunk PORT=8787 npm run dev:server
+npm run dev                                # http://localhost:5173; /api is forwarded to :8787
+VITE_CLOUD=off npm run dev                 # or: UI work with no server at all (saves stay local)
+```
+
+| Command | What it does |
+|---|---|
+| `npm run check` | Typecheck, lint, layer rules and the game's tests. Run it before every commit. |
+| `npm test` | The game's Vitest suites: unit, content validation, headless playthroughs, parity with v1. Needs no database. |
+| `npm run test:server` | The server's tests against a real Postgres (the dev `db` container) |
+| `npm run e2e` | Playwright on a 360×740 touch phone: builds a local-only test build and fails on any horizontal overflow |
+| `E2E_STACK_URL=http://localhost:8080 npx playwright test` | The cloud-save e2e, against the running Docker stack (two browsers playing two phones) |
+| `npm run build` / `npm run build:server` | The game → `dist/`; the server → one bundle in `dist-server/` |
+| `npm run db:generate` | After editing `server/db/schema.ts`: writes the SQL migration (commit it) |
+| `npm run sim` / `npm run trace` | Headless balance simulation; one fight's log |
+| `npm run parity:coverage` | The v1-vs-v2 engine oracle under coverage (fails below 95% branches) |
+| `npm run legacy:build` / `legacy:sim` | Rebuild or simulate v1 |
+
+The full guides are [docs/guides/docker.md](docs/guides/docker.md) and [docs/guides/testing.md](docs/guides/testing.md). Contribution workflow: [CONTRIBUTING.md](CONTRIBUTING.md).
+
+## How it's built
+
+| Concern | Choice |
+|---|---|
+| Game | TypeScript 6 (strict), React 19, Valtio, CSS Modules, Vite 8 |
+| Save server | Node 24, Fastify 5, Drizzle ORM, PostgreSQL 18, Zod (the same save schema on both sides) |
+| Tests | Vitest, Playwright, plus parity oracles that run v1 and v2 side by side |
+| Run | One multi-stage `Dockerfile`; `compose.yaml` (run it) and `compose.dev.yaml` (develop) |
+
+The game is six layers. Imports only point down, and `npm run depcruise` enforces it ([ADR-0002](docs/adr/0002-layering.md)):
+
+```
+ui         React: screens, sheets, the battle view. Renders snapshots, calls commands.
+app        The session, stores, presenters, saves and cloud sync. No React.
+engine     Rules: stats, combat, economy, progression. Deterministic, no DOM.
+content    Typed data (classes, enemies, items, districts) and the story, as *.scene.ts scripts.
+narrative  The scene runtime: the Director and the scene API.
+core       Ids, types, the seeded Rng, pure helpers.
+```
+
+`server/` sits beside the layers. It shares only the save format and the API contract (`src/app/save/format.ts`, `protocol.ts`) and the core ids they use. The game never imports the server.
+
+A few rules shape everything ([engineering principles](docs/vision/engineering-principles.md)):
+- **Parity first.** v2 must match v1 exactly (same numbers, same random draws), proven by the oracles in `tools/parity/`. Fixes come afterwards, one commit each ([known issues](docs/known-issues.md)).
+- **Deterministic.** All game randomness comes from one seeded `Rng`, and it's saved with the game, so a save and a seed replay a fight exactly.
+- **Mistakes don't compile.** Every id is a typed union. Content tables are checked against them, and a validator catches what types can't.
+- **Phone first.** Everything is built for a 360px screen with one-thumb controls and 48px tap targets, and the e2e suite fails on any horizontal overflow.
 
 ## Repo layout
 
 ```
-src/
-  01_data_core.js      tones, statuses, roots, SKILLS (player + enemy + boss moves), CLASSES, timing table
-  02_data_enemies.js   ENEMIES, BOSSES (with per-boss AI), Blue Notes, note frequencies
-  03_data_items.js     ITEMS, GEAR (instruments/threads/charms/mods), SHEET_MUSIC, BANDMATES, SECOND_LINE roster
-  04_data_world.js     DISTRICTS, PLACES, NPCS, main-quest steps, QUESTS, BOUNTIES, street EVENTS, GLOSSARY
-  05_engine.js         state, derived stats, progression, enemy factory, the combat engine and generic effect resolver (no DOM)
-  06_ui_core.js        renderer, typewriter, lexicon linking, sheets/popups, menus (status, bag, gear, band, journal, book, lexicon, settings)
-  07_ui_combat.js      battle screen, On the One timing bar, Play the Blues, victory/defeat, enemy group builder
-  08_world.js          district hub, Hit the Streets, travel, shops, every place, NPC talks, side quests, mini-games
-  09_story.js          prologue, boss pre/post scenes and the three choices, ball, second line, Tower, ending, NG+
-  10_main.js           save/load/export/import, synthesized audio, title, character creation, dev menu, boot
-  style.css            all styles (single dark neon theme)
-build.js               concatenates src/ into dist/ (no bundler; the game itself has no build step)
-dist/
-  cyberfunk.html       the standalone game (complete HTML document)
-  artifact.html        same page without the document skeleton, for hosts that wrap it
-sim/
-  sim.js               headless balance simulation: every class vs every district and boss
-  trace.js             prints a single fight's log  (node sim/trace.js <class> <boss> <level>)
-test/
-  smoke.js             jsdom: drives the real UI through creation, menus, every place, every boss
-  natural.js           jsdom: a legitimate no-cheat playthrough from prologue to ending
-  stress.js            jsdom: repeated boss fights, detects loop stalls
-  click.js             jsdom: traces the final Click fight step by step
-  shots.py             Playwright: 360px screenshots and horizontal-overflow check
+src/            the game (layers above); main.tsx boots it
+  app/save/       save format, slots, the cloud API client and sync engine
+server/         the save API: routes/, repo/ (SQL rules), db/ (schema, migrations)
+tests/          integration/ (headless playthroughs), e2e/ (Playwright), e2e/stack/ (against Docker)
+tools/          sim, trace, content validator, layer rules; parity/ and migrate/ until cutover
+docs/           architecture, guides, ADRs, roadmap; start at docs/README.md
+docker/         the dev entrypoint and the database init script
+legacy/         v1, unchanged: the source of truth for behavior until cutover
+Dockerfile, compose.yaml, compose.dev.yaml, .env.example
 ```
 
-## Working on it
+## Documentation
 
-```
-npm install          # jsdom, for the headless tests only
-npm run build        # rebuild dist/ after editing src/
-npm run sim          # balance numbers (tune BALANCE in src/05_engine.js)
-npm test             # smoke test (~5 min)
-npm run test:natural # full natural playthrough (~15-20 min)
-```
+Start at [docs/README.md](docs/README.md) for the reading order. The most-used pages:
 
-`test/shots.py` needs Python with Playwright and a Chromium install.
-
-### How the engine fits together
-
-- **One state object** `S` holds everything and is what gets saved. `newState()` in `05_engine.js` is the schema; `migrate()` in `10_main.js` fills in missing fields on load.
-- **One effect resolver.** Every skill, boss move, assist, and item is a list of effects (`dmg`, `status`, `heal`, `funk`, `cleanse`, `strip`, `guard`, `groove`, `fn`) resolved by `resolveSkill()`. It is actor-agnostic, which is how rivals, Session Clones, and Vox's Sample reuse player skills.
-- **Combat is a pull loop.** `runUntilPlayer()` advances enemies until it needs the player; `playerAction()` applies the choice. The engine only emits `b.events`; the UI (`drainEvents`) animates them. The sim and tests use the engine without any DOM.
-- **Content is data.** Adding an enemy, item, event, or glossary term is a new row in the matching table in `src/0x_data_*.js`. Story beats live in `08_world.js` (places/NPCs) and `09_story.js` (bosses, acts, ending).
-- **Balance knobs** are in `BALANCE` at the top of the engine section of `05_engine.js`; boss stats in `makeEnemy()`; XP curve in `xpToNext()`.
+- **Architecture:** [core and engine](docs/architecture/core-and-engine.md), [content model](docs/architecture/content-model.md), [narrative runtime](docs/architecture/narrative-runtime.md), [UI](docs/architecture/ui.md), [state and saves](docs/architecture/state-and-saves.md), [server and cloud saves](docs/architecture/server.md)
+- **Guides:** [writing scenes](docs/guides/writing-scenes.md), [balancing](docs/guides/balancing.md), [testing](docs/guides/testing.md), [Docker](docs/guides/docker.md)
+- **Decisions:** [ADRs 0001–0006](docs/adr/)
+- **Game systems:** [combat](docs/systems/combat.md)
 
 ## Credits
 

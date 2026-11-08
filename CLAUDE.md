@@ -2,7 +2,7 @@
 
 This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
 
-CYBER FUNK is a phone-first text RPG. **It is mid-migration** from v1 (vanilla JS in one global scope, shipped as one HTML file) to v2 (TypeScript + React 19 + Valtio, a multi-file PWA built with Vite). The approved plan is in `docs/` (ADRs 0001–0005) and the phases are below.
+CYBER FUNK is a phone-first text RPG. **It is mid-migration** from v1 (vanilla JS in one global scope, shipped as one HTML file) to v2 (TypeScript + React 19 + Valtio, a multi-file PWA built with Vite). The approved plan is in `docs/` (ADRs 0001–0005) and the phases are below. To find your way around the code, start at `docs/architecture/code-map.md` (flows and wiring) and `docs/reference/code-map/` (generated: every function with its callers).
 
 - **v1 lives in `legacy/`** and stays runnable and unchanged until cutover: `legacy/src/01–10_*.js`, `legacy/build.js` → `legacy/dist/cyberfunk.html`. It is the source of truth for behavior.
 - **v2 lives in `src/`**, in six layers (ADR-0002): `core ← narrative ← content ← engine ← app ← ui`. Imports point down only, and `npm run depcruise` enforces it.
@@ -24,6 +24,7 @@ docker compose -f compose.dev.yaml up --build             # develop in Docker: :
 npm run docker:check / docker:e2e                         # check + server tests / e2e inside containers
 npm run build            # production build -> dist/ (gitignored)
 npm run parity:coverage  # corpus vs legacy engine under c8; fails below 95% branch coverage
+npm run docs:codemap     # regenerate docs/reference/code-map after code changes (npm test fails when stale)
 npm run legacy:build     # rebuild legacy/dist (the hook does this automatically)
 npm run legacy:sim       # v1 balance sim
 npx tsx tools/parity/legacyShots.ts   # v1 reference screenshots at 360px -> legacy/shots/
