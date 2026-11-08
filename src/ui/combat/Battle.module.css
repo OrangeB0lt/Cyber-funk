@@ -9,7 +9,7 @@
   display: flex;
   flex-direction: column;
   gap: 6px;
-  max-height: 45%;
+  max-height: 55%;
   overflow-y: auto;
 }
 .card {
@@ -41,12 +41,46 @@
   cursor: pointer;
   animation: pulse 0.8s infinite alternate;
 }
+/* Sprite on the left, everything else on the right. A div inside the button, not grid on the
+   button itself (WebKit). Bosses get the bigger box. */
+.cardBody {
+  display: grid;
+  grid-template-columns: var(--box, 72px) minmax(0, 1fr);
+  column-gap: 8px;
+  align-items: center;
+}
+.boss .cardBody {
+  --box: 96px;
+}
+/* Feet on the floor of the box; damage numbers float from here, so they stay on screen. */
+.portrait {
+  position: relative;
+  width: var(--box, 72px);
+  height: var(--box, 72px);
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+}
+.info {
+  min-width: 0;
+}
+.dead .portrait * {
+  animation: none;
+}
 .head {
   display: flex;
   justify-content: space-between;
   gap: 8px;
   align-items: baseline;
   margin-bottom: 4px;
+}
+.head > b {
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+.head > span {
+  flex: none;
+  white-space: nowrap;
 }
 .log {
   flex: 1 1 auto;
@@ -111,6 +145,27 @@
   flex-direction: column;
   gap: 4px;
 }
+/* Your hero beside your name and bars; the hero box anchors your damage numbers. */
+.pbody {
+  display: grid;
+  grid-template-columns: 48px minmax(0, 1fr);
+  column-gap: 8px;
+  align-items: start;
+}
+.hero {
+  position: relative;
+  width: 48px;
+  height: 48px;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+}
+.pinfo {
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
 .pname {
   color: var(--cyan);
   display: flex;
@@ -147,8 +202,19 @@
   background: var(--gold);
   color: #000;
 }
+/* The strip floats spread across (see Floats): from the sprite's left edge, 160px wide. */
+.floats {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 160px;
+  height: 100%;
+  pointer-events: none;
+  z-index: 5;
+}
 .float {
   position: absolute;
+  white-space: nowrap;
   top: 4px;
   font-weight: bold;
   font-size: 1.15em;

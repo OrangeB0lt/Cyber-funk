@@ -2,17 +2,23 @@ import { useEffect, useRef, type CSSProperties, type RefObject } from 'react';
 import type { Snapshot } from 'valtio';
 import type { ActorView } from '@app/view';
 import { CLASSES } from '@content/index';
+import { actorSprite, heroSprite } from '@content/sprites';
 import { Bar } from '../components/Bar';
 import { StatusChips } from '../components/Chips';
+import { Sprite } from '../components/Sprite';
 import { Tone } from '../components/Tone';
 import { useGame, useView } from '../GameContext';
 import { resetBattleInput, useTargeting } from './targeting';
 import s from './Battle.module.css';
 
+/**
+ * Damage and heal numbers rising from an actor's sprite. They spread across a fixed-width strip that
+ * starts at the sprite, so several in a row stay readable and even a big "✦18 WEAK!" stays on screen.
+ */
 function Floats({ id }: { id: string }) {
   const v = useView();
   return (
-    <>
+    <span className={s.floats} aria-hidden="true">
       {v
         .battle!.floats.filter(f => f.target === id)
         .map(f => (
@@ -20,20 +26,33 @@ function Floats({ id }: { id: string }) {
             key={f.id}
             className={`${s.float} ${f.big ? s.big : ''}`}
             style={{ color: f.color, left: `${f.x}%` } as CSSProperties}
-            aria-hidden="true"
           >
             {f.text}
           </span>
         ))}
-    </>
+    </span>
   );
+}
+
+/** The newest damage number still floating over an actor: its sprite flashes once per new one. */
+function useLastHit(id: string): number | null {
+  const v = useView();
+  return v.battle!.floats.filter(f => f.target === id && f.kind === 'dmg').at(-1)?.id ?? null;
+}
+
+/** Where in the idle bob an actor starts, from its id, so a group doesn't bob in unison. */
+function bobPhase(id: string): number {
+  let h = 7;
+  for (const ch of id) h = (h * 31 + ch.charCodeAt(0)) % 997;
+  return (h % 100) / 100;
 }
 
 function EnemyCard({ e }: { e: Snapshot<ActorView> }) {
   const v = useView();
   const g = useGame()!;
   const targeting = useTargeting();
-  const book = g.book[e.defId as keyof typeof g.book];
+  const hit = useLastHit(e.id);
+  const book = e.defId === 'player' ? undefined : g.book[e.defId];
   const known = !!(book?.weak || book?.hint);
   const canTarget = !!targeting.pending && e.alive;
   const cls = [
@@ -54,39 +73,96 @@ function EnemyCard({ e }: { e: Snapshot<ActorView> }) {
       aria-label={`${e.name}, level ${e.level}, ${Math.max(0, e.hp)} of ${e.maxHp} Heart${canTarget ? '. Tap to target.' : ''}`}
       onClick={() => targeting.pick(e.id)}
     >
-      <div className={s.head}>
-        <b>{e.name}</b>
-        <span className="dim small">
-          Lv {e.level}
-          {e.elite ? ' ★' : ''}
+      <div className={s.cardBody}>
+        <span className={s.portrait}>
+          <Sprite id={actorSprite(e, g.cls)} scale={3} idle={e.alive} hit={hit} phase={bobPhase(e.id)} />
+          <Floats id={e.id} />
         </span>
-      </div>
-      <Bar
-        kind="enemy"
-        compact
-        name={`${e.name} Heart`}
-        value={e.hp}
-        max={e.maxHp}
-        label={`${Math.max(0, e.hp)}/${e.maxHp}`}
-      />
-      <StatusChips statuses={e.statuses} />
-      <div className="small dim">
-        {known && e.weak ? (
-          <>
-            Weak <Tone tone={e.weak} />
-            {e.resist && (
+        <div className={s.info}>
+          <div className={s.head}>
+            <b>{e.name}</b>
+            <span className="dim small">
+              Lv {e.level}
+              {e.elite ? ' ★' : ''}
+            </span>
+          </div>
+          <Bar
+            kind="enemy"
+            compact
+            name={`${e.name} Heart`}
+            value={e.hp}
+            max={e.maxHp}
+            label={`${Math.max(0, e.hp)}/${e.maxHp}`}
+          />
+          <StatusChips statuses={e.statuses} />
+          <div className="small dim">
+            {known && e.weak ? (
               <>
-                {' '}
-                · Resists <Tone tone={e.resist} />
+                Weak <Tone tone={e.weak} />
+                {e.resist && (
+                  <>
+                    {' '}
+                    · Resists <Tone tone={e.resist} />
+                  </>
+                )}
               </>
+            ) : (
+              'Weakness: ?'
             )}
-          </>
-        ) : (
-          'Weakness: ?'
-        )}
+          </div>
+        </div>
       </div>
-      <Floats id={e.id} />
     </button>
+  );
+}
+
+/** You: your hero, name, level and class, the Big Four beat (Bass Drum), and your three bars. */
+function PlayerPanel({ p, active }: { p: Snapshot<ActorView>; active: boolean }) {
+  const g = useGame()!;
+  const hit = useLastHit(p.id);
+  return (
+    <div className={`${s.player} ${active ? s.active : ''}`} data-testid="pstat">
+      <div className={s.pbody}>
+        <span className={s.hero}>
+          <Sprite id={heroSprite(g.cls)} scale={2} idle hit={hit} phase={0.5} />
+          <Floats id={p.id} />
+        </span>
+        <div className={s.pinfo}>
+          <div className={s.pname}>
+            <b>{g.name}</b>{' '}
+            <span className="dim small">
+              Lv {g.level} · {CLASSES[g.cls].name}
+            </span>
+            {p.bigFour && (
+              <span className={s.beat} aria-label={`Beat ${p.beat} of 4`}>
+                {[1, 2, 3, 4].map(n => (
+                  <i key={n} className={`${p.beat === n ? s.on : ''} ${n === 4 ? s.four : ''}`}>
+                    {n}
+                  </i>
+                ))}
+              </span>
+            )}
+          </div>
+          <Bar
+            kind="heart"
+            name="Heart"
+            value={p.hp}
+            max={p.maxHp}
+            label={`♥ ${Math.max(0, p.hp)}/${p.maxHp}`}
+          />
+          <Bar kind="funk" name="Funk" value={p.fp} max={p.maxFp} label={`♪ ${p.fp}/${p.maxFp}`} />
+          <Bar
+            kind="groove"
+            name="Groove"
+            value={p.groove}
+            max={100}
+            full={p.groove >= 100}
+            label={`GROOVE ${p.groove}${p.groove >= 100 ? ' — SOLO READY' : ''}`}
+          />
+          <StatusChips statuses={p.statuses} guard={p.guard} />
+        </div>
+      </div>
+    </div>
   );
 }
 
@@ -141,41 +217,7 @@ export function BattleScreen() {
           </div>
         ))}
       </div>
-      <div className={`${s.player} ${b.active === p.id ? s.active : ''}`} data-testid="pstat">
-        <div className={s.pname}>
-          <b>{g.name}</b>{' '}
-          <span className="dim small">
-            Lv {g.level} · {CLASSES[g.cls].name}
-          </span>
-          {p.bigFour && (
-            <span className={s.beat} aria-label={`Beat ${p.beat} of 4`}>
-              {[1, 2, 3, 4].map(n => (
-                <i key={n} className={`${p.beat === n ? s.on : ''} ${n === 4 ? s.four : ''}`}>
-                  {n}
-                </i>
-              ))}
-            </span>
-          )}
-        </div>
-        <Bar
-          kind="heart"
-          name="Heart"
-          value={p.hp}
-          max={p.maxHp}
-          label={`♥ ${Math.max(0, p.hp)}/${p.maxHp}`}
-        />
-        <Bar kind="funk" name="Funk" value={p.fp} max={p.maxFp} label={`♪ ${p.fp}/${p.maxFp}`} />
-        <Bar
-          kind="groove"
-          name="Groove"
-          value={p.groove}
-          max={100}
-          full={p.groove >= 100}
-          label={`GROOVE ${p.groove}${p.groove >= 100 ? ' — SOLO READY' : ''}`}
-        />
-        <StatusChips statuses={p.statuses} guard={p.guard} />
-        <Floats id={p.id} />
-      </div>
+      <PlayerPanel p={p} active={b.active === p.id} />
     </div>
   );
 }

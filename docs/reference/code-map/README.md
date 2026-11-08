@@ -6,7 +6,7 @@ Every source file in `src/`, `server/`, `tools/` and `tests/`, with its declarat
 
 For how the pieces work together (boot, a story line, a battle, a save reaching Postgres), read the hand-written [guide](../../architecture/code-map.md) first.
 
-**220** source files · **25** test files · **949** top-level declarations · **402** members · **2437** "uses" edges
+**220** source files · **25** test files · **952** top-level declarations · **402** members · **2447** "uses" edges
 
 ## Pages
 
@@ -60,7 +60,7 @@ flowchart TD
   tools -->|30| core
   tools -->|4| engine
   ui -->|10| app
-  ui -->|17| content
+  ui -->|18| content
   ui -->|22| core
   ui -->|5| engine
   ui -->|1| narrative

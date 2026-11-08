@@ -167,7 +167,7 @@ Declarations:
 - <a id="tests-e2e-helpers-ts--expectnooverflow"></a>**expectNoOverflow** · *function* `(page: Page, label: string): Promise<void>` — Fail if anything sticks out past the 360px viewport.
   - used by: tests: [saves.spec](#tests-e2e-saves-spec-ts), [slice.spec](#tests-e2e-slice-spec-ts), [sprites.spec](#tests-e2e-sprites-spec-ts), [cloud.spec](#tests-e2e-stack-cloud-spec-ts)
 - <a id="tests-e2e-helpers-ts--cf"></a>**cf** · *function* `<T, A = undefined>(page: Page, fn: (app: any, arg: A) => T, arg?: A): Promise<T>` — Run app code in the page: `fn(app, arg)` where app is the GameApp (window.CF).
-  - used by: here [quickStart](#tests-e2e-helpers-ts--quickstart) · tests: [saves.spec](#tests-e2e-saves-spec-ts), [slice.spec](#tests-e2e-slice-spec-ts)
+  - used by: here [quickStart](#tests-e2e-helpers-ts--quickstart) · tests: [saves.spec](#tests-e2e-saves-spec-ts), [slice.spec](#tests-e2e-slice-spec-ts), [sprites.spec](#tests-e2e-sprites-spec-ts)
 - <a id="tests-e2e-helpers-ts--screenof"></a>**screenOf** · *function* `(page: Page): Promise<string | null>` — The current screen (data-screen on the app root).
   - used by: here [playUntil](#tests-e2e-helpers-ts--playuntil), [quickStart](#tests-e2e-helpers-ts--quickstart) · tests: [saves.spec](#tests-e2e-saves-spec-ts), [slice.spec](#tests-e2e-slice-spec-ts), [cloud.spec](#tests-e2e-stack-cloud-spec-ts)
 - <a id="tests-e2e-helpers-ts--playuntil"></a>**playUntil** · *function* `(page: Page, done: () => Promise<boolean>, opts: { onScreen?: (screen: string) => Promise<void>; choose?: string; maxSteps?: number } = {}): Promise<void>` — Tap through whatever the game asks (Continue, first choice, dialogs, timing bar, RIFF at the first target, outcome buttons) until `done` holds.
@@ -175,7 +175,7 @@ Declarations:
   - used by: here [quickStart](#tests-e2e-helpers-ts--quickstart) · tests: [saves.spec](#tests-e2e-saves-spec-ts), [slice.spec](#tests-e2e-slice-spec-ts), [cloud.spec](#tests-e2e-stack-cloud-spec-ts)
 - <a id="tests-e2e-helpers-ts--quickstart"></a>**quickStart** · *function* `(page: Page, cls = 'trumpet'): Promise<void>` — A new game in Tremé after the prologue, fast: text instant, playback in turbo.
   - uses: here [cf](#tests-e2e-helpers-ts--cf), [playUntil](#tests-e2e-helpers-ts--playuntil), [screenOf](#tests-e2e-helpers-ts--screenof)
-  - used by: tests: [saves.spec](#tests-e2e-saves-spec-ts), [slice.spec](#tests-e2e-slice-spec-ts)
+  - used by: tests: [saves.spec](#tests-e2e-saves-spec-ts), [slice.spec](#tests-e2e-slice-spec-ts), [sprites.spec](#tests-e2e-sprites-spec-ts)
 
 <a id="tests-e2e-saves-spec-ts"></a>
 

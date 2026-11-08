@@ -1277,7 +1277,7 @@ Declarations:
 - <a id="src-app-view-ts--sheetspec"></a>**SheetSpec** · *type* `= SheetView extends infer T ? (T extends unknown ? Omit<T, 'id'> : never) : never` — A sheet to open (a SheetView without its id).
   - used by: **[app/game](#src-app-game-ts)** [GameApp.openSheet](#src-app-game-ts--gameapp-opensheet) · **[app/reactPresenter](#src-app-reactpresenter-ts)** [ReactPresenter.openSheet](#src-app-reactpresenter-ts--reactpresenter-opensheet)
 - <a id="src-app-view-ts--actorview"></a>**ActorView** · *interface* — An actor as the battle screen shows it.
-  - used by: here [BattleView](#src-app-view-ts--battleview) · **[app/reactPresenter](#src-app-reactpresenter-ts)** [actorView](#src-app-reactpresenter-ts--actorview), [syncActors](#src-app-reactpresenter-ts--syncactors) · **[ui/combat/BattleScreen](ui.md#src-ui-combat-battlescreen-tsx)** [EnemyCard](ui.md#src-ui-combat-battlescreen-tsx--enemycard)
+  - used by: here [BattleView](#src-app-view-ts--battleview) · **[app/reactPresenter](#src-app-reactpresenter-ts)** [actorView](#src-app-reactpresenter-ts--actorview), [syncActors](#src-app-reactpresenter-ts--syncactors) · **[ui/combat/BattleScreen](ui.md#src-ui-combat-battlescreen-tsx)** [EnemyCard](ui.md#src-ui-combat-battlescreen-tsx--enemycard), [PlayerPanel](ui.md#src-ui-combat-battlescreen-tsx--playerpanel)
 - <a id="src-app-view-ts--float"></a>**Float** · *interface* — A number floating up from an actor.
   - used by: here [BattleView](#src-app-view-ts--battleview) · **[app/reactPresenter](#src-app-reactpresenter-ts)** [ReactPresenter.applyEvent](#src-app-reactpresenter-ts--reactpresenter-applyevent)
 - <a id="src-app-view-ts--battleview"></a>**BattleView** · *interface* — The battle screen.
