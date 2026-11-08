@@ -3,7 +3,9 @@
  * sim never import this file (they use data.ts), which keeps prose out of their module graph.
  *
  * The scene registries are partial during the 2.0 migration: districts are added as they're ported
- * (P2: Tremé; P3: the rest; P4: the Tower and the ending). Places without scenes show only "Back".
+ * (P2: Tremé; P3: the rest; P4: the Tower and the ending). src/content/pending.ts lists the districts
+ * still waiting; their places show TEXT.placeNotBuilt. The completeness tests fail if a place outside
+ * those districts has no scenes.
  */
 import type { BossId } from '@core/ids/enemies';
 import type { PlaceId } from '@core/ids/world';

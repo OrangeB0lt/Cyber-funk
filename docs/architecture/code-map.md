@@ -343,7 +343,7 @@ sequenceDiagram
 
 - **Options are computed every time** the place is shown, from `PLACE_SCENES[id].options(game, helpers)` ([`definePlace`](../../src/narrative/define.ts)). Content can't import the engine, so it gets [`PlaceHelpers`](../reference/code-map/narrative.md#src-narrative-define-ts--placehelpers) built by [`Session.placeHelpers`](../reference/code-map/app.md#src-app-session-ts--session-placehelpers): `price` → engine `priceFor`, `is` → `storyIs`, `reached` → `storyReached`.
 - **Option keys are stable.** They become test ids (`opt:<key>`) and the scene's name in the Director.
-- **Places without scenes** (districts not ported yet) show only "Back". The registry is `PLACE_SCENES` in [content/index.ts](../../src/content/index.ts).
+- **Places without scenes** (districts still listed in [content/pending.ts](../../src/content/pending.ts)) show `TEXT.placeNotBuilt` ("Closed tonight…") and Back. The registry is `PLACE_SCENES` in [content/index.ts](../../src/content/index.ts); `tools/completeness.test.ts` and `tests/integration/explore.test.ts` fail if a place outside a pending district has no scenes or no options.
 - **The "!" hint** on the district screen comes from [`GameApp.hintPlace`](../reference/code-map/app.md#src-app-game-ts--gameapp-hintplace): `currentStep(g).def.hintPlace`, from the act table in [content/story/acts.ts](../../src/content/story/acts.ts).
 
 ### The other district actions

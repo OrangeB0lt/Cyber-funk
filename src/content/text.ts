@@ -34,4 +34,9 @@ export const TEXT = {
   fightRestarts: 'Your last fight restarts when you go back in.',
   /** When a scene breaks unexpectedly. */
   somethingBroke: 'Something skipped a beat. Back to the street.',
+  /**
+   * A place with nothing to do yet (its district hasn't been ported to 2.0: src/content/pending.ts).
+   * The completeness tests make sure no ported place ever shows this.
+   */
+  placeNotBuilt: 'Closed tonight. This part of Neon Orleans opens in a later build.',
 } as const;

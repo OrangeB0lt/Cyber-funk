@@ -1714,9 +1714,9 @@ The game's system copy: lines the app shows around scenes and battles (recoverin
 
 Declarations:
 
-- <a id="src-content-text-ts--text"></a>**TEXT** · *const* `= { … } (14 keys)`
+- <a id="src-content-text-ts--text"></a>**TEXT** · *const* `= { … } (15 keys)`
   - uses: **[content/format](#src-content-format-ts)** [fmtDoubloons](#src-content-format-ts--fmtdoubloons)
-  - used by: **[app/battleController](app.md#src-app-battlecontroller-ts)** [runBattle](app.md#src-app-battlecontroller-ts--runbattle) · **[app/reactPresenter](app.md#src-app-reactpresenter-ts)** [ReactPresenter.battle](app.md#src-app-reactpresenter-ts--reactpresenter-battle) · **[app/sceneContext](app.md#src-app-scenecontext-ts)** [createSceneContext](app.md#src-app-scenecontext-ts--createscenecontext) · **[app/session](app.md#src-app-session-ts)** [Session.constructor](app.md#src-app-session-ts--session-constructor), [Session.resume](app.md#src-app-session-ts--session-resume)
+  - used by: **[app/battleController](app.md#src-app-battlecontroller-ts)** [runBattle](app.md#src-app-battlecontroller-ts--runbattle) · **[app/reactPresenter](app.md#src-app-reactpresenter-ts)** [ReactPresenter.battle](app.md#src-app-reactpresenter-ts--reactpresenter-battle) · **[app/sceneContext](app.md#src-app-scenecontext-ts)** [createSceneContext](app.md#src-app-scenecontext-ts--createscenecontext) · **[app/session](app.md#src-app-session-ts)** [Session.constructor](app.md#src-app-session-ts--session-constructor), [Session.resume](app.md#src-app-session-ts--session-resume) · **[ui/screens/Place](ui.md#src-ui-screens-place-tsx)** [PlaceScreen](ui.md#src-ui-screens-place-tsx--placescreen)
 
 <a id="src-content-world-arrivals-scene-ts"></a>
 

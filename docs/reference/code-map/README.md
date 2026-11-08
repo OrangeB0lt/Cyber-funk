@@ -6,7 +6,7 @@ Every source file in `src/`, `server/`, `tools/` and `tests/`, with its declarat
 
 For how the pieces work together (boot, a story line, a battle, a save reaching Postgres), read the hand-written [guide](../../architecture/code-map.md) first.
 
-**224** source files · **27** test files · **988** top-level declarations · **402** members · **2530** "uses" edges
+**224** source files · **27** test files · **988** top-level declarations · **402** members · **2531** "uses" edges
 
 ## Pages
 
