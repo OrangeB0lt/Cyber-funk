@@ -29,7 +29,7 @@ flowchart LR
   n_roots["roots"]
   n_rules["rules"]
   n_sheetMusic["sheetMusic"]
-  n_sprites_["sprites/ (17)"]
+  n_sprites_["sprites/ (16)"]
   n_story_["story/ (2)"]
   n_text["text"]
   n_world_["world/ (3)"]
@@ -163,7 +163,6 @@ flowchart LR
 | [src/content/sprites/compile.ts](#src-content-sprites-compile-ts) | Turns sprite rows into drawable data. |
 | [src/content/sprites/index.ts](#src-content-sprites-index-ts) | Character art, for the UI and tools only. |
 | [src/content/sprites/palette.ts](#src-content-sprites-palette-ts) | The master palette: every colour a sprite may use. |
-| [src/content/sprites/placeholder.ts](#src-content-sprites-placeholder-ts) | Stand-in art: a grey "?" bust that keeps the sprite table complete while the real art lands, one batch at a time. |
 | [src/content/sprites/refs.ts](#src-content-sprites-refs-ts) | Who is drawn with which sprite. |
 | [src/content/sprites/table.ts](#src-content-sprites-table-ts) | Every sprite in one table: the art files, plus a generated Session Clone row per class. |
 | [src/content/story/acts.ts](#src-content-story-acts-ts) | The main quest, step by step: what the journal says, which place gets the "!" hint, and how a step completes on its own after battles. |
@@ -1444,14 +1443,13 @@ Declarations:
 Shopkeepers in places P3 still has to port (no NpcId yet; see RESERVED_P3). Specs: docs/vision/character-design.md (Shopkeepers (P3)).
 
 - Source: [src/content/sprites/art/shopkeepers.ts](../../../src/content/sprites/art/shopkeepers.ts)
-- Imports: core: [types/index](core.md#src-core-types-index-ts) · content: [sprites/placeholder](#src-content-sprites-placeholder-ts)
+- Imports: core: [types/index](core.md#src-core-types-index-ts)
 - Imported by: content: [sprites/table](#src-content-sprites-table-ts)
 - Types used: **[core/types/sprites](core.md#src-core-types-sprites-ts)** [SpriteTable](core.md#src-core-types-sprites-ts--spritetable)
 
 Declarations:
 
 - <a id="src-content-sprites-art-shopkeepers-ts--shopkeeper-art"></a>**SHOPKEEPER_ART** · *const* `satisfies Partial<SpriteTable>`
-  - uses: **[content/sprites/placeholder](#src-content-sprites-placeholder-ts)** [todo](#src-content-sprites-placeholder-ts--todo)
   - used by: **[content/sprites/table](#src-content-sprites-table-ts)** [SPRITES](#src-content-sprites-table-ts--sprites)
 
 <a id="src-content-sprites-art-storyville-ts"></a>
@@ -1574,31 +1572,6 @@ Declarations:
 
 - <a id="src-content-sprites-palette-ts--palette"></a>**PALETTE** · *const* `: Readonly<Record<PaletteId, string>>`
   - used by: **[content/sprites/index](#src-content-sprites-index-ts)** [compiled](#src-content-sprites-index-ts--compiled) · **[tools/sprites](tools.md#tools-sprites-ts)** [contactSheet](tools.md#tools-sprites-ts--contactsheet), [generateSpriteGallery](tools.md#tools-sprites-ts--generatespritegallery), [paletteSvg](tools.md#tools-sprites-ts--palettesvg) · **[tools/validate-content](tools.md#tools-validate-content-ts)** [validateSprites](tools.md#tools-validate-content-ts--validatesprites) · tests: [compile.test](tests.md#src-content-sprites-compile-test-ts)
-
-<a id="src-content-sprites-placeholder-ts"></a>
-
-### src/content/sprites/placeholder.ts
-
-Stand-in art: a grey "?" bust that keeps the sprite table complete while the real art lands, one batch at a time. The last art batch deletes this file, so any sprite still using it stops compiling.
-
-- Source: [src/content/sprites/placeholder.ts](../../../src/content/sprites/placeholder.ts)
-- Imports: core: [ids/sprites](core.md#src-core-ids-sprites-ts), [types/index](core.md#src-core-types-index-ts)
-- Imported by: content: [sprites/art/shopkeepers](#src-content-sprites-art-shopkeepers-ts) · tools: [sprites](tools.md#tools-sprites-ts), [validate-content](tools.md#tools-validate-content-ts)
-- Types used: **[core/ids/sprites](core.md#src-core-ids-sprites-ts)** [SpriteId](core.md#src-core-ids-sprites-ts--spriteid) · **[core/types/sprites](core.md#src-core-types-sprites-ts)** [GridSpriteDef](core.md#src-core-types-sprites-ts--gridspritedef), [SpriteDef](core.md#src-core-types-sprites-ts--spritedef)
-
-Declarations:
-
-- <a id="src-content-sprites-placeholder-ts--q24"></a>**Q24** · *const, internal* `: readonly string[]`
-  - used by: here [Q32](#src-content-sprites-placeholder-ts--q32), [isTodo](#src-content-sprites-placeholder-ts--istodo), [todo](#src-content-sprites-placeholder-ts--todo)
-- <a id="src-content-sprites-placeholder-ts--q32"></a>**Q32** · *const, internal* `: readonly string[]`
-  - uses: here [Q24](#src-content-sprites-placeholder-ts--q24)
-  - used by: here [isTodo](#src-content-sprites-placeholder-ts--istodo), [todo](#src-content-sprites-placeholder-ts--todo)
-- <a id="src-content-sprites-placeholder-ts--todo"></a>**todo** · *function* `<K extends SpriteId>(id: K, size: 24 | 32 = 24): GridSpriteDef & { id: K }` — A placeholder row for `id` (32×32 for bosses).
-  - uses: here [Q24](#src-content-sprites-placeholder-ts--q24), [Q32](#src-content-sprites-placeholder-ts--q32)
-  - used by: **[content/sprites/art/shopkeepers](#src-content-sprites-art-shopkeepers-ts)** [SHOPKEEPER_ART](#src-content-sprites-art-shopkeepers-ts--shopkeeper-art)
-- <a id="src-content-sprites-placeholder-ts--istodo"></a>**isTodo** · *function* `(def: SpriteDef): boolean` — Whether a row is still a placeholder (the validator skips those).
-  - uses: here [Q24](#src-content-sprites-placeholder-ts--q24), [Q32](#src-content-sprites-placeholder-ts--q32)
-  - used by: **[tools/sprites](tools.md#tools-sprites-ts)** [generateSpriteGallery](tools.md#tools-sprites-ts--generatespritegallery) · **[tools/validate-content](tools.md#tools-validate-content-ts)** [validateSprites](tools.md#tools-validate-content-ts--validatesprites)
 
 <a id="src-content-sprites-refs-ts"></a>
 

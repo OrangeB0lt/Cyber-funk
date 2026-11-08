@@ -40,7 +40,6 @@ import {
   resolveSprite,
   type ResolvedSprite,
 } from '@content/sprites';
-import { isTodo } from '@content/sprites/placeholder';
 import { MECHANIC_STATUSES } from '@engine/combat/resolve';
 
 export function validateContent(): string[] {
@@ -116,15 +115,8 @@ const DESIGN_DOC = 'docs/vision/character-design.md';
 /** Sprite rules from docs/vision/character-design.md that the types can't express. */
 function validateSprites(fail: (msg: string) => void): void {
   const bosses = new Set<string>(BOSS_IDS);
-  // A sprite whose chain ends in a placeholder is still waiting for its art; skip it until then.
-  const pending = (id: SpriteId): boolean => {
-    let def: SpriteDef = SPRITES[id];
-    for (let hops = 0; 'from' in def && hops <= 10; hops++) def = SPRITES[def.from];
-    return isTodo(def);
-  };
   const resolved = new Map<SpriteId, ResolvedSprite>();
   for (const id of SPRITE_IDS) {
-    if (pending(id)) continue;
     const def = SPRITES[id];
     const size = bosses.has(id) ? 32 : 24;
     const at = `Sprite ${id}`;
@@ -190,6 +182,18 @@ function validateSprites(fail: (msg: string) => void): void {
     if (twin) fail(`Sprite ${id}: identical to ${twin}.`);
     else byPixels.set(r.px.join(','), id);
   }
+
+  // Every palette colour is used by some pixel or glow, so the palette doesn't collect dead entries.
+  const usedColours = new Set<string>();
+  for (const r of resolved.values()) {
+    for (const c of r.px) if (c) usedColours.add(c);
+    if (r.glow) usedColours.add(r.glow);
+  }
+  for (const id of PALETTE_IDS)
+    if (!usedColours.has(id))
+      fail(
+        `Palette colour ${id} isn't used by any sprite: use it, or remove it (and its row in ${DESIGN_DOC}).`,
+      );
 
   // Opponents flagged as holograms are drawn as holograms.
   const holograms = [
