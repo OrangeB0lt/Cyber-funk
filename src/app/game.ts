@@ -9,12 +9,13 @@ import { BOSS_IDS } from '@core/ids/enemies';
 import { BANDMATE_IDS } from '@core/ids/band';
 import { NOTE_IDS } from '@core/ids/enemies';
 import type { GearId, GearSlot, ItemId, ShopItemId } from '@core/ids/items';
-import { ACT_ORDER, ACT_STEPS, type ActId, type StoryPosition } from '@core/ids/story';
+import { ACT_ORDER, type ActId } from '@core/ids/story';
 import type { DistrictId, GlossaryId, PlaceId } from '@core/ids/world';
 import type { StatusId } from '@core/ids/combat';
 import { SAVE_SLOT_IDS, type SaveSlotId } from '@core/ids/saves';
-import type { PlayerIntent, Settings, StepDef } from '@core/types';
-import { ACTS, BOSSES, CLASSES, DISTRICTS, ENEMIES, GEAR, PLACES, cuttingContest } from '@content/index';
+import type { PlayerIntent, Settings } from '@core/types';
+import { BOSSES, CLASSES, DISTRICTS, ENEMIES, GEAR, cuttingContest } from '@content/index';
+import { bossStep, setupAct } from './devStates';
 import {
   addItem,
   buy,
@@ -702,25 +703,7 @@ export class GameApp {
       const g = this.store.game;
       if (!g) return;
       this.presenter.closeSheet();
-      const idx = ACT_ORDER.indexOf(act);
-      g.unlocked = ACT_ORDER.slice(0, idx + 1).filter((x): x is DistrictId => x in DISTRICTS);
-      g.story = { act, step: ACT_STEPS[act][0] } as StoryPosition;
-      g.flags.metRoux = true;
-      for (const prev of ACT_ORDER.slice(0, idx)) {
-        const boss = prev in DISTRICTS ? DISTRICTS[prev as DistrictId].boss : null;
-        if (boss && !g.bossesDefeated.includes(boss)) {
-          g.bossesDefeated.push(boss);
-          const note = BOSSES[boss].note;
-          if (note && !g.notes.includes(note)) g.notes.push(note);
-        }
-      }
-      if (idx >= 5) g.flags.gusFreed = true;
-      const lv = act in DISTRICTS ? DISTRICTS[act as DistrictId].levels[0] : 13;
-      if (g.level < lv) {
-        g.level = lv;
-        fullRest(g);
-      }
-      const target: DistrictId = act in DISTRICTS ? (act as DistrictId) : 'tower';
+      const target = setupAct(g, act);
       void this.session.run(s => s.goto(target), `dev:act:${act}`);
     },
     /** Play the Cutting Contest (its place arrives with the Quarter in P3). */
@@ -739,17 +722,6 @@ export class GameApp {
   static defaults(): Settings {
     return defaultSettings();
   }
-}
-
-/** The story step a boss is fought at: the step whose hint place is the boss's place. */
-function bossStep(id: BossId): StoryPosition {
-  const place = Object.values(PLACES).find(p => p.boss === id);
-  const act = BOSSES[id].district as ActId;
-  const steps = ACT_STEPS[act] as readonly string[];
-  const step =
-    steps.find(s => place && (ACTS[act] as Record<string, StepDef>)[s]?.hintPlace === place.id) ??
-    (act === 'tower' ? 'climb_tower' : steps[steps.length - 1]!);
-  return { act, step } as StoryPosition;
 }
 
 /** "Dawlin (Trumpet, Lv 4) in Tremé, Oct 31 10:42": a save in one line, for dialogs. */

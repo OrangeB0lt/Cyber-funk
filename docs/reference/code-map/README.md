@@ -6,7 +6,7 @@ Every source file in `src/`, `server/`, `tools/` and `tests/`, with its declarat
 
 For how the pieces work together (boot, a story line, a battle, a save reaching Postgres), read the hand-written [guide](../../architecture/code-map.md) first.
 
-**219** source files · **25** test files · **949** top-level declarations · **402** members · **2445** "uses" edges
+**222** source files · **25** test files · **957** top-level declarations · **402** members · **2452** "uses" edges
 
 ## Pages
 
@@ -14,9 +14,9 @@ For how the pieces work together (boot, a story line, a battle, a save reaching 
 |---|---|---|
 | [src/core](core.md) | 18 | The floor layer: every id list, the shared types (GameState, Battle, Actor, content defs, effects), the seeded Rng and pure helpers. |
 | [src/narrative](narrative.md) | 3 | The scene API that story content is written against (Scene, SceneContext, Presenter), the Director that runs one scene at a time, and the place/event authoring helpers. |
-| [src/content](content.md) | 87 | Typed game data and story scripts: classes, skills, statuses, enemies, bosses (with their AI), items, gear, districts, acts, and the *.scene.ts files. |
+| [src/content](content.md) | 88 | Typed game data and story scripts: classes, skills, statuses, enemies, bosses (with their AI), items, gear, districts, acts, and the *.scene.ts files. |
 | [src/engine](engine.md) | 22 | The game rules as plain functions over GameState and Battle: stats, progression, inventory, shops, encounters, aftermath, and the combat loop. |
-| [src/app](app.md) | 16 | Runs the game without React: GameApp (every command the UI can issue), Session, the SceneContext implementation, the battle controller, the presenters, the view store, saves, and cloud sync. |
+| [src/app](app.md) | 18 | Runs the game without React: GameApp (every command the UI can issue), Session, the SceneContext implementation, the battle controller, the presenters, the view store, saves, and cloud sync. |
 | [src/ui and src/main.tsx](ui.md) | 37 | React components that render the two stores (game and view) and call GameApp commands, plus the browser entry point src/main.tsx. |
 | [server](server.md) | 15 | The cloud-save API: the Fastify app, its routes, the PostgreSQL repository and Drizzle schema, migrations and player-code auth. |
 | [tools](tools.md) | 20 | Node scripts: the parity oracles against v1, the balance sim and fight trace, the content validator, the layer check, the one-time migration codegen, and this generator. |
@@ -37,20 +37,20 @@ flowchart TD
   server["server"]
   tools["tools"]
   tests["tests (and every test file)"]
-  app -->|6| content
-  app -->|54| core
-  app -->|7| engine
+  app -->|7| content
+  app -->|59| core
+  app -->|8| engine
   app -->|9| narrative
-  content -->|134| core
+  content -->|136| core
   content -->|11| narrative
   engine -->|19| content
   engine -->|65| core
   narrative -->|13| core
   server -->|8| app
   server -->|1| core
-  tests -->|24| app
+  tests -->|25| app
   tests -->|8| content
-  tests -->|42| core
+  tests -->|41| core
   tests -->|13| engine
   tests -->|2| narrative
   tests -->|6| server
@@ -101,7 +101,7 @@ Interfaces with methods are where one part of the code calls into another withou
 | [SessionDeps](app.md#src-app-session-ts--sessiondeps) (app/session) | 4 | [app/game](app.md#src-app-game-ts), [tests/integration/slice.test](tests.md#tests-integration-slice-test-ts), [tools/parity/transcripts.test](tests.md#tools-parity-transcripts-test-ts) | [app/session](app.md#src-app-session-ts) |
 | [SessionPort](app.md#src-app-sessionport-ts--sessionport) (app/sessionPort) | 1 | [app/session](app.md#src-app-session-ts) | [app/battleController](app.md#src-app-battlecontroller-ts), [app/sceneContext](app.md#src-app-scenecontext-ts) |
 | [ScriptPolicy](app.md#src-app-testing-scriptedpresenter-ts--scriptpolicy) (app/testing/scriptedPresenter) | 6 | [tests/integration/slice.test](tests.md#tests-integration-slice-test-ts) | [app/testing/scriptedPresenter](app.md#src-app-testing-scriptedpresenter-ts) |
-| [Rng](core.md#src-core-rng-ts--rng) (core/rng) | 7 | [core/rng](core.md#src-core-rng-ts), [tools/parity/transcripts.test](tests.md#tools-parity-transcripts-test-ts) | [app/battleController](app.md#src-app-battlecontroller-ts), [app/game](app.md#src-app-game-ts), [app/sceneContext](app.md#src-app-scenecontext-ts), [app/session](app.md#src-app-session-ts), [content/bosses/captain_hush](content.md#src-content-bosses-captain-hush-ts), [content/bosses/rougarou](content.md#src-content-bosses-rougarou-ts) … +17 |
+| [Rng](core.md#src-core-rng-ts--rng) (core/rng) | 7 | [app/testing/rng](app.md#src-app-testing-rng-ts), [core/rng](core.md#src-core-rng-ts) | [app/battleController](app.md#src-app-battlecontroller-ts), [app/game](app.md#src-app-game-ts), [app/sceneContext](app.md#src-app-scenecontext-ts), [app/session](app.md#src-app-session-ts), [content/bosses/captain_hush](content.md#src-content-bosses-captain-hush-ts), [content/bosses/rougarou](content.md#src-content-bosses-rougarou-ts) … +17 |
 | [BossDef](core.md#src-core-types-content-ts--bossdef) (core/types/content) | 4 | [content/bosses/archivist](content.md#src-content-bosses-archivist-ts), [content/bosses/captain_hush](content.md#src-content-bosses-captain-hush-ts), [content/bosses/conductor](content.md#src-content-bosses-conductor-ts), [content/bosses/isolde](content.md#src-content-bosses-isolde-ts), [content/bosses/mr_ledger](content.md#src-content-bosses-mr-ledger-ts), [content/bosses/rougarou](content.md#src-content-bosses-rougarou-ts) … +2 | [engine/combat/resolve](engine.md#src-engine-combat-resolve-ts), [engine/combat/turns](engine.md#src-engine-combat-turns-ts) |
 | [SecondLineMemberDef](core.md#src-core-types-content-ts--secondlinememberdef) (core/types/content) | 1 | [content/band/secondLine](content.md#src-content-band-secondline-ts) | [tools/parity/tsAdapter](tools.md#tools-parity-tsadapter-ts) |
 | [CustomEffect](core.md#src-core-types-effects-ts--customeffect) (core/types/effects) | 1 | [content/classes/bassdrum](content.md#src-content-classes-bassdrum-ts), [content/classes/trombone](content.md#src-content-classes-trombone-ts), [content/combat/bossSkills](content.md#src-content-combat-bossskills-ts), [content/combat/enemySkills](content.md#src-content-combat-enemyskills-ts), [content/items](content.md#src-content-items-ts) | [engine/combat/resolve](engine.md#src-engine-combat-resolve-ts) |

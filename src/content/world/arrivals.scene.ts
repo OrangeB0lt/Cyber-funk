@@ -5,7 +5,7 @@
 import type { DistrictId } from '@core/ids/world';
 import type { Scene } from '@narrative/types';
 
-export const ARRIVALS: Partial<Record<DistrictId, Scene>> = {
+export const ARRIVALS: Record<Exclude<DistrictId, 'treme'>, Scene> = {
   quarter: async s => {
     await s.narrate(
       'Off the streetcar on Canal, into the Quarter. Frenchmen Street is a few blocks down. Club Feu Follet has a green light over the door, and the door is open.',

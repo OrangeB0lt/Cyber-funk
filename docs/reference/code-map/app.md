@@ -12,6 +12,7 @@ Generated reference. Start with the [guide](../../architecture/code-map.md) for 
 flowchart LR
   n_audio_sfx["audio/sfx"]
   n_battleController["battleController"]
+  n_devStates["devStates"]
   n_game["game"]
   n_lexicon["lexicon"]
   n_reactPresenter["reactPresenter"]
@@ -24,6 +25,7 @@ flowchart LR
   n_sceneContext["sceneContext"]
   n_session["session"]
   n_sessionPort["sessionPort"]
+  n_testing_rng["testing/rng"]
   n_testing_scriptedPresenter["testing/scriptedPresenter"]
   n_view["view"]
   n_ext_content[["content"]]
@@ -33,7 +35,10 @@ flowchart LR
   n_battleController --> n_ext_engine
   n_battleController --> n_ext_narrative
   n_battleController --> n_sessionPort
+  n_devStates --> n_ext_content
+  n_devStates --> n_ext_engine
   n_game --> n_audio_sfx
+  n_game --> n_devStates
   n_game --> n_ext_content
   n_game --> n_ext_engine
   n_game --> n_reactPresenter
@@ -88,6 +93,7 @@ flowchart LR
 |---|---|
 | [src/app/audio/sfx.ts](#src-app-audio-sfx-ts) | Synthesized sound effects (Web Audio; no audio files). |
 | [src/app/battleController.ts](#src-app-battlecontroller-ts) | Runs one battle: the engine's pull loop wired to the presenter. |
+| [src/app/devStates.ts](#src-app-devstates-ts) | Shortcuts that put a save at a point in the story: the start of an act, or the step a boss is fought at. |
 | [src/app/game.ts](#src-app-game-ts) | The browser game: one Session, the view store, the React presenter and the synth, plus every command the UI can issue. |
 | [src/app/lexicon.ts](#src-app-lexicon-ts) | Lexicon linking: turns narration into text and term segments. |
 | [src/app/reactPresenter.ts](#src-app-reactpresenter-ts) | The browser Presenter: turns scene and battle requests into view state that React renders, and resolves them when the player acts. |
@@ -100,6 +106,7 @@ flowchart LR
 | [src/app/sceneContext.ts](#src-app-scenecontext-ts) | The SceneContext implementation: the scene API (narrative/types.ts) on top of the engine, the session and a Presenter. |
 | [src/app/session.ts](#src-app-session-ts) | A play session: the live save (a Valtio proxy the UI renders from), the random streams, the Director that runs scenes, the current route, and the commands the… |
 | [src/app/sessionPort.ts](#src-app-sessionport-ts) | What the scene context and battle controller need from a Session. |
+| [src/app/testing/rng.ts](#src-app-testing-rng-ts) | Random streams for tests. |
 | [src/app/testing/scriptedPresenter.ts](#src-app-testing-scriptedpresenter-ts) | A Presenter for tests and headless runs: answers every prompt instantly according to a policy and records a transcript of what the player would have seen. |
 | [src/app/view.ts](#src-app-view-ts) | Presentation state: everything React renders that isn't the save. |
 
@@ -173,6 +180,26 @@ Declarations:
   - uses: here [drain](#src-app-battlecontroller-ts--drain) · **[app/sessionPort](#src-app-sessionport-ts)** [SessionPort.save](#src-app-sessionport-ts--sessionport-save) · **[content/story/acts](content.md#src-content-story-acts-ts)** [ACTS](content.md#src-content-story-acts-ts--acts) · **[content/text](content.md#src-content-text-ts)** [TEXT](content.md#src-content-text-ts--text) · **[core/rng](core.md#src-core-rng-ts)** [Rng.next](core.md#src-core-rng-ts--rng-next) · **[engine/aftermath](engine.md#src-engine-aftermath-ts)** [applyStreetDefeat](engine.md#src-engine-aftermath-ts--applystreetdefeat), [resolveVictory](engine.md#src-engine-aftermath-ts--resolvevictory), [restoreSnapshot](engine.md#src-engine-aftermath-ts--restoresnapshot), [takeSnapshot](engine.md#src-engine-aftermath-ts--takesnapshot) · **[engine/combat/actors](engine.md#src-engine-combat-actors-ts)** [makeEnemy](engine.md#src-engine-combat-actors-ts--makeenemy) · **[engine/combat/battle](engine.md#src-engine-combat-battle-ts)** [createBattle](engine.md#src-engine-combat-battle-ts--createbattle) · **[engine/combat/events](engine.md#src-engine-combat-events-ts)** [logLine](engine.md#src-engine-combat-events-ts--logline) · **[engine/combat/player](engine.md#src-engine-combat-player-ts)** [playerAction](engine.md#src-engine-combat-player-ts--playeraction) · **[engine/combat/resolve](engine.md#src-engine-combat-resolve-ts)** [rollAutoTiming](engine.md#src-engine-combat-resolve-ts--rollautotiming) · **[engine/combat/rewards](engine.md#src-engine-combat-rewards-ts)** [applyBattleResult](engine.md#src-engine-combat-rewards-ts--applybattleresult) · **[engine/combat/timing](engine.md#src-engine-combat-timing-ts)** [announceTiming](engine.md#src-engine-combat-timing-ts--announcetiming) · … +23 more
   - used by: **[app/sceneContext](#src-app-scenecontext-ts)** [createSceneContext](#src-app-scenecontext-ts--createscenecontext)
 
+<a id="src-app-devstates-ts"></a>
+
+### src/app/devStates.ts
+
+Shortcuts that put a save at a point in the story: the start of an act, or the step a boss is fought at. The dev menu uses them, and so do the tests that crawl every district.
+
+- Source: [src/app/devStates.ts](../../../src/app/devStates.ts)
+- Imports: core: [ids/enemies](core.md#src-core-ids-enemies-ts), [ids/story](core.md#src-core-ids-story-ts), [ids/world](core.md#src-core-ids-world-ts), [types/index](core.md#src-core-types-index-ts) · content: [data](content.md#src-content-data-ts) · engine: [index](engine.md#src-engine-index-ts)
+- Imported by: app: [game](#src-app-game-ts)
+- Types used: **[core/ids/enemies](core.md#src-core-ids-enemies-ts)** [BossId](core.md#src-core-ids-enemies-ts--bossid) · **[core/ids/story](core.md#src-core-ids-story-ts)** [ActId](core.md#src-core-ids-story-ts--actid), [StoryPosition](core.md#src-core-ids-story-ts--storyposition) · **[core/ids/world](core.md#src-core-ids-world-ts)** [DistrictId](core.md#src-core-ids-world-ts--districtid) · **[core/types/content](core.md#src-core-types-content-ts)** [StepDef](core.md#src-core-types-content-ts--stepdef) · **[core/types/state](core.md#src-core-types-state-ts)** [GameState](core.md#src-core-types-state-ts--gamestate)
+
+Declarations:
+
+- <a id="src-app-devstates-ts--setupact"></a>**setupAct** · *function* `(g: GameState, act: ActId): DistrictId` — Jump to the start of an act, as if every earlier boss were beaten: unlock the districts so far, set the story, record earlier bosses and their Blue Notes, and raise the level to the act's floor.
+  - uses: **[content/bosses/index](content.md#src-content-bosses-index-ts)** [BOSSES](content.md#src-content-bosses-index-ts--bosses) · **[content/districts/index](content.md#src-content-districts-index-ts)** [DISTRICTS](content.md#src-content-districts-index-ts--districts) · **[core/ids/story](core.md#src-core-ids-story-ts)** [ACT_ORDER](core.md#src-core-ids-story-ts--act-order), [ACT_STEPS](core.md#src-core-ids-story-ts--act-steps) · **[engine/stats](engine.md#src-engine-stats-ts)** [fullRest](engine.md#src-engine-stats-ts--fullrest)
+  - used by: **[app/game](#src-app-game-ts)** [GameApp.dev](#src-app-game-ts--gameapp-dev)
+- <a id="src-app-devstates-ts--bossstep"></a>**bossStep** · *function* `(id: BossId): StoryPosition` — The story step a boss is fought at: the last step whose hint place is the boss's place (Isolde's manor hosts both the Ball and the duel; the duel is the later step, as in v1's dev menu).
+  - uses: **[content/bosses/index](content.md#src-content-bosses-index-ts)** [BOSSES](content.md#src-content-bosses-index-ts--bosses) · **[content/places](content.md#src-content-places-ts)** [PLACES](content.md#src-content-places-ts--places) · **[content/story/acts](content.md#src-content-story-acts-ts)** [ACTS](content.md#src-content-story-acts-ts--acts) · **[core/ids/story](core.md#src-core-ids-story-ts)** [ACT_STEPS](core.md#src-core-ids-story-ts--act-steps)
+  - used by: **[app/game](#src-app-game-ts)** [GameApp.dev](#src-app-game-ts--gameapp-dev)
+
 <a id="src-app-game-ts"></a>
 
 ### src/app/game.ts
@@ -180,9 +207,9 @@ Declarations:
 The browser game: one Session, the view store, the React presenter and the synth, plus every command the UI can issue. React components call these; they never change state themselves.
 
 - Source: [src/app/game.ts](../../../src/app/game.ts)
-- Imports: core: [ids/band](core.md#src-core-ids-band-ts), [ids/characters](core.md#src-core-ids-characters-ts), [ids/combat](core.md#src-core-ids-combat-ts), [ids/enemies](core.md#src-core-ids-enemies-ts), [ids/items](core.md#src-core-ids-items-ts), [ids/saves](core.md#src-core-ids-saves-ts), [ids/story](core.md#src-core-ids-story-ts), [ids/world](core.md#src-core-ids-world-ts), [types/index](core.md#src-core-types-index-ts) · content: [index](content.md#src-content-index-ts) · engine: [index](engine.md#src-engine-index-ts) · app: [audio/sfx](#src-app-audio-sfx-ts), [reactPresenter](#src-app-reactpresenter-ts), [save/cloud](#src-app-save-cloud-ts), [save/format](#src-app-save-format-ts), [save/slots](#src-app-save-slots-ts), [save/storage](#src-app-save-storage-ts), [save/sync](#src-app-save-sync-ts), [session](#src-app-session-ts), [view](#src-app-view-ts)
+- Imports: core: [ids/band](core.md#src-core-ids-band-ts), [ids/characters](core.md#src-core-ids-characters-ts), [ids/combat](core.md#src-core-ids-combat-ts), [ids/enemies](core.md#src-core-ids-enemies-ts), [ids/items](core.md#src-core-ids-items-ts), [ids/saves](core.md#src-core-ids-saves-ts), [ids/story](core.md#src-core-ids-story-ts), [ids/world](core.md#src-core-ids-world-ts), [types/index](core.md#src-core-types-index-ts) · content: [index](content.md#src-content-index-ts) · engine: [index](engine.md#src-engine-index-ts) · app: [audio/sfx](#src-app-audio-sfx-ts), [devStates](#src-app-devstates-ts), [reactPresenter](#src-app-reactpresenter-ts), [save/cloud](#src-app-save-cloud-ts), [save/format](#src-app-save-format-ts), [save/slots](#src-app-save-slots-ts), [save/storage](#src-app-save-storage-ts), [save/sync](#src-app-save-sync-ts), [session](#src-app-session-ts), [view](#src-app-view-ts)
 - Imported by: ui: [src/main](ui.md#src-main-tsx), [App](ui.md#src-ui-app-tsx), [GameContext](ui.md#src-ui-gamecontext-tsx), [combat/targeting](ui.md#src-ui-combat-targeting-ts)
-- Types used: **[app/audio/sfx](#src-app-audio-sfx-ts)** [Sfx](#src-app-audio-sfx-ts--sfx) · **[app/reactPresenter](#src-app-reactpresenter-ts)** [ReactPresenter](#src-app-reactpresenter-ts--reactpresenter) · **[app/save/cloud](#src-app-save-cloud-ts)** [CloudClient](#src-app-save-cloud-ts--cloudclient) · **[app/save/format](#src-app-save-format-ts)** [SaveSummary](#src-app-save-format-ts--savesummary) · **[app/save/slots](#src-app-save-slots-ts)** [SaveSlots](#src-app-save-slots-ts--saveslots) · **[app/save/storage](#src-app-save-storage-ts)** [KeyValue](#src-app-save-storage-ts--keyvalue) · **[app/save/sync](#src-app-save-sync-ts)** [CloudSync](#src-app-save-sync-ts--cloudsync) · **[app/session](#src-app-session-ts)** [Session](#src-app-session-ts--session) · **[app/view](#src-app-view-ts)** [SheetSpec](#src-app-view-ts--sheetspec), [SlotPick](#src-app-view-ts--slotpick), [ViewState](#src-app-view-ts--viewstate) · **[core/ids/band](core.md#src-core-ids-band-ts)** [BandmateId](core.md#src-core-ids-band-ts--bandmateid) · **[core/ids/characters](core.md#src-core-ids-characters-ts)** [ClassId](core.md#src-core-ids-characters-ts--classid), [RootsId](core.md#src-core-ids-characters-ts--rootsid) · **[core/ids/combat](core.md#src-core-ids-combat-ts)** [StatusId](core.md#src-core-ids-combat-ts--statusid) · **[core/ids/enemies](core.md#src-core-ids-enemies-ts)** [BossId](core.md#src-core-ids-enemies-ts--bossid) · **[core/ids/items](core.md#src-core-ids-items-ts)** [GearId](core.md#src-core-ids-items-ts--gearid), [GearSlot](core.md#src-core-ids-items-ts--gearslot), [ItemId](core.md#src-core-ids-items-ts--itemid), [ShopItemId](core.md#src-core-ids-items-ts--shopitemid) · **[core/ids/saves](core.md#src-core-ids-saves-ts)** [SaveSlotId](core.md#src-core-ids-saves-ts--saveslotid) · **[core/ids/story](core.md#src-core-ids-story-ts)** [ActId](core.md#src-core-ids-story-ts--actid), [StoryPosition](core.md#src-core-ids-story-ts--storyposition) · **[core/ids/world](core.md#src-core-ids-world-ts)** [DistrictId](core.md#src-core-ids-world-ts--districtid) · … +5 more
+- Types used: **[app/audio/sfx](#src-app-audio-sfx-ts)** [Sfx](#src-app-audio-sfx-ts--sfx) · **[app/reactPresenter](#src-app-reactpresenter-ts)** [ReactPresenter](#src-app-reactpresenter-ts--reactpresenter) · **[app/save/cloud](#src-app-save-cloud-ts)** [CloudClient](#src-app-save-cloud-ts--cloudclient) · **[app/save/format](#src-app-save-format-ts)** [SaveSummary](#src-app-save-format-ts--savesummary) · **[app/save/slots](#src-app-save-slots-ts)** [SaveSlots](#src-app-save-slots-ts--saveslots) · **[app/save/storage](#src-app-save-storage-ts)** [KeyValue](#src-app-save-storage-ts--keyvalue) · **[app/save/sync](#src-app-save-sync-ts)** [CloudSync](#src-app-save-sync-ts--cloudsync) · **[app/session](#src-app-session-ts)** [Session](#src-app-session-ts--session) · **[app/view](#src-app-view-ts)** [SheetSpec](#src-app-view-ts--sheetspec), [SlotPick](#src-app-view-ts--slotpick), [ViewState](#src-app-view-ts--viewstate) · **[core/ids/band](core.md#src-core-ids-band-ts)** [BandmateId](core.md#src-core-ids-band-ts--bandmateid) · **[core/ids/characters](core.md#src-core-ids-characters-ts)** [ClassId](core.md#src-core-ids-characters-ts--classid), [RootsId](core.md#src-core-ids-characters-ts--rootsid) · **[core/ids/combat](core.md#src-core-ids-combat-ts)** [StatusId](core.md#src-core-ids-combat-ts--statusid) · **[core/ids/enemies](core.md#src-core-ids-enemies-ts)** [BossId](core.md#src-core-ids-enemies-ts--bossid) · **[core/ids/items](core.md#src-core-ids-items-ts)** [GearId](core.md#src-core-ids-items-ts--gearid), [GearSlot](core.md#src-core-ids-items-ts--gearslot), [ItemId](core.md#src-core-ids-items-ts--itemid), [ShopItemId](core.md#src-core-ids-items-ts--shopitemid) · **[core/ids/saves](core.md#src-core-ids-saves-ts)** [SaveSlotId](core.md#src-core-ids-saves-ts--saveslotid) · **[core/ids/story](core.md#src-core-ids-story-ts)** [ActId](core.md#src-core-ids-story-ts--actid) · **[core/ids/world](core.md#src-core-ids-world-ts)** [DistrictId](core.md#src-core-ids-world-ts--districtid), [GlossaryId](core.md#src-core-ids-world-ts--glossaryid) · … +3 more
 
 Declarations:
 
@@ -375,14 +402,11 @@ Declarations:
     - uses: here [describe](#src-app-game-ts--describe) · **[app/reactPresenter](#src-app-reactpresenter-ts)** [ReactPresenter.confirm](#src-app-reactpresenter-ts--reactpresenter-confirm), [ReactPresenter.openSheet](#src-app-reactpresenter-ts--reactpresenter-opensheet), [ReactPresenter.toast](#src-app-reactpresenter-ts--reactpresenter-toast) · **[app/save/sync](#src-app-save-sync-ts)** [CloudSync.restore](#src-app-save-sync-ts--cloudsync-restore)
     - used by: **[ui/sheets/HistorySheet](ui.md#src-ui-sheets-historysheet-tsx)** [HistorySheet](ui.md#src-ui-sheets-historysheet-tsx--historysheet)
   - <a id="src-app-game-ts--gameapp-dev"></a>**dev** · *property* `= { … } (13 keys)`
-    - uses: here [bossStep](#src-app-game-ts--bossstep) · **[app/reactPresenter](#src-app-reactpresenter-ts)** [ReactPresenter.closeSheet](#src-app-reactpresenter-ts--reactpresenter-closesheet), [ReactPresenter.levelUps](#src-app-reactpresenter-ts--reactpresenter-levelups), [ReactPresenter.toast](#src-app-reactpresenter-ts--reactpresenter-toast) · **[app/session](#src-app-session-ts)** [Session.run](#src-app-session-ts--session-run) · **[content/bosses/index](content.md#src-content-bosses-index-ts)** [BOSSES](content.md#src-content-bosses-index-ts--bosses) · **[content/districts/index](content.md#src-content-districts-index-ts)** [DISTRICTS](content.md#src-content-districts-index-ts--districts) · **[content/districts/quarter/cutting.scene](content.md#src-content-districts-quarter-cutting-scene-ts)** [cuttingContest](content.md#src-content-districts-quarter-cutting-scene-ts--cuttingcontest) · **[core/ids/band](core.md#src-core-ids-band-ts)** [BANDMATE_IDS](core.md#src-core-ids-band-ts--bandmate-ids) · **[core/ids/enemies](core.md#src-core-ids-enemies-ts)** [BOSS_IDS](core.md#src-core-ids-enemies-ts--boss-ids), [NOTE_IDS](core.md#src-core-ids-enemies-ts--note-ids) · **[core/ids/story](core.md#src-core-ids-story-ts)** [ACT_ORDER](core.md#src-core-ids-story-ts--act-order), [ACT_STEPS](core.md#src-core-ids-story-ts--act-steps) · **[engine/band](engine.md#src-engine-band-ts)** [equip](engine.md#src-engine-band-ts--equip) · **[engine/inventory](engine.md#src-engine-inventory-ts)** [addItem](engine.md#src-engine-inventory-ts--additem) · **[engine/progression](engine.md#src-engine-progression-ts)** [gainXp](engine.md#src-engine-progression-ts--gainxp) · … +3 more
+    - uses: **[app/devStates](#src-app-devstates-ts)** [bossStep](#src-app-devstates-ts--bossstep), [setupAct](#src-app-devstates-ts--setupact) · **[app/reactPresenter](#src-app-reactpresenter-ts)** [ReactPresenter.closeSheet](#src-app-reactpresenter-ts--reactpresenter-closesheet), [ReactPresenter.levelUps](#src-app-reactpresenter-ts--reactpresenter-levelups), [ReactPresenter.toast](#src-app-reactpresenter-ts--reactpresenter-toast) · **[app/session](#src-app-session-ts)** [Session.run](#src-app-session-ts--session-run) · **[content/bosses/index](content.md#src-content-bosses-index-ts)** [BOSSES](content.md#src-content-bosses-index-ts--bosses) · **[content/districts/index](content.md#src-content-districts-index-ts)** [DISTRICTS](content.md#src-content-districts-index-ts--districts) · **[content/districts/quarter/cutting.scene](content.md#src-content-districts-quarter-cutting-scene-ts)** [cuttingContest](content.md#src-content-districts-quarter-cutting-scene-ts--cuttingcontest) · **[core/ids/band](core.md#src-core-ids-band-ts)** [BANDMATE_IDS](core.md#src-core-ids-band-ts--bandmate-ids) · **[core/ids/enemies](core.md#src-core-ids-enemies-ts)** [BOSS_IDS](core.md#src-core-ids-enemies-ts--boss-ids), [NOTE_IDS](core.md#src-core-ids-enemies-ts--note-ids) · **[core/ids/story](core.md#src-core-ids-story-ts)** [ACT_ORDER](core.md#src-core-ids-story-ts--act-order) · **[engine/band](engine.md#src-engine-band-ts)** [equip](engine.md#src-engine-band-ts--equip) · **[engine/inventory](engine.md#src-engine-inventory-ts)** [addItem](engine.md#src-engine-inventory-ts--additem) · **[engine/progression](engine.md#src-engine-progression-ts)** [gainXp](engine.md#src-engine-progression-ts--gainxp) · … +3 more
     - used by: **[ui/sheets/WorldSheets](ui.md#src-ui-sheets-worldsheets-tsx)** [DevSheet](ui.md#src-ui-sheets-worldsheets-tsx--devsheet)
   - <a id="src-app-game-ts--gameapp-defaults"></a>**defaults** · *method, static* `(): Settings` — New-game settings defaults (for tests).
     - uses: **[engine/state](engine.md#src-engine-state-ts)** [defaultSettings](engine.md#src-engine-state-ts--defaultsettings)
     - *no references found*
-- <a id="src-app-game-ts--bossstep"></a>**bossStep** · *function, internal* `(id: BossId): StoryPosition` — The story step a boss is fought at: the step whose hint place is the boss's place.
-  - uses: **[content/bosses/index](content.md#src-content-bosses-index-ts)** [BOSSES](content.md#src-content-bosses-index-ts--bosses) · **[content/places](content.md#src-content-places-ts)** [PLACES](content.md#src-content-places-ts--places) · **[content/story/acts](content.md#src-content-story-acts-ts)** [ACTS](content.md#src-content-story-acts-ts--acts) · **[core/ids/story](core.md#src-core-ids-story-ts)** [ACT_STEPS](core.md#src-core-ids-story-ts--act-steps)
-  - used by: here [GameApp.dev](#src-app-game-ts--gameapp-dev)
 - <a id="src-app-game-ts--describe"></a>**describe** · *function, internal* `(s: SaveSummary, savedAt?: string): string` — "Dawlin (Trumpet, Lv 4) in Tremé, Oct 31 10:42": a save in one line, for dialogs.
   - uses: **[content/classes/index](content.md#src-content-classes-index-ts)** [CLASSES](content.md#src-content-classes-index-ts--classes) · **[content/districts/index](content.md#src-content-districts-index-ts)** [DISTRICTS](content.md#src-content-districts-index-ts--districts)
   - used by: here [GameApp.confirmRestore](#src-app-game-ts--gameapp-confirmrestore), [GameApp.settleConflicts](#src-app-game-ts--gameapp-settleconflicts)
@@ -1160,6 +1184,26 @@ Declarations:
   - <a id="src-app-sessionport-ts--sessionport-save"></a>**save** · *interface member* `(manual?: boolean): boolean` — Autosave (manual saves report failure).
     - implemented by: **[app/session](#src-app-session-ts)** [Session.save](#src-app-session-ts--session-save)
     - called from: **[app/battleController](#src-app-battlecontroller-ts)** [runBattle](#src-app-battlecontroller-ts--runbattle) · **[app/sceneContext](#src-app-scenecontext-ts)** [createSceneContext](#src-app-scenecontext-ts--createscenecontext)
+
+<a id="src-app-testing-rng-ts"></a>
+
+### src/app/testing/rng.ts
+
+Random streams for tests. Game code takes an `Rng`; these let a test decide exactly which way every draw lands, so each branch of a scene can be reached on purpose.
+
+- Source: [src/app/testing/rng.ts](../../../src/app/testing/rng.ts)
+- Imports: core: [rng](core.md#src-core-rng-ts)
+- Tested by: [transcripts.test](tests.md#tools-parity-transcripts-test-ts)
+- Types used: **[core/rng](core.md#src-core-rng-ts)** [Rng](core.md#src-core-rng-ts--rng)
+
+Declarations:
+
+- <a id="src-app-testing-rng-ts--constantrng"></a>**constantRng** · *function* `(c: number): Rng` — A random stream that always returns `c`, so every pick/chance lands the same way (the parity oracle uses it to keep v1 and 2.0 in step).
+  - used by: tests: [transcripts.test](tests.md#tools-parity-transcripts-test-ts)
+- <a id="src-app-testing-rng-ts--pickrecord"></a>**PickRecord** · *interface* — One `pick` call seen by a scripted stream: the pool it chose from and the index it took.
+  - used by: here [scriptedRng](#src-app-testing-rng-ts--scriptedrng)
+- <a id="src-app-testing-rng-ts--scriptedrng"></a>**scriptedRng** · *function* `(values: readonly number[], picks?: PickRecord[]): Rng` — A stream that returns `values` in order, then repeats the last one.
+  - *no references found*
 
 <a id="src-app-testing-scriptedpresenter-ts"></a>
 

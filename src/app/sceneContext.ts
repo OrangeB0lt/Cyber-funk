@@ -88,8 +88,8 @@ export function createSceneContext(session: SessionPort, signal: AbortSignal): S
         game.districtIntros.push(id);
         P.story(DISTRICTS[id].name);
         await ctx.narrate(DISTRICTS[id].intro);
-        const arrival = ARRIVALS[id];
-        if (arrival) await arrival(ctx);
+        // Tremé has no arrival scene: the prologue is its first visit.
+        if (id !== 'treme') await ARRIVALS[id](ctx);
       }
     },
     returnTo: route => {

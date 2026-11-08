@@ -9,7 +9,7 @@ import { afterAll, describe, expect, it } from 'vitest';
 import { Session } from '@app/session';
 import { memorySaveStorage } from '@app/save/storage';
 import { ScriptedPresenter, type TranscriptEntry } from '@app/testing/scriptedPresenter';
-import type { Rng } from '@core/rng';
+import { constantRng } from '@app/testing/rng';
 import type { ClassId, RootsId } from '@core/ids/characters';
 import type { BossId, NoteId } from '@core/ids/enemies';
 import type { FlagId } from '@core/ids/flags';
@@ -23,21 +23,6 @@ import { firstDifference } from './driver';
 import { loadLegacyDom } from './legacyDom';
 
 /* eslint-disable @typescript-eslint/no-explicit-any */
-
-/** A random stream that always returns `c`, so v1 and 2.0 make the same picks. */
-function constantRng(c: number): Rng {
-  const r: Rng = {
-    next: () => c,
-    draws: 0,
-    float: (a, b) => a + c * (b - a),
-    int: (a, b) => Math.floor(a + c * (b + 1 - a)),
-    pick: items => items[Math.floor(c * items.length)]!,
-    chance: p => c < p,
-    fork: () => r,
-    save: () => ({ s: 0, draws: 0 }),
-  };
-  return r;
-}
 
 type Entry =
   | { t: 'title'; text: string | null }
