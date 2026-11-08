@@ -27,6 +27,7 @@ flowchart LR
   n_parity_micro["parity/micro"]
   n_parity_tsAdapter["parity/tsAdapter"]
   n_sim["sim"]
+  n_sprites["sprites"]
   n_trace["trace"]
   n_validate_content["validate-content"]
   n_ext_content[["content"]]
@@ -52,6 +53,7 @@ flowchart LR
   n_parity_tsAdapter --> n_parity_driver
   n_sim --> n_ext_content
   n_sim --> n_ext_engine
+  n_sprites --> n_ext_content
   n_trace --> n_ext_content
   n_trace --> n_ext_engine
   n_trace --> n_sim
@@ -82,6 +84,7 @@ flowchart LR
 | [tools/parity/micro.ts](#tools-parity-micro-ts) | Hand-written fight setups for engine branches the random corpus rarely reaches. |
 | [tools/parity/tsAdapter.ts](#tools-parity-tsadapter-ts) | EngineAdapter over the TypeScript engine, mirroring legacyAdapter.ts field for field so the shared driver can compare traces. |
 | [tools/sim.ts](#tools-sim-ts) | Headless balance sim: every class against every district's streets and every boss, played by a simple scripted player. |
+| [tools/sprites.ts](#tools-sprites-ts) | The sprite gallery. |
 | [tools/trace.ts](#tools-trace-ts) | Print one fight, turn by turn, as the sim's scripted player plays it. |
 | [tools/validate-content.ts](#tools-validate-content-ts) | Content checks the type system can't express. |
 
@@ -850,6 +853,56 @@ Declarations:
   - used by: here [(top level)](#tools-sim-ts--top-level)
 - <a id="tools-sim-ts--top-level"></a>**(top level)** · *module* — Statements that run when the module loads.
   - uses: here [isMain](#tools-sim-ts--ismain), [runSim](#tools-sim-ts--runsim)
+
+<a id="tools-sprites-ts"></a>
+
+### tools/sprites.ts
+
+The sprite gallery. Exports every sprite as an SVG, drawn as the game draws it, into docs/reference/sprites/. Alongside them it writes a palette swatch sheet and a README listing the whole cast. The design doc's cards embed these images. A test (tools/sprites.test.ts) fails when the gallery is stale.
+
+- Source: [tools/sprites.ts](../../../tools/sprites.ts)
+- Imports: core: [ids/characters](core.md#src-core-ids-characters-ts), [ids/enemies](core.md#src-core-ids-enemies-ts), [ids/sprites](core.md#src-core-ids-sprites-ts), [ids/world](core.md#src-core-ids-world-ts) · content: [data](content.md#src-content-data-ts), [enemies/rivals](content.md#src-content-enemies-rivals-ts), [enemies/summons](content.md#src-content-enemies-summons-ts), [sprites/index](content.md#src-content-sprites-index-ts), [sprites/placeholder](content.md#src-content-sprites-placeholder-ts)
+- Packages: `node:fs`, `node:path`, `node:url`
+- Tested by: [sprites.test](tests.md#tools-sprites-test-ts)
+- Types used: **[content/bosses/index](content.md#src-content-bosses-index-ts)** [BOSSES](content.md#src-content-bosses-index-ts--bosses) · **[content/enemies/index](content.md#src-content-enemies-index-ts)** [ENEMIES](content.md#src-content-enemies-index-ts--enemies) · **[core/ids/sprites](core.md#src-core-ids-sprites-ts)** [PersonSpriteId](core.md#src-core-ids-sprites-ts--personspriteid), [SpriteId](core.md#src-core-ids-sprites-ts--spriteid)
+
+Declarations:
+
+- <a id="tools-sprites-ts--root"></a>**ROOT** · *const, internal*
+  - used by: here [staleSpriteGallery](#tools-sprites-ts--stalespritegallery), [writeSpriteGallery](#tools-sprites-ts--writespritegallery)
+- <a id="tools-sprites-ts--out-dir"></a>**OUT_DIR** · *const, internal*
+  - used by: here [(top level)](#tools-sprites-ts--top-level), [staleSpriteGallery](#tools-sprites-ts--stalespritegallery), [writeSpriteGallery](#tools-sprites-ts--writespritegallery)
+- <a id="tools-sprites-ts--backdrop"></a>**BACKDROP** · *const, internal* — --bg2: the surface sprites sit on in battle cards, dialogue and sheets.
+  - used by: here [contactSheet](#tools-sprites-ts--contactsheet), [generateSpriteGallery](#tools-sprites-ts--generatespritegallery), [paletteSvg](#tools-sprites-ts--palettesvg)
+- <a id="tools-sprites-ts--scale"></a>**SCALE** · *const, internal*
+  - used by: here [generateSpriteGallery](#tools-sprites-ts--generatespritegallery)
+- <a id="tools-sprites-ts--shopkeeper-names"></a>**SHOPKEEPER_NAMES** · *const, internal* `: Partial<Record<PersonSpriteId, string>>` — Names for people who have no NpcId yet (the shopkeepers P3 will wire up).
+  - used by: here [nameOf](#tools-sprites-ts--nameof)
+- <a id="tools-sprites-ts--nameof"></a>**nameOf** · *function, internal* `(id: SpriteId): string` — A sprite's display name.
+  - uses: here [SHOPKEEPER_NAMES](#tools-sprites-ts--shopkeeper-names) · **[content/bosses/index](content.md#src-content-bosses-index-ts)** [BOSSES](content.md#src-content-bosses-index-ts--bosses) · **[content/classes/index](content.md#src-content-classes-index-ts)** [CLASSES](content.md#src-content-classes-index-ts--classes) · **[content/enemies/index](content.md#src-content-enemies-index-ts)** [ENEMIES](content.md#src-content-enemies-index-ts--enemies) · **[content/npcs](content.md#src-content-npcs-ts)** [NPCS](content.md#src-content-npcs-ts--npcs) · **[content/sprites/refs](content.md#src-content-sprites-refs-ts)** [NPC_SPRITE](content.md#src-content-sprites-refs-ts--npc-sprite) · **[core/ids/characters](core.md#src-core-ids-characters-ts)** [CLASS_IDS](core.md#src-core-ids-characters-ts--class-ids) · **[core/ids/world](core.md#src-core-ids-world-ts)** [NPC_IDS](core.md#src-core-ids-world-ts--npc-ids)
+  - used by: here [generateSpriteGallery](#tools-sprites-ts--generatespritegallery)
+- <a id="tools-sprites-ts--groups"></a>**groups** · *function, internal* `(): { title: string; ids: SpriteId[] }[]` — The cast in gallery order, grouped.
+  - uses: **[content/districts/index](content.md#src-content-districts-index-ts)** [DISTRICTS](content.md#src-content-districts-index-ts--districts) · **[content/enemies/rivals](content.md#src-content-enemies-rivals-ts)** [RIVALS](content.md#src-content-enemies-rivals-ts--rivals) · **[content/enemies/summons](content.md#src-content-enemies-summons-ts)** [SUMMONS](content.md#src-content-enemies-summons-ts--summons) · **[content/sprites/refs](content.md#src-content-sprites-refs-ts)** [RESERVED_P3](content.md#src-content-sprites-refs-ts--reserved-p3) · **[core/ids/enemies](core.md#src-core-ids-enemies-ts)** [BOSS_IDS](core.md#src-core-ids-enemies-ts--boss-ids) · **[core/ids/sprites](core.md#src-core-ids-sprites-ts)** [CLONE_SPRITE_IDS](core.md#src-core-ids-sprites-ts--clone-sprite-ids), [HERO_SPRITE_IDS](core.md#src-core-ids-sprites-ts--hero-sprite-ids), [PERSON_SPRITE_IDS](core.md#src-core-ids-sprites-ts--person-sprite-ids), [SPRITE_IDS](core.md#src-core-ids-sprites-ts--sprite-ids) · **[core/ids/world](core.md#src-core-ids-world-ts)** [DISTRICT_IDS](core.md#src-core-ids-world-ts--district-ids)
+  - used by: here [contactSheet](#tools-sprites-ts--contactsheet), [generateSpriteGallery](#tools-sprites-ts--generatespritegallery)
+- <a id="tools-sprites-ts--palettesvg"></a>**paletteSvg** · *function, internal* `(): string` — The palette as one SVG: a labelled swatch per colour.
+  - uses: here [BACKDROP](#tools-sprites-ts--backdrop) · **[content/sprites/palette](content.md#src-content-sprites-palette-ts)** [PALETTE](content.md#src-content-sprites-palette-ts--palette) · **[core/ids/sprites](core.md#src-core-ids-sprites-ts)** [PALETTE_IDS](core.md#src-core-ids-sprites-ts--palette-ids)
+  - used by: here [generateSpriteGallery](#tools-sprites-ts--generatespritegallery)
+- <a id="tools-sprites-ts--generatespritegallery"></a>**generateSpriteGallery** · *function* `(): Map<string, string>` — Every gallery file: one SVG per sprite, the palette, and the README.
+  - uses: here [BACKDROP](#tools-sprites-ts--backdrop), [SCALE](#tools-sprites-ts--scale), [groups](#tools-sprites-ts--groups), [nameOf](#tools-sprites-ts--nameof), [paletteSvg](#tools-sprites-ts--palettesvg) · **[content/sprites/compile](content.md#src-content-sprites-compile-ts)** [compileSprite](content.md#src-content-sprites-compile-ts--compilesprite), [spriteSvg](content.md#src-content-sprites-compile-ts--spritesvg) · **[content/sprites/palette](content.md#src-content-sprites-palette-ts)** [PALETTE](content.md#src-content-sprites-palette-ts--palette) · **[content/sprites/placeholder](content.md#src-content-sprites-placeholder-ts)** [isTodo](content.md#src-content-sprites-placeholder-ts--istodo) · **[content/sprites/table](content.md#src-content-sprites-table-ts)** [SPRITES](content.md#src-content-sprites-table-ts--sprites) · **[core/ids/sprites](core.md#src-core-ids-sprites-ts)** [PALETTE_IDS](core.md#src-core-ids-sprites-ts--palette-ids), [SPRITE_IDS](core.md#src-core-ids-sprites-ts--sprite-ids)
+  - used by: here [(top level)](#tools-sprites-ts--top-level) · tests: [sprites.test](tests.md#tools-sprites-test-ts)
+- <a id="tools-sprites-ts--stalespritegallery"></a>**staleSpriteGallery** · *function* `(files: Map<string, string>): string[]` — Files that differ from what's on disk (or shouldn't be there any more).
+  - uses: here [OUT_DIR](#tools-sprites-ts--out-dir), [ROOT](#tools-sprites-ts--root)
+  - used by: here [(top level)](#tools-sprites-ts--top-level) · tests: [sprites.test](tests.md#tools-sprites-test-ts)
+- <a id="tools-sprites-ts--writespritegallery"></a>**writeSpriteGallery** · *function* `(files: Map<string, string>): void`
+  - uses: here [OUT_DIR](#tools-sprites-ts--out-dir), [ROOT](#tools-sprites-ts--root)
+  - used by: here [(top level)](#tools-sprites-ts--top-level)
+- <a id="tools-sprites-ts--contactsheet"></a>**contactSheet** · *function* `(scale: number): string` — A one-page contact sheet (HTML) of every sprite, for reviewing art in a browser or a screenshot.
+  - uses: here [BACKDROP](#tools-sprites-ts--backdrop), [groups](#tools-sprites-ts--groups) · **[content/sprites/compile](content.md#src-content-sprites-compile-ts)** [compileSprite](content.md#src-content-sprites-compile-ts--compilesprite), [spriteSvg](content.md#src-content-sprites-compile-ts--spritesvg) · **[content/sprites/palette](content.md#src-content-sprites-palette-ts)** [PALETTE](content.md#src-content-sprites-palette-ts--palette) · **[content/sprites/table](content.md#src-content-sprites-table-ts)** [SPRITES](content.md#src-content-sprites-table-ts--sprites)
+  - used by: here [(top level)](#tools-sprites-ts--top-level)
+- <a id="tools-sprites-ts--ismain"></a>**isMain** · *const, internal*
+  - used by: here [(top level)](#tools-sprites-ts--top-level)
+- <a id="tools-sprites-ts--top-level"></a>**(top level)** · *module* — Statements that run when the module loads.
+  - uses: here [OUT_DIR](#tools-sprites-ts--out-dir), [contactSheet](#tools-sprites-ts--contactsheet), [generateSpriteGallery](#tools-sprites-ts--generatespritegallery), [isMain](#tools-sprites-ts--ismain), [staleSpriteGallery](#tools-sprites-ts--stalespritegallery), [writeSpriteGallery](#tools-sprites-ts--writespritegallery)
 
 <a id="tools-trace-ts"></a>
 

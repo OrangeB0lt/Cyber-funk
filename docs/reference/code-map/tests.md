@@ -32,6 +32,7 @@ Generated reference. Start with the [guide](../../architecture/code-map.md) for 
 | [tools/parity/rules.test.ts](#tools-parity-rules-test-ts) | Rule oracle: rules that lived in v1's UI layer, now engine functions, checked against the legacy UI code itself (legacy/dist loaded in jsdom) with the same see… |
 | [tools/parity/sim.test.ts](#tools-parity-sim-test-ts) | The TypeScript sim prints byte-identical output to legacy/sim/sim.js for the same seed. |
 | [tools/parity/transcripts.test.ts](#tools-parity-transcripts-test-ts) | Transcript oracle: ported scenes show the player exactly what v1 showed and leave the save in the same state. |
+| [tools/sprites.test.ts](#tools-sprites-test-ts) | The sprite gallery (docs/reference/sprites/) must match the art. |
 | [tools/validate-content.test.ts](#tools-validate-content-test-ts) | Content validation and engine/content separation, enforced in CI. |
 
 ## Details
@@ -280,6 +281,17 @@ Transcript oracle: ported scenes show the player exactly what v1 showed and leav
 - Imports: core: [ids/characters](core.md#src-core-ids-characters-ts), [ids/enemies](core.md#src-core-ids-enemies-ts), [ids/flags](core.md#src-core-ids-flags-ts), [ids/items](core.md#src-core-ids-items-ts), [ids/story](core.md#src-core-ids-story-ts), [ids/world](core.md#src-core-ids-world-ts), [rng](core.md#src-core-rng-ts), [types/index](core.md#src-core-types-index-ts) · content: [index](content.md#src-content-index-ts) · engine: [index](engine.md#src-engine-index-ts) · app: [save/storage](app.md#src-app-save-storage-ts), [session](app.md#src-app-session-ts), [testing/scriptedPresenter](app.md#src-app-testing-scriptedpresenter-ts) · tools: [parity/driver](tools.md#tools-parity-driver-ts), [parity/legacyDom](tools.md#tools-parity-legacydom-ts)
 - Packages: `vitest`
 - Suites: “scene transcripts match v1”
+
+<a id="tools-sprites-test-ts"></a>
+
+### tools/sprites.test.ts
+
+The sprite gallery (docs/reference/sprites/) must match the art. When this fails, run `npm run sprites:export` and commit the files with your change.
+
+- Source: [tools/sprites.test.ts](../../../tools/sprites.test.ts)
+- Imports: tools: [sprites](tools.md#tools-sprites-ts)
+- Packages: `vitest`
+- Suites: “sprite gallery”
 
 <a id="tools-validate-content-test-ts"></a>
 

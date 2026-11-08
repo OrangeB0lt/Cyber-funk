@@ -33,6 +33,7 @@
     "parity:coverage": "c8 --check-coverage --branches 95 --include legacy/src/05_engine.js --include legacy/src/01_data_core.js --include legacy/src/02_data_enemies.js --include legacy/src/03_data_items.js --reporter text --reporter text-summary tsx tools/parity/coverage.ts",
     "validate": "tsx tools/validate-content.ts",
     "docs:codemap": "tsx tools/codemap.ts",
+    "sprites:export": "tsx tools/sprites.ts",
     "parity:engine": "vitest run tools/parity/engine.test.ts tools/parity/sim.test.ts tools/parity/properties.test.ts",
     "parity:rules": "vitest run tools/parity/rules.test.ts",
     "parity:content": "vitest run tools/parity/content.test.ts",

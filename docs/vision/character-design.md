@@ -244,6 +244,8 @@ The player picks one of seven instrument classes, and each class has one fixed h
 
 ### Hero: Trumpet · `hero_trumpet`
 
+![Hero: Trumpet](../reference/sprites/hero_trumpet.svg)
+
 *Lead Horn: burst damage, glass cannon · class colour HOT · 24×24, glow `hot`*
 
 > "High notes that peel paint off the balconies. Hits hardest, bruises easiest."
@@ -262,6 +264,8 @@ The player picks one of seven instrument classes, and each class has one fixed h
 
 ### Hero: Trombone · `hero_trombone`
 
+![Hero: Trombone](../reference/sprites/hero_trombone.svg)
+
 *Tailgate: drain bruiser, debuffs · class colour BLUE · 24×24, glow `blue`*
 
 > "Smears, growls, and dirges. Wears enemies down and drinks the sorrow back as Heart."
@@ -277,6 +281,8 @@ The player picks one of seven instrument classes, and each class has one fixed h
 - **Details:** a chrome brace on her slide forearm (`chrome`/`chrome_lo`), and a `blue` rim light down her back.
 
 ### Hero: Sousaphone · `hero_sousaphone`
+
+![Hero: Sousaphone](../reference/sprites/hero_sousaphone.svg)
 
 *Low End: tank, armor shred · class colour LOW · 24×24, glow `low`*
 
@@ -294,6 +300,8 @@ The player picks one of seven instrument classes, and each class has one fixed h
 
 ### Hero: Saxophone · `hero_saxophone`
 
+![Hero: Saxophone](../reference/sprites/hero_saxophone.svg)
+
 *Honker: control and charm · class colour FUNK · 24×24, glow `green`*
 
 > "Honks that knock the grid off-beat and ballads that make the Hush forget to fight."
@@ -310,6 +318,8 @@ The player picks one of seven instrument classes, and each class has one fixed h
 
 ### Hero: Clarinet · `hero_clarinet`
 
+![Hero: Clarinet](../reference/sprites/hero_clarinet.svg)
+
 *Licorice Stick: healer, buffer, agile · class colour SWEET · 24×24, glow `sweet`*
 
 > "Quick, sweet, and hard to pin down. Heals, buffs, and counters with a high trill."
@@ -325,6 +335,8 @@ The player picks one of seven instrument classes, and each class has one fixed h
 - **Details:** her free hand is open as if she's just thrown a heal, with one `sweet` sparkle pixel beside it.
 
 ### Hero: Snare · `hero_snare`
+
+![Hero: Snare](../reference/sprites/hero_snare.svg)
 
 *Snare Line: speed, multi-hit, stun · class colour gold · 24×24, glow `gold`*
 
@@ -343,6 +355,8 @@ The player picks one of seven instrument classes, and each class has one fixed h
 - **Details:** one `gold` motion pixel trailing the raised stick.
 
 ### Hero: Bass Drum · `hero_bassdrum`
+
+![Hero: Bass Drum](../reference/sprites/hero_bassdrum.svg)
 
 *The Heartbeat: heavy hitter, Big Four counter · class colour purple · 24×24, glow `purple`*
 
@@ -376,29 +390,43 @@ The eyes become `cyan` LEDs: hero pupils are drawn in `shadow`, which heroes use
 
 ### Session Clone (Trumpet) · `clone_trumpet`
 
+![Session Clone (Trumpet)](../reference/sprites/clone_trumpet.svg)
+
 Variant of `hero_trumpet` with `CLONE_RECOLOR`.
 
 ### Session Clone (Trombone) · `clone_trombone`
+
+![Session Clone (Trombone)](../reference/sprites/clone_trombone.svg)
 
 Variant of `hero_trombone` with `CLONE_RECOLOR`.
 
 ### Session Clone (Sousaphone) · `clone_sousaphone`
 
+![Session Clone (Sousaphone)](../reference/sprites/clone_sousaphone.svg)
+
 Variant of `hero_sousaphone` with `CLONE_RECOLOR`.
 
 ### Session Clone (Saxophone) · `clone_saxophone`
+
+![Session Clone (Saxophone)](../reference/sprites/clone_saxophone.svg)
 
 Variant of `hero_saxophone` with `CLONE_RECOLOR`.
 
 ### Session Clone (Clarinet) · `clone_clarinet`
 
+![Session Clone (Clarinet)](../reference/sprites/clone_clarinet.svg)
+
 Variant of `hero_clarinet` with `CLONE_RECOLOR`.
 
 ### Session Clone (Snare) · `clone_snare`
 
+![Session Clone (Snare)](../reference/sprites/clone_snare.svg)
+
 Variant of `hero_snare` with `CLONE_RECOLOR`.
 
 ### Session Clone (Bass Drum) · `clone_bassdrum`
+
+![Session Clone (Bass Drum)](../reference/sprites/clone_bassdrum.svg)
 
 Variant of `hero_bassdrum` with `CLONE_RECOLOR`.
 
@@ -411,6 +439,8 @@ Everyone who speaks in a scene, runs a shop, gives a quest or marches with the b
 ### People of Tremé
 
 #### Mama Roux · `mamaroux`
+
+![Mama Roux](../reference/sprites/mamaroux.svg)
 
 *Tremé guide and mentor, the Kitchen (food and a sit-down meal), Red Beans Monday quest, always in the second line · v2: prologue, Lagniappe club, Kitchen, Congo Square, streets · 24×24, glow `gold`*
 
@@ -430,6 +460,8 @@ Everyone who speaks in a scene, runs a shop, gives a quest or marches with the b
 
 #### Ti-Jacques · `tijacques`
 
+![Ti-Jacques](../reference/sprites/tijacques.svg)
+
 *Pawn & Horn (instruments, threads, accessories), builds your legendary instrument, always in the second line · v2: Pawn & Horn · 24×24, glow `green`*
 
 > "Horns in the window, suits in the back, and a man who can fix anything that makes a sound" · "Mais, cher… yeah" · "licensed since 1952. By me." · "Carries a horn in each hand and one in reserve"
@@ -445,6 +477,8 @@ Everyone who speaks in a scene, runs a shop, gives a quest or marches with the b
 - **Details:** a jeweller's loupe over one eye, a chrome cyber-loupe with a `green` lens. That glowing eye is the signature.
 
 #### Gus · `gus`
+
+![Gus](../reference/sprites/gus.svg)
 
 *Auguste "Gus" Thibodeaux, Grand Marshal of the Lagniappe Social Aid & Pleasure Club, your dead mentor · v2: prologue funeral, Lagniappe cassette · v1: ghost in the Data Mausoleum, leads the second line · 24×24, glow `purple`*
 
@@ -463,6 +497,8 @@ Everyone who speaks in a scene, runs a shop, gives a quest or marches with the b
 
 #### The Praline Lady · `pralinelady`
 
+![The Praline Lady](../reference/sprites/pralinelady.svg)
+
 *Rare wandering vendor (a cart of lucky things) · v2: streets, any district · 24×24, glow `gold`*
 
 > "a rare cart with lucky things" · "She lifts the cloth"
@@ -479,6 +515,8 @@ Everyone who speaks in a scene, runs a shop, gives a quest or marches with the b
 
 #### Stranger · `stranger`
 
+![Stranger](../reference/sprites/stranger.svg)
+
 *Generic speaker: the old-timer on a stoop, the streetcar joke-teller, the balcony dancer · v2: street events · 24×24, glow `chrome`*
 
 > "hat pushed back, a horn case at his feet" · "She laughs"
@@ -493,6 +531,8 @@ Everyone who speaks in a scene, runs a shop, gives a quest or marches with the b
 - **Details:** hands in pockets, nothing in them. It's a figure the player fills in.
 
 #### Busker · `busker`
+
+![Busker](../reference/sprites/busker.svg)
 
 *Generic street horn: the old man at the Tip Jar, the Jackson Square bench busker (The Confiscated Horn) · v2: Tip Jar street event · v1: Jackson Square · 24×24, glow `green`*
 
@@ -511,6 +551,8 @@ Everyone who speaks in a scene, runs a shop, gives a quest or marches with the b
 
 #### Street Preacher · `preacher`
 
+![Street Preacher](../reference/sprites/preacher.svg)
+
 *Metronome street evangelist; narrated only, never speaks · v2: street event · 24×24, glow `chrome`*
 
 > "white robe, white helmet, bullhorn tuned to exactly 440 Hz" · "doesn't have a response coded for that"
@@ -528,6 +570,8 @@ Everyone who speaks in a scene, runs a shop, gives a quest or marches with the b
 
 #### Miss Odette · `odette`
 
+![Miss Odette](../reference/sprites/odette.svg)
+
 *Miss Odette Fontenot, owner of Club Feu Follet (the last real jazz club), Cutting Contest, the Sit In gig, always in the second line · v2: Cutting Contest (dev menu), Vox aftermath · v1: Club Feu Follet · 24×24, glow `sweet`*
 
 > "The last real jazz club. Miss Odette runs it" · "second one's on Metronome because I'm not paying their license" · "Miss Odette raises her glass"
@@ -543,6 +587,8 @@ Everyone who speaks in a scene, runs a shop, gives a quest or marches with the b
 - **Details:** a `green` carnation on the lapel, for the "green light over the door" of Club Feu Follet.
 
 #### Sugar · `sugar`
+
+![Sugar](../reference/sprites/sugar.svg)
 
 *Sugar Desmarais, vocals, bandmate (recruited by winning the Cutting Contest), always in the second line · v2: Cutting Contest (dev menu) · v1: Club Feu Follet · 24×24, glow `sweet`*
 
@@ -562,6 +608,8 @@ Everyone who speaks in a scene, runs a shop, gives a quest or marches with the b
 
 #### Madame Zinnia · `zinnia`
 
+![Madame Zinnia](../reference/sprites/zinnia.svg)
+
 *Zinnia's Charms (charms; data-tarot for Ð30), The Lost Eye quest, second line if that quest is done · v1: Jackson Square · 24×24, glow `cyan`*
 
 > "cybernetic eye" · "pops the eye back in and it whirs and focuses on you. 'I have a spare.'" · "The cards don't read for free. Neither do I." · "Reads the cards and says the Tower's already lost"
@@ -579,6 +627,8 @@ Everyone who speaks in a scene, runs a shop, gives a quest or marches with the b
 
 #### Madame Céleste · `celeste`
 
+![Madame Céleste](../reference/sprites/celeste.svg)
+
 *Madame Céleste Arceneaux, keeper of the Velvet Lantern (deluxe rest, paid Whispers about bosses), can get you the ball invitation, second line if you burn the contracts · v1: Velvet Lantern · 24×24, glow `magenta`*
 
 > "Live piano, deluxe rooms, and secrets for a price" · "Bienvenue, chéri" · "I don't judge, chéri. I just remember."
@@ -593,6 +643,8 @@ Everyone who speaks in a scene, runs a shop, gives a quest or marches with the b
 - **Details:** a `white` cameo choker, and a beauty mark (one `skin5_lo` pixel).
 
 #### Professor Theo · `theo`
+
+![Professor Theo](../reference/sprites/theo.svg)
 
 *Professor Theo Lavigne, sheet music at the Lantern piano, Missing Rolls quest, second line · v1: Velvet Lantern · 24×24, glow `gold`*
 
@@ -612,6 +664,8 @@ Everyone who speaks in a scene, runs a shop, gives a quest or marches with the b
 
 #### Static · `static`
 
+![Static](../reference/sprites/static.svg)
+
 *"Static" Okafor, cassette-deck DJ and hacker, bandmate (Static's Contract) · v2: street events, once recruited · v1: Velvet Lantern booth · 24×24, glow `cyan`*
 
 > "Cassette-deck DJ and hacker" · "built the Click's first test encoder as a Metronome intern" · "Deck on his shoulder" · "scratches two wires together"
@@ -630,6 +684,8 @@ Everyone who speaks in a scene, runs a shop, gives a quest or marches with the b
 
 #### Grand-mère Clothilde · `clothilde`
 
+![Grand-mère Clothilde](../reference/sprites/clothilde.svg)
+
 *Traiteur (free healing), Bayou guide, Traiteur's Herbs quest, second line · v1: Clothilde's Cabin · 24×24, glow `green`*
 
 > "on stilts… herbs hanging from every beam" · "says something soft in French that isn't a spell, exactly" · "on her feet since 1998" · "presses a thumb to your forehead"
@@ -646,6 +702,8 @@ Everyone who speaks in a scene, runs a shop, gives a quest or marches with the b
 - **Details:** a small `gold` medal on a cord at her neck.
 
 #### Remy · `remy`
+
+![Remy](../reference/sprites/remy.svg)
 
 *Remy Guidry, frottoir (rubboard), bandmate (defend the Fais Do-Do) · v1: Fais Do-Do · 24×24, glow `green`*
 
@@ -665,6 +723,8 @@ Everyone who speaks in a scene, runs a shop, gives a quest or marches with the b
 
 #### Boudreaux · `boudreaux`
 
+![Boudreaux](../reference/sprites/boudreaux.svg)
+
 *Boudreaux's Boudin Shack (food), "the worst jokes in the parish, free with purchase" · v1: Boudin Shack · 24×24, glow `gold`*
 
 > "the worst jokes in the parish, free with purchase" · "laughs harder than you do"
@@ -680,6 +740,8 @@ Everyone who speaks in a scene, runs a shop, gives a quest or marches with the b
 - **Details:** closed laughing eyes (two `ink` arcs) and a wide-open mouth.
 
 #### Lucien · `lucien`
+
+![Lucien](../reference/sprites/lucien.svg)
 
 *Alpha of the Chrome Wolves, human form after the Rougarou fight; second line if spared · v1: Pump Station 13, Clothilde's cabin · 24×24, glow `hot`*
 
@@ -700,6 +762,8 @@ Everyone who speaks in a scene, runs a shop, gives a quest or marches with the b
 
 #### Mambo Rosalie · `rosalie`
 
+![Mambo Rosalie](../reference/sprites/rosalie.svg)
+
 *Vodou priestess, Mambo Rosalie's Altar (gris-gris), paid Blessing, Restless Haints quest, second line · v1: Rosalie's Temple · 24×24, glow `purple`*
 
 > "Candles, a bell, an altar with everyone's photo on it" · "Mind the candles" · "shakes the asson. The candles lean toward you"
@@ -715,6 +779,8 @@ Everyone who speaks in a scene, runs a shop, gives a quest or marches with the b
 - **Details:** the candle flame is the brightest pixel in the sprite.
 
 #### Brother Moses · `moses`
+
+![Brother Moses](../reference/sprites/moses.svg)
 
 *Brother Moses Valcour, banjo and hymn-leader, bandmate (Restless Haints) · v1: Crypt Rows · 24×24, glow `gold`*
 
@@ -734,6 +800,8 @@ Everyone who speaks in a scene, runs a shop, gives a quest or marches with the b
 
 #### The Valet · `tuxedo_valet`
 
+![The Valet](../reference/sprites/tuxedo_valet.svg)
+
 *NpcId `valet`: the Silver Tuxedo valet who sells the ball invitation for Ð300 and tells rumours. Not the Valet Assassin enemy · v1: Silver Tuxedo · 24×24, glow `chrome`*
 
 > "a valet who knows things" · "from his sleeve like a magician who hates his job" · "pretending to polish a glass"
@@ -751,6 +819,8 @@ Everyone who speaks in a scene, runs a shop, gives a quest or marches with the b
 ### People of the Central Business District
 
 #### Vending Machine · `vendor`
+
+![Vending Machine](../reference/sprites/vendor.svg)
 
 *The busted vending machine inside Metronome Tower · v1: Tower floors · 24×24, glow `cyan`*
 
@@ -781,6 +851,8 @@ Elites get a ★ on their battle card. Draw them as a step up from the district'
 
 #### Hush Patrolman · `hush_patrol`
 
+![Hush Patrolman](../reference/sprites/hush_patrol.svg)
+
 *Regular · L1–2 · deals LOW, weak FUNK, resists BLUE · v2: Tremé streets, the prologue raid, Captain Hush's backup · 24×24, glow `cyan`*
 
 > "White chrome armor, noise-cancelling helmet, and a citation pad. Can't hear a thing, which is the point."
@@ -797,6 +869,8 @@ Elites get a ★ on their battle card. Draw them as a step up from the district'
 - **Family:** the base sprite for `hush_sergeant` and `hush_elite`.
 
 #### Click-Drone · `click_drone`
+
+![Click-Drone](../reference/sprites/click_drone.svg)
 
 *Regular · L1–3 · machine · deals FUNK, weak FUNK, resists LOW · v2: Tremé streets · 24×24, glow `cyan`*
 
@@ -816,6 +890,8 @@ Elites get a ★ on their battle card. Draw them as a step up from the district'
 
 #### Mutant Nutria · `nutria`
 
+![Mutant Nutria](../reference/sprites/nutria.svg)
+
 *Regular · L1–2 · deals HOT, weak HOT · v2: Tremé streets · 24×24, glow `hot`*
 
 > "Swamp rat the size of a Labrador. Orange teeth, glowing eyes, no manners."
@@ -831,6 +907,8 @@ Elites get a ★ on their battle card. Draw them as a step up from the district'
 - **Details:** the orange teeth are the brightest thing on it, two 1×2 blocks.
 
 #### Corner Hustler · `hustler`
+
+![Corner Hustler](../reference/sprites/hustler.svg)
 
 *Regular · L2–3 · deals BLUE, weak BLUE, resists FUNK · v2: Tremé streets · 24×24, glow `blue`*
 
@@ -849,6 +927,8 @@ Elites get a ★ on their battle card. Draw them as a step up from the district'
 
 #### Hush Sergeant · `hush_sergeant`
 
+![Hush Sergeant](../reference/sprites/hush_sergeant.svg)
+
 *Elite (bounty Ð120) · L3 · deals LOW, weak FUNK, resists BLUE · v2: Tremé streets, the bounty board · 24×24, glow `gold`*
 
 > "Three stripes on the chrome and a riot baton he names. ELITE."
@@ -863,6 +943,8 @@ Elites get a ★ on their battle card. Draw them as a step up from the district'
 
 #### Go-Cup Golem · `gocup_golem`
 
+![Go-Cup Golem](../reference/sprites/gocup_golem.svg)
+
 *Regular · L3–4 · deals LOW, weak HOT, resists LOW · v2: Quarter streets · 24×24, glow `low`*
 
 > "Ten thousand plastic go-cups fused by a thousand spilled drinks. Smells like Thursday."
@@ -873,6 +955,8 @@ Elites get a ★ on their battle card. Draw them as a step up from the district'
 - **Details:** the cup rims make horizontal stripes across the body. Two cups for eyes, each with an `ink` pupil.
 
 #### Neon Mime · `neon_mime`
+
+![Neon Mime](../reference/sprites/neon_mime.svg)
 
 *Regular · L3–5 · deals BLUE, weak FUNK, resists BLUE · v2: Quarter streets, the Invisible Wall street event · 24×24, glow `magenta`*
 
@@ -892,6 +976,8 @@ Elites get a ★ on their battle card. Draw them as a step up from the district'
 
 #### Licensed Busker-Bot · `busker_bot`
 
+![Licensed Busker-Bot](../reference/sprites/busker_bot.svg)
+
 *Regular · L4–5 · machine · deals FUNK, weak BLUE, resists FUNK · v2: Quarter streets · 24×24, glow `green`*
 
 > "Plays the same licensed jingle on loop and bills you for listening."
@@ -908,6 +994,8 @@ Elites get a ★ on their battle card. Draw them as a step up from the district'
 
 #### Bourbon Barker · `barker`
 
+![Bourbon Barker](../reference/sprites/barker.svg)
+
 *Regular · L3–5 · hologram · deals HOT, weak LOW, resists HOT · v2: Quarter streets · 24×24, glow `magenta`, fx `holo`*
 
 > "A hologram outside every licensed club. Two-for-one, no cover, come on in, come on in."
@@ -918,6 +1006,8 @@ Elites get a ★ on their battle card. Draw them as a step up from the district'
 - **Details:** the `holo` effect adds scanlines and a flicker. Leave every other row slightly darker in the grid itself, so the static look reads as a hologram too.
 
 #### Hurricane Hooligan · `hooligan`
+
+![Hurricane Hooligan](../reference/sprites/hooligan.svg)
 
 *Elite (bounty Ð180) · L5 · deals HOT, weak LOW, resists HOT · v2: Quarter streets, the bounty board · 24×24, glow `hot`*
 
@@ -939,6 +1029,8 @@ Elites get a ★ on their battle card. Draw them as a step up from the district'
 
 #### Contract Enforcer · `enforcer`
 
+![Contract Enforcer](../reference/sprites/enforcer.svg)
+
 *Regular · L5–6 · deals LOW, weak BLUE, resists LOW · v2: Storyville streets · 24×24, glow `low`*
 
 > "Pinstripes over armor plating. Carries the fine print in a holster."
@@ -955,6 +1047,8 @@ Elites get a ★ on their battle card. Draw them as a step up from the district'
 - **Details:** the pinstripes are vertical `grey` pixels every other column.
 
 #### Velvet Rope Bouncer · `bouncer`
+
+![Velvet Rope Bouncer](../reference/sprites/bouncer.svg)
 
 *Regular · L5–7 · deals LOW, weak FUNK, resists LOW · extra armour · v2: Storyville streets · 24×24, glow `red`*
 
@@ -973,6 +1067,8 @@ Elites get a ★ on their battle card. Draw them as a step up from the district'
 
 #### Absinthe Phantom · `absinthe`
 
+![Absinthe Phantom](../reference/sprites/absinthe.svg)
+
 *Regular · L6–7 · deals BLUE, weak HOT, resists BLUE · v2: Storyville streets · 24×24, glow `green`, fx `ghost`*
 
 > "A green fog that walks like a gentleman. Burns off in the heat."
@@ -983,6 +1079,8 @@ Elites get a ★ on their battle card. Draw them as a step up from the district'
 - **Details:** no outline on the fog tail. It fades to scattered single pixels at the bottom, the one place loose pixels are allowed.
 
 #### Repo Drone · `repo_drone`
+
+![Repo Drone](../reference/sprites/repo_drone.svg)
 
 *Regular · L5–7 · machine · deals FUNK, weak FUNK, resists HOT · v2: Storyville streets, Mr. Ledger's add · 24×24, glow `cyan`*
 
@@ -999,6 +1097,8 @@ Elites get a ★ on their battle card. Draw them as a step up from the district'
 - **Details:** the claw grips a small `gold` doubloon.
 
 #### The Bagman · `bagman`
+
+![The Bagman](../reference/sprites/bagman.svg)
 
 *Elite (bounty Ð260) · L7 · deals LOW, weak BLUE, resists LOW · v2: Storyville streets, the bounty board · 24×24, glow `gold`*
 
@@ -1020,6 +1120,8 @@ Elites get a ★ on their battle card. Draw them as a step up from the district'
 
 #### Chrome Gator · `chrome_gator`
 
+![Chrome Gator](../reference/sprites/chrome_gator.svg)
+
 *Regular · L7–9 · deals LOW, weak HOT, resists LOW · extra armour · v2: Bayou streets · 24×24, glow `low`*
 
 > "Twelve feet of armored reptile with a Metronome tracking tag. Hates heat."
@@ -1037,6 +1139,8 @@ Elites get a ★ on their battle card. Draw them as a step up from the district'
 
 #### Feu Follet · `feu_follet`
 
+![Feu Follet](../reference/sprites/feu_follet.svg)
+
 *Regular · L7–8 · deals HOT, weak BLUE, resists HOT · extra dodge · v2: Bayou streets · 24×24, strong glow `ghost`*
 
 > "A swamp light that leads travelers astray. Sorrow is the only thing it can't dodge."
@@ -1047,6 +1151,8 @@ Elites get a ★ on their battle card. Draw them as a step up from the district'
 - **Details:** settles a contradiction in the game text: the prose calls it "bluish", but it deals HOT damage. So it has a blue-white core with an orange edge. No ink outline; the glow does the work.
 
 #### Swamp Grunch · `grunch`
+
+![Swamp Grunch](../reference/sprites/grunch.svg)
 
 *Regular · L7–9 · deals FUNK, weak LOW, resists FUNK · v2: Bayou streets · 24×24, glow `green`*
 
@@ -1063,6 +1169,8 @@ Elites get a ★ on their battle card. Draw them as a step up from the district'
 
 #### Skeeter Swarm · `skeeter`
 
+![Skeeter Swarm](../reference/sprites/skeeter.svg)
+
 *Regular · L8–9 · machine · deals HOT, weak HOT, resists BLUE · v2: Bayou streets · 24×24, glow `hot`*
 
 > "Ten thousand mosquito drones that drink Funk. Burn them out."
@@ -1073,6 +1181,8 @@ Elites get a ★ on their battle card. Draw them as a step up from the district'
 - **Details:** one drone in front is a little bigger, with a `green` drop of stolen Funk on its needle.
 
 #### Rougarou Pup · `rougarou_pup`
+
+![Rougarou Pup](../reference/sprites/rougarou_pup.svg)
 
 *Regular · L8–9 · deals HOT, weak HOT, resists BLUE · v2: Bayou streets · 24×24, glow `hot`*
 
@@ -1089,6 +1199,8 @@ Elites get a ★ on their battle card. Draw them as a step up from the district'
 
 #### Big Grunch · `big_grunch`
 
+![Big Grunch](../reference/sprites/big_grunch.svg)
+
 *Elite (bounty Ð340) · L9 · deals FUNK, weak LOW, resists FUNK · v2: Bayou streets, the bounty board · 24×24, glow `green`*
 
 > "The grunch the other grunches tell stories about. ELITE."
@@ -1104,6 +1216,8 @@ Elites get a ★ on their battle card. Draw them as a step up from the district'
 
 #### Wandering Haint · `haint`
 
+![Wandering Haint](../reference/sprites/haint.svg)
+
 *Regular · L9–10 · deals BLUE, weak BLUE, resists FUNK · v2: the haint street event · also the `haint` speaker · 24×24, glow `blue`, fx `ghost`*
 
 > "A restless spirit drifting between the tombs. Sorrow calls it home." · "A ghost. Haint blue paint on a porch ceiling keeps them out." · "sits on a tomb, swinging its legs" · "cackles and fades"
@@ -1114,6 +1228,8 @@ Elites get a ★ on their battle card. Draw them as a step up from the district'
 - **Details:** a faint cornet held loosely in his hand, drawn in `ghost`. The ghost of the music, not the music.
 
 #### Data Wraith · `data_wraith`
+
+![Data Wraith](../reference/sprites/data_wraith.svg)
 
 *Regular · L9–11 · deals FUNK, weak FUNK, resists HOT · v2: Cemetery streets · 24×24, glow `green`, fx `glitch`*
 
@@ -1128,6 +1244,8 @@ Elites get a ★ on their battle card. Draw them as a step up from the district'
 - **Details:** the `glitch` effect adds jitter. In the grid itself, offset 2–3 rows by one pixel, so the static look is broken too.
 
 #### Tomb Crawler · `tomb_crawler`
+
+![Tomb Crawler](../reference/sprites/tomb_crawler.svg)
 
 *Regular · L10–11 · deals LOW, weak LOW, resists BLUE · v2: Cemetery streets · 24×24, glow `low`*
 
@@ -1144,6 +1262,8 @@ Elites get a ★ on their battle card. Draw them as a step up from the district'
 
 #### Archive Drone · `archive_drone`
 
+![Archive Drone](../reference/sprites/archive_drone.svg)
+
 *Regular · L9–11 · machine · deals FUNK, weak FUNK, resists LOW · v2: Cemetery streets · 24×24, glow `cyan`*
 
 > "Records everything you do and plays it back wrong. Copies your buffs." · "photographs a tomb inscription, then erases it"
@@ -1159,6 +1279,8 @@ Elites get a ★ on their battle card. Draw them as a step up from the district'
 
 #### Bone Choir · `bone_choir`
 
+![Bone Choir](../reference/sprites/bone_choir.svg)
+
 *Regular · L10–11 · deals BLUE, weak HOT, resists BLUE · v2: Cemetery streets · 24×24, glow `blue`*
 
 > "Four skeletons in perfect four-part harmony. Perfect is the problem."
@@ -1173,6 +1295,8 @@ Elites get a ★ on their battle card. Draw them as a step up from the district'
 - **Details:** settles a contradiction in the game text: one ambient line says three skeletons, but the Blue Book says four, and four it is.
 
 #### Crypt Keeper Unit · `crypt_keeper`
+
+![Crypt Keeper Unit](../reference/sprites/crypt_keeper.svg)
 
 *Elite (bounty Ð420) · L11 · machine · deals LOW, weak FUNK, resists LOW · v2: Cemetery streets, the bounty board · 24×24, glow `cyan`*
 
@@ -1190,6 +1314,8 @@ Elites get a ★ on their battle card. Draw them as a step up from the district'
 
 #### Ghost Track · `ghost_track`
 
+![Ghost Track](../reference/sprites/ghost_track.svg)
+
 *Summon (only the Archivist calls it) · deals BLUE, weak BLUE, resists FUNK · half Heart · v1: Data Mausoleum, Archivist fight (v2 via dev boss jump) · 24×24, glow `blue`, fx `ghost`*
 
 > "The captured echo of a dead musician, replayed by the Archivist. It wants to rest." · "A Ghost Track flickers into the room, an echo of a dead musician."
@@ -1204,6 +1330,8 @@ Elites get a ★ on their battle card. Draw them as a step up from the district'
 *"Oak-lined St. Charles Avenue. Mansions under security domes, topiary trimmed into soldiers, and a streetcar that runs in perfect silence past gates that never open."*
 
 #### Debutante Droid · `debutante`
+
+![Debutante Droid](../reference/sprites/debutante.svg)
 
 *Regular · L11–12 · deals BLUE, weak FUNK, resists BLUE · v2: Garden streets · 24×24, glow `blue`*
 
@@ -1220,6 +1348,8 @@ Elites get a ★ on their battle card. Draw them as a step up from the district'
 - **Details:** the chrome smile, a `chrome_hi` line of teeth.
 
 #### Butler Unit · `butler`
+
+![Butler Unit](../reference/sprites/butler.svg)
 
 *Regular · L11–13 · machine · deals LOW, weak LOW, resists HOT · v2: Garden streets · 24×24, glow `low`*
 
@@ -1238,6 +1368,8 @@ Elites get a ★ on their battle card. Draw them as a step up from the district'
 
 #### Topiary Mech · `topiary`
 
+![Topiary Mech](../reference/sprites/topiary.svg)
+
 *Regular · L12–13 · machine · deals HOT, weak HOT, resists LOW · v2: Garden streets · 24×24, glow `hot`*
 
 > "A hedge trimmed into a soldier, with a soldier inside. Flammable."
@@ -1251,6 +1383,8 @@ Elites get a ★ on their battle card. Draw them as a step up from the district'
 - **Details:** one leafy gap in the chest shows the chrome inside.
 
 #### String Quartet Drone · `quartet`
+
+![String Quartet Drone](../reference/sprites/quartet.svg)
 
 *Regular · L12–13 · machine · deals BLUE, weak FUNK, resists BLUE · low Heart · always fights as four · v2: Garden streets · 24×24, glow `blue`*
 
@@ -1268,6 +1402,8 @@ Elites get a ★ on their battle card. Draw them as a step up from the district'
 
 #### Valet Assassin · `valet`
 
+![Valet Assassin](../reference/sprites/valet.svg)
+
 *Regular · L12–13 · deals HOT, weak BLUE, resists FUNK · v2: Garden streets · 24×24, glow `hot`*
 
 > "Parks your car, picks your pocket, pierces your lung. Tips appreciated."
@@ -1283,6 +1419,8 @@ Elites get a ★ on their battle card. Draw them as a step up from the district'
 - **Details:** a polite smile, and the knife glint is the joke.
 
 #### Security Chief Beaumont · `beaumont`
+
+![Security Chief Beaumont](../reference/sprites/beaumont.svg)
 
 *Elite (bounty Ð520) · L13 · deals HOT, weak FUNK, resists BLUE · v2: Garden streets, the bounty board · 24×24, glow `hot`*
 
@@ -1305,6 +1443,8 @@ Elites get a ★ on their battle card. Draw them as a step up from the district'
 
 #### Hush Elite · `hush_elite`
 
+![Hush Elite](../reference/sprites/hush_elite.svg)
+
 *Regular (Tower) · L13–14 · deals LOW, weak FUNK, resists BLUE · v2: Tower streets · 24×24, glow `gold`*
 
 > "The Hush's best. Gold chrome, no citation pad. They don't write tickets anymore." · "Hush Elites in gold armor"
@@ -1314,6 +1454,8 @@ Elites get a ★ on their battle card. Draw them as a step up from the district'
 - **Sprite:** variant (recolour + overlay), glow `gold`.
 
 #### Quantizer · `quantizer`
+
+![Quantizer](../reference/sprites/quantizer.svg)
 
 *Regular · L13–15 · machine · deals FUNK, weak FUNK, resists HOT · v2: Tower streets · 24×24, glow `cyan`*
 
@@ -1328,6 +1470,8 @@ Elites get a ★ on their battle card. Draw them as a step up from the district'
 - **Details:** tiny `cyan` corner brackets float off the cube's corners, snapping into place.
 
 #### Click Sentinel · `sentinel`
+
+![Click Sentinel](../reference/sprites/sentinel.svg)
 
 *Regular · L14–15 · machine · deals LOW, weak LOW, resists FUNK · v2: Tower streets · 24×24, glow `cyan`*
 
@@ -1344,6 +1488,8 @@ Elites get a ★ on their battle card. Draw them as a step up from the district'
 - **Details:** tick marks down the face (`chrome_dk`).
 
 #### Tempo Warden · `warden`
+
+![Tempo Warden](../reference/sprites/warden.svg)
 
 *Elite (bounty Ð650) · L15 · machine · deals FUNK, weak FUNK, resists BLUE · v2: Tower streets, the bounty board · 24×24, glow `cyan`*
 
@@ -1364,6 +1510,8 @@ Elites get a ★ on their battle card. Draw them as a step up from the district'
 
 #### "Hot Rod" Broussard · `rival_hotrod`
 
+!["Hot Rod" Broussard](../reference/sprites/rival_hotrod.svg)
+
 *Rival · trumpet · L4 · deals HOT, weak LOW, resists HOT · 24×24, glow `hot`*
 
 > "Trumpet. Plays high, plays loud, plays like the bell is on fire. Lost once, in 2081, and won't talk about it." · "trumpet already at his lips" · "lowers his horn and grins"
@@ -1380,6 +1528,8 @@ Elites get a ★ on their battle card. Draw them as a step up from the district'
 
 #### Big Mae Boudreaux · `rival_bigmae`
 
+![Big Mae Boudreaux](../reference/sprites/rival_bigmae.svg)
+
 *Rival · sousaphone · L5 · deals LOW, weak HOT, resists LOW · extra armour · 24×24, glow `low`*
 
 > "Sousaphone. Holds down the low end of three bands and the whole Feu Follet bar when she leans on it." · "settles the sousaphone on her shoulder and the floorboards complain"
@@ -1394,6 +1544,8 @@ Elites get a ★ on their battle card. Draw them as a step up from the district'
 - **Details:** the bell is on her left, mirrored from the hero's. Both are wide, but they never look alike.
 
 #### Henri "Two-Tone" LeBlanc · `rival_twotone`
+
+![Henri "Two-Tone" LeBlanc](../reference/sprites/rival_twotone.svg)
 
 *Rival · saxophone · L5 · deals FUNK, weak HOT, resists FUNK · 24×24, glow `green`*
 
@@ -1417,6 +1569,8 @@ Bosses are 32×32 and appear at 96px in battle. The six who speak in scenes show
 
 ### Captain Hush · `captain_hush`
 
+![Captain Hush](../reference/sprites/captain_hush.svg)
+
 *Tremé, Congo Square · L3 · guards Blue Note C · deals LOW, weak FUNK, resists BLUE · speaker `hush` · v2: the prologue raid, the Congo Square boss · 32×32, glow `cyan`*
 
 > "Metronome's man in Tremé. Declared Congo Square a Quiet Zone and found out why the drums never stopped." · "white chrome gleaming, dampener on his belt" · "By order of Metronome, this square is now a Quiet Zone. Unlicensed syncopation detected. Cease all swing."
@@ -1438,6 +1592,8 @@ Bosses are 32×32 and appear at 96px in battle. The six who speak in scenes show
 
 ### Vox Perfecta · `vox_perfecta`
 
+![Vox Perfecta](../reference/sprites/vox_perfecta.svg)
+
 *French Quarter, Bourbon Strip main stage · L5 · guards E♭ · hologram · deals HOT, weak BLUE, resists HOT · speaker `vox` · v2: dev boss jump · 32×32, glow `magenta`, fx `holo`*
 
 > "The holographic android diva headlining the Bourbon Strip. Perfect pitch, perfect time, and one note she cannot feel." · "forty feet of hologram folding down into something person-sized and silver" · "Her chassis is open… under the licensing chip"
@@ -1458,6 +1614,8 @@ Bosses are 32×32 and appear at 96px in battle. The six who speak in scenes show
 
 ### Mr. Ledger · `mr_ledger`
 
+![Mr. Ledger](../reference/sprites/mr_ledger.svg)
+
 *Storyville, the vault under Basin Street · L7 · guards F · deals LOW, weak FUNK, resists BLUE · speaker `ledger` · v1: Ledger & Sons (v2 via dev boss jump) · 32×32, glow `gold`*
 
 > "Bought every contract in Storyville and keeps them in a vault under Basin Street. His Chops compound every turn. Kill him fast." · "at a brass desk… reading. He closes the book" · "smiling like a closed account"
@@ -1477,6 +1635,8 @@ Bosses are 32×32 and appear at 96px in battle. The six who speak in scenes show
 
 ### Le Rougarou Chromé · `rougarou`
 
+![Le Rougarou Chromé](../reference/sprites/rougarou.svg)
+
 *Manchac Swamp, Pump Station 13 · L9 · guards G · deals HOT, weak HOT, resists LOW · after the fight he speaks as `lucien` · v1: Pump Station 13 (v2 via dev boss jump) · 32×32, glow `hot`*
 
 > "Lucien, alpha of the Chrome Wolves, overclocked into a rougarou by the Click's test signal. Weak to heat; the implant runs hot already." · "chrome fur, white eyes, a jaw that's more machine than mouth"
@@ -1494,6 +1654,8 @@ Bosses are 32×32 and appear at 96px in battle. The six who speak in scenes show
 - **Details:** the hot implant at the temple matches `rougarou_pup` and `lucien`.
 
 ### The Archivist · `archivist`
+
+![The Archivist](../reference/sprites/archivist.svg)
 
 *Cities of the Dead, the Data Mausoleum · L11 · guards B♭ · machine · deals FUNK, weak BLUE, resists FUNK · speaker `archivist` · summons `ghost_track` · v1: Data Mausoleum (v2 via dev boss jump) · 32×32, glow `cyan`*
 
@@ -1514,6 +1676,8 @@ Bosses are 32×32 and appear at 96px in battle. The six who speak in scenes show
 
 ### Lady Concertmaster Isolde Vane · `isolde`
 
+![Lady Concertmaster Isolde Vane](../reference/sprites/isolde.svg)
+
 *Garden District, the Vane Manor ballroom · L13 · guards G♭, the blue note itself · deals BLUE, weak FUNK, resists BLUE · speaker `isolde` · v1: Vane Manor (v2 via dev boss jump) · 32×32, glow `chrome_hi`*
 
 > "Metronome's First Chair, keeper of the Blue Note." · "a violin that is also, somehow, a blade" · "Father never let me be flat."
@@ -1531,6 +1695,8 @@ Bosses are 32×32 and appear at 96px in battle. The six who speak in scenes show
 - **Details:** a single `cyan_hi` glint along the blade's edge. She is the only boss whose glow is pure white.
 
 ### The Conductor · `conductor`
+
+![The Conductor](../reference/sprites/conductor.svg)
 
 *Maestro Aurelius Quant, CEO of Metronome · Tower, the Booth · L15 · deals LOW, weak FUNK, resists BLUE · speaker `conductor` · v1: the Booth (v2 via dev boss jump) · 32×32, glow `chrome_hi`*
 
@@ -1550,6 +1716,8 @@ Bosses are 32×32 and appear at 96px in battle. The six who speak in scenes show
 - **Details:** the glowing baton is the brightest pixel line in the sprite.
 
 ### THE CLICK · `the_click`
+
+![THE CLICK](../reference/sprites/the_click.svg)
 
 *Tower, the Crown · L15 · machine · deals FUNK, weak FUNK, resists BLUE · never speaks · v1: the final battle (v2 via dev boss jump) · 32×32, glow `cyan`*
 
@@ -1573,6 +1741,8 @@ These six run shops in districts that are still v1-only, and none of them has an
 
 ### Thirsty Pelican bartender · `pelican_bartender`
 
+![Thirsty Pelican bartender](../reference/sprites/pelican_bartender.svg)
+
 *French Quarter, the Thirsty Pelican (drinks; starts the crawfish races with a whistle) · 24×24, glow `hot`*
 
 - **Silhouette:** a burly bald bartender with a handlebar mustache, a towel over his shoulder, and a whistle on a lanyard.
@@ -1585,11 +1755,15 @@ These six run shops in districts that are still v1-only, and none of them has an
 
 ### Fais Do-Do bartender · `faisdodo_bartender`
 
+![Fais Do-Do bartender](../reference/sprites/faisdodo_bartender.svg)
+
 *Manchac Swamp, the Fais Do-Do (drinks) · 24×24, glow `green`*
 
 - **Design:** a variant of `pelican_bartender`, recoloured to `skin2` skin, a `moss`/`moss_lo` shirt and a `hair_brown` mustache. Same pose; a bayou dancehall keeper.
 
 ### French Market vendor · `market_vendor`
+
+![French Market vendor](../reference/sprites/market_vendor.svg)
 
 *French Quarter, the French Market (one of the "old woman selling hot sauce", the praline hawker, the sno-ball man) · 24×24, glow `red`*
 
@@ -1602,6 +1776,8 @@ These six run shops in districts that are still v1-only, and none of them has an
   - bottle `red` with a `white` label and a `gold` cap
 
 ### Chop Shop surgeon · `chop_surgeon`
+
+![Chop Shop surgeon](../reference/sprites/chop_surgeon.svg)
 
 *Storyville, the Basin St Chop Shop (cyberware mods) · 24×24, glow `magenta`*
 
@@ -1618,6 +1794,8 @@ These six run shops in districts that are still v1-only, and none of them has an
 
 ### Maison Chrome clerk · `maison_clerk`
 
+![Maison Chrome clerk](../reference/sprites/maison_clerk.svg)
+
 *Garden District, Maison Chrome (luxury threads) · 24×24, glow `chrome`*
 
 - **Silhouette:** a prim, narrow clerk in pince-nez, with a measuring tape draped around the neck and a silver waistcoat.
@@ -1630,6 +1808,8 @@ These six run shops in districts that are still v1-only, and none of them has an
   - tape `gold` with `ink` ticks
 
 ### Silver Tuxedo maître d' · `tuxedo_maitre`
+
+![Silver Tuxedo maître d'](../reference/sprites/tuxedo_maitre.svg)
 
 *Garden District, the Silver Tuxedo ("pricey buffs") · 24×24, glow `gold`*
 
