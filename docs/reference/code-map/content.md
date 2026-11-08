@@ -1230,13 +1230,13 @@ The districts whose scenes haven't been ported from v1 yet (the 2.0 migration, P
 - Source: [src/content/pending.ts](../../../src/content/pending.ts)
 - Imports: core: [ids/story](core.md#src-core-ids-story-ts), [ids/world](core.md#src-core-ids-world-ts)
 - Imported by: tools: [completeness](tools.md#tools-completeness-ts)
-- Tested by: [explore.test](tests.md#tests-integration-explore-test-ts), [playthrough.test](tests.md#tests-integration-playthrough-test-ts)
+- Tested by: [world.spec](tests.md#tests-e2e-world-spec-ts), [explore.test](tests.md#tests-integration-explore-test-ts), [playthrough.test](tests.md#tests-integration-playthrough-test-ts)
 - Types used: **[core/ids/story](core.md#src-core-ids-story-ts)** [ActId](core.md#src-core-ids-story-ts--actid) · **[core/ids/world](core.md#src-core-ids-world-ts)** [DistrictId](core.md#src-core-ids-world-ts--districtid)
 
 Declarations:
 
 - <a id="src-content-pending-ts--pending-districts"></a>**PENDING_DISTRICTS** · *const* `satisfies readonly DistrictId[]`
-  - used by: here [PendingDistrict](#src-content-pending-ts--pendingdistrict), [isPendingDistrict](#src-content-pending-ts--ispendingdistrict) · **[tools/completeness](tools.md#tools-completeness-ts)** [checkCompleteness](tools.md#tools-completeness-ts--checkcompleteness)
+  - used by: here [PendingDistrict](#src-content-pending-ts--pendingdistrict), [isPendingDistrict](#src-content-pending-ts--ispendingdistrict) · **[tools/completeness](tools.md#tools-completeness-ts)** [checkCompleteness](tools.md#tools-completeness-ts--checkcompleteness) · tests: [world.spec](tests.md#tests-e2e-world-spec-ts)
 - <a id="src-content-pending-ts--pendingdistrict"></a>**PendingDistrict** · *type* `= (typeof PENDING_DISTRICTS)[number]` — A district still waiting for its scenes.
   - used by: here [isPendingDistrict](#src-content-pending-ts--ispendingdistrict) · tests: [explore.test](tests.md#tests-integration-explore-test-ts)
 - <a id="src-content-pending-ts--ispendingdistrict"></a>**isPendingDistrict** · *function* `(d: DistrictId): d is PendingDistrict` — Is this district still waiting for its scenes?

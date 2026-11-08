@@ -50,12 +50,19 @@ export const screenOf = (page: Page) => page.locator('[data-screen]').getAttribu
 
 /**
  * Tap through whatever the game asks (Continue, first choice, dialogs, timing bar, RIFF at the first
- * target, outcome buttons) until `done` holds. Optional hooks see each screen once.
+ * target, outcome buttons) until `done` holds. Optional hooks see each screen once. With
+ * `closeSheets`, a sheet a scene opens (a shop, the journal) is shown to `onSheet`, then closed.
  */
 export async function playUntil(
   page: Page,
   done: () => Promise<boolean>,
-  opts: { onScreen?: (screen: string) => Promise<void>; choose?: string; maxSteps?: number } = {},
+  opts: {
+    onScreen?: (screen: string) => Promise<void>;
+    choose?: string;
+    maxSteps?: number;
+    closeSheets?: boolean;
+    onSheet?: () => Promise<void>;
+  } = {},
 ): Promise<void> {
   const seen = new Set<string>();
   const has = async (id: string) => (await page.getByTestId(id).count()) > 0;
@@ -66,7 +73,10 @@ export async function playUntil(
       seen.add(sc);
       await opts.onScreen(sc);
     }
-    if (await has('popup')) {
+    if (opts.closeSheets && (await has('sheet')) && !(await has('popup'))) {
+      await opts.onSheet?.();
+      await tid(page, 'sheet-close').click();
+    } else if (await has('popup')) {
       for (const id of ['ok', 'yes', 'popup-close']) {
         if (await has(id)) {
           await tid(page, id).first().click();

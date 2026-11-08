@@ -27,6 +27,7 @@ Generated reference. Start with the [guide](../../architecture/code-map.md) for 
 | [tests/e2e/slice.spec.ts](#tests-e2e-slice-spec-ts) | The P2 vertical slice in a 360×740 touch phone: the prologue through the UI, every menu sheet, the pawn shop, a street fight, and Captain Hush. |
 | [tests/e2e/sprites.spec.ts](#tests-e2e-sprites-spec-ts) | Character sprites in the 360×740 phone: the dev gallery shows every sprite at both sizes, and sprites appear wherever a character does (battle cards, dialogue,… |
 | [tests/e2e/stack/cloud.spec.ts](#tests-e2e-stack-cloud-spec-ts) | Cloud saves against the real Docker stack (docker compose up): the production image, the API and Postgres. |
+| [tests/e2e/world.spec.ts](#tests-e2e-world-spec-ts) | The world walk: in a 360×740 phone, visit every place of every ported district and tap every option, playing through whatever it starts (story, choices, shops,… |
 | [tests/integration/explore.test.ts](#tests-integration-explore-test-ts) | The crawler: for every ported district (src/content/pending.ts), build saves at every step of its story, in three states of play, and press every option at eve… |
 | [tests/integration/playthrough.test.ts](#tests-integration-playthrough-test-ts) | The whole game so far, played headlessly with real battles: new game → prologue → every ported district's story → its boss, down every branch of the big boss c… |
 | [tests/integration/slice.test.ts](#tests-integration-slice-test-ts) | The vertical slice, played headlessly: new game → prologue → Tremé → three street wins → Captain Hush → the Quarter unlocks. |
@@ -172,26 +173,26 @@ Shared e2e helpers. Tests reach states through the UI where that's what's being 
 
 - Source: [tests/e2e/helpers.ts](../../../tests/e2e/helpers.ts)
 - Packages: `@playwright/test`
-- Tested by: [saves.spec](#tests-e2e-saves-spec-ts), [slice.spec](#tests-e2e-slice-spec-ts), [sprites.spec](#tests-e2e-sprites-spec-ts), [cloud.spec](#tests-e2e-stack-cloud-spec-ts)
+- Tested by: [saves.spec](#tests-e2e-saves-spec-ts), [slice.spec](#tests-e2e-slice-spec-ts), [sprites.spec](#tests-e2e-sprites-spec-ts), [cloud.spec](#tests-e2e-stack-cloud-spec-ts), [world.spec](#tests-e2e-world-spec-ts)
 
 Declarations:
 
 - <a id="tests-e2e-helpers-ts--tid"></a>**tid** · *function* `(page: Page, id: string): Locator` — Click by data-testid.
-  - used by: here [playUntil](#tests-e2e-helpers-ts--playuntil) · tests: [saves.spec](#tests-e2e-saves-spec-ts), [slice.spec](#tests-e2e-slice-spec-ts), [sprites.spec](#tests-e2e-sprites-spec-ts), [cloud.spec](#tests-e2e-stack-cloud-spec-ts)
+  - used by: here [playUntil](#tests-e2e-helpers-ts--playuntil) · tests: [saves.spec](#tests-e2e-saves-spec-ts), [slice.spec](#tests-e2e-slice-spec-ts), [sprites.spec](#tests-e2e-sprites-spec-ts), [cloud.spec](#tests-e2e-stack-cloud-spec-ts), [world.spec](#tests-e2e-world-spec-ts)
 - <a id="tests-e2e-helpers-ts--watcherrors"></a>**watchErrors** · *function* `(page: Page): string[]` — Collect console errors and uncaught exceptions; assert none at the end of a test.
-  - used by: tests: [saves.spec](#tests-e2e-saves-spec-ts), [slice.spec](#tests-e2e-slice-spec-ts), [sprites.spec](#tests-e2e-sprites-spec-ts)
+  - used by: tests: [saves.spec](#tests-e2e-saves-spec-ts), [slice.spec](#tests-e2e-slice-spec-ts), [sprites.spec](#tests-e2e-sprites-spec-ts), [world.spec](#tests-e2e-world-spec-ts)
 - <a id="tests-e2e-helpers-ts--expectnooverflow"></a>**expectNoOverflow** · *function* `(page: Page, label: string): Promise<void>` — Fail if anything sticks out past the 360px viewport.
-  - used by: tests: [saves.spec](#tests-e2e-saves-spec-ts), [slice.spec](#tests-e2e-slice-spec-ts), [sprites.spec](#tests-e2e-sprites-spec-ts), [cloud.spec](#tests-e2e-stack-cloud-spec-ts)
+  - used by: tests: [saves.spec](#tests-e2e-saves-spec-ts), [slice.spec](#tests-e2e-slice-spec-ts), [sprites.spec](#tests-e2e-sprites-spec-ts), [cloud.spec](#tests-e2e-stack-cloud-spec-ts), [world.spec](#tests-e2e-world-spec-ts)
 - <a id="tests-e2e-helpers-ts--cf"></a>**cf** · *function* `<T, A = undefined>(page: Page, fn: (app: any, arg: A) => T, arg?: A): Promise<T>` — Run app code in the page: `fn(app, arg)` where app is the GameApp (window.CF).
-  - used by: here [quickStart](#tests-e2e-helpers-ts--quickstart) · tests: [saves.spec](#tests-e2e-saves-spec-ts), [slice.spec](#tests-e2e-slice-spec-ts), [sprites.spec](#tests-e2e-sprites-spec-ts)
+  - used by: here [quickStart](#tests-e2e-helpers-ts--quickstart) · tests: [saves.spec](#tests-e2e-saves-spec-ts), [slice.spec](#tests-e2e-slice-spec-ts), [sprites.spec](#tests-e2e-sprites-spec-ts), [world.spec](#tests-e2e-world-spec-ts)
 - <a id="tests-e2e-helpers-ts--screenof"></a>**screenOf** · *function* `(page: Page): Promise<string | null>` — The current screen (data-screen on the app root).
   - used by: here [playUntil](#tests-e2e-helpers-ts--playuntil), [quickStart](#tests-e2e-helpers-ts--quickstart) · tests: [saves.spec](#tests-e2e-saves-spec-ts), [slice.spec](#tests-e2e-slice-spec-ts), [cloud.spec](#tests-e2e-stack-cloud-spec-ts)
-- <a id="tests-e2e-helpers-ts--playuntil"></a>**playUntil** · *function* `(page: Page, done: () => Promise<boolean>, opts: { onScreen?: (screen: string) => Promise<void>; choose?: string; maxSteps?: number } = {}): Promise<void>` — Tap through whatever the game asks (Continue, first choice, dialogs, timing bar, RIFF at the first target, outcome buttons) until `done` holds.
+- <a id="tests-e2e-helpers-ts--playuntil"></a>**playUntil** · *function* `(page: Page, done: () => Promise<boolean>, opts: { onScreen?: (screen: string) => Promise<void>; choose?: string; maxSteps?: number; closeSheets?: boolean; onSheet?: ()…` — Tap through whatever the game asks (Continue, first choice, dialogs, timing bar, RIFF at the first target, outcome buttons) until `done` holds.
   - uses: here [screenOf](#tests-e2e-helpers-ts--screenof), [tid](#tests-e2e-helpers-ts--tid)
-  - used by: here [quickStart](#tests-e2e-helpers-ts--quickstart) · tests: [saves.spec](#tests-e2e-saves-spec-ts), [slice.spec](#tests-e2e-slice-spec-ts), [sprites.spec](#tests-e2e-sprites-spec-ts), [cloud.spec](#tests-e2e-stack-cloud-spec-ts)
+  - used by: here [quickStart](#tests-e2e-helpers-ts--quickstart) · tests: [saves.spec](#tests-e2e-saves-spec-ts), [slice.spec](#tests-e2e-slice-spec-ts), [sprites.spec](#tests-e2e-sprites-spec-ts), [cloud.spec](#tests-e2e-stack-cloud-spec-ts), [world.spec](#tests-e2e-world-spec-ts)
 - <a id="tests-e2e-helpers-ts--quickstart"></a>**quickStart** · *function* `(page: Page, cls = 'trumpet'): Promise<void>` — A new game in Tremé after the prologue, fast: text instant, playback in turbo.
   - uses: here [cf](#tests-e2e-helpers-ts--cf), [playUntil](#tests-e2e-helpers-ts--playuntil), [screenOf](#tests-e2e-helpers-ts--screenof)
-  - used by: tests: [saves.spec](#tests-e2e-saves-spec-ts), [slice.spec](#tests-e2e-slice-spec-ts), [sprites.spec](#tests-e2e-sprites-spec-ts)
+  - used by: tests: [saves.spec](#tests-e2e-saves-spec-ts), [slice.spec](#tests-e2e-slice-spec-ts), [sprites.spec](#tests-e2e-sprites-spec-ts), [world.spec](#tests-e2e-world-spec-ts)
 
 <a id="tests-e2e-saves-spec-ts"></a>
 
@@ -231,6 +232,16 @@ Cloud saves against the real Docker stack (docker compose up): the production im
 
 - Source: [tests/e2e/stack/cloud.spec.ts](../../../tests/e2e/stack/cloud.spec.ts)
 - Imports: core: [rng](core.md#src-core-rng-ts) · engine: [index](engine.md#src-engine-index-ts) · app: [save/format](app.md#src-app-save-format-ts) · tests: [e2e/helpers](#tests-e2e-helpers-ts)
+- Packages: `@playwright/test`
+
+<a id="tests-e2e-world-spec-ts"></a>
+
+### tests/e2e/world.spec.ts
+
+The world walk: in a 360×740 phone, visit every place of every ported district and tap every option, playing through whatever it starts (story, choices, shops, fights), checking for sideways overflow on every screen and sheet and for console errors. This is the UI path the empty French Quarter broke; the headless crawler (tests/integration/explore.test.ts) covers every branch, this covers the real screens.
+
+- Source: [tests/e2e/world.spec.ts](../../../tests/e2e/world.spec.ts)
+- Imports: core: [ids/world](core.md#src-core-ids-world-ts) · content: [pending](content.md#src-content-pending-ts) · tests: [e2e/helpers](#tests-e2e-helpers-ts)
 - Packages: `@playwright/test`
 
 <a id="tests-integration-explore-test-ts"></a>
