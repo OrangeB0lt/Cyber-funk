@@ -1364,14 +1364,13 @@ Declarations:
 The Garden District: its street enemies, its elite and Isolde Vane. Specs: docs/vision/character-design.md (Garden District, Isolde Vane).
 
 - Source: [src/content/sprites/art/garden.ts](../../../src/content/sprites/art/garden.ts)
-- Imports: core: [types/index](core.md#src-core-types-index-ts) · content: [sprites/placeholder](#src-content-sprites-placeholder-ts)
+- Imports: core: [types/index](core.md#src-core-types-index-ts)
 - Imported by: content: [sprites/table](#src-content-sprites-table-ts)
 - Types used: **[core/types/sprites](core.md#src-core-types-sprites-ts)** [SpriteTable](core.md#src-core-types-sprites-ts--spritetable)
 
 Declarations:
 
 - <a id="src-content-sprites-art-garden-ts--garden-art"></a>**GARDEN_ART** · *const* `satisfies Partial<SpriteTable>`
-  - uses: **[content/sprites/placeholder](#src-content-sprites-placeholder-ts)** [todo](#src-content-sprites-placeholder-ts--todo)
   - used by: **[content/sprites/table](#src-content-sprites-table-ts)** [SPRITES](#src-content-sprites-table-ts--sprites)
 
 <a id="src-content-sprites-art-heroes-ts"></a>
@@ -1397,14 +1396,13 @@ Declarations:
 Speakers, guides, vendors and bandmates with art of their own. Specs: docs/vision/character-design.md (People).
 
 - Source: [src/content/sprites/art/people.ts](../../../src/content/sprites/art/people.ts)
-- Imports: core: [types/index](core.md#src-core-types-index-ts) · content: [sprites/placeholder](#src-content-sprites-placeholder-ts)
+- Imports: core: [types/index](core.md#src-core-types-index-ts)
 - Imported by: content: [sprites/table](#src-content-sprites-table-ts)
 - Types used: **[core/types/sprites](core.md#src-core-types-sprites-ts)** [SpriteTable](core.md#src-core-types-sprites-ts--spritetable)
 
 Declarations:
 
 - <a id="src-content-sprites-art-people-ts--people-art"></a>**PEOPLE_ART** · *const* `satisfies Partial<SpriteTable>`
-  - uses: **[content/sprites/placeholder](#src-content-sprites-placeholder-ts)** [todo](#src-content-sprites-placeholder-ts--todo)
   - used by: **[content/sprites/table](#src-content-sprites-table-ts)** [SPRITES](#src-content-sprites-table-ts--sprites)
 
 <a id="src-content-sprites-art-quarter-ts"></a>
@@ -1479,14 +1477,13 @@ Declarations:
 The Central Business District: its street enemies, its elite, the Conductor and the Click. Specs: docs/vision/character-design.md (Central Business District, The Conductor, THE CLICK).
 
 - Source: [src/content/sprites/art/tower.ts](../../../src/content/sprites/art/tower.ts)
-- Imports: core: [types/index](core.md#src-core-types-index-ts) · content: [sprites/placeholder](#src-content-sprites-placeholder-ts)
+- Imports: core: [types/index](core.md#src-core-types-index-ts)
 - Imported by: content: [sprites/table](#src-content-sprites-table-ts)
 - Types used: **[core/types/sprites](core.md#src-core-types-sprites-ts)** [SpriteTable](core.md#src-core-types-sprites-ts--spritetable)
 
 Declarations:
 
 - <a id="src-content-sprites-art-tower-ts--tower-art"></a>**TOWER_ART** · *const* `satisfies Partial<SpriteTable>`
-  - uses: **[content/sprites/placeholder](#src-content-sprites-placeholder-ts)** [todo](#src-content-sprites-placeholder-ts--todo)
   - used by: **[content/sprites/table](#src-content-sprites-table-ts)** [SPRITES](#src-content-sprites-table-ts--sprites)
 
 <a id="src-content-sprites-art-treme-ts"></a>
@@ -1586,7 +1583,7 @@ Stand-in art: a grey "?" bust that keeps the sprite table complete while the rea
 
 - Source: [src/content/sprites/placeholder.ts](../../../src/content/sprites/placeholder.ts)
 - Imports: core: [ids/sprites](core.md#src-core-ids-sprites-ts), [types/index](core.md#src-core-types-index-ts)
-- Imported by: content: [sprites/art/garden](#src-content-sprites-art-garden-ts), [sprites/art/people](#src-content-sprites-art-people-ts), [sprites/art/shopkeepers](#src-content-sprites-art-shopkeepers-ts), [sprites/art/tower](#src-content-sprites-art-tower-ts) · tools: [sprites](tools.md#tools-sprites-ts), [validate-content](tools.md#tools-validate-content-ts)
+- Imported by: content: [sprites/art/shopkeepers](#src-content-sprites-art-shopkeepers-ts) · tools: [sprites](tools.md#tools-sprites-ts), [validate-content](tools.md#tools-validate-content-ts)
 - Types used: **[core/ids/sprites](core.md#src-core-ids-sprites-ts)** [SpriteId](core.md#src-core-ids-sprites-ts--spriteid) · **[core/types/sprites](core.md#src-core-types-sprites-ts)** [GridSpriteDef](core.md#src-core-types-sprites-ts--gridspritedef), [SpriteDef](core.md#src-core-types-sprites-ts--spritedef)
 
 Declarations:
@@ -1598,7 +1595,7 @@ Declarations:
   - used by: here [isTodo](#src-content-sprites-placeholder-ts--istodo), [todo](#src-content-sprites-placeholder-ts--todo)
 - <a id="src-content-sprites-placeholder-ts--todo"></a>**todo** · *function* `<K extends SpriteId>(id: K, size: 24 | 32 = 24): GridSpriteDef & { id: K }` — A placeholder row for `id` (32×32 for bosses).
   - uses: here [Q24](#src-content-sprites-placeholder-ts--q24), [Q32](#src-content-sprites-placeholder-ts--q32)
-  - used by: **[content/sprites/art/garden](#src-content-sprites-art-garden-ts)** [GARDEN_ART](#src-content-sprites-art-garden-ts--garden-art) · **[content/sprites/art/people](#src-content-sprites-art-people-ts)** [PEOPLE_ART](#src-content-sprites-art-people-ts--people-art) · **[content/sprites/art/shopkeepers](#src-content-sprites-art-shopkeepers-ts)** [SHOPKEEPER_ART](#src-content-sprites-art-shopkeepers-ts--shopkeeper-art) · **[content/sprites/art/tower](#src-content-sprites-art-tower-ts)** [TOWER_ART](#src-content-sprites-art-tower-ts--tower-art)
+  - used by: **[content/sprites/art/shopkeepers](#src-content-sprites-art-shopkeepers-ts)** [SHOPKEEPER_ART](#src-content-sprites-art-shopkeepers-ts--shopkeeper-art)
 - <a id="src-content-sprites-placeholder-ts--istodo"></a>**isTodo** · *function* `(def: SpriteDef): boolean` — Whether a row is still a placeholder (the validator skips those).
   - uses: here [Q24](#src-content-sprites-placeholder-ts--q24), [Q32](#src-content-sprites-placeholder-ts--q32)
   - used by: **[tools/sprites](tools.md#tools-sprites-ts)** [generateSpriteGallery](tools.md#tools-sprites-ts--generatespritegallery) · **[tools/validate-content](tools.md#tools-validate-content-ts)** [validateSprites](tools.md#tools-validate-content-ts--validatesprites)
