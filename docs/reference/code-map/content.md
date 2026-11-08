@@ -11,11 +11,11 @@ Generated reference. Start with the [guide](../../architecture/code-map.md) for 
 ```mermaid
 flowchart LR
   n_band_["band/ (2)"]
-  n_bosses_["bosses/ (12)"]
+  n_bosses_["bosses/ (13)"]
   n_classes_["classes/ (8)"]
   n_combat_["combat/ (7)"]
   n_data["data"]
-  n_districts_["districts/ (19)"]
+  n_districts_["districts/ (20)"]
   n_enemies_["enemies/ (3)"]
   n_format["format"]
   n_gear_["gear/ (5)"]
@@ -63,6 +63,7 @@ flowchart LR
   n_districts_ --> n_places
   n_districts_ --> n_quests
   n_districts_ --> n_sheetMusic
+  n_districts_ --> n_stats
   n_districts_ --> n_world_
   n_enemies_ --> n_districts_
   n_gear_ --> n_classes_
@@ -100,6 +101,7 @@ flowchart LR
 | [src/content/bosses/isolde.ts](#src-content-bosses-isolde-ts) | Lady Concertmaster Isolde Vane, Act 6 (Garden District, the Vane Manor ballroom). |
 | [src/content/bosses/mr_ledger.scene.ts](#src-content-bosses-mr-ledger-scene-ts) | Mr. |
 | [src/content/bosses/mr_ledger.ts](#src-content-bosses-mr-ledger-ts) | Mr. |
+| [src/content/bosses/rougarou.scene.ts](#src-content-bosses-rougarou-scene-ts) | Le Rougarou Chromé: Pump Station 13, and the third big choice. |
 | [src/content/bosses/rougarou.ts](#src-content-bosses-rougarou-ts) | Le Rougarou Chromé (Lucien), Act 4 (Manchac Swamp, Pump Station 13). |
 | [src/content/bosses/the_click.ts](#src-content-bosses-the-click-ts) | THE CLICK, the finale (Metronome Tower, the Crown). |
 | [src/content/bosses/vox_perfecta.scene.ts](#src-content-bosses-vox-perfecta-scene-ts) | Vox Perfecta: before and after the fight on the Bourbon Strip, and the first big choice. |
@@ -122,6 +124,7 @@ flowchart LR
 | [src/content/data.ts](#src-content-data-ts) | — |
 | [src/content/districts/bayou/district.ts](#src-content-districts-bayou-district-ts) | Manchac Swamp. |
 | [src/content/districts/bayou/enemies.ts](#src-content-districts-bayou-enemies-ts) | Manchac Swamp: street enemies and the district elite. |
+| [src/content/districts/bayou/places.scene.ts](#src-content-districts-bayou-places-scene-ts) | Manchac Swamp's places: Grand-mère Clothilde's cabin, the Fais Do-Do dancehall, Boudreaux's Boudin Shack and Pump Station 13. |
 | [src/content/districts/cemetery/district.ts](#src-content-districts-cemetery-district-ts) | Cities of the Dead. |
 | [src/content/districts/cemetery/enemies.ts](#src-content-districts-cemetery-enemies-ts) | Cities of the Dead: street enemies and the district elite. |
 | [src/content/districts/garden/district.ts](#src-content-districts-garden-district-ts) | Garden District. |
@@ -359,6 +362,26 @@ Declarations:
 - <a id="src-content-bosses-mr-ledger-ts--mrledger"></a>**mrLedger** · *const* `satisfies BossDef`
   - uses: **[core/types/effects](core.md#src-core-types-effects-ts)** [EffectOps.log](core.md#src-core-types-effects-ts--effectops-log), [EffectOps.summon](core.md#src-core-types-effects-ts--effectops-summon)
   - used by: **[content/bosses/index](#src-content-bosses-index-ts)** [BOSSES](#src-content-bosses-index-ts--bosses)
+
+<a id="src-content-bosses-rougarou-scene-ts"></a>
+
+### src/content/bosses/rougarou.scene.ts
+
+Le Rougarou Chromé: Pump Station 13, and the third big choice. (v1: 09_story.js BOSS_PRE/BOSS_POST.)
+
+- Source: [src/content/bosses/rougarou.scene.ts](../../../src/content/bosses/rougarou.scene.ts)
+- Imports: narrative: [types](narrative.md#src-narrative-types-ts)
+- Imported by: content: [index](#src-content-index-ts)
+- Types used: **[narrative/types](narrative.md#src-narrative-types-ts)** [Scene](narrative.md#src-narrative-types-ts--scene)
+
+Declarations:
+
+- <a id="src-content-bosses-rougarou-scene-ts--pre"></a>**pre** · *function* `(s): Promise<void>`
+  - uses: **[narrative/types](narrative.md#src-narrative-types-ts)** [SceneContext.narrate](narrative.md#src-narrative-types-ts--scenecontext-narrate)
+  - *no references found*
+- <a id="src-content-bosses-rougarou-scene-ts--post"></a>**post** · *function* `(s): Promise<void>`
+  - uses: **[narrative/types](narrative.md#src-narrative-types-ts)** [SceneContext.choice](narrative.md#src-narrative-types-ts--scenecontext-choice), [SceneContext.choose](narrative.md#src-narrative-types-ts--scenecontext-choose), [SceneContext.gainGear](narrative.md#src-narrative-types-ts--scenecontext-gaingear), [SceneContext.giveNote](narrative.md#src-narrative-types-ts--scenecontext-givenote), [SceneContext.narrate](narrative.md#src-narrative-types-ts--scenecontext-narrate), [SceneContext.say](narrative.md#src-narrative-types-ts--scenecontext-say)
+  - *no references found*
 
 <a id="src-content-bosses-rougarou-ts"></a>
 
@@ -739,6 +762,41 @@ Declarations:
 
 - <a id="src-content-districts-bayou-enemies-ts--bayouenemies"></a>**bayouEnemies** · *const* `satisfies Partial<Table<EnemyId, EnemyDef>>`
   - used by: **[content/enemies/index](#src-content-enemies-index-ts)** [ENEMIES](#src-content-enemies-index-ts--enemies)
+
+<a id="src-content-districts-bayou-places-scene-ts"></a>
+
+### src/content/districts/bayou/places.scene.ts
+
+Manchac Swamp's places: Grand-mère Clothilde's cabin, the Fais Do-Do dancehall, Boudreaux's Boudin Shack and Pump Station 13. (v1: legacy/src/08_world.js PLACE_FLOWS cabin/faisdodo/boudin/pump, clothildeTalk, remyQuest, herbsQuest.)
+
+- Source: [src/content/districts/bayou/places.scene.ts](../../../src/content/districts/bayou/places.scene.ts)
+- Imports: core: [ids/combat](core.md#src-core-ids-combat-ts) · narrative: [define](narrative.md#src-narrative-define-ts), [types](narrative.md#src-narrative-types-ts) · content: [places](#src-content-places-ts), [quests](#src-content-quests-ts), [stats](#src-content-stats-ts), [world/shared.scene](#src-content-world-shared-scene-ts)
+- Imported by: content: [index](#src-content-index-ts)
+- Types used: **[core/ids/combat](core.md#src-core-ids-combat-ts)** [StatKey](core.md#src-core-ids-combat-ts--statkey) · **[narrative/types](narrative.md#src-narrative-types-ts)** [Scene](narrative.md#src-narrative-types-ts--scene)
+
+Declarations:
+
+- <a id="src-content-districts-bayou-places-scene-ts--clothildetalk"></a>**clothildeTalk** · *function* `(s): Promise<void>` — Talking to Grand-mère Clothilde: the first time explains the rougarou and asks for herbs.
+  - uses: **[core/rng](core.md#src-core-rng-ts)** [Rng.pick](core.md#src-core-rng-ts--rng-pick) · **[narrative/types](narrative.md#src-narrative-types-ts)** [SceneContext.bookHint](narrative.md#src-narrative-types-ts--scenecontext-bookhint), [SceneContext.say](narrative.md#src-narrative-types-ts--scenecontext-say), [SceneContext.setQuest](narrative.md#src-narrative-types-ts--scenecontext-setquest)
+  - used by: here [cabin](#src-content-districts-bayou-places-scene-ts--cabin)
+- <a id="src-content-districts-bayou-places-scene-ts--herbsquest"></a>**herbsQuest** · *function* `(s): Promise<void>` — The traiteur's herbs: bring three swamp herbs and she blesses one stat, permanently.
+  - uses: **[content/quests](#src-content-quests-ts)** [QUESTS](#src-content-quests-ts--quests) · **[content/stats](#src-content-stats-ts)** [STAT_NAMES](#src-content-stats-ts--stat-names) · **[core/ids/combat](core.md#src-core-ids-combat-ts)** [STAT_KEYS](core.md#src-core-ids-combat-ts--stat-keys) · **[narrative/types](narrative.md#src-narrative-types-ts)** [SceneContext.choose](narrative.md#src-narrative-types-ts--scenecontext-choose), [SceneContext.count](narrative.md#src-narrative-types-ts--scenecontext-count), [SceneContext.gold](narrative.md#src-narrative-types-ts--scenecontext-gold), [SceneContext.narrate](narrative.md#src-narrative-types-ts--scenecontext-narrate), [SceneContext.permStat](narrative.md#src-narrative-types-ts--scenecontext-permstat), [SceneContext.quest](narrative.md#src-narrative-types-ts--scenecontext-quest), [SceneContext.say](narrative.md#src-narrative-types-ts--scenecontext-say), [SceneContext.setQuest](narrative.md#src-narrative-types-ts--scenecontext-setquest), [SceneContext.take](narrative.md#src-narrative-types-ts--scenecontext-take), [SceneContext.title](narrative.md#src-narrative-types-ts--scenecontext-title), [SceneContext.xp](narrative.md#src-narrative-types-ts--scenecontext-xp)
+  - used by: here [cabin](#src-content-districts-bayou-places-scene-ts--cabin)
+- <a id="src-content-districts-bayou-places-scene-ts--cabin"></a>**cabin** · *const*
+  - uses: here [clothildeTalk](#src-content-districts-bayou-places-scene-ts--clothildetalk), [herbsQuest](#src-content-districts-bayou-places-scene-ts--herbsquest) · **[content/places](#src-content-places-ts)** [PLACES](#src-content-places-ts--places) · **[core/rng](core.md#src-core-rng-ts)** [Rng.pick](core.md#src-core-rng-ts--rng-pick) · **[narrative/define](narrative.md#src-narrative-define-ts)** [PlaceHelpers.is](narrative.md#src-narrative-define-ts--placehelpers-is), [definePlace](narrative.md#src-narrative-define-ts--defineplace) · **[narrative/types](narrative.md#src-narrative-types-ts)** [SceneContext.choose](narrative.md#src-narrative-types-ts--scenecontext-choose), [SceneContext.count](narrative.md#src-narrative-types-ts--scenecontext-count), [SceneContext.nextFight](narrative.md#src-narrative-types-ts--scenecontext-nextfight), [SceneContext.rest](narrative.md#src-narrative-types-ts--scenecontext-rest), [SceneContext.say](narrative.md#src-narrative-types-ts--scenecontext-say), [SceneContext.take](narrative.md#src-narrative-types-ts--scenecontext-take), [SceneContext.title](narrative.md#src-narrative-types-ts--scenecontext-title)
+  - used by: **[content/index](#src-content-index-ts)** [PLACE_SCENES](#src-content-index-ts--place-scenes)
+- <a id="src-content-districts-bayou-places-scene-ts--remyquest"></a>**remyQuest** · *function* `(s): Promise<void>` — Remy at the frottoir: hold the dancehall against two waves of Chrome Gators and he's yours.
+  - uses: **[content/quests](#src-content-quests-ts)** [QUESTS](#src-content-quests-ts--quests) · **[core/rng](core.md#src-core-rng-ts)** [Rng.pick](core.md#src-core-rng-ts--rng-pick) · **[narrative/types](narrative.md#src-narrative-types-ts)** [SceneContext.choose](narrative.md#src-narrative-types-ts--scenecontext-choose), [SceneContext.fight](narrative.md#src-narrative-types-ts--scenecontext-fight), [SceneContext.gold](narrative.md#src-narrative-types-ts--scenecontext-gold), [SceneContext.heal](narrative.md#src-narrative-types-ts--scenecontext-heal), [SceneContext.narrate](narrative.md#src-narrative-types-ts--scenecontext-narrate), [SceneContext.quest](narrative.md#src-narrative-types-ts--scenecontext-quest), [SceneContext.recruit](narrative.md#src-narrative-types-ts--scenecontext-recruit), [SceneContext.say](narrative.md#src-narrative-types-ts--scenecontext-say), [SceneContext.setQuest](narrative.md#src-narrative-types-ts--scenecontext-setquest), [SceneContext.title](narrative.md#src-narrative-types-ts--scenecontext-title), [SceneContext.xp](narrative.md#src-narrative-types-ts--scenecontext-xp)
+  - used by: here [faisdodo](#src-content-districts-bayou-places-scene-ts--faisdodo)
+- <a id="src-content-districts-bayou-places-scene-ts--faisdodo"></a>**faisdodo** · *const*
+  - uses: here [remyQuest](#src-content-districts-bayou-places-scene-ts--remyquest) · **[content/places](#src-content-places-ts)** [PLACES](#src-content-places-ts--places) · **[content/world/shared.scene](#src-content-world-shared-scene-ts)** [rumor](#src-content-world-shared-scene-ts--rumor) · **[narrative/define](narrative.md#src-narrative-define-ts)** [definePlace](narrative.md#src-narrative-define-ts--defineplace) · **[narrative/types](narrative.md#src-narrative-types-ts)** [SceneContext.heal](narrative.md#src-narrative-types-ts--scenecontext-heal), [SceneContext.narrate](narrative.md#src-narrative-types-ts--scenecontext-narrate), [SceneContext.nextFight](narrative.md#src-narrative-types-ts--scenecontext-nextfight), [SceneContext.sheet](narrative.md#src-narrative-types-ts--scenecontext-sheet), [SceneContext.title](narrative.md#src-narrative-types-ts--scenecontext-title)
+  - used by: **[content/index](#src-content-index-ts)** [PLACE_SCENES](#src-content-index-ts--place-scenes)
+- <a id="src-content-districts-bayou-places-scene-ts--boudin"></a>**boudin** · *const*
+  - uses: **[content/places](#src-content-places-ts)** [PLACES](#src-content-places-ts--places) · **[core/rng](core.md#src-core-rng-ts)** [Rng.pick](core.md#src-core-rng-ts--rng-pick) · **[narrative/define](narrative.md#src-narrative-define-ts)** [definePlace](narrative.md#src-narrative-define-ts--defineplace) · **[narrative/types](narrative.md#src-narrative-types-ts)** [SceneContext.narrate](narrative.md#src-narrative-types-ts--scenecontext-narrate), [SceneContext.nextFight](narrative.md#src-narrative-types-ts--scenecontext-nextfight), [SceneContext.say](narrative.md#src-narrative-types-ts--scenecontext-say), [SceneContext.sheet](narrative.md#src-narrative-types-ts--scenecontext-sheet), [SceneContext.title](narrative.md#src-narrative-types-ts--scenecontext-title)
+  - used by: **[content/index](#src-content-index-ts)** [PLACE_SCENES](#src-content-index-ts--place-scenes)
+- <a id="src-content-districts-bayou-places-scene-ts--pump"></a>**pump** · *const*
+  - uses: **[content/places](#src-content-places-ts)** [PLACES](#src-content-places-ts--places) · **[narrative/define](narrative.md#src-narrative-define-ts)** [PlaceHelpers.is](narrative.md#src-narrative-define-ts--placehelpers-is), [definePlace](narrative.md#src-narrative-define-ts--defineplace) · **[narrative/types](narrative.md#src-narrative-types-ts)** [SceneContext.boss](narrative.md#src-narrative-types-ts--scenecontext-boss), [SceneContext.narrate](narrative.md#src-narrative-types-ts--scenecontext-narrate), [SceneContext.nextFight](narrative.md#src-narrative-types-ts--scenecontext-nextfight), [SceneContext.title](narrative.md#src-narrative-types-ts--scenecontext-title)
+  - used by: **[content/index](#src-content-index-ts)** [PLACE_SCENES](#src-content-index-ts--place-scenes)
 
 <a id="src-content-districts-cemetery-district-ts"></a>
 
@@ -1270,7 +1328,7 @@ Declarations:
 All content as the app sees it: the data (content/data.ts) plus every scene. The engine and the sim never import this file (they use data.ts), which keeps prose out of their module graph.
 
 - Source: [src/content/index.ts](../../../src/content/index.ts)
-- Imports: core: [ids/enemies](core.md#src-core-ids-enemies-ts), [ids/world](core.md#src-core-ids-world-ts) · narrative: [define](narrative.md#src-narrative-define-ts), [types](narrative.md#src-narrative-types-ts) · content: [bosses/captain_hush.scene](#src-content-bosses-captain-hush-scene-ts), [bosses/mr_ledger.scene](#src-content-bosses-mr-ledger-scene-ts), [bosses/vox_perfecta.scene](#src-content-bosses-vox-perfecta-scene-ts), [data](#src-content-data-ts), [districts/quarter/cutting.scene](#src-content-districts-quarter-cutting-scene-ts), [districts/quarter/places.scene](#src-content-districts-quarter-places-scene-ts), [districts/storyville/places.scene](#src-content-districts-storyville-places-scene-ts), [districts/treme/places.scene](#src-content-districts-treme-places-scene-ts), [format](#src-content-format-ts), [story/prologue.scene](#src-content-story-prologue-scene-ts), [text](#src-content-text-ts), [world/arrivals.scene](#src-content-world-arrivals-scene-ts), [world/streetEvents.scene](#src-content-world-streetevents-scene-ts), [world/streets.scene](#src-content-world-streets-scene-ts)
+- Imports: core: [ids/enemies](core.md#src-core-ids-enemies-ts), [ids/world](core.md#src-core-ids-world-ts) · narrative: [define](narrative.md#src-narrative-define-ts), [types](narrative.md#src-narrative-types-ts) · content: [bosses/captain_hush.scene](#src-content-bosses-captain-hush-scene-ts), [bosses/mr_ledger.scene](#src-content-bosses-mr-ledger-scene-ts), [bosses/rougarou.scene](#src-content-bosses-rougarou-scene-ts), [bosses/vox_perfecta.scene](#src-content-bosses-vox-perfecta-scene-ts), [data](#src-content-data-ts), [districts/bayou/places.scene](#src-content-districts-bayou-places-scene-ts), [districts/quarter/cutting.scene](#src-content-districts-quarter-cutting-scene-ts), [districts/quarter/places.scene](#src-content-districts-quarter-places-scene-ts), [districts/storyville/places.scene](#src-content-districts-storyville-places-scene-ts), [districts/treme/places.scene](#src-content-districts-treme-places-scene-ts), [format](#src-content-format-ts), [story/prologue.scene](#src-content-story-prologue-scene-ts), [text](#src-content-text-ts), [world/arrivals.scene](#src-content-world-arrivals-scene-ts), [world/streetEvents.scene](#src-content-world-streetevents-scene-ts), [world/streets.scene](#src-content-world-streets-scene-ts)
 - Re-exports: `* from './data'`, `{ TEXT } from './text'`, `{ fmtDoubloons } from './format'`, `{ STREET_EVENTS } from './world/streetEvents.scene'`, `{ hitTheStreets, pralineLady, trackBounty, travel, wakeUpAtClub, runEvent, fmtD } from './world/streets.scene'`, `{ ARRIVALS } from './world/arrivals.scene'`, `{ prologue, prologueEnd, resumeTutorial } from './story/prologue.scene'`, `{ cuttingContest } from './districts/quarter/cutting.scene'`, `{ mamaRouxTalk } from './districts/treme/places.scene'`
 - Imported by: app: [battleController](app.md#src-app-battlecontroller-ts), [game](app.md#src-app-game-ts), [lexicon](app.md#src-app-lexicon-ts), [reactPresenter](app.md#src-app-reactpresenter-ts), [sceneContext](app.md#src-app-scenecontext-ts), [session](app.md#src-app-session-ts) · ui: [combat/BattleActions](ui.md#src-ui-combat-battleactions-tsx), [combat/BattleScreen](ui.md#src-ui-combat-battlescreen-tsx), [combat/TimingOverlay](ui.md#src-ui-combat-timingoverlay-tsx), [components/Chips](ui.md#src-ui-components-chips-tsx), [components/Notes](ui.md#src-ui-components-notes-tsx), [components/StatGrid](ui.md#src-ui-components-statgrid-tsx), [layers/PopupLayer](ui.md#src-ui-layers-popuplayer-tsx), [layers/Topbar](ui.md#src-ui-layers-topbar-tsx), [screens/Create](ui.md#src-ui-screens-create-tsx), [screens/District](ui.md#src-ui-screens-district-tsx), [screens/Place](ui.md#src-ui-screens-place-tsx), [sheets/HistorySheet](ui.md#src-ui-sheets-historysheet-tsx), [sheets/MenuSheets](ui.md#src-ui-sheets-menusheets-tsx), [sheets/SavesSheet](ui.md#src-ui-sheets-savessheet-tsx), [sheets/ShopSheet](ui.md#src-ui-sheets-shopsheet-tsx), [sheets/SpritesSheet](ui.md#src-ui-sheets-spritessheet-tsx), [sheets/WorldSheets](ui.md#src-ui-sheets-worldsheets-tsx), [sheets/format](ui.md#src-ui-sheets-format-ts) · tools: [completeness](tools.md#tools-completeness-ts) · tests: [integration/support/crawl](tests.md#tests-integration-support-crawl-ts)
 - Tested by: [explore.test](tests.md#tests-integration-explore-test-ts), [playthrough.test](tests.md#tests-integration-playthrough-test-ts), [transcripts.test](tests.md#tools-parity-transcripts-test-ts)
@@ -1281,7 +1339,7 @@ Declarations:
 - <a id="src-content-index-ts--boss-scenes"></a>**BOSS_SCENES** · *const* `: Partial<Record<BossId, { pre: Scene; post: Scene }>>` — Each boss's scenes: `pre` plays the first time you go in, `post` after you win.
   - used by: **[app/sceneContext](app.md#src-app-scenecontext-ts)** [createSceneContext](app.md#src-app-scenecontext-ts--createscenecontext) · **[tools/completeness](tools.md#tools-completeness-ts)** [checkCompleteness](tools.md#tools-completeness-ts--checkcompleteness) · tests: [playthrough.test](tests.md#tests-integration-playthrough-test-ts)
 - <a id="src-content-index-ts--place-scenes"></a>**PLACE_SCENES** · *const* `: Partial<Record<PlaceId, PlaceScenes>>` — What you can do at each place.
-  - uses: **[content/districts/quarter/places.scene](#src-content-districts-quarter-places-scene-ts)** [feufollet](#src-content-districts-quarter-places-scene-ts--feufollet), [jackson](#src-content-districts-quarter-places-scene-ts--jackson), [market](#src-content-districts-quarter-places-scene-ts--market), [pelican](#src-content-districts-quarter-places-scene-ts--pelican), [strip](#src-content-districts-quarter-places-scene-ts--strip) · **[content/districts/storyville/places.scene](#src-content-districts-storyville-places-scene-ts)** [chopshop](#src-content-districts-storyville-places-scene-ts--chopshop), [counting](#src-content-districts-storyville-places-scene-ts--counting), [lantern](#src-content-districts-storyville-places-scene-ts--lantern) · **[content/districts/treme/places.scene](#src-content-districts-treme-places-scene-ts)** [club](#src-content-districts-treme-places-scene-ts--club), [congo](#src-content-districts-treme-places-scene-ts--congo), [kitchen](#src-content-districts-treme-places-scene-ts--kitchen), [pawn](#src-content-districts-treme-places-scene-ts--pawn)
+  - uses: **[content/districts/bayou/places.scene](#src-content-districts-bayou-places-scene-ts)** [boudin](#src-content-districts-bayou-places-scene-ts--boudin), [cabin](#src-content-districts-bayou-places-scene-ts--cabin), [faisdodo](#src-content-districts-bayou-places-scene-ts--faisdodo), [pump](#src-content-districts-bayou-places-scene-ts--pump) · **[content/districts/quarter/places.scene](#src-content-districts-quarter-places-scene-ts)** [feufollet](#src-content-districts-quarter-places-scene-ts--feufollet), [jackson](#src-content-districts-quarter-places-scene-ts--jackson), [market](#src-content-districts-quarter-places-scene-ts--market), [pelican](#src-content-districts-quarter-places-scene-ts--pelican), [strip](#src-content-districts-quarter-places-scene-ts--strip) · **[content/districts/storyville/places.scene](#src-content-districts-storyville-places-scene-ts)** [chopshop](#src-content-districts-storyville-places-scene-ts--chopshop), [counting](#src-content-districts-storyville-places-scene-ts--counting), [lantern](#src-content-districts-storyville-places-scene-ts--lantern) · **[content/districts/treme/places.scene](#src-content-districts-treme-places-scene-ts)** [club](#src-content-districts-treme-places-scene-ts--club), [congo](#src-content-districts-treme-places-scene-ts--congo), [kitchen](#src-content-districts-treme-places-scene-ts--kitchen), [pawn](#src-content-districts-treme-places-scene-ts--pawn)
   - used by: **[app/session](app.md#src-app-session-ts)** [Session.placeIntro](app.md#src-app-session-ts--session-placeintro), [Session.placeOptions](app.md#src-app-session-ts--session-placeoptions) · **[tools/completeness](tools.md#tools-completeness-ts)** [checkCompleteness](tools.md#tools-completeness-ts--checkcompleteness) · tests: [explore.test](tests.md#tests-integration-explore-test-ts)
 
 <a id="src-content-items-ts"></a>
@@ -1369,14 +1427,14 @@ Places inside districts. What you can do at each one is its scene (districts/&lt
 
 - Source: [src/content/places.ts](../../../src/content/places.ts)
 - Imports: core: [ids/world](core.md#src-core-ids-world-ts), [types/index](core.md#src-core-types-index-ts)
-- Imported by: content: [data](#src-content-data-ts), [districts/quarter/places.scene](#src-content-districts-quarter-places-scene-ts), [districts/storyville/places.scene](#src-content-districts-storyville-places-scene-ts), [districts/treme/places.scene](#src-content-districts-treme-places-scene-ts)
+- Imported by: content: [data](#src-content-data-ts), [districts/bayou/places.scene](#src-content-districts-bayou-places-scene-ts), [districts/quarter/places.scene](#src-content-districts-quarter-places-scene-ts), [districts/storyville/places.scene](#src-content-districts-storyville-places-scene-ts), [districts/treme/places.scene](#src-content-districts-treme-places-scene-ts)
 - Tested by: [explore.test](tests.md#tests-integration-explore-test-ts), [playthrough.test](tests.md#tests-integration-playthrough-test-ts), [content.test](tests.md#tools-parity-content-test-ts)
 - Types used: **[core/ids/world](core.md#src-core-ids-world-ts)** [PlaceId](core.md#src-core-ids-world-ts--placeid) · **[core/types/content](core.md#src-core-types-content-ts)** [PlaceDef](core.md#src-core-types-content-ts--placedef), [Table](core.md#src-core-types-content-ts--table)
 
 Declarations:
 
 - <a id="src-content-places-ts--places"></a>**PLACES** · *const* `: Table<PlaceId, PlaceDef>`
-  - used by: **[app/devStates](app.md#src-app-devstates-ts)** [bossStep](app.md#src-app-devstates-ts--bossstep) · **[app/sceneContext](app.md#src-app-scenecontext-ts)** [createSceneContext](app.md#src-app-scenecontext-ts--createscenecontext) · **[content/districts/quarter/places.scene](#src-content-districts-quarter-places-scene-ts)** [feufollet](#src-content-districts-quarter-places-scene-ts--feufollet), [jackson](#src-content-districts-quarter-places-scene-ts--jackson), [market](#src-content-districts-quarter-places-scene-ts--market), [pelican](#src-content-districts-quarter-places-scene-ts--pelican), [strip](#src-content-districts-quarter-places-scene-ts--strip) · **[content/districts/storyville/places.scene](#src-content-districts-storyville-places-scene-ts)** [chopshop](#src-content-districts-storyville-places-scene-ts--chopshop), [counting](#src-content-districts-storyville-places-scene-ts--counting), [lantern](#src-content-districts-storyville-places-scene-ts--lantern) · **[content/districts/treme/places.scene](#src-content-districts-treme-places-scene-ts)** [congo](#src-content-districts-treme-places-scene-ts--congo), [kitchen](#src-content-districts-treme-places-scene-ts--kitchen), [pawn](#src-content-districts-treme-places-scene-ts--pawn) · **[ui/screens/District](ui.md#src-ui-screens-district-tsx)** [DistrictScreen](ui.md#src-ui-screens-district-tsx--districtscreen) · **[ui/screens/Place](ui.md#src-ui-screens-place-tsx)** [PlaceScreen](ui.md#src-ui-screens-place-tsx--placescreen) · **[tools/completeness](tools.md#tools-completeness-ts)** [checkCompleteness](tools.md#tools-completeness-ts--checkcompleteness) · tests: [explore.test](tests.md#tests-integration-explore-test-ts), [playthrough.test](tests.md#tests-integration-playthrough-test-ts), [content.test](tests.md#tools-parity-content-test-ts)
+  - used by: **[app/devStates](app.md#src-app-devstates-ts)** [bossStep](app.md#src-app-devstates-ts--bossstep) · **[app/sceneContext](app.md#src-app-scenecontext-ts)** [createSceneContext](app.md#src-app-scenecontext-ts--createscenecontext) · **[content/districts/bayou/places.scene](#src-content-districts-bayou-places-scene-ts)** [boudin](#src-content-districts-bayou-places-scene-ts--boudin), [cabin](#src-content-districts-bayou-places-scene-ts--cabin), [faisdodo](#src-content-districts-bayou-places-scene-ts--faisdodo), [pump](#src-content-districts-bayou-places-scene-ts--pump) · **[content/districts/quarter/places.scene](#src-content-districts-quarter-places-scene-ts)** [feufollet](#src-content-districts-quarter-places-scene-ts--feufollet), [jackson](#src-content-districts-quarter-places-scene-ts--jackson), [market](#src-content-districts-quarter-places-scene-ts--market), [pelican](#src-content-districts-quarter-places-scene-ts--pelican), [strip](#src-content-districts-quarter-places-scene-ts--strip) · **[content/districts/storyville/places.scene](#src-content-districts-storyville-places-scene-ts)** [chopshop](#src-content-districts-storyville-places-scene-ts--chopshop), [counting](#src-content-districts-storyville-places-scene-ts--counting), [lantern](#src-content-districts-storyville-places-scene-ts--lantern) · **[content/districts/treme/places.scene](#src-content-districts-treme-places-scene-ts)** [congo](#src-content-districts-treme-places-scene-ts--congo), [kitchen](#src-content-districts-treme-places-scene-ts--kitchen) · … +4 more · tests: [explore.test](tests.md#tests-integration-explore-test-ts), [playthrough.test](tests.md#tests-integration-playthrough-test-ts), [content.test](tests.md#tools-parity-content-test-ts)
 
 <a id="src-content-quests-ts"></a>
 
@@ -1386,14 +1444,14 @@ Side quests as the journal shows them. Each quest's logic lives in its giver's s
 
 - Source: [src/content/quests.ts](../../../src/content/quests.ts)
 - Imports: core: [ids/world](core.md#src-core-ids-world-ts), [types/index](core.md#src-core-types-index-ts)
-- Imported by: content: [data](#src-content-data-ts), [districts/quarter/cutting.scene](#src-content-districts-quarter-cutting-scene-ts), [districts/quarter/places.scene](#src-content-districts-quarter-places-scene-ts), [districts/storyville/places.scene](#src-content-districts-storyville-places-scene-ts), [districts/treme/places.scene](#src-content-districts-treme-places-scene-ts)
+- Imported by: content: [data](#src-content-data-ts), [districts/bayou/places.scene](#src-content-districts-bayou-places-scene-ts), [districts/quarter/cutting.scene](#src-content-districts-quarter-cutting-scene-ts), [districts/quarter/places.scene](#src-content-districts-quarter-places-scene-ts), [districts/storyville/places.scene](#src-content-districts-storyville-places-scene-ts), [districts/treme/places.scene](#src-content-districts-treme-places-scene-ts)
 - Tested by: [explore.test](tests.md#tests-integration-explore-test-ts), [content.test](tests.md#tools-parity-content-test-ts)
 - Types used: **[core/ids/world](core.md#src-core-ids-world-ts)** [QuestId](core.md#src-core-ids-world-ts--questid) · **[core/types/content](core.md#src-core-types-content-ts)** [QuestDef](core.md#src-core-types-content-ts--questdef), [Table](core.md#src-core-types-content-ts--table)
 
 Declarations:
 
 - <a id="src-content-quests-ts--quests"></a>**QUESTS** · *const* `: Table<QuestId, QuestDef>`
-  - used by: **[content/districts/quarter/cutting.scene](#src-content-districts-quarter-cutting-scene-ts)** [cuttingContest](#src-content-districts-quarter-cutting-scene-ts--cuttingcontest) · **[content/districts/quarter/places.scene](#src-content-districts-quarter-places-scene-ts)** [hornQuest](#src-content-districts-quarter-places-scene-ts--hornquest), [lostEyeQuest](#src-content-districts-quarter-places-scene-ts--losteyequest) · **[content/districts/storyville/places.scene](#src-content-districts-storyville-places-scene-ts)** [staticQuest](#src-content-districts-storyville-places-scene-ts--staticquest), [theoTalk](#src-content-districts-storyville-places-scene-ts--theotalk) · **[content/districts/treme/places.scene](#src-content-districts-treme-places-scene-ts)** [kitchen](#src-content-districts-treme-places-scene-ts--kitchen) · **[ui/sheets/MenuSheets](ui.md#src-ui-sheets-menusheets-tsx)** [JournalSheet](ui.md#src-ui-sheets-menusheets-tsx--journalsheet) · **[tests/integration/support/crawl](tests.md#tests-integration-support-crawl-ts)** [buildState](tests.md#tests-integration-support-crawl-ts--buildstate) · tests: [explore.test](tests.md#tests-integration-explore-test-ts), [content.test](tests.md#tools-parity-content-test-ts)
+  - used by: **[content/districts/bayou/places.scene](#src-content-districts-bayou-places-scene-ts)** [herbsQuest](#src-content-districts-bayou-places-scene-ts--herbsquest), [remyQuest](#src-content-districts-bayou-places-scene-ts--remyquest) · **[content/districts/quarter/cutting.scene](#src-content-districts-quarter-cutting-scene-ts)** [cuttingContest](#src-content-districts-quarter-cutting-scene-ts--cuttingcontest) · **[content/districts/quarter/places.scene](#src-content-districts-quarter-places-scene-ts)** [hornQuest](#src-content-districts-quarter-places-scene-ts--hornquest), [lostEyeQuest](#src-content-districts-quarter-places-scene-ts--losteyequest) · **[content/districts/storyville/places.scene](#src-content-districts-storyville-places-scene-ts)** [staticQuest](#src-content-districts-storyville-places-scene-ts--staticquest), [theoTalk](#src-content-districts-storyville-places-scene-ts--theotalk) · **[content/districts/treme/places.scene](#src-content-districts-treme-places-scene-ts)** [kitchen](#src-content-districts-treme-places-scene-ts--kitchen) · **[ui/sheets/MenuSheets](ui.md#src-ui-sheets-menusheets-tsx)** [JournalSheet](ui.md#src-ui-sheets-menusheets-tsx--journalsheet) · **[tests/integration/support/crawl](tests.md#tests-integration-support-crawl-ts)** [buildState](tests.md#tests-integration-support-crawl-ts--buildstate) · tests: [explore.test](tests.md#tests-integration-explore-test-ts), [content.test](tests.md#tools-parity-content-test-ts)
 
 <a id="src-content-roots-ts"></a>
 
@@ -1779,13 +1837,13 @@ Display names for the six stats (v1: STAT_NAMES). Scenes use them for choices li
 
 - Source: [src/content/stats.ts](../../../src/content/stats.ts)
 - Imports: core: [ids/combat](core.md#src-core-ids-combat-ts)
-- Imported by: content: [data](#src-content-data-ts)
+- Imported by: content: [data](#src-content-data-ts), [districts/bayou/places.scene](#src-content-districts-bayou-places-scene-ts)
 - Types used: **[core/ids/combat](core.md#src-core-ids-combat-ts)** [StatKey](core.md#src-core-ids-combat-ts--statkey)
 
 Declarations:
 
 - <a id="src-content-stats-ts--stat-names"></a>**STAT_NAMES** · *const* `: Record<StatKey, string>`
-  - used by: **[ui/components/StatGrid](ui.md#src-ui-components-statgrid-tsx)** [StatGrid](ui.md#src-ui-components-statgrid-tsx--statgrid) · **[ui/sheets/format](ui.md#src-ui-sheets-format-ts)** [gearStats](ui.md#src-ui-sheets-format-ts--gearstats)
+  - used by: **[content/districts/bayou/places.scene](#src-content-districts-bayou-places-scene-ts)** [herbsQuest](#src-content-districts-bayou-places-scene-ts--herbsquest) · **[ui/components/StatGrid](ui.md#src-ui-components-statgrid-tsx)** [StatGrid](ui.md#src-ui-components-statgrid-tsx--statgrid) · **[ui/sheets/format](ui.md#src-ui-sheets-format-ts)** [gearStats](ui.md#src-ui-sheets-format-ts--gearstats)
 
 <a id="src-content-story-acts-ts"></a>
 
@@ -1876,7 +1934,7 @@ Scenes and helpers more than one district uses: instrument stock for shops, bar 
 
 - Source: [src/content/world/shared.scene.ts](../../../src/content/world/shared.scene.ts)
 - Imports: core: [ids/enemies](core.md#src-core-ids-enemies-ts), [ids/items](core.md#src-core-ids-items-ts), [ids/story](core.md#src-core-ids-story-ts), [ids/world](core.md#src-core-ids-world-ts) · narrative: [types](narrative.md#src-narrative-types-ts) · content: [classes/index](#src-content-classes-index-ts), [districts/index](#src-content-districts-index-ts)
-- Imported by: content: [districts/quarter/places.scene](#src-content-districts-quarter-places-scene-ts), [districts/storyville/places.scene](#src-content-districts-storyville-places-scene-ts), [districts/treme/places.scene](#src-content-districts-treme-places-scene-ts)
+- Imported by: content: [districts/bayou/places.scene](#src-content-districts-bayou-places-scene-ts), [districts/quarter/places.scene](#src-content-districts-quarter-places-scene-ts), [districts/storyville/places.scene](#src-content-districts-storyville-places-scene-ts), [districts/treme/places.scene](#src-content-districts-treme-places-scene-ts)
 - Types used: **[content/classes/index](#src-content-classes-index-ts)** [CLASSES](#src-content-classes-index-ts--classes) · **[core/ids/enemies](core.md#src-core-ids-enemies-ts)** [BossId](core.md#src-core-ids-enemies-ts--bossid) · **[core/ids/items](core.md#src-core-ids-items-ts)** [InstrumentTierId](core.md#src-core-ids-items-ts--instrumenttierid) · **[core/ids/world](core.md#src-core-ids-world-ts)** [DistrictId](core.md#src-core-ids-world-ts--districtid) · **[narrative/types](narrative.md#src-narrative-types-ts)** [Scene](narrative.md#src-narrative-types-ts--scene), [SceneContext](narrative.md#src-narrative-types-ts--scenecontext), [ShopStock](narrative.md#src-narrative-types-ts--shopstock)
 
 Declarations:
@@ -1887,7 +1945,7 @@ Declarations:
   - used by: here [rumor](#src-content-world-shared-scene-ts--rumor)
 - <a id="src-content-world-shared-scene-ts--rumor"></a>**rumor** · *function* `(s): Promise<void>` — A tip about the next boss you haven't beaten (recorded in the Blue Book), and a bit of gossip.
   - uses: here [BOSS_RUMORS](#src-content-world-shared-scene-ts--boss-rumors) · **[content/districts/index](#src-content-districts-index-ts)** [DISTRICTS](#src-content-districts-index-ts--districts) · **[core/ids/story](core.md#src-core-ids-story-ts)** [ACT_ORDER](core.md#src-core-ids-story-ts--act-order) · **[core/rng](core.md#src-core-rng-ts)** [Rng.pick](core.md#src-core-rng-ts--rng-pick) · **[narrative/types](narrative.md#src-narrative-types-ts)** [SceneContext.bookHint](narrative.md#src-narrative-types-ts--scenecontext-bookhint), [SceneContext.narrate](narrative.md#src-narrative-types-ts--scenecontext-narrate)
-  - used by: **[content/districts/quarter/places.scene](#src-content-districts-quarter-places-scene-ts)** [pelican](#src-content-districts-quarter-places-scene-ts--pelican), [zinniaTarot](#src-content-districts-quarter-places-scene-ts--zinniatarot)
+  - used by: **[content/districts/bayou/places.scene](#src-content-districts-bayou-places-scene-ts)** [faisdodo](#src-content-districts-bayou-places-scene-ts--faisdodo) · **[content/districts/quarter/places.scene](#src-content-districts-quarter-places-scene-ts)** [pelican](#src-content-districts-quarter-places-scene-ts--pelican), [zinniaTarot](#src-content-districts-quarter-places-scene-ts--zinniatarot)
 - <a id="src-content-world-shared-scene-ts--getinvitation"></a>**getInvitation** · *function* `(s: SceneContext, how: 'celeste' | 'static' | 'valet'): Promise<void>` — The invitation to the Vane ball, from Céleste, Static or the valet: the key item, and the Ball opens.
   - uses: **[narrative/types](narrative.md#src-narrative-types-ts)** [SceneContext.keyItem](narrative.md#src-narrative-types-ts--scenecontext-keyitem), [SceneContext.narrate](narrative.md#src-narrative-types-ts--scenecontext-narrate), [SceneContext.toast](narrative.md#src-narrative-types-ts--scenecontext-toast)
   - used by: **[content/districts/storyville/places.scene](#src-content-districts-storyville-places-scene-ts)** [celesteTalk](#src-content-districts-storyville-places-scene-ts--celestetalk), [staticQuest](#src-content-districts-storyville-places-scene-ts--staticquest)

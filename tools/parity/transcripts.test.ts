@@ -561,6 +561,88 @@ const cases: Case[] = [
       inAct('bayou', 1, { district: 'storyville', choices: { contracts } }),
     ),
   ),
+  // ---- Manchac Swamp ----
+  ...(['yat', 'cajun'] as const).map(roots =>
+    placeCase(`cabin talk, first time (${roots})`, 'cabin', 'talk', inAct('bayou', 1, { roots })),
+  ),
+  placeCase('cabin talk, first time, later step', 'cabin', 'talk', inAct('bayou', 3)),
+  ...(['yat', 'cajun'] as const).map(roots =>
+    placeCase(
+      `cabin talk (${roots})`,
+      'cabin',
+      'talk',
+      inAct('bayou', 2, { roots, flags: ['metRoux', 'metClothilde'] }),
+    ),
+  ),
+  ...(['spared', 'finished'] as const).map(lucien =>
+    placeCase(
+      `cabin talk after the rougarou (${lucien})`,
+      'cabin',
+      'talk',
+      inAct('cemetery', 0, { district: 'bayou', flags: ['metRoux', 'metClothilde'], choices: { lucien } }),
+    ),
+  ),
+  placeCase('cabin treat', 'cabin', 'treat', inAct('bayou', 2)),
+  ...[0, 1].map(pick =>
+    placeCase(
+      `cabin treat with boudin (${pick})`,
+      'cabin',
+      'treat',
+      inAct('bayou', 2, { bag: { boudin: 2 } }),
+      pick,
+    ),
+  ),
+  placeCase('cabin herbs, asked', 'cabin', 'herbs', inAct('bayou', 2)),
+  ...[0, 1, 5].map(pick =>
+    placeCase(
+      `cabin herbs, all three (${pick})`,
+      'cabin',
+      'herbs',
+      inAct('bayou', 3, { quests: { herbs: 'active' }, bag: { swampherb: 3 } }),
+      pick,
+    ),
+  ),
+  placeCase('faisdodo drinks', 'faisdodo', 'drinks', inAct('bayou', 2)),
+  placeCase('faisdodo rumors', 'faisdodo', 'rumors', inAct('bayou', 2)),
+  ...(['yat', 'cajun'] as const).flatMap(roots =>
+    [0, 1].map(pick =>
+      placeCase(
+        `faisdodo remy, asked (${roots}, ${pick})`,
+        'faisdodo',
+        'remy',
+        inAct('bayou', 2, { roots }),
+        pick,
+      ),
+    ),
+  ),
+  placeCase(
+    'faisdodo remy, the waves',
+    'faisdodo',
+    'remy',
+    inAct('bayou', 2, { quests: { faisdodo: 'active' } }),
+  ),
+  ...(['yat', 'cajun'] as const).map(roots =>
+    placeCase(
+      `faisdodo remy, in the band (${roots})`,
+      'faisdodo',
+      'remy',
+      inAct('bayou', 3, { roots, quests: { faisdodo: 'done' }, recruited: ['remy'] }),
+    ),
+  ),
+  placeCase('faisdodo dance', 'faisdodo', 'dance', inAct('bayou', 2)),
+  placeCase('boudin food', 'boudin', 'food', inAct('bayou', 2)),
+  placeCase('boudin joke', 'boudin', 'joke', inAct('bayou', 2)),
+  placeCase('pump fence', 'pump', 'fence', inAct('bayou', 2)),
+  ...[0, 1].map(pick => placeCase(`pump boss (${pick})`, 'pump', 'boss', inAct('bayou', 3), pick)),
+  placeCase('pump boss (again)', 'pump', 'boss', inAct('bayou', 3, { intros: ['rougarou'] })),
+  ...(['spared', 'finished'] as const).map(lucien =>
+    placeCase(
+      `pump listen (${lucien})`,
+      'pump',
+      'listen',
+      inAct('cemetery', 0, { district: 'bayou', choices: { lucien } }),
+    ),
+  ),
   {
     name: 'vox perfecta boss flow',
     state: inAct('quarter', 2),
@@ -702,7 +784,8 @@ function legacyView(S: any) {
       k =>
         S.flags[k] &&
         !/^(intro_|boss_|bosspre_)/.test(k) &&
-        !['vox', 'contracts', 'lucien', 'tremeStepToast', 'pupToast'].includes(k),
+        // boudinGiven: a v1 counter nothing reads (known-issues "Dead fields and flags"); not ported.
+        !['vox', 'contracts', 'lucien', 'tremeStepToast', 'pupToast', 'boudinGiven'].includes(k),
     )
     .sort();
   return {
