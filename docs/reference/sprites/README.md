@@ -4,7 +4,7 @@
 
 Every sprite as the game draws it, at 4× on the surface it sits on in battle and dialogue (`--bg2`). Generated from `src/content/sprites/` by [tools/sprites.ts](../../../tools/sprites.ts). **Don't edit these files:** run `npm run sprites:export` after changing art. A test (`tools/sprites.test.ts`) fails when they are out of date. What each character should look like, and why, is in the [character design doc](../../vision/character-design.md).
 
-**90** sprites · **80** palette colours · **83** still placeholders
+**90** sprites · **80** palette colours · **76** still placeholders
 
 ## Heroes
 
