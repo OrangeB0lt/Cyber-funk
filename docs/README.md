@@ -31,6 +31,7 @@ Start here if you're new. Suggested reading order:
 | [vision/character-design.md](vision/character-design.md) | Art direction, the master palette, the sprite spec, and a design card for every character |
 | [architecture/code-map.md](architecture/code-map.md) | The code map: runtime objects, wiring, and traces of boot, story, battles, saves and sync |
 | [reference/code-map/](reference/code-map/README.md) | Generated: every file, declaration and call edge in `src/`, `server/`, `tools/`, `tests/` |
+| [reference/sprites/](reference/sprites/README.md) | Generated: every character sprite as the game draws it, and the palette |
 | [architecture/core-and-engine.md](architecture/core-and-engine.md) | Core types, the Rng, the engine's modules and combat loop |
 | [architecture/content-model.md](architecture/content-model.md) | Typed content tables, ids, renames from v1 |
 | [architecture/narrative-runtime.md](architecture/narrative-runtime.md) | Scenes, the Director, routes, presenters, battles |

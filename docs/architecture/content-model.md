@@ -58,6 +58,30 @@ The full step-by-step list is [guides/adding-content.md](../guides/adding-conten
 3. **Wire references**: add the enemy to a district `pool`, the item to a shop (in its scene), and so on.
 4. **Run `npm run check`.** The content validator (`tools/validate-content.ts`) catches what types can't, such as an enemy that never spawns or a missing riff flag.
 
+## Character art
+
+Every character's pixel-art sprite lives in `content/sprites/`. The spec for each one is [character-design.md](../vision/character-design.md), and the reasons for the format are in [ADR-0007](../adr/0007-character-sprites.md).
+
+- **Ids.**
+  - An opponent's id is its sprite id. Heroes and Session Clones are `hero_<class>` and `clone_<class>`, and everyone else is in `PERSON_SPRITE_IDS` (`core/ids/sprites.ts`).
+  - A type-level guard stops a person id from reusing an opponent id. (NpcId `valet` is the Silver Tuxedo valet, drawn as `tuxedo_valet`; EnemyId `valet` is the Valet Assassin.)
+- **Rows.**
+  - `SPRITES` (`content/sprites/table.ts`) is a full `Table<SpriteId, SpriteDef>`, merged from the per-family files in `content/sprites/art/`. A new enemy, boss, class or person without art doesn't compile.
+  - A row is either a grid (24 strings of 24 characters, 32×32 for bosses, with `keys` mapping each character to a colour in `PALETTE`) or a variant of another sprite (`recolor` and/or an `overlay`).
+  - The seven Session Clone rows are generated from the heroes.
+- **Who is drawn with what.** `NPC_SPRITE` (`content/sprites/refs.ts`) maps every NpcId to its sprite, and the compiler requires a row per speaker:
+  - Some speakers reuse an opponent's art (`hush` → `captain_hush`).
+  - `you` is the player's hero.
+  - Shopkeepers in places P3 hasn't ported are in `RESERVED_P3`.
+- **Only the UI and tools load it.** A depcruise rule forbids importing `content/sprites/` from core, narrative, engine, app or other content, and nothing re-exports it from `content/index.ts` or `content/data.ts`, so the engine, the sim and headless tests never load art.
+- **Checks.** `tools/validate-content.ts` enforces these rules from the design doc:
+  - grid size, keys, and the pixel alphabet
+  - variant depth and cycles, at least 15% painted pixels, at most 16 colours (20 for bosses)
+  - no duplicates, holograms drawn with `fx: 'holo'`, every palette colour in use
+  - a card in the design doc for every sprite, and a palette table equal to `PALETTE`
+
+  `npm run sprites:export` regenerates the gallery in `docs/reference/sprites/`, and a test fails when it's stale.
+
 ## Functions in content
 
 Some content is behavior: a boss's AI, a skill with a one-off mechanic, a second-line member's join condition. Those are small functions in the content file, with three rules:

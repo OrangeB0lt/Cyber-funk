@@ -44,13 +44,31 @@ One more tiny store, `ui/combat/targeting.ts`, holds battle-input UI state (skil
 
 - **Screens** fill the scrolling middle. **Actions** live in the thumb-reach bar at the bottom. Each screen file exports both (`DistrictScreen` and `DistrictActions`), and `ActionBar` picks by `view.screen`.
 - **Overlays stack** in order: timing, then sheet, then popup, then toast. Everything behind an open sheet or popup is marked `inert` (no focus, no taps, hidden from screen readers).
-- **Sheets** (`sheets/`) share one frame, `sheets/Sheet.tsx`: heading, `‹ Menu` back button, ✕ close, a scrolling body, an optional footer, and Escape to close. A sheet opened by a scene (`s.sheet({ kind: 'shop', … })`) is *awaited*: the scene continues when the player closes it.
+- **Sheets** (`sheets/`) share one frame, `sheets/Sheet.tsx`: heading, an optional `lead` before it (a shop shows its keeper's portrait there), `‹ Menu` back button, ✕ close, a scrolling body, an optional footer, and Escape to close. A sheet opened by a scene (`s.sheet({ kind: 'shop', … })`) is *awaited*: the scene continues when the player closes it.
+
+## Sprites
+
+`components/Sprite.tsx` draws a character's pixel art as inline SVG at a whole-number scale (`shape-rendering="crispEdges"`). It is decorative: the name is always shown as text beside it, so the SVG is `aria-hidden`. It uses only spans and an svg, so it fits inside a `<p>` or a `<button>`. The art, its rules and the reasons are in `content/sprites/`, [character-design.md](../vision/character-design.md) and [ADR-0007](../adr/0007-character-sprites.md).
+
+| Where | Sprite | Scale |
+|---|---|---|
+| Battle enemy cards | the opponent; a Session Clone draws the clone of the class it copied (`actorSprite`) | 3×: 72px, bosses 96px |
+| Battle player panel | your class hero | 2×: 48px |
+| Story lines | the speaker (`StoryLine.npc` or `.sprite`), floated left, first line of a run only; your echoed choices show your hero, flipped, on the right | 2×: 48px (boss art 64px) |
+| Shop sheets | the keeper (`keeper` on the shop request), before the title | 2× |
+| Create, step 3 | each class's hero | 3× |
+| Blue Book, Band, Bounty Board, Status | the opponent, bandmate, elite or your hero (`ItemRow`'s `lead` slot) | 2× (Status 3×) |
+| Dev menu → Sprite gallery | every sprite, grouped | 3× or 2× |
+
+- **Motion is CSS only:** the accent glow, a two-frame idle bob in battle, and a white hit flash. The flash works by keying the svg on the newest damage float's id, so each hit remounts it and replays the animation.
+- **Effects** (`ghost`, `holo`, `glitch`) each keep a static look when reduce motion stops the animation.
+- **Damage numbers** rise from a 160px strip anchored at the sprite, so they stay on screen.
 
 ## Battle view
 
 `ReactPresenter` builds `view.battle` (`BattleView`: actor views, the visible log, floats, the active actor, shake and flash counters, and `legal` while waiting for the player) and steps it event by event as the engine reports what happened.
 
-- `combat/BattleScreen.tsx`: enemy cards (tap to target), the log (last six lines, `aria-live`), the player panel (Heart, Funk, Groove, the Big Four beat for Bass Drum).
+- `combat/BattleScreen.tsx`: enemy cards (a sprite column, then name, Heart, statuses and weakness; tap to target), the log (last six lines, `aria-live`), the player panel (your hero, Heart, Funk, Groove, the Big Four beat for Bass Drum). The enemy list may take 55% of the battle area before it scrolls. Crit shakes and shatter flashes play with `element.animate()` on the screen root, so nothing remounts.
 - `combat/BattleActions.tsx`: RIFF, PLAY (skill picker), SOLO, VAMP, BAG, SPLIT, plus PLAY THE BLUES when it's available. Unavailable actions stay tappable and toast why (v1 behavior), using `aria-disabled` rather than `disabled`.
 - `combat/TimingOverlay.tsx`: the On the One bar (driven by `requestAnimationFrame`; tap anywhere, Space or Enter), the auto-rhythm result, and the six Blues pads. Grading happens in the engine (`gradeTiming`, `scoreBlues`); the component only measures when you tapped.
 
@@ -86,6 +104,7 @@ Every interactive element gets a stable `data-testid`, and Playwright uses `test
 | Settings | `set:textSpeed:instant` |
 | Save slots, history | `save:2`, `save-del:2`, `save-history:2`, `restore:7` (a server revision) |
 | Cloud saves (Settings) | `cloud:status`, `cloud:code`, `cloud:link`, `cloud:link-text`, `cloud:dolink`, `cloud:unlink` |
+| Sprites (not interactive; for tests), gallery size | `sprite:hush_patrol`, `sprite:hero_trumpet`, `gallery-scale:2` |
 
 Keys come from content ids and choice keys, never from labels, so rewording copy never breaks a test.
 

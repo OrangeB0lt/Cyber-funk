@@ -25,6 +25,7 @@ npm run docker:check / docker:e2e                         # check + server tests
 npm run build            # production build -> dist/ (gitignored)
 npm run parity:coverage  # corpus vs legacy engine under c8; fails below 95% branch coverage
 npm run docs:codemap     # regenerate docs/reference/code-map after code changes (npm test fails when stale)
+npm run sprites:export   # regenerate docs/reference/sprites after art changes (npm test fails when stale)
 npm run legacy:build     # rebuild legacy/dist (the hook does this automatically)
 npm run legacy:sim       # v1 balance sim
 npx tsx tools/parity/legacyShots.ts   # v1 reference screenshots at 360px -> legacy/shots/
@@ -39,6 +40,7 @@ Node 24 (`.nvmrc`). `npm run depcruise` calls dependency-cruiser's API (`tools/d
 - No `Math.random` in game logic. Use the seeded `Rng` from `src/core/rng.ts`; functions that consume randomness take it explicitly.
 - Every id kind gets an `as const` list in `src/core/ids/`. Tables are `satisfies Record<Id, Def>`. Every field of a `core/types` interface has TSDoc (ESLint enforces it).
 - Content never imports the engine. It gets engine capabilities through `EffectOps` arguments. Only `*.scene.ts` content files may import `narrative/`.
+- Every opponent, class and speaker has a pixel-art sprite in `src/content/sprites/`, and a missing one doesn't compile. Draw to the spec in `docs/vision/character-design.md` (one card per sprite, the 80-colour palette, 24×24 grids, 32×32 bosses), then run `npm run sprites:export`. Only `ui/` and `tools/` may import `content/sprites/` (ADR-0007).
 
 ## Phases
 
