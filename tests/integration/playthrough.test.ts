@@ -10,10 +10,12 @@ import { describe, expect, it } from 'vitest';
 import { Session } from '@app/session';
 import { memorySaveStorage } from '@app/save/storage';
 import { ScriptedPresenter, type ScriptPolicy } from '@app/testing/scriptedPresenter';
+import { decodeSave } from '@app/save/format';
 import { bossStep } from '@app/devStates';
 import { BOSS_IDS, type BossId } from '@core/ids/enemies';
 import type { DistrictId, PlaceId } from '@core/ids/world';
-import type { StepDef } from '@core/types';
+import type { GameState, StepDef } from '@core/types';
+import type { StoryCard } from '@narrative/types';
 import { ACTS, BOSS_SCENES, BOSSES, DISTRICTS, PLACES } from '@content/index';
 import { defaultSettings, storyIs } from '@engine/index';
 
@@ -46,6 +48,90 @@ const CONSEQUENCES: Record<string, (s: Session) => string | null> = {
         ? null
         : 'no Chrome Fang',
 };
+
+/** Each branch's line in the epilogue: [card title, how its text starts]. */
+const EPILOGUE: Record<string, [string, string]> = {
+  'vox_perfecta=reprogram': ['Vox Perfecta', 'Sings three nights a week'],
+  'vox_perfecta=shutdown': ['Vox Perfecta', 'The main stage on Bourbon went dark'],
+  'mr_ledger=burn': ['Storyville', 'Free. Madame Céleste marched'],
+  'mr_ledger=keep': ['Storyville', 'Still runs on your paper'],
+  'rougarou=spare': ['Lucien', 'Runs the Chrome Wolves'],
+  'rougarou=finish': ['Lucien', 'The pack scattered'],
+};
+
+/** The epilogue cards the player saw last. */
+function epilogueOf(p: Player): StoryCard[] {
+  const shown = p.presenter.transcript.filter(e => e.t === 'cards' && e.style === 'epilogue');
+  const last = shown.at(-1);
+  return last && last.t === 'cards' ? last.items : [];
+}
+
+/**
+ * New Game+ from a finished game: the club's March again → New Game+ → yes. Returns the problems
+ * found, checking the New Game+ save as it was written (before the prologue's fights add XP) and
+ * that the prologue then plays.
+ */
+async function newGamePlusFrom(where: string, save: string): Promise<string[]> {
+  const problems: string[] = [];
+  const q = player(17, save, ['ngplus']);
+  const old = q.session.game;
+  const written: GameState[] = [];
+  const storage = q.session.deps.storage;
+  const write = storage.write.bind(storage);
+  storage.write = raw => {
+    const r = decodeSave(raw);
+    if (typeof r !== 'string' && r.game.ngPlus === 1) written.push(r.game);
+    return write(raw);
+  };
+  const before = JSON.parse(JSON.stringify(old)) as GameState;
+  q.session.enterPlace('club');
+  await act(q, `${where}: club:ngplus`, () => q.session.chooseOption('club', 'ngplus'));
+  const ns = written[0];
+  if (!ns) return [`${where}: New Game+ never saved`];
+  const carried = [
+    'level',
+    'xp',
+    'gear',
+    'gearBag',
+    'sheet',
+    'perm',
+    'blessings',
+    'bag',
+    'lexicon',
+    'day',
+  ] as const;
+  for (const k of carried)
+    if (JSON.stringify(ns[k]) !== JSON.stringify(before[k]))
+      problems.push(`${where}: NG+ ${k} not carried over`);
+  if (ns.doubloons !== Math.round(before.doubloons * 0.5))
+    problems.push(`${where}: NG+ doubloons ${ns.doubloons}, expected half of ${before.doubloons}`);
+  if (Object.values(ns.book).some(e => !e?.seen)) problems.push(`${where}: NG+ book entries not all seen`);
+  const fresh = {
+    ngPlus: 1,
+    story: { act: 'treme', step: 'meet_roux' },
+    secondLine: null,
+    flags: {},
+    counters: {},
+    notes: [],
+    quests: {},
+    bossesDefeated: [],
+    choices: {},
+  };
+  for (const [k, v] of Object.entries(fresh))
+    if (JSON.stringify(ns[k as keyof GameState]) !== JSON.stringify(v))
+      problems.push(`${where}: NG+ ${k} is ${JSON.stringify(ns[k as keyof GameState])}`);
+  // Then the prologue plays through, at ngPlus 1.
+  const g = q.session.game;
+  if (!q.presenter.lines().some(l => l.startsWith('The city resets like a tape rewound. Enemies are 30%')))
+    problems.push(`${where}: no New Game+ narration`);
+  if (!q.presenter.lines().some(l => l.startsWith('NEON ORLEANS, 2084')))
+    problems.push(`${where}: no prologue`);
+  if (g.ngPlus !== 1 || g.story.act !== 'treme' || g.story.step !== 'win_street_fights')
+    problems.push(`${where}: after NG+ the story is ${g.story.act}.${g.story.step} (ngPlus ${g.ngPlus})`);
+  const reloaded = new Session({ presenter: new ScriptedPresenter(), storage: memorySaveStorage() });
+  if (reloaded.load(q.session.serialize()) !== null) problems.push(`${where}: the NG+ save doesn't load`);
+  return problems;
+}
 
 /** Steps the hints don't point at. */
 const STEP_FALLBACK: Partial<Record<string, (s: Session) => Promise<unknown>>> = {
@@ -225,7 +311,7 @@ async function playAll(seed: number): Promise<Leaf[]> {
 }
 
 describe('playthrough', () => {
-  it('plays from a new game to the ending, down every branch of the boss choices', async () => {
+  it('plays from a new game to the ending down every branch of the boss choices, then New Game+', async () => {
     const leaves = await playAll(17);
     const choiceBosses = BOSS_IDS.filter(b => CHOICE_BOSSES[b]);
     expect(leaves).toHaveLength(2 ** choiceBosses.length);
@@ -241,7 +327,18 @@ describe('playthrough', () => {
       for (const step of path) {
         const why = CONSEQUENCES[step]?.(p.session);
         if (why) problems.push(`${where}: ${step}: ${why}`);
+        // The epilogue tells this branch's story.
+        const [title, starts] = EPILOGUE[step]!;
+        const card = epilogueOf(p).find(c => c.title === title);
+        if (!card?.text.startsWith(starts)) problems.push(`${where}: ${step}: epilogue says ${card?.text}`);
       }
+      const line = epilogueOf(p).find(c => c.title === 'The Second Line');
+      if (
+        line?.text !==
+        `${g.secondLine?.length} strong on the night the Click broke. Everyone in it got a hat.`
+      )
+        problems.push(`${where}: the second line card says ${line?.text}`);
+      problems.push(...(await newGamePlusFrom(where, p.session.serialize()!)));
       // The final save loads back.
       const reloaded = new Session({ presenter: new ScriptedPresenter(), storage: memorySaveStorage() });
       if (reloaded.load(p.session.serialize()) !== null) problems.push(`${where}: the save doesn't load`);

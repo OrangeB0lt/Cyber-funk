@@ -48,11 +48,11 @@ flowchart TD
   narrative -->|13| core
   server -->|8| app
   server -->|1| core
-  tests -->|42| app
+  tests -->|43| app
   tests -->|13| content
   tests -->|67| core
   tests -->|23| engine
-  tests -->|5| narrative
+  tests -->|6| narrative
   tests -->|6| server
   tests -->|24| tools
   tests -->|1| ui

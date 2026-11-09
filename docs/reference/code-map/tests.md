@@ -324,7 +324,7 @@ The crawler: for every district, build saves at every step of its story, in four
 The whole game, played headlessly with real battles: new game → prologue → every district's story → its boss → the second line → the Tower → the ending, down every branch of the big boss choices.
 
 - Source: [tests/integration/playthrough.test.ts](../../../tests/integration/playthrough.test.ts)
-- Imports: core: [ids/enemies](core.md#src-core-ids-enemies-ts), [ids/world](core.md#src-core-ids-world-ts), [types/index](core.md#src-core-types-index-ts) · content: [index](content.md#src-content-index-ts) · engine: [index](engine.md#src-engine-index-ts) · app: [devStates](app.md#src-app-devstates-ts), [save/storage](app.md#src-app-save-storage-ts), [session](app.md#src-app-session-ts), [testing/scriptedPresenter](app.md#src-app-testing-scriptedpresenter-ts)
+- Imports: core: [ids/enemies](core.md#src-core-ids-enemies-ts), [ids/world](core.md#src-core-ids-world-ts), [types/index](core.md#src-core-types-index-ts) · narrative: [types](narrative.md#src-narrative-types-ts) · content: [index](content.md#src-content-index-ts) · engine: [index](engine.md#src-engine-index-ts) · app: [devStates](app.md#src-app-devstates-ts), [save/format](app.md#src-app-save-format-ts), [save/storage](app.md#src-app-save-storage-ts), [session](app.md#src-app-session-ts), [testing/scriptedPresenter](app.md#src-app-testing-scriptedpresenter-ts)
 - Packages: `vitest`
 - Suites: “playthrough”
 

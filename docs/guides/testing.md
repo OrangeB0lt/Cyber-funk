@@ -82,6 +82,13 @@ expect(session.game.story).toEqual({ act: 'treme', step: 'win_street_fights' });
 
 The policy answers every prompt (`choose`, `intent`, `timing`, `confirm`, `sheet`, `defeat`), and `p.transcript` records what the player would have seen. Battles run for real in the engine; set `intent` and `timing` policies to steer them. Use these tests for any story logic: they're fast, deterministic and don't depend on UI wording.
 
+`tests/integration/playthrough.test.ts` plays the whole game that way, in well under a second. It goes from a new game through every district, the second line and the Tower to the ending, forking at each big boss choice, so it plays all 8 combinations. Each leaf must:
+- have beaten every boss and hold every Blue Note
+- show the epilogue that matches its choices
+- start New Game+ from the club
+
+The New Game+ save is checked field by field (what carries over, what's halved, what resets), and then the prologue plays again. The scripted player follows the "!" hints, grinds before bosses, always goes up from the Studio Floor's vending machine, keeps playing at the credits, and gives a step a few tries (a Tower defeat wakes you at the club).
+
 ## End to end
 
 The e2e build is a production build in `test` mode (`vite build --mode test`), which also exposes `window.CF` (the `GameApp`). `tests/e2e/helpers.ts` provides:
