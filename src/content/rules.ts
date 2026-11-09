@@ -64,6 +64,9 @@ export const ENCOUNTER_RIGS: readonly EncounterRig[] = [
 /** Selling returns this fraction of the base price (at least Ð1). */
 export const SELL_RATE = 0.4;
 
+/** A sparring match at Congo Square pays this share of a street fight's Doubloons ("practice fights, real XP, half the Doubloons"). */
+export const SPAR_DOUBLOON_RATE = 0.5;
+
 /** Losing a street fight costs this fraction of your Doubloons. */
 export const STREET_DEFEAT_DOUBLOON_LOSS = 0.2;
 

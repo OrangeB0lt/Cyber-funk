@@ -4,7 +4,7 @@
 import type { ItemId } from '@core/ids/items';
 import type { Battle, BattleRewards } from '@core/types';
 
-import { LOOT, QUEST_DROPS } from '@content/data';
+import { LOOT, QUEST_DROPS, SPAR_DOUBLOON_RATE } from '@content/data';
 import { countItem } from '../inventory';
 import { derivedStats, funkPct, healPct, clampVitals } from '../stats';
 import { storyIs } from '../story';
@@ -53,7 +53,9 @@ export function battleRewards(b: Battle): BattleRewards {
     }
   });
   const mojoBonus = 1 + 0.01 * effStat(b.player, 'mojo') + st.doubloonBonus;
-  gold = Math.round(gold * mojoBonus) + b.stolen;
+  gold = Math.round(gold * mojoBonus);
+  if (b.context === 'spar') gold = Math.round(gold * SPAR_DOUBLOON_RATE);
+  gold += b.stolen;
   return { xp: Math.round(xp), gold, drops };
 }
 

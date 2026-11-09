@@ -29,7 +29,6 @@ These go away by construction. Where the visible sequence changed, the transcrip
 | *Cayenne*-style next-tone boosts and Dirge's +50% apply only to the first hit of multi-hit or all-target skills. | `05_engine.js:272-274` | design call |
 | Boss telegraphs are logged on the same turn as the move (only `charge` moves give a real warning). | `05_engine.js:457` | design call |
 | Play the Blues is always timed, even with auto rhythm (auto rhythm covers only the On the One bar), so players who can't tap in time can't land the Click's shield break well. Found in the P3 accessibility pass. | `07_ui_combat.js` (v2: `battleController.ts`) | design call |
-| Spar promises "half the Doubloons" but pays normally. | `08_world.js:203` | bug |
 | NG+ re-grants story gear (`thr_regalia`, `ch_fang`), creating duplicates, and resets `legendBuilt`, so Ti-Jacques builds a second legendary instrument. | `09_story.js` | bug |
 | `flags.endingCount` resets every NG+, so it is always 1. | `09_story.js:309` | bug |
 | The broadcaster's "smash" path advances the story step even if you flee, and records no flag. | `09_story.js:172` | bug |
@@ -51,3 +50,4 @@ Each fix landed in its own commit with a test that failed first; the commit name
 | **An assist helper's death ends the battle as a loss.** A bandmate assist is a 1-HP `side:'player'` actor; if its hit gets countered (for example by a Countermelody the Archive Drone recorded from you), `checkDeath` runs the *player* death path. Reproduced: 170 of 200 trials in that setup. | `checkDeath` lets an assist helper leave; the battle goes on | `src/engine/combat/combat.test.ts`: "a bandmate's assist that gets countered and cut doesn't end the battle" |
 | Second Line Smoke escapes boss fights; its description says "non-boss". | Items with `escape` are refused, keeping the item and the turn, in boss and no-flee fights | `src/engine/combat/combat.test.ts`: "Second Line Smoke is refused in a boss fight, keeping the item and the turn" |
 | Tripping the 200-iteration loop guard in `runUntilPlayer` counts as a loss in the UI. | `callOff`: the fight ends as `fled` with `stalled` set and its own line; no defeat penalty | `src/engine/combat/combat.test.ts`: "a fight that never reaches the player's turn is called off, not lost" |
+| Spar promises "half the Doubloons" but pays normally. | `battleRewards` pays `SPAR_DOUBLOON_RATE` (half) in spar fights, so the victory screen shows it | `src/engine/combat/combat.test.ts`: "a spar pays half the Doubloons of the same fight on the street, and the same XP" |

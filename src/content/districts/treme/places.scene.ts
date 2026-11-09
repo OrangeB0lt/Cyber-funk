@@ -326,13 +326,12 @@ function spar(bonus: number): Scene {
       e => !e.elite && !e.rival && e.district !== 'tower' && e.id !== 'ghost_track',
     );
     const ids = [s.rng.pick(pool).id, s.rng.pick(pool).id];
-    const res = await s.fight({
+    await s.fight({
       enemies: ids,
       level: lvl,
       context: 'spar',
       intro: 'Sparring partners step into the circle. The drummers keep time.',
     });
-    if (res === 'win') s.game.doubloons = Math.round(s.game.doubloons);
   };
 }
 

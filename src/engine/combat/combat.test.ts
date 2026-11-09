@@ -7,10 +7,19 @@ import { describe, expect, it } from 'vitest';
 import { hasStatus } from '@core/helpers';
 import type { ClassId } from '@core/ids/characters';
 import type { OpponentId } from '@core/ids/enemies';
-import { createRng } from '@core/rng';
+import { createRng, restoreRng } from '@core/rng';
 import type { Battle, BattleEvent, BattleOptions, GameState } from '@core/types';
 import { TIMING } from '@content/data';
-import { addItem, createBattle, fullRest, makeEnemy, newGame, playerAction, runUntilPlayer } from '../index';
+import {
+  addItem,
+  battleRewards,
+  createBattle,
+  fullRest,
+  makeEnemy,
+  newGame,
+  playerAction,
+  runUntilPlayer,
+} from '../index';
 import { applyStatusRaw } from './statuses';
 import { endTurn, runAssists } from './turns';
 
@@ -249,5 +258,21 @@ describe('the loop guard', () => {
     expect(b.over).toBe(true);
     expect(b.result).toBe('fled');
     expect(b.stalled).toBe(true);
+  });
+});
+
+describe('rewards', () => {
+  it('a spar pays half the Doubloons of the same fight on the street, and the same XP', () => {
+    const b = setup('trumpet', [
+      { id: 'nutria', level: 8 },
+      { id: 'hustler', level: 8 },
+    ]);
+    const at = b.rng.save();
+    const street = battleRewards(b);
+    b.rng = restoreRng(at);
+    b.context = 'spar';
+    const spar = battleRewards(b);
+    expect(spar.xp).toBe(street.xp);
+    expect(spar.gold).toBe(Math.round(street.gold * 0.5));
   });
 });
