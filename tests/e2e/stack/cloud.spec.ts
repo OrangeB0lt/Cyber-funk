@@ -3,7 +3,7 @@
  * and Postgres. Two browser contexts play the part of two phones.
  *
  *   docker compose up --build -d --wait
- *   E2E_STACK_URL=http://localhost:8080 npx playwright test
+ *   E2E_STACK_URL=https://localhost:8443 npx playwright test
  *
  * The production build has no window.CF, so states are set up the way a player would, plus a save
  * seeded into localStorage (as if it had been played on this phone before).

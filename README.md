@@ -17,11 +17,11 @@ No images and no audio files: every sound is synthesized with the Web Audio API.
 **With Docker** (the game, its save server and the database):
 
 ```bash
-docker compose up --build -d --wait     # then open http://localhost:8080
+docker compose up --build -d --wait     # then open https://localhost:8443
 docker compose down                     # stop; saves are kept in a Docker volume
 ```
 
-To play on your phone, open `http://<your computer's LAN IP>:8080` on the same Wi-Fi. Settings live in `.env` (copy [`.env.example`](.env.example)). Before running it anywhere but your own machine, change the database password.
+To play on your phone, or install it there as an app, follow [docs/guides/docker.md](docs/guides/docker.md#play-and-install-on-your-phone) (HTTPS through Caddy). Settings live in `.env` (copy [`.env.example`](.env.example)). Before running it anywhere but your own machine, change the database password.
 
 **v1:** open `legacy/dist/cyberfunk.html` in a browser. It's one self-contained file.
 
@@ -67,7 +67,7 @@ VITE_CLOUD=off npm run dev                 # or: UI work with no server at all (
 | `npm test` | The game's Vitest suites: unit, content validation, headless playthroughs, parity with v1. Needs no database. |
 | `npm run test:server` | The server's tests against a real Postgres (the dev `db` container) |
 | `npm run e2e` | Playwright on a 360×740 touch phone: builds a local-only test build and fails on any horizontal overflow |
-| `E2E_STACK_URL=http://localhost:8080 npx playwright test` | The cloud-save e2e, against the running Docker stack (two browsers playing two phones) |
+| `E2E_STACK_URL=https://localhost:8443 npx playwright test` | The cloud-save e2e, against the running Docker stack (two browsers playing two phones) |
 | `npm run build` / `npm run build:server` | The game → `dist/`; the server → one bundle in `dist-server/` |
 | `npm run db:generate` | After editing `server/db/schema.ts`: writes the SQL migration (commit it) |
 | `npm run sim` / `npm run trace` | Headless balance simulation; one fight's log |

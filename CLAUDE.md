@@ -18,8 +18,8 @@ npm run dev              # Vite dev server (the v2 game; window.CF is the GameAp
 npm run e2e              # Playwright at 360×740: builds in test mode (cloud off), runs tests/e2e (fails on overflow)
 npm run dev:server       # the API on :8787 (needs DATABASE_URL); `npm run dev` forwards /api to it
 npm run db:generate      # after editing server/db/schema.ts: write the SQL migration (commit it)
-docker compose up --build -d --wait                       # production stack: game + API + Postgres on :8080
-E2E_STACK_URL=http://localhost:8080 npx playwright test   # tests/e2e/stack against that stack
+docker compose up --build -d --wait                       # production stack: Caddy (HTTPS :8443) + game + API + Postgres
+E2E_STACK_URL=https://localhost:8443 npx playwright test  # tests/e2e/stack against that stack
 docker compose -f compose.dev.yaml up --build             # develop in Docker: :5173 (HMR), :8787, Postgres
 npm run docker:check / docker:e2e                         # check + server tests / e2e inside containers
 npm run build            # production build -> dist/ (gitignored)

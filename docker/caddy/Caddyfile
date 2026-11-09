@@ -1,0 +1,22 @@
+# HTTPS in front of the game (compose.yaml). Installing the game as an app on a phone needs HTTPS.
+#
+# SITE_ADDRESS (default localhost) is the name or IP players use. For localhost and IP addresses
+# Caddy issues certificates from its own local CA (trust its root on a phone: docs/guides/docker.md);
+# for a real domain it gets a Let's Encrypt certificate (set HTTP_PORT=80 and HTTPS_PORT=443).
+#
+# Caddy listens on the same ports the host publishes. HTTP redirects to HTTPS by hand, because
+# Caddy's automatic redirect leaves out a port that isn't 443. (ACME challenges for a real domain are
+# still answered on the HTTP port.)
+{
+	http_port {$HTTP_PORT:8080}
+	https_port {$HTTPS_PORT:8443}
+}
+
+{$SITE_ADDRESS:localhost} {
+	encode zstd gzip
+	reverse_proxy app:8080
+}
+
+http://{$SITE_ADDRESS:localhost} {
+	redir https://{host}:{$HTTPS_PORT:8443}{uri} permanent
+}

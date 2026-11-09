@@ -56,7 +56,7 @@ The project owner asked for saves in PostgreSQL, the whole application in Docker
   - The `stack` Playwright project drives the Docker stack with two browser contexts as two phones.
   - `npm test` stays database-free and fast.
 - **CI gains two jobs:** `server`, with a Postgres service, and `stack`, which runs Compose and the stack e2e.
-- **P5's service worker must never cache `/api/*`.** Publishing the game as a static site (the old GitHub Pages idea) now means the local-only build.
+- **P5's service worker must never cache `/api/*`** (done: tests/e2e/pwa.spec.ts and tests/e2e/stack/pwa.spec.ts check it). Publishing the game as a static site (the old GitHub Pages idea) now means the local-only build.
 - **`@fastify/static` pulls in `glob`, which has a moderate advisory.** It only matters for `wildcard: false`, which we don't use, so `glob` never runs. Upgrade when a fixed release is two weeks old.
 
 ## Alternatives considered

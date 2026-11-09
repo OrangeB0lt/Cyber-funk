@@ -36,7 +36,7 @@ npm run docker:check                  # check + server tests inside the dev cont
 npm run docker:e2e                    # the local e2e suite inside the Playwright container
 
 docker compose up --build -d --wait                       # the production stack, then:
-E2E_STACK_URL=http://localhost:8080 npx playwright test   # the stack suite
+E2E_STACK_URL=https://localhost:8443 npx playwright test  # the stack suite (HTTPS through Caddy)
 ```
 
 ## Adding a place or boss

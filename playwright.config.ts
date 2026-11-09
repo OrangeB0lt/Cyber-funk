@@ -5,8 +5,9 @@
    Two suites:
    - local (default, `npm run e2e`): a `test`-mode build with no server (cloud saves off), served by
      vite preview, with the window.CF handle tests use to set up states.
-   - stack (E2E_STACK_URL=http://localhost:8080 npx playwright test): tests/e2e/stack against the
-     running Docker stack (docker compose up): the production image, the API and Postgres. */
+   - stack (E2E_STACK_URL=https://localhost:8443 npx playwright test): tests/e2e/stack against the
+     running Docker stack (docker compose up): Caddy (HTTPS with its local CA, so certificate errors
+     are ignored), the production image, the API and Postgres. */
 import { defineConfig } from '@playwright/test';
 
 const stackUrl = process.env.E2E_STACK_URL;
@@ -30,7 +31,19 @@ export default defineConfig({
     trace: 'retain-on-failure',
   },
   projects: stackUrl
-    ? [{ name: 'stack', testMatch: 'stack/**/*.spec.ts', timeout: 120_000 }]
+    ? [
+        {
+          name: 'stack',
+          testMatch: 'stack/**/*.spec.ts',
+          timeout: 120_000,
+          use: {
+            ignoreHTTPSErrors: true,
+            // Caddy's local CA isn't trusted here, and Chromium won't register a service worker
+            // over an untrusted certificate even with ignoreHTTPSErrors. (A phone trusts the CA.)
+            launchOptions: { args: ['--ignore-certificate-errors'] },
+          },
+        },
+      ]
     : [
         { name: 'local', testIgnore: ['stack/**', 'pwa.spec.ts'] },
         { name: 'pwa', testMatch: 'pwa.spec.ts', testIgnore: 'stack/**', use: { serviceWorkers: 'allow' } },

@@ -87,7 +87,7 @@ jobs:
       - run: npx playwright install --with-deps chromium
       - run: npx playwright test
         env:
-          E2E_STACK_URL: http://localhost:8080
+          E2E_STACK_URL: https://localhost:8443
       - if: failure()
         run: docker compose logs
       - uses: actions/upload-artifact@v4

@@ -118,7 +118,6 @@ Each slot on the device has bookkeeping (`cyberfunk_sync_v2:<slot>`):
 - Bearer tokens, no cookies, same origin, no CORS headers. CSRF has nothing to ride on.
 - The CSP allows `'self'` only, plus inline styles for React's style attributes. `X-Frame-Options: DENY` and `nosniff` are set too.
 - Uploads are size-capped and validated with the game's own schema before they touch the database.
-- Rate limits: 300 requests per minute per IP, and 10 new players per hour per IP. Behind a reverse proxy, set `TRUST_PROXY=true` so these see the client's IP.
-- **Not covered yet:**
-  - TLS. Put a reverse proxy in front; Caddy is the planned add-on.
-  - Rotating a leaked code. A future `POST /players/me/rotate`.
+- Rate limits: 300 requests per minute per IP, and 10 new players per hour per IP. The stack runs the app behind Caddy with `TRUST_PROXY=true`, so these see the client's IP.
+- TLS: Caddy terminates it in front of the app (compose.yaml, [docker.md](../guides/docker.md#play-and-install-on-your-phone)).
+- **Not covered yet:** rotating a leaked code. A future `POST /players/me/rotate`.
