@@ -154,7 +154,7 @@ export function enemyAct(b: Battle, a: Actor): void {
 
 /**
  * Advance until the player must act (returns true) or the battle ends (returns false).
- * A 200-step guard stops runaway loops (it returns false without ending the battle).
+ * A 200-step guard stops runaway loops: it calls the fight off (`callOff`) and returns false.
  */
 export function runUntilPlayer(b: Battle): boolean {
   let guard = 0;
