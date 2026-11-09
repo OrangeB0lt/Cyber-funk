@@ -1,3 +1,4 @@
+import { useFocusReturn } from '../components/useFocusReturn';
 import { useGame, useView } from '../GameContext';
 import {
   BagSheet,
@@ -17,11 +18,15 @@ import { ShopSheet } from '../sheets/ShopSheet';
 import { SpritesSheet } from '../sheets/SpritesSheet';
 import { BountySheet, DevSheet, HowToSheet, TravelSheet } from '../sheets/WorldSheets';
 
-/** The open bottom sheet, if any. Sheets that need a game render nothing without one. */
+/**
+ * The open bottom sheet, if any. Sheets that need a game render nothing without one. Focus goes back
+ * to whatever opened the first sheet once the last one closes (Menu → Status → close: back to Menu).
+ */
 export function SheetLayer() {
   const v = useView();
   const g = useGame();
   const sh = v.sheet;
+  useFocusReturn(!!sh);
   if (!sh) return null;
   switch (sh.kind) {
     case 'settings':

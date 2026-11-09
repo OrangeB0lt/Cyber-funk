@@ -34,10 +34,6 @@ export const A11Y_ALLOW: Record<string, { reason: string; on: readonly string[] 
       'battle:defeat',
     ],
   },
-  'scrollable-region-focusable': {
-    reason: 'the sheet body scrolls but can not be reached from the keyboard',
-    on: ['sheet:howto', 'sheet:status', 'sheet:journal'],
-  },
   'color-contrast': {
     reason: 'locked skills are drawn at 50% opacity (tone badge and level text)',
     on: ['sheet:status'],

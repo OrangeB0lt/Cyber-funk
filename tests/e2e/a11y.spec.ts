@@ -239,3 +239,56 @@ test('battle: defeat', async ({ page }) => {
   expect(await screenOf(page)).toBe('story');
   expect(errors).toEqual([]);
 });
+
+/** Is the focused element inside the element with this test id? */
+const focusIn = (page: Page, testId: string) =>
+  page.evaluate(id => !!document.activeElement?.closest(`[data-testid="${id}"]`), testId);
+const focusedTestId = (page: Page) =>
+  page.evaluate(() => document.activeElement?.getAttribute('data-testid') ?? null);
+
+test('keyboard: focus moves into a sheet and comes back to what opened it', async ({ page }) => {
+  const errors = watchErrors(page);
+  await quickStart(page);
+  await tid(page, 'menu').focus();
+  await page.keyboard.press('Enter');
+  await expect(tid(page, 'sheet')).toBeVisible();
+  expect(await focusIn(page, 'sheet')).toBe(true);
+  // Menu → Status, then Escape: back on Menu, the button that opened the first sheet.
+  await page.keyboard.press('Enter');
+  await expect(page.getByRole('dialog', { name: 'Status' })).toBeVisible();
+  expect(await focusIn(page, 'sheet')).toBe(true);
+  await page.keyboard.press('Escape');
+  await expect(tid(page, 'sheet')).toHaveCount(0);
+  expect(await focusedTestId(page)).toBe('menu');
+  expect(errors).toEqual([]);
+});
+
+test('keyboard: Escape closes only the top layer', async ({ page }) => {
+  const errors = watchErrors(page);
+  await quickStart(page);
+  await tid(page, 'menu').click();
+  await tid(page, 'm:journal').click();
+  // A lexicon term opened from inside the sheet (as tapping a [[term]] in its text does).
+  await tid(page, 'sheet-close').focus();
+  await cf(page, app => app.showTerm('krewe'));
+  await expect(tid(page, 'popup')).toBeVisible();
+  expect(await focusIn(page, 'popup')).toBe(true);
+  await page.keyboard.press('Escape');
+  await expect(tid(page, 'popup')).toHaveCount(0);
+  await expect(tid(page, 'sheet')).toBeVisible();
+  expect(await focusedTestId(page)).toBe('sheet-close');
+  await page.keyboard.press('Escape');
+  await expect(tid(page, 'sheet')).toHaveCount(0);
+  expect(await focusedTestId(page)).toBe('menu');
+  expect(errors).toEqual([]);
+});
+
+test('keyboard: a text-only sheet scrolls from the keyboard', async ({ page }) => {
+  const errors = watchErrors(page);
+  await quickStart(page);
+  await tid(page, 'menu').click();
+  await tid(page, 'm:journal').click();
+  const body = tid(page, 'sheet').locator('[tabindex="0"]');
+  await expect(body).toBeFocused();
+  expect(errors).toEqual([]);
+});

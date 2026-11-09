@@ -221,7 +221,7 @@ Declarations:
   - used by: **[main](ui.md#src-main-tsx)** [app](ui.md#src-main-tsx--app) · **[ui/App](ui.md#src-ui-app-tsx)** [App](ui.md#src-ui-app-tsx--app) · **[ui/GameContext](ui.md#src-ui-gamecontext-tsx)** [GameContext](ui.md#src-ui-gamecontext-tsx--gamecontext), [useApp](ui.md#src-ui-gamecontext-tsx--useapp) · **[ui/combat/targeting](ui.md#src-ui-combat-targeting-ts)** [withTarget](ui.md#src-ui-combat-targeting-ts--withtarget)
   - <a id="src-app-game-ts--gameapp-view"></a>**view** · *property* `: ViewState`
     - uses: **[app/view](#src-app-view-ts)** [createView](#src-app-view-ts--createview)
-    - used by: **[main](ui.md#src-main-tsx)** [(top level)](ui.md#src-main-tsx--top-level) · **[ui/GameContext](ui.md#src-ui-gamecontext-tsx)** [useView](ui.md#src-ui-gamecontext-tsx--useview)
+    - used by: **[main](ui.md#src-main-tsx)** [(top level)](ui.md#src-main-tsx--top-level) · **[ui/GameContext](ui.md#src-ui-gamecontext-tsx)** [useView](ui.md#src-ui-gamecontext-tsx--useview) · **[ui/sheets/Sheet](ui.md#src-ui-sheets-sheet-tsx)** [Sheet](ui.md#src-ui-sheets-sheet-tsx--sheet)
   - <a id="src-app-game-ts--gameapp-sfx"></a>**sfx** · *property* `: Sfx`
     - used by: **[ui/App](ui.md#src-ui-app-tsx)** [Shell](ui.md#src-ui-app-tsx--shell) · **[ui/combat/TimingOverlay](ui.md#src-ui-combat-timingoverlay-tsx)** [BluesPads](ui.md#src-ui-combat-timingoverlay-tsx--bluespads)
   - <a id="src-app-game-ts--gameapp-presenter"></a>**presenter** · *property* `: ReactPresenter`

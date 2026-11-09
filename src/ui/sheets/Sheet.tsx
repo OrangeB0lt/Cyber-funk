@@ -15,20 +15,35 @@ interface Props {
   children: ReactNode;
 }
 
+/** What can take focus inside a sheet's body. */
+const FOCUSABLE =
+  'button:not([disabled]), a[href], input:not([disabled]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])';
+
 /**
  * The bottom-sheet frame: a modal dialog with a heading, back and close buttons, a scrolling body
- * and an optional footer. Escape closes it.
+ * and an optional footer.
+ *
+ * Focus moves in to `[data-autofocus]`, else the body's first control, else the body itself (it's
+ * focusable so the keyboard can scroll it); SheetLayer gives focus back to the opener on close.
+ * Escape closes the sheet unless a dialog is open on top of it (the dialog takes that Escape).
  */
 export function Sheet({ title, lead, back, foot, children }: Props) {
   const app = useApp();
   const ref = useRef<HTMLDivElement>(null);
   useEffect(() => {
-    ref.current?.querySelector<HTMLElement>('[data-autofocus], button')?.focus({ preventScroll: true });
-    ref.current?.querySelector('.' + s.body)?.scrollTo(0, 0);
+    const card = ref.current;
+    const body = card?.querySelector<HTMLElement>('.' + s.body);
+    const target =
+      card?.querySelector<HTMLElement>('[data-autofocus]') ??
+      body?.querySelector<HTMLElement>(FOCUSABLE) ??
+      body;
+    target?.focus({ preventScroll: true });
+    body?.scrollTo(0, 0);
   }, [title]);
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
-      if (e.key === 'Escape') app.closeSheet();
+      if (e.key !== 'Escape' || e.defaultPrevented || app.view.popups.length > 0) return;
+      app.closeSheet();
     };
     window.addEventListener('keydown', onKey);
     return () => window.removeEventListener('keydown', onKey);
@@ -55,7 +70,9 @@ export function Sheet({ title, lead, back, foot, children }: Props) {
             ✕
           </Button>
         </div>
-        <div className={s.body}>{children}</div>
+        <div className={s.body} tabIndex={0}>
+          {children}
+        </div>
         {foot && <div className={s.foot}>{foot}</div>}
       </div>
     </div>

@@ -58,7 +58,8 @@ function Shell() {
           <Topbar />
         </div>
       )}
-      <main className={s.screen} inert={covered || !!v.timing}>
+      {/* tabIndex -1: where focus lands when the control that opened a sheet is gone. */}
+      <main className={s.screen} inert={covered || !!v.timing} tabIndex={-1}>
         <Screen />
       </main>
       <footer className={s.actions} inert={covered || !!v.timing}>

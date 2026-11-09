@@ -13,7 +13,7 @@ flowchart LR
   n_App["App"]
   n_GameContext["GameContext"]
   n_combat_["combat/ (4)"]
-  n_components_["components/ (11)"]
+  n_components_["components/ (12)"]
   n_layers_["layers/ (5)"]
   n_main["main"]
   n_screens_["screens/ (5)"]
@@ -82,6 +82,7 @@ flowchart LR
 | [src/ui/components/StatGrid.tsx](#src-ui-components-statgrid-tsx) | — |
 | [src/ui/components/Tone.tsx](#src-ui-components-tone-tsx) | — |
 | [src/ui/components/Typewriter.tsx](#src-ui-components-typewriter-tsx) | — |
+| [src/ui/components/useFocusReturn.ts](#src-ui-components-usefocusreturn-ts) | — |
 | [src/ui/layers/ActionBar.tsx](#src-ui-layers-actionbar-tsx) | — |
 | [src/ui/layers/PopupLayer.tsx](#src-ui-layers-popuplayer-tsx) | — |
 | [src/ui/layers/SheetLayer.tsx](#src-ui-layers-sheetlayer-tsx) | — |
@@ -459,6 +460,19 @@ Declarations:
   - uses: here [SPEED](#src-ui-components-typewriter-tsx--speed) · **[app/game](app.md#src-app-game-ts)** [GameApp.presenter](app.md#src-app-game-ts--gameapp-presenter), [GameApp.sawTerms](app.md#src-app-game-ts--gameapp-sawterms), [GameApp.settings](app.md#src-app-game-ts--gameapp-settings) · **[app/lexicon](app.md#src-app-lexicon-ts)** [parseLex](app.md#src-app-lexicon-ts--parselex), [plainText](app.md#src-app-lexicon-ts--plaintext) · **[app/reactPresenter](app.md#src-app-reactpresenter-ts)** [ReactPresenter.typed](app.md#src-app-reactpresenter-ts--reactpresenter-typed) · **[ui/GameContext](#src-ui-gamecontext-tsx)** [useApp](#src-ui-gamecontext-tsx--useapp) · **[ui/components/LexText](#src-ui-components-lextext-tsx)** [LexText](#src-ui-components-lextext-tsx--lextext)
   - used by: **[ui/screens/Story](#src-ui-screens-story-tsx)** [StoryScreen](#src-ui-screens-story-tsx--storyscreen)
 
+<a id="src-ui-components-usefocusreturn-ts"></a>
+
+### src/ui/components/useFocusReturn.ts
+
+- Source: [src/ui/components/useFocusReturn.ts](../../../src/ui/components/useFocusReturn.ts)
+- Packages: `react`
+- Imported by: ui: [layers/PopupLayer](#src-ui-layers-popuplayer-tsx), [layers/SheetLayer](#src-ui-layers-sheetlayer-tsx)
+
+Declarations:
+
+- <a id="src-ui-components-usefocusreturn-ts--usefocusreturn"></a>**useFocusReturn** · *function* `(open: boolean): void` — Give focus back to whatever opened a layer (a sheet, a dialog, an overlay) once it closes.
+  - used by: **[ui/layers/PopupLayer](#src-ui-layers-popuplayer-tsx)** [PopupLayer](#src-ui-layers-popuplayer-tsx--popuplayer) · **[ui/layers/SheetLayer](#src-ui-layers-sheetlayer-tsx)** [SheetLayer](#src-ui-layers-sheetlayer-tsx--sheetlayer)
+
 <a id="src-ui-layers-actionbar-tsx"></a>
 
 ### src/ui/layers/ActionBar.tsx
@@ -478,17 +492,17 @@ Declarations:
 ### src/ui/layers/PopupLayer.tsx
 
 - Source: [src/ui/layers/PopupLayer.tsx](../../../src/ui/layers/PopupLayer.tsx)
-- Imports: content: [index](content.md#src-content-index-ts) · ui: [GameContext](#src-ui-gamecontext-tsx), [components/Button](#src-ui-components-button-tsx), [components/StatGrid](#src-ui-components-statgrid-tsx)
+- Imports: content: [index](content.md#src-content-index-ts) · ui: [GameContext](#src-ui-gamecontext-tsx), [components/Button](#src-ui-components-button-tsx), [components/StatGrid](#src-ui-components-statgrid-tsx), [components/useFocusReturn](#src-ui-components-usefocusreturn-ts)
 - Packages: `react`
 - Styles: `Dialog.module.css`
 - Imported by: ui: [App](#src-ui-app-tsx)
 
 Declarations:
 
-- <a id="src-ui-layers-popuplayer-tsx--dialog"></a>**Dialog** · *component, internal* `({ title, onDismiss, children, className, }: { title: string; onDismiss(): void; children: ReactNode; className?: string; }): React.JSX.Element` — A modal dialog: focus moves in, Escape dismisses, the rest of the app is inert behind it.
+- <a id="src-ui-layers-popuplayer-tsx--dialog"></a>**Dialog** · *component, internal* `({ title, onDismiss, children, className, }: { title: string; onDismiss(): void; children: ReactNode; className?: string; }): React.JSX.Element` — A modal dialog: focus moves to its first button when it opens, Escape dismisses it, and the rest of the app is inert behind it.
   - used by: here [PopupLayer](#src-ui-layers-popuplayer-tsx--popuplayer)
 - <a id="src-ui-layers-popuplayer-tsx--popuplayer"></a>**PopupLayer** · *component* `(): React.JSX.Element | null` — The first queued dialog: confirm, level-up, lexicon term or status.
-  - uses: here [Dialog](#src-ui-layers-popuplayer-tsx--dialog) · **[app/game](app.md#src-app-game-ts)** [GameApp.answerPopup](app.md#src-app-game-ts--gameapp-answerpopup) · **[content/combat/skills](content.md#src-content-combat-skills-ts)** [SKILLS](content.md#src-content-combat-skills-ts--skills) · **[content/combat/statuses](content.md#src-content-combat-statuses-ts)** [STATUSES](content.md#src-content-combat-statuses-ts--statuses) · **[content/glossary](content.md#src-content-glossary-ts)** [GLOSSARY](content.md#src-content-glossary-ts--glossary) · **[ui/GameContext](#src-ui-gamecontext-tsx)** [useApp](#src-ui-gamecontext-tsx--useapp), [useView](#src-ui-gamecontext-tsx--useview) · **[ui/components/Button](#src-ui-components-button-tsx)** [Button](#src-ui-components-button-tsx--button) · **[ui/components/StatGrid](#src-ui-components-statgrid-tsx)** [StatGrid](#src-ui-components-statgrid-tsx--statgrid)
+  - uses: here [Dialog](#src-ui-layers-popuplayer-tsx--dialog) · **[app/game](app.md#src-app-game-ts)** [GameApp.answerPopup](app.md#src-app-game-ts--gameapp-answerpopup) · **[content/combat/skills](content.md#src-content-combat-skills-ts)** [SKILLS](content.md#src-content-combat-skills-ts--skills) · **[content/combat/statuses](content.md#src-content-combat-statuses-ts)** [STATUSES](content.md#src-content-combat-statuses-ts--statuses) · **[content/glossary](content.md#src-content-glossary-ts)** [GLOSSARY](content.md#src-content-glossary-ts--glossary) · **[ui/GameContext](#src-ui-gamecontext-tsx)** [useApp](#src-ui-gamecontext-tsx--useapp), [useView](#src-ui-gamecontext-tsx--useview) · **[ui/components/Button](#src-ui-components-button-tsx)** [Button](#src-ui-components-button-tsx--button) · **[ui/components/StatGrid](#src-ui-components-statgrid-tsx)** [StatGrid](#src-ui-components-statgrid-tsx--statgrid) · **[ui/components/useFocusReturn](#src-ui-components-usefocusreturn-ts)** [useFocusReturn](#src-ui-components-usefocusreturn-ts--usefocusreturn)
   - used by: **[ui/App](#src-ui-app-tsx)** [Shell](#src-ui-app-tsx--shell)
 
 <a id="src-ui-layers-sheetlayer-tsx"></a>
@@ -496,13 +510,13 @@ Declarations:
 ### src/ui/layers/SheetLayer.tsx
 
 - Source: [src/ui/layers/SheetLayer.tsx](../../../src/ui/layers/SheetLayer.tsx)
-- Imports: ui: [GameContext](#src-ui-gamecontext-tsx), [sheets/HistorySheet](#src-ui-sheets-historysheet-tsx), [sheets/MenuSheets](#src-ui-sheets-menusheets-tsx), [sheets/SavesSheet](#src-ui-sheets-savessheet-tsx), [sheets/SettingsSheet](#src-ui-sheets-settingssheet-tsx), [sheets/ShopSheet](#src-ui-sheets-shopsheet-tsx), [sheets/SpritesSheet](#src-ui-sheets-spritessheet-tsx), [sheets/WorldSheets](#src-ui-sheets-worldsheets-tsx)
+- Imports: ui: [GameContext](#src-ui-gamecontext-tsx), [components/useFocusReturn](#src-ui-components-usefocusreturn-ts), [sheets/HistorySheet](#src-ui-sheets-historysheet-tsx), [sheets/MenuSheets](#src-ui-sheets-menusheets-tsx), [sheets/SavesSheet](#src-ui-sheets-savessheet-tsx), [sheets/SettingsSheet](#src-ui-sheets-settingssheet-tsx), [sheets/ShopSheet](#src-ui-sheets-shopsheet-tsx), [sheets/SpritesSheet](#src-ui-sheets-spritessheet-tsx), [sheets/WorldSheets](#src-ui-sheets-worldsheets-tsx)
 - Imported by: ui: [App](#src-ui-app-tsx)
 
 Declarations:
 
 - <a id="src-ui-layers-sheetlayer-tsx--sheetlayer"></a>**SheetLayer** · *component* `(): React.JSX.Element | null` — The open bottom sheet, if any.
-  - uses: **[ui/GameContext](#src-ui-gamecontext-tsx)** [useGame](#src-ui-gamecontext-tsx--usegame), [useView](#src-ui-gamecontext-tsx--useview) · **[ui/sheets/HistorySheet](#src-ui-sheets-historysheet-tsx)** [HistorySheet](#src-ui-sheets-historysheet-tsx--historysheet) · **[ui/sheets/MenuSheets](#src-ui-sheets-menusheets-tsx)** [BagSheet](#src-ui-sheets-menusheets-tsx--bagsheet), [BandSheet](#src-ui-sheets-menusheets-tsx--bandsheet), [BookSheet](#src-ui-sheets-menusheets-tsx--booksheet), [GearSheet](#src-ui-sheets-menusheets-tsx--gearsheet), [JournalSheet](#src-ui-sheets-menusheets-tsx--journalsheet), [LexiconSheet](#src-ui-sheets-menusheets-tsx--lexiconsheet), [MenuSheet](#src-ui-sheets-menusheets-tsx--menusheet), [SlotSheet](#src-ui-sheets-menusheets-tsx--slotsheet), [StatusSheet](#src-ui-sheets-menusheets-tsx--statussheet) · **[ui/sheets/SavesSheet](#src-ui-sheets-savessheet-tsx)** [SavesSheet](#src-ui-sheets-savessheet-tsx--savessheet) · **[ui/sheets/SettingsSheet](#src-ui-sheets-settingssheet-tsx)** [SettingsSheet](#src-ui-sheets-settingssheet-tsx--settingssheet) · **[ui/sheets/ShopSheet](#src-ui-sheets-shopsheet-tsx)** [ShopSheet](#src-ui-sheets-shopsheet-tsx--shopsheet) · **[ui/sheets/SpritesSheet](#src-ui-sheets-spritessheet-tsx)** [SpritesSheet](#src-ui-sheets-spritessheet-tsx--spritessheet) · … +4 more
+  - uses: **[ui/GameContext](#src-ui-gamecontext-tsx)** [useGame](#src-ui-gamecontext-tsx--usegame), [useView](#src-ui-gamecontext-tsx--useview) · **[ui/components/useFocusReturn](#src-ui-components-usefocusreturn-ts)** [useFocusReturn](#src-ui-components-usefocusreturn-ts--usefocusreturn) · **[ui/sheets/HistorySheet](#src-ui-sheets-historysheet-tsx)** [HistorySheet](#src-ui-sheets-historysheet-tsx--historysheet) · **[ui/sheets/MenuSheets](#src-ui-sheets-menusheets-tsx)** [BagSheet](#src-ui-sheets-menusheets-tsx--bagsheet), [BandSheet](#src-ui-sheets-menusheets-tsx--bandsheet), [BookSheet](#src-ui-sheets-menusheets-tsx--booksheet), [GearSheet](#src-ui-sheets-menusheets-tsx--gearsheet), [JournalSheet](#src-ui-sheets-menusheets-tsx--journalsheet), [LexiconSheet](#src-ui-sheets-menusheets-tsx--lexiconsheet), [MenuSheet](#src-ui-sheets-menusheets-tsx--menusheet), [SlotSheet](#src-ui-sheets-menusheets-tsx--slotsheet), [StatusSheet](#src-ui-sheets-menusheets-tsx--statussheet) · **[ui/sheets/SavesSheet](#src-ui-sheets-savessheet-tsx)** [SavesSheet](#src-ui-sheets-savessheet-tsx--savessheet) · **[ui/sheets/SettingsSheet](#src-ui-sheets-settingssheet-tsx)** [SettingsSheet](#src-ui-sheets-settingssheet-tsx--settingssheet) · **[ui/sheets/ShopSheet](#src-ui-sheets-shopsheet-tsx)** [ShopSheet](#src-ui-sheets-shopsheet-tsx--shopsheet) · … +5 more
   - used by: **[ui/App](#src-ui-app-tsx)** [Shell](#src-ui-app-tsx--shell)
 
 <a id="src-ui-layers-toast-tsx"></a>
@@ -765,8 +779,10 @@ Declarations:
 
 - <a id="src-ui-sheets-sheet-tsx--props"></a>**Props** · *interface, internal*
   - used by: here [Sheet](#src-ui-sheets-sheet-tsx--sheet)
+- <a id="src-ui-sheets-sheet-tsx--focusable"></a>**FOCUSABLE** · *const, internal* — What can take focus inside a sheet's body.
+  - used by: here [Sheet](#src-ui-sheets-sheet-tsx--sheet)
 - <a id="src-ui-sheets-sheet-tsx--sheet"></a>**Sheet** · *component* `({ title, lead, back, foot, children }: Props): React.JSX.Element` — The bottom-sheet frame: a modal dialog with a heading, back and close buttons, a scrolling body and an optional footer.
-  - uses: **[app/game](app.md#src-app-game-ts)** [GameApp.closeSheet](app.md#src-app-game-ts--gameapp-closesheet), [GameApp.openSheet](app.md#src-app-game-ts--gameapp-opensheet) · **[ui/GameContext](#src-ui-gamecontext-tsx)** [useApp](#src-ui-gamecontext-tsx--useapp) · **[ui/components/Button](#src-ui-components-button-tsx)** [Button](#src-ui-components-button-tsx--button)
+  - uses: here [FOCUSABLE](#src-ui-sheets-sheet-tsx--focusable) · **[app/game](app.md#src-app-game-ts)** [GameApp.closeSheet](app.md#src-app-game-ts--gameapp-closesheet), [GameApp.openSheet](app.md#src-app-game-ts--gameapp-opensheet), [GameApp.view](app.md#src-app-game-ts--gameapp-view) · **[ui/GameContext](#src-ui-gamecontext-tsx)** [useApp](#src-ui-gamecontext-tsx--useapp) · **[ui/components/Button](#src-ui-components-button-tsx)** [Button](#src-ui-components-button-tsx--button)
   - used by: **[ui/sheets/HistorySheet](#src-ui-sheets-historysheet-tsx)** [HistorySheet](#src-ui-sheets-historysheet-tsx--historysheet) · **[ui/sheets/MenuSheets](#src-ui-sheets-menusheets-tsx)** [BagSheet](#src-ui-sheets-menusheets-tsx--bagsheet), [BandSheet](#src-ui-sheets-menusheets-tsx--bandsheet), [BookSheet](#src-ui-sheets-menusheets-tsx--booksheet), [GearSheet](#src-ui-sheets-menusheets-tsx--gearsheet), [JournalSheet](#src-ui-sheets-menusheets-tsx--journalsheet), [LexiconSheet](#src-ui-sheets-menusheets-tsx--lexiconsheet), [MenuSheet](#src-ui-sheets-menusheets-tsx--menusheet), [SlotSheet](#src-ui-sheets-menusheets-tsx--slotsheet), [StatusSheet](#src-ui-sheets-menusheets-tsx--statussheet) · **[ui/sheets/SavesSheet](#src-ui-sheets-savessheet-tsx)** [SavesSheet](#src-ui-sheets-savessheet-tsx--savessheet) · **[ui/sheets/SettingsSheet](#src-ui-sheets-settingssheet-tsx)** [SettingsSheet](#src-ui-sheets-settingssheet-tsx--settingssheet) · **[ui/sheets/ShopSheet](#src-ui-sheets-shopsheet-tsx)** [ShopSheet](#src-ui-sheets-shopsheet-tsx--shopsheet) · **[ui/sheets/SpritesSheet](#src-ui-sheets-spritessheet-tsx)** [SpritesSheet](#src-ui-sheets-spritessheet-tsx--spritessheet) · **[ui/sheets/WorldSheets](#src-ui-sheets-worldsheets-tsx)** [BountySheet](#src-ui-sheets-worldsheets-tsx--bountysheet), [DevSheet](#src-ui-sheets-worldsheets-tsx--devsheet) · … +2 more
 
 <a id="src-ui-sheets-shopsheet-tsx"></a>

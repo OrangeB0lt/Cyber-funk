@@ -49,3 +49,8 @@
 .actions:empty {
   display: none;
 }
+/* Focus lands on <main> only as a fallback (the control that opened a sheet is gone); it isn't a
+   control, so it shows no ring. */
+.screen:focus {
+  outline: none;
+}
