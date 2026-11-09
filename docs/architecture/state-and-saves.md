@@ -82,6 +82,7 @@ type ResumePoint =
 **Format versions:**
 - v2: the first v2 format.
 - v3 (P4): `towerFloor`, `towerFight`, and the `afterBoss` resume point. `MIGRATIONS[2]` fills the two fields with 0.
+- v4 (P6): drops the dead `towerRested2` flag and the unobtainable `pralinelady_king` item. `MIGRATIONS[3]` strips them from older saves.
 
 ## Changing the save format
 

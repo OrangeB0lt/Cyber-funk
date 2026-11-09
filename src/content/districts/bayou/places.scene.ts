@@ -116,8 +116,6 @@ export const cabin = definePlace('cabin', {
           const c = await s.choose({ give: 'Give her a Boudin Link', keep: 'Keep it' });
           if (c === 'give') {
             s.take('boudin', 1);
-            // PARITY: v1 also counted S.flags.boudinGiven here, a number nothing ever read
-            // (docs/known-issues.md "Dead fields and flags"). Flags are on/off in 2.0, so it's dropped.
             await s.say(
               'clothilde',
               "\"Mais, you didn't have to. But I won't say no.\" She eats it standing up, like a person who's been on her feet since 1998. (+5 Mojo next fight.)",

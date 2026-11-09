@@ -231,10 +231,10 @@ Declarations:
 
 ### tools/completeness.ts
 
-Is the game whole? Checks that every place has something to do, every boss has its scenes, every story step points somewhere real and every [[lexicon]] link resolves. The registries' types already require every place and boss; this keeps the message friendly and covers the rest. Runs in CI as a test (completeness.test.ts) and on demand:
+Is the game whole? Checks that every place has something to do, every boss has its scenes, every story step points somewhere real, every [[lexicon]] link resolves and every flag is read somewhere. The registries' types already require every place and boss; this keeps the message friendly and covers the rest. Runs in CI as a test (completeness.test.ts) and on demand:
 
 - Source: [tools/completeness.ts](../../../tools/completeness.ts)
-- Imports: core: [ids/enemies](core.md#src-core-ids-enemies-ts), [ids/story](core.md#src-core-ids-story-ts), [ids/world](core.md#src-core-ids-world-ts), [types/index](core.md#src-core-types-index-ts) · content: [index](content.md#src-content-index-ts)
+- Imports: core: [ids/enemies](core.md#src-core-ids-enemies-ts), [ids/flags](core.md#src-core-ids-flags-ts), [ids/story](core.md#src-core-ids-story-ts), [ids/world](core.md#src-core-ids-world-ts), [types/index](core.md#src-core-types-index-ts) · content: [index](content.md#src-content-index-ts)
 - Packages: `node:fs`, `node:path`, `node:url`
 - Tested by: [completeness.test](tests.md#tools-completeness-test-ts)
 - Types used: **[core/ids/world](core.md#src-core-ids-world-ts)** [PlaceId](core.md#src-core-ids-world-ts--placeid) · **[core/types/content](core.md#src-core-types-content-ts)** [StepDef](core.md#src-core-types-content-ts--stepdef)
@@ -242,15 +242,18 @@ Is the game whole? Checks that every place has something to do, every boss has i
 Declarations:
 
 - <a id="tools-completeness-ts--checkcompleteness"></a>**checkCompleteness** · *function* `(): string[]` — Every problem found, as a sentence a writer can act on.
-  - uses: here [checkLexiconLinks](#tools-completeness-ts--checklexiconlinks) · **[content/bosses/index](content.md#src-content-bosses-index-ts)** [BOSSES](content.md#src-content-bosses-index-ts--bosses) · **[content/districts/index](content.md#src-content-districts-index-ts)** [DISTRICTS](content.md#src-content-districts-index-ts--districts) · **[content/index](content.md#src-content-index-ts)** [BOSS_SCENES](content.md#src-content-index-ts--boss-scenes), [PLACE_SCENES](content.md#src-content-index-ts--place-scenes) · **[content/places](content.md#src-content-places-ts)** [PLACES](content.md#src-content-places-ts--places) · **[content/story/acts](content.md#src-content-story-acts-ts)** [ACTS](content.md#src-content-story-acts-ts--acts) · **[core/ids/enemies](core.md#src-core-ids-enemies-ts)** [BOSS_IDS](core.md#src-core-ids-enemies-ts--boss-ids) · **[core/ids/story](core.md#src-core-ids-story-ts)** [ACT_ORDER](core.md#src-core-ids-story-ts--act-order), [ACT_STEPS](core.md#src-core-ids-story-ts--act-steps) · **[core/ids/world](core.md#src-core-ids-world-ts)** [DISTRICT_IDS](core.md#src-core-ids-world-ts--district-ids), [PLACE_IDS](core.md#src-core-ids-world-ts--place-ids)
+  - uses: here [checkFlagsRead](#tools-completeness-ts--checkflagsread), [checkLexiconLinks](#tools-completeness-ts--checklexiconlinks) · **[content/bosses/index](content.md#src-content-bosses-index-ts)** [BOSSES](content.md#src-content-bosses-index-ts--bosses) · **[content/districts/index](content.md#src-content-districts-index-ts)** [DISTRICTS](content.md#src-content-districts-index-ts--districts) · **[content/index](content.md#src-content-index-ts)** [BOSS_SCENES](content.md#src-content-index-ts--boss-scenes), [PLACE_SCENES](content.md#src-content-index-ts--place-scenes) · **[content/places](content.md#src-content-places-ts)** [PLACES](content.md#src-content-places-ts--places) · **[content/story/acts](content.md#src-content-story-acts-ts)** [ACTS](content.md#src-content-story-acts-ts--acts) · **[core/ids/enemies](core.md#src-core-ids-enemies-ts)** [BOSS_IDS](core.md#src-core-ids-enemies-ts--boss-ids) · **[core/ids/story](core.md#src-core-ids-story-ts)** [ACT_ORDER](core.md#src-core-ids-story-ts--act-order), [ACT_STEPS](core.md#src-core-ids-story-ts--act-steps) · **[core/ids/world](core.md#src-core-ids-world-ts)** [DISTRICT_IDS](core.md#src-core-ids-world-ts--district-ids), [PLACE_IDS](core.md#src-core-ids-world-ts--place-ids)
   - used by: here [(top level)](#tools-completeness-ts--top-level) · tests: [completeness.test](tests.md#tools-completeness-test-ts)
 - <a id="tools-completeness-ts--link"></a>**LINK** · *const, internal* — The [[key]] / [[key|display]] markup the lexicon links (src/app/lexicon.ts).
   - used by: here [checkLexiconLinks](#tools-completeness-ts--checklexiconlinks)
 - <a id="tools-completeness-ts--checklexiconlinks"></a>**checkLexiconLinks** · *function, internal* `(fail: (msg: string) => void): void` — Every explicit [[link]] in content source resolves to a glossary entry (else it renders as plain text).
   - uses: here [LINK](#tools-completeness-ts--link), [stripComments](#tools-completeness-ts--stripcomments) · **[content/glossary](content.md#src-content-glossary-ts)** [GLOSSARY](content.md#src-content-glossary-ts--glossary)
   - used by: here [checkCompleteness](#tools-completeness-ts--checkcompleteness)
-- <a id="tools-completeness-ts--stripcomments"></a>**stripComments** · *function, internal* `(src: string): string` — Source with comments blanked out (kept line-for-line so line numbers stay right).
-  - used by: here [checkLexiconLinks](#tools-completeness-ts--checklexiconlinks)
+- <a id="tools-completeness-ts--checkflagsread"></a>**checkFlagsRead** · *function, internal* `(fail: (msg: string) => void): void` — Every flag is read somewhere in the game.
+  - uses: here [stripComments](#tools-completeness-ts--stripcomments) · **[core/ids/flags](core.md#src-core-ids-flags-ts)** [FLAG_IDS](core.md#src-core-ids-flags-ts--flag-ids)
+  - used by: here [checkCompleteness](#tools-completeness-ts--checkcompleteness)
+- <a id="tools-completeness-ts--stripcomments"></a>**stripComments** · *function, internal* `(src: string): string`
+  - used by: here [checkFlagsRead](#tools-completeness-ts--checkflagsread), [checkLexiconLinks](#tools-completeness-ts--checklexiconlinks)
 - <a id="tools-completeness-ts--ismain"></a>**isMain** · *const, internal*
   - used by: here [(top level)](#tools-completeness-ts--top-level)
 - <a id="tools-completeness-ts--top-level"></a>**(top level)** · *module* — Statements that run when the module loads.

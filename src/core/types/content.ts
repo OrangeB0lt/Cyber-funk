@@ -278,8 +278,6 @@ export interface NoteDef {
   id: NoteId;
   /** Display name, e.g. "♭3 (E♭)". */
   name: string;
-  /** Scale degree name. */
-  degree: string;
   /** What the note says when recovered. */
   quote: string;
   /** Pitch in Hz for the synth. */
@@ -586,8 +584,6 @@ export interface QuestDef {
   name: string;
   /** Where it's given. */
   district: DistrictId;
-  /** Who gives it (display). */
-  giver: string;
   /** What to do. */
   desc: string;
   /** What you get (display). */

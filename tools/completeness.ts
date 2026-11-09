@@ -1,6 +1,6 @@
 /**
  * Is the game whole? Checks that every place has something to do, every boss has its scenes, every
- * story step points somewhere real and every [[lexicon]] link resolves. The registries' types already
+ * story step points somewhere real, every [[lexicon]] link resolves and every flag is read somewhere. The registries' types already
  * require every place and boss; this keeps the message friendly and covers the rest. Runs in CI as a test
  * (completeness.test.ts) and on demand:
  *
@@ -13,6 +13,7 @@ import fs from 'node:fs';
 import path from 'node:path';
 import { pathToFileURL } from 'node:url';
 import { BOSS_IDS } from '@core/ids/enemies';
+import { FLAG_IDS } from '@core/ids/flags';
 import { ACT_ORDER, ACT_STEPS } from '@core/ids/story';
 import { DISTRICT_IDS, PLACE_IDS, type PlaceId } from '@core/ids/world';
 import type { StepDef } from '@core/types';
@@ -62,6 +63,7 @@ export function checkCompleteness(): string[] {
   }
 
   checkLexiconLinks(fail);
+  checkFlagsRead(fail);
   return problems;
 }
 
@@ -88,6 +90,32 @@ function checkLexiconLinks(fail: (msg: string) => void): void {
 }
 
 /** Source with comments blanked out (kept line-for-line so line numbers stay right). */
+/**
+ * Every flag is read somewhere in the game. A flag that's only ever set is dead weight in every save.
+ * A read is any use other than setting it: `flags.has('x')`, `g.flags.x`, a list of flags. Flags read
+ * through a template (`towerintro_${f}`) count when their prefix appears in one.
+ */
+function checkFlagsRead(fail: (msg: string) => void): void {
+  const root = path.resolve('src');
+  const files = (fs.readdirSync(root, { recursive: true }) as string[]).filter(
+    f => /\.tsx?$/.test(f) && !/\.test\.tsx?$/.test(f) && !f.startsWith(path.join('core', 'ids')),
+  );
+  const code = files.map(f => stripComments(fs.readFileSync(path.join(root, f), 'utf8'))).join('\n');
+  const count = (re: RegExp) => code.match(re)?.length ?? 0;
+  for (const flag of FLAG_IDS) {
+    const q = `['"]${flag}['"]`;
+    const uses = count(new RegExp(q, 'g')) + count(new RegExp(`flags\\.${flag}\\b`, 'g'));
+    const writes =
+      count(new RegExp(`flags\\.set\\(${q}\\)`, 'g')) +
+      count(new RegExp(`flags\\.${flag}\\s*=(?!=)`, 'g')) +
+      count(new RegExp(`flags\\[${q}\\]\\s*=(?!=)`, 'g'));
+    const prefix = flag.replace(/\d+$/, '');
+    const templated = prefix !== flag && code.includes('`' + prefix + '${');
+    if (uses - writes <= 0 && !templated)
+      fail(`flag "${flag}" is set but never read: delete it (with a save migration) or use it.`);
+  }
+}
+
 function stripComments(src: string): string {
   return src
     .replace(/\/\*[\s\S]*?\*\//g, c => c.replace(/[^\n]/g, ' '))

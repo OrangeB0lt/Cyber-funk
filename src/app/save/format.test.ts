@@ -49,6 +49,18 @@ describe('save format', () => {
     expect(r).toMatchObject({ game: { towerFloor: 0, towerFight: 0 } });
   });
 
+  it('loads a v3 save as v4, dropping the dead towerRested2 flag and pralinelady_king item', () => {
+    const env = JSON.parse(encodeSave(game(), rng()));
+    env.game.flags = { ...env.game.flags, metRoux: true, towerRested2: true };
+    env.game.bag = { ...env.game.bag, beignet: 2, pralinelady_king: 1 };
+    const r = decodeSave(JSON.stringify({ ...env, version: 3 }));
+    if (typeof r === 'string') throw new Error(`v3 save refused: ${r}`);
+    expect(r.game.flags).not.toHaveProperty('towerRested2');
+    expect(r.game.flags.metRoux).toBe(true);
+    expect(r.game.bag).not.toHaveProperty('pralinelady_king');
+    expect(r.game.bag.beignet).toBe(2);
+  });
+
   it('round-trips the after-boss checkpoint and the climb', () => {
     const g = game();
     Object.assign(g, { towerFloor: 3, towerFight: 1, resume: { kind: 'afterBoss', boss: 'rougarou' } });

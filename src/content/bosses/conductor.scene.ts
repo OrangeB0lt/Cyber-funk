@@ -28,8 +28,6 @@ export const post: Scene = async s => {
   s.heal(0.5);
   s.funk(0.5);
   s.story.set({ act: 'tower', step: 'break_the_click' });
-  // PARITY: v1 sets towerRested2 here and never reads it (known-issues, dead flags).
-  s.flags.set('towerRested2');
   // The climb's next floor (the loop sets the same): a reload that replays this scene continues at
   // the Crown instead of the Booth.
   s.game.towerFloor = 4;

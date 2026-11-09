@@ -50,8 +50,6 @@ export const FLAG_IDS = [
   'towerintro_4',
   /** Rested at the Studio Floor vending machine (once per playthrough; hides the option). */
   'towerRested',
-  /** Set after the Conductor's +50% rally. Nothing reads it (v1 dead flag, kept for parity; P6 removes it). */
-  'towerRested2',
   /** The Click is broken (the ending). The lobby shows Look up; the club offers New Game+. */
   'ending',
 ] as const;

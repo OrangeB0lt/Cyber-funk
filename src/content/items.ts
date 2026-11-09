@@ -320,14 +320,4 @@ export const ITEMS: Table<ItemId, ItemDef> = {
     key: true,
     effects: [],
   },
-  pralinelady_king: {
-    id: 'pralinelady_king',
-    name: "Praline Lady's Secret Box",
-    price: 0,
-    desc: 'A box with a second bottom.',
-    battle: false,
-    field: false,
-    key: true,
-    effects: [],
-  },
 };

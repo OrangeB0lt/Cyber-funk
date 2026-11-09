@@ -41,4 +41,3 @@ Consumables and key items. Shops sell at **Price** (before district modifiers) a
 | Ball Invitation (`invitation`) | Cream card, gold leaf. "Miss Isolde Vane requests your presence." |
 | Gus's Second-Line Umbrella (`umbrella`) | Purple, green, and gold fringe. Lifted at every second line Gus ever led. |
 | Gus's Last Cassette (`cassette`) | "Dirge on the way there, dance on the way back." His voice, on tape. |
-| Praline Lady's Secret Box (`pralinelady_king`) | A box with a second bottom. |

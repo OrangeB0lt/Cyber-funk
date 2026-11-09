@@ -33,7 +33,7 @@ import type { DistrictId } from '@core/ids/world';
 import type { GameState } from '@core/types';
 
 /** The current save format. */
-export const SAVE_VERSION = 3;
+export const SAVE_VERSION = 4;
 /** Prefix of exported save codes. */
 export const CODE_PREFIX = 'CF2:';
 
@@ -172,6 +172,12 @@ export interface LoadedSave {
 const MIGRATIONS: Record<number, (game: Record<string, unknown>) => Record<string, unknown>> = {
   /** v3 (P4): Tower progress. */
   2: game => ({ ...game, towerFloor: 0, towerFight: 0 }),
+  /** v4 (P6): drop the dead `towerRested2` flag and the unobtainable `pralinelady_king` item. */
+  3: game => {
+    const { towerRested2: _flag, ...flags } = (game.flags ?? {}) as Record<string, unknown>;
+    const { pralinelady_king: _item, ...bag } = (game.bag ?? {}) as Record<string, unknown>;
+    return { ...game, flags, bag };
+  },
 };
 
 /** Why a save couldn't be read. */

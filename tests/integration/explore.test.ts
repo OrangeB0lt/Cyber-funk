@@ -236,9 +236,7 @@ describe('street events', () => {
 /* ------------------------------------------------------------------ */
 
 /** Never obtainable, on purpose. */
-const NEVER: Partial<Record<ObtainableKey, string>> = {
-  pralinelady_king: 'dead item kept for parity (docs/known-issues.md "Dead fields and flags")',
-};
+const NEVER: Partial<Record<ObtainableKey, string>> = {};
 
 describe('coverage', () => {
   it('every quest can be finished', () => {

@@ -8,7 +8,7 @@ The game content as tables, generated from `src/content`. For how content is def
 - [bosses](bosses.md) (8)
 - [skills](skills.md) (126)
 - [statuses](statuses.md) (17)
-- [items](items.md) (29)
+- [items](items.md) (28)
 - [gear](gear.md) (64)
 - [places](places.md) (23)
 - [quests](quests.md) (9)

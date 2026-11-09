@@ -31,7 +31,6 @@ export const ITEM_IDS = [
   'invitation',
   'umbrella',
   'cassette',
-  'pralinelady_king',
 ] as const;
 /** An item in the bag. */
 export type ItemId = (typeof ITEM_IDS)[number];
