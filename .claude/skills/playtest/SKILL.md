@@ -1,92 +1,106 @@
 ---
 name: playtest
-description: Launch and drive the real CYBER FUNK build in a 360px mobile browser through the Playwright MCP — screenshot screens, check horizontal overflow and console errors, jump to any act or boss with the dev menu, or load a player's exported save to reproduce a bug. Also covers getting the build onto a real phone. Use to see a change working in the actual UI, to check layout at phone width, or whenever asked to run, open, play or screenshot the game.
+description: Launch and drive the real CYBER FUNK build in a 360px mobile browser through the Playwright MCP — screenshot screens, check horizontal overflow, accessibility and console errors, jump to any act or boss with the dev API, or load a player's exported CF2 save to reproduce a bug. Also covers getting the game onto a real phone and installing it. Use to see a change working in the actual UI, to check layout at phone width, or whenever asked to run, open, play or screenshot the game.
 ---
 
 # Playtest
 
 The `playwright` MCP server (`.mcp.json`, config in `.claude/playwright/`) runs headless Chrome as a
-360×740 touch phone (DPR 2). It serves `dist/cyberfunk.html` at **http://cyberfunk.local/**, read
-fresh on every request, so after an edit (the hook rebuilds `dist/`) a reload shows the new build.
-`data-act` is configured as Playwright's test id, so `page.getByTestId('act:riff')` and the target
-`internal:testid=[data-act="act:riff"s]` both work. The browser profile is in memory: every new
-Claude session starts with no save.
+360×740 touch phone (DPR 2). It serves the **test-mode build** in `dist-e2e/` at
+**http://cyberfunk.local/**: production code, cloud saves off, and `window.CF` (the `GameApp`).
+Files are read fresh on every request and service workers are blocked, so after a rebuild a reload
+shows the new code. `data-testid` is Playwright's test id (`page.getByTestId('act:riff')`). The
+browser profile is in memory: every new Claude session starts with no save.
 
-If the `mcp__playwright__*` tools are missing, the server needs approving (`/mcp`) or a restart.
+- **Build first:** `npm run build:test` (about 10 s; `npm run e2e` also builds it). Rebuild after
+  every code change you want to see. Without a build the page says so.
+- If the `mcp__playwright__*` tools are missing, the server needs approving (`/mcp`) or a restart.
+  If it reports "Cannot use import statement", restart it (`init-page.ts` must stay CommonJS).
+- For hot reload instead, run `npm run dev` in the background and navigate to the URL it prints
+  (`window.CF` exists there too, and the cloud is on, forwarding `/api` to `npm run dev:server`).
 
 ## Start
 
 1. `browser_navigate` → `http://cyberfunk.local/`
-2. Skip the typewriter and the timing minigame unless they are what you're testing:
-   `browser_evaluate` → `() => Object.assign(CF.UI.titleSettings, { textSpeed: 'instant', rhythm: 'auto', reduceMotion: true })`
-   (these carry into the new save's settings; for an existing save set `CF.S.settings.rhythm = 'auto'`).
-3. Create a character in one `browser_run_code_unsafe` call:
+2. A new game in Tremé after the prologue, in one `browser_run_code_unsafe` call (the same steps as
+   `quickStart` in `tests/e2e/helpers.ts`):
    ```js
    async (page) => {
-     await page.getByTestId('new').click(); await page.fill('#name-input', 'Dawlin'); await page.getByTestId('next').click();
-     await page.getByTestId('next').click(); await page.getByTestId('pick:snare').click(); await page.getByTestId('next').click();
-     await page.getByTestId('go').click(); return 'ok';
-   }
-   ```
-   Classes: `trumpet trombone sousaphone saxophone clarinet snare bassdrum`.
-4. Advance through narration and fights until the district hub (the prologue takes ~85 steps, ~10 s):
-   ```js
-   async (page) => {
+     await page.evaluate(() => {
+       CF.turbo = true;                                   // near-instant battle playback
+       CF.view.titleSettings.textSpeed = 'instant';       // carries into the new save
+       CF.view.titleSettings.rhythm = 'auto';             // skip the timing bar
+       CF.createCharacter('Dawlin', 'creole', 'snare');
+       CF.closeSheet();
+       CF.dev.act('treme');
+     });
      for (let i = 0; i < 300; i++) {
-       if (await page.getByTestId('streets').count()) return 'district after ' + i + ' steps';
-       const popup = page.locator('#popup:not([hidden]) [data-act]');
-       if (await popup.count()) { await popup.first().click(); continue; }
-       const cont = page.getByTestId('continue');
-       if (await cont.count()) { await cont.first().click(); continue; }
-       const target = page.locator('.ecard.targetable');
-       if (await target.count()) { await target.first().click(); continue; }
-       const riff = page.getByTestId('act:riff');
-       if (await riff.count()) { await riff.click(); continue; }
-       await page.waitForTimeout(150);
+       const screen = await page.locator('[data-screen]').getAttribute('data-screen');
+       if (screen === 'district' && !(await page.getByTestId('popup').count())) return 'district after ' + i;
+       for (const id of ['ok', 'yes', 'popup-close', 'continue']) {
+         const b = page.getByTestId(id);
+         if (await b.count()) { await b.first().click(); break; }
+       }
+       const choice = page.locator('[data-testid^="choice:"]');
+       if (await choice.count()) await choice.first().click();
+       await page.waitForTimeout(50);
      }
-     return 'gave up: ' + (await page.locator('#screen').innerText()).slice(0, 200);
+     return 'gave up on ' + (await page.locator('[data-screen]').getAttribute('data-screen'));
    }
    ```
-   Change the first `if` to stop somewhere else (e.g. on `act:play` to inspect a battle).
+   Roots: `creole cajun yat`. Classes: `trumpet trombone sousaphone saxophone clarinet snare bassdrum`.
+   To play through the UI instead (name, roots, instrument), start from the `new` button.
+3. For a fight, `playUntil` in `tests/e2e/helpers.ts` is the reference loop: popups, the timing bar,
+   Play the Blues, `act:riff` then a `target:`, `out:` buttons, `continue`, `choice:`.
 
-## Jump anywhere (dev menu)
+Screens (`[data-screen]`): `title create story district place battle`.
 
-Needs a save (do Start first). `browser_evaluate` → `() => openDevMenu()`, then click a `data-act`:
-`act:<treme|quarter|storyville|bayou|cemetery|garden|tower>`, `boss:<id>`
-(`captain_hush vox_perfecta mr_ledger rougarou archivist isolde conductor the_click`), `xp` (+500),
-`gold`, `heal`, `items`, `gear`, `band`, `notes`, `unlock`. Close it with `sheet-close`.
+## Jump anywhere (the dev API)
 
-To reproduce a bug from a player's exported save (Settings → Export):
-`() => { if (!importSave('CF1:...')) return 'bad code'; resumeGame(); return 'ok'; }`
+Needs a save (do Start first). `browser_evaluate` with one of:
+
+- `() => CF.dev.act('quarter')`: the start of an act, every earlier boss beaten
+  (`treme quarter storyville bayou cemetery garden tower`)
+- `() => CF.dev.boss('rougarou')`: straight into a boss (`captain_hush vox_perfecta mr_ledger rougarou
+  archivist isolde conductor the_click`); the Tower's two start their climb floor
+- `CF.dev.xp()` (+500), `gold()`, `heal()`, `items()`, `gear()`, `band()`, `notes()`, `unlock()`,
+  `cutting()` (the Cutting Contest)
+
+The same menu is in the UI: tap the version on the title screen five times.
+
+To reproduce a bug from a player's save (Settings → Saves → Export gives a `CF2:` code):
+`async () => (await CF.importSave('CF2:...')) ? 'loaded' : 'not a save this version can load'`.
+From the title it asks which slot; in a game it replaces the current one and resumes.
 
 ## Check
 
 - **Screenshot**: `browser_take_screenshot` with no filename returns the image inline at CSS size
   (360×740). For files, pass `filename: '.playwright-mcp/<name>.png'` (gitignored).
-- **Overflow** (the 360px rule), the same test as `test/shots.py`:
-  `() => { const w = innerWidth, s = document.querySelector('#screen'); const r = { inner: w, doc: document.documentElement.scrollWidth, body: document.body.scrollWidth, screen: s ? s.scrollWidth : 0 }; r.overflow = r.doc > w || r.body > w || r.screen > w + 1; return r; }`
-  Check it on every screen you touched: open sheets (`menu`, `m:status`, `m:journal`, `m:settings`,
-  `act:bag`), popups, and long battle logs.
-- **Console**: `browser_console_messages`. Warnings and errors only; any error is a finding.
-- **Accessibility tree**: `browser_snapshot` (useful with the `fixing-accessibility` skill).
-- **State**: `browser_evaluate` with `() => CF.S` (or a slice of it) to confirm the change took effect.
+- **Overflow** (the 360px rule), the same test as `expectNoOverflow` in `tests/e2e/helpers.ts`:
+  `() => { const w = document.documentElement.clientWidth; const bad = [...document.querySelectorAll('body *')].filter(el => { const r = el.getBoundingClientRect(); return r.width > 0 && (r.right > w + 0.5 || r.left < -0.5); }).slice(0, 5).map(el => el.tagName + '.' + el.className); return { scrolls: document.documentElement.scrollWidth > w, bad }; }`
+  Check it on every screen you touched: sheets (`m:status`, `m:journal`, `m:bag`, `m:settings`),
+  popups, long battle logs, the story cards.
+- **Console**: `browser_console_messages`. Any error is a finding.
+- **Accessibility**: `browser_snapshot` for the tree (pair with the `fixing-accessibility` skill).
+  The e2e suite runs axe on every screen (`tests/e2e/a11y.spec.ts`); run `npm run e2e` for the verdict.
+- **State**: `() => CF.session.game` (or a slice of it) to confirm a change took effect.
 
-Things this can't verify: synthesized audio (headless has no sound output) and how manual
-On the One timing feels. Say so rather than claiming them.
+Things this can't verify: synthesized audio (headless has no sound output), how manual On the One
+timing feels, and the service worker (blocked here; `tests/e2e/pwa.spec.ts` covers offline play and
+installability). Say so rather than claiming them.
 
-## Common act names
+## Test ids
 
-`continue`, `choice:N`, `menu`, `m:status|journal|settings|bag|gear|band|book|lexicon`,
-`sheet-close`, `sheet-back`, `streets`, `place:<placeId>`, `opt:N`, `leave`, `act:riff|play|bag|vamp|solo|blues`.
-Grep `btn('` in `src/` for the rest.
+Conventions are in `docs/architecture/ui.md` ("Test ids"): `place:congo`, `opt:talk`, `choice:spare`,
+`out:retry`, `act:riff`, `skill:tr_s1`, `target:<actor id>`, `m:bag`, `sheet-close`, `sheet-back`,
+`buy:gumbo`, `set:textSpeed:instant`, `save:2`. Keys come from content ids, never labels.
 
 ## On a real phone
 
-- **Same Wi-Fi (cheapest):** start `python3 -m http.server 8765 --bind 0.0.0.0 -d dist` in the
-  background, get the Mac's LAN address with `ipconfig getifaddr en0`, and have the person open
-  `http://<ip>:8765/cyberfunk.html`. A refresh picks up each rebuild. This serves `dist/` to the whole
-  local network, so stop it when done.
-- **A link to share:** publish `dist/artifact.html` (the build made for Claude Artifact hosting) with
-  the Artifact tool, `icon: "game"`. Re-publishing the same path in the same conversation keeps the
-  URL. The Artifact tool requires reading the whole file first, and it is ~360 KB, so this uses a lot
-  of context. Only do it when the person asks for a link.
+- **Try a change (same Wi-Fi):** `npm run dev -- --host` in the background, then open the Network URL
+  it prints on the phone. Hot reload, `window.CF`, no service worker. It serves the dev build to the
+  whole local network, so stop it when done.
+- **Install it (the PWA):** run the production stack with the Mac's LAN address as the site:
+  `SITE_ADDRESS=$(ipconfig getifaddr en0) docker compose up --build -d --wait`, then follow
+  `docs/guides/docker.md` ("Play and install on your phone") to trust Caddy's root certificate on the
+  phone, open `https://<ip>:8443`, and add it to the home screen. `docker compose down` when done.
