@@ -32,13 +32,13 @@ Generated reference. Start with the [guide](../../architecture/code-map.md) for 
 | [tests/e2e/slice.spec.ts](#tests-e2e-slice-spec-ts) | The P2 vertical slice in a 360×740 touch phone: the prologue through the UI, every menu sheet, the pawn shop, a street fight, and Captain Hush. |
 | [tests/e2e/sprites.spec.ts](#tests-e2e-sprites-spec-ts) | Character sprites in the 360×740 phone: the dev gallery shows every sprite at both sizes, and sprites appear wherever a character does (battle cards, dialogue,… |
 | [tests/e2e/stack/cloud.spec.ts](#tests-e2e-stack-cloud-spec-ts) | Cloud saves against the real Docker stack (docker compose up): the production image, the API and Postgres. |
-| [tests/e2e/world.spec.ts](#tests-e2e-world-spec-ts) | The world walk: in a 360×740 phone, visit every place of every ported district and tap every option, playing through whatever it starts (story, choices, shops,… |
-| [tests/integration/explore.test.ts](#tests-integration-explore-test-ts) | The crawler: for every ported district (src/content/pending.ts), build saves at every step of its story, in three states of play, and press every option at eve… |
-| [tests/integration/playthrough.test.ts](#tests-integration-playthrough-test-ts) | The whole game so far, played headlessly with real battles: new game → prologue → every ported district's story → its boss, down every branch of the big boss c… |
+| [tests/e2e/world.spec.ts](#tests-e2e-world-spec-ts) | The world walk: in a 360×740 phone, visit every place of every district and tap every option, playing through whatever it starts (story, choices, shops, fights… |
+| [tests/integration/explore.test.ts](#tests-integration-explore-test-ts) | The crawler: for every district, build saves at every step of its story, in four states of play, and press every option at every place down every branch of its… |
+| [tests/integration/playthrough.test.ts](#tests-integration-playthrough-test-ts) | The whole game, played headlessly with real battles: new game → prologue → every district's story → its boss → the second line → the Tower → the ending, down e… |
 | [tests/integration/slice.test.ts](#tests-integration-slice-test-ts) | The vertical slice, played headlessly: new game → prologue → Tremé → three street wins → Captain Hush → the Quarter unlocks. |
 | [tests/integration/support/crawl.ts](#tests-integration-support-crawl-ts) | The crawler's toolkit: build saves at every point of a district's story, run any scene in a fresh headless Session with a scripted player, and explore every br… |
 | [tools/codemap.test.ts](#tools-codemap-test-ts) | The generated code map (docs/reference/code-map/) must match the code. |
-| [tools/completeness.test.ts](#tools-completeness-test-ts) | The game is whole for every ported district (see src/content/pending.ts), enforced in CI. |
+| [tools/completeness.test.ts](#tools-completeness-test-ts) | The game is whole: every place, boss, story hint and lexicon link is wired up, enforced in CI. |
 | [tools/parity/content.test.ts](#tools-parity-content-test-ts) | Content oracle: every typed table, mapped back through the documented renames, deep-equals the legacy table it came from. |
 | [tools/parity/engine.test.ts](#tools-parity-engine-test-ts) | Engine parity: the TypeScript engine must replay the whole corpus draw-for-draw like legacy v1. |
 | [tools/parity/properties.test.ts](#tools-parity-properties-test-ts) | Properties of the TypeScript engine that the parity oracle doesn't cover: - determinism: the same seed replays the same fight, with no hidden global state; - p… |
@@ -300,20 +300,20 @@ Cloud saves against the real Docker stack (docker compose up): the production im
 
 ### tests/e2e/world.spec.ts
 
-The world walk: in a 360×740 phone, visit every place of every ported district and tap every option, playing through whatever it starts (story, choices, shops, fights), checking for sideways overflow on every screen and sheet and for console errors. This is the UI path the empty French Quarter broke; the headless crawler (tests/integration/explore.test.ts) covers every branch, this covers the real screens.
+The world walk: in a 360×740 phone, visit every place of every district and tap every option, playing through whatever it starts (story, choices, shops, fights), checking for sideways overflow on every screen and sheet and for console errors. This is the UI path the empty French Quarter broke; the headless crawler (tests/integration/explore.test.ts) covers every branch, this covers the real screens.
 
 - Source: [tests/e2e/world.spec.ts](../../../tests/e2e/world.spec.ts)
-- Imports: core: [ids/world](core.md#src-core-ids-world-ts) · content: [pending](content.md#src-content-pending-ts) · tests: [e2e/helpers](#tests-e2e-helpers-ts)
+- Imports: core: [ids/world](core.md#src-core-ids-world-ts) · tests: [e2e/helpers](#tests-e2e-helpers-ts)
 - Packages: `@playwright/test`
 
 <a id="tests-integration-explore-test-ts"></a>
 
 ### tests/integration/explore.test.ts
 
-The crawler: for every ported district (src/content/pending.ts), build saves at every step of its story, in three states of play, and press every option at every place down every branch of its choices. Then check, across the whole crawl, that every quest can be finished, every story step reached, every choice taken and every item obtained.
+The crawler: for every district, build saves at every step of its story, in four states of play, and press every option at every place down every branch of its choices. Then check, across the whole crawl, that every quest can be finished, every story step reached, every choice taken and every item obtained.
 
 - Source: [tests/integration/explore.test.ts](../../../tests/integration/explore.test.ts)
-- Imports: core: [ids/characters](core.md#src-core-ids-characters-ts), [ids/items](core.md#src-core-ids-items-ts), [ids/story](core.md#src-core-ids-story-ts), [ids/world](core.md#src-core-ids-world-ts), [types/index](core.md#src-core-types-index-ts) · narrative: [define](narrative.md#src-narrative-define-ts) · content: [index](content.md#src-content-index-ts), [pending](content.md#src-content-pending-ts), [sprites/index](content.md#src-content-sprites-index-ts) · engine: [index](engine.md#src-engine-index-ts) · tests: [integration/support/crawl](#tests-integration-support-crawl-ts)
+- Imports: core: [ids/characters](core.md#src-core-ids-characters-ts), [ids/items](core.md#src-core-ids-items-ts), [ids/story](core.md#src-core-ids-story-ts), [ids/world](core.md#src-core-ids-world-ts), [types/index](core.md#src-core-types-index-ts) · narrative: [define](narrative.md#src-narrative-define-ts) · content: [index](content.md#src-content-index-ts), [sprites/index](content.md#src-content-sprites-index-ts) · engine: [index](engine.md#src-engine-index-ts) · tests: [integration/support/crawl](#tests-integration-support-crawl-ts)
 - Packages: `node:fs`, `node:path`, `vitest`
 - Suites: “story”, “street events”, “coverage”
 
@@ -321,10 +321,10 @@ The crawler: for every ported district (src/content/pending.ts), build saves at 
 
 ### tests/integration/playthrough.test.ts
 
-The whole game so far, played headlessly with real battles: new game → prologue → every ported district's story → its boss, down every branch of the big boss choices, until the story reaches a district that hasn't been ported yet (src/content/pending.ts). As districts are ported, this test plays further on its own.
+The whole game, played headlessly with real battles: new game → prologue → every district's story → its boss → the second line → the Tower → the ending, down every branch of the big boss choices.
 
 - Source: [tests/integration/playthrough.test.ts](../../../tests/integration/playthrough.test.ts)
-- Imports: core: [ids/enemies](core.md#src-core-ids-enemies-ts), [ids/world](core.md#src-core-ids-world-ts), [types/index](core.md#src-core-types-index-ts) · content: [index](content.md#src-content-index-ts), [pending](content.md#src-content-pending-ts) · engine: [index](engine.md#src-engine-index-ts) · app: [devStates](app.md#src-app-devstates-ts), [save/storage](app.md#src-app-save-storage-ts), [session](app.md#src-app-session-ts), [testing/scriptedPresenter](app.md#src-app-testing-scriptedpresenter-ts)
+- Imports: core: [ids/enemies](core.md#src-core-ids-enemies-ts), [ids/world](core.md#src-core-ids-world-ts), [types/index](core.md#src-core-types-index-ts) · content: [index](content.md#src-content-index-ts) · engine: [index](engine.md#src-engine-index-ts) · app: [devStates](app.md#src-app-devstates-ts), [save/storage](app.md#src-app-save-storage-ts), [session](app.md#src-app-session-ts), [testing/scriptedPresenter](app.md#src-app-testing-scriptedpresenter-ts)
 - Packages: `vitest`
 - Suites: “playthrough”
 
@@ -435,7 +435,7 @@ The generated code map (docs/reference/code-map/) must match the code. When this
 
 ### tools/completeness.test.ts
 
-The game is whole for every ported district (see src/content/pending.ts), enforced in CI.
+The game is whole: every place, boss, story hint and lexicon link is wired up, enforced in CI.
 
 - Source: [tools/completeness.test.ts](../../../tools/completeness.test.ts)
 - Imports: tools: [completeness](tools.md#tools-completeness-ts)

@@ -6,7 +6,7 @@ Every source file in `src/`, `server/`, `tools/` and `tests/`, with its declarat
 
 For how the pieces work together (boot, a story line, a battle, a save reaching Postgres), read the hand-written [guide](../../architecture/code-map.md) first.
 
-**245** source files · **34** test files · **1076** top-level declarations · **416** members · **3019** "uses" edges
+**244** source files · **34** test files · **1070** top-level declarations · **416** members · **3013** "uses" edges
 
 ## Pages
 
@@ -14,7 +14,7 @@ For how the pieces work together (boot, a story line, a battle, a save reaching 
 |---|---|---|
 | [src/core](core.md) | 18 | The floor layer: every id list, the shared types (GameState, Battle, Actor, content defs, effects), the seeded Rng and pure helpers. |
 | [src/narrative](narrative.md) | 3 | The scene API that story content is written against (Scene, SceneContext, Presenter), the Director that runs one scene at a time, and the place/event authoring helpers. |
-| [src/content](content.md) | 106 | Typed game data and story scripts: classes, skills, statuses, enemies, bosses (with their AI), items, gear, districts, acts, and the *.scene.ts files. |
+| [src/content](content.md) | 105 | Typed game data and story scripts: classes, skills, statuses, enemies, bosses (with their AI), items, gear, districts, acts, and the *.scene.ts files. |
 | [src/engine](engine.md) | 22 | The game rules as plain functions over GameState and Battle: stats, progression, inventory, shops, encounters, aftermath, and the combat loop. |
 | [src/app](app.md) | 18 | Runs the game without React: GameApp (every command the UI can issue), Session, the SceneContext implementation, the battle controller, the presenters, the view store, saves, and cloud sync. |
 | [src/ui and src/main.tsx](ui.md) | 39 | React components that render the two stores (game and view) and call GameApp commands, plus the browser entry point src/main.tsx. |
@@ -41,7 +41,7 @@ flowchart TD
   app -->|60| core
   app -->|8| engine
   app -->|9| narrative
-  content -->|147| core
+  content -->|145| core
   content -->|32| narrative
   engine -->|19| content
   engine -->|65| core
@@ -49,14 +49,14 @@ flowchart TD
   server -->|8| app
   server -->|1| core
   tests -->|42| app
-  tests -->|16| content
+  tests -->|13| content
   tests -->|67| core
   tests -->|23| engine
   tests -->|5| narrative
   tests -->|6| server
   tests -->|24| tools
   tests -->|1| ui
-  tools -->|13| content
+  tools -->|12| content
   tools -->|35| core
   tools -->|4| engine
   ui -->|12| app

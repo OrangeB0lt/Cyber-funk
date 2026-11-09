@@ -1,5 +1,5 @@
 import type { PlaceId } from '@core/ids/world';
-import { PLACES, TEXT } from '@content/index';
+import { PLACES } from '@content/index';
 import { Button } from '../components/Button';
 import { Notes } from '../components/Notes';
 import { useApp, useGame, useView } from '../GameContext';
@@ -20,11 +20,6 @@ export function PlaceScreen() {
       <p className="small dim">{pl.desc}</p>
       {intro?.notes && <Notes have={g.notes} />}
       {intro?.text && <p className="small">{intro.text}</p>}
-      {options.length === 0 && (
-        <p className="small dim" data-testid="not-built">
-          {TEXT.placeNotBuilt}
-        </p>
-      )}
       <div className={s.list}>
         {options.map(o => (
           <Button

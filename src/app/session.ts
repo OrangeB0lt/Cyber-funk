@@ -211,12 +211,12 @@ export class Session implements SessionPort {
 
   /** A place's intro right now. */
   placeIntro(id: PlaceId): PlaceIntro | null {
-    return PLACE_SCENES[id]?.intro?.(this.game, this.placeHelpers()) ?? null;
+    return PLACE_SCENES[id].intro?.(this.game, this.placeHelpers()) ?? null;
   }
 
   /** The options at a place right now. */
   placeOptions(id: PlaceId): PlaceOption[] {
-    return PLACE_SCENES[id]?.options(this.game, this.placeHelpers()) ?? [];
+    return PLACE_SCENES[id].options(this.game, this.placeHelpers());
   }
 
   /** Walk into a place. */

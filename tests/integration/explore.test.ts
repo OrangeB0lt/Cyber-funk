@@ -1,11 +1,11 @@
 /**
- * The crawler: for every ported district (src/content/pending.ts), build saves at every step of its
- * story, in three states of play, and press every option at every place down every branch of its
+ * The crawler: for every district, build saves at every step of its story, in four states of play,
+ * and press every option at every place down every branch of its
  * choices. Then check, across the whole crawl, that every quest can be finished, every story step
  * reached, every choice taken and every item obtained.
  *
  * This is the test the empty French Quarter would have failed first: "every place offers something".
- * A district is crawled as soon as it leaves PENDING_DISTRICTS; nothing here needs editing per district.
+ * Nothing here needs editing for new content: a new place, option or quest is crawled automatically.
  *
  * Fights are stubbed (the engine's own tests cover combat); scenes, saves and text are real.
  */
@@ -31,7 +31,6 @@ import {
   PLACE_SCENES,
   PLACES,
   QUEST_DROPS,
-  QUESTS,
   STREET_EVENTS,
   hitTheStreets,
   prologue,
@@ -39,7 +38,6 @@ import {
   trackBounty,
   travel,
 } from '@content/index';
-import { isPendingAct, isPendingDistrict, type PendingDistrict } from '@content/pending';
 import { SHOPKEEPERS } from '@content/sprites';
 import { newGame, priceFor, storyIs, storyReached } from '@engine/index';
 import type { PlaceHelpers } from '@narrative/define';
@@ -58,7 +56,7 @@ import {
   type RunSpec,
 } from './support/crawl';
 
-const PORTED = DISTRICT_IDS.filter(d => !isPendingDistrict(d));
+const PORTED = DISTRICT_IDS;
 
 /* ------------------------------------------------------------------ */
 /* What the whole crawl saw (read by the coverage checks at the end)    */
@@ -242,22 +240,15 @@ const NEVER: Partial<Record<ObtainableKey, string>> = {
   pralinelady_king: 'dead item kept for parity (docs/known-issues.md "Dead fields and flags")',
 };
 
-/**
- * Obtainable only from a district that isn't ported yet (v1's shops and scenes in legacy/src/08_world.js).
- * The values are pending districts, so porting one turns its leftover entries into type errors.
- */
-const PENDING_SOURCES: Partial<Record<ObtainableKey, PendingDistrict>> = {};
-
 describe('coverage', () => {
-  it('every quest of a ported district can be finished', () => {
-    const missing = QUEST_IDS.filter(q => !isPendingDistrict(QUESTS[q].district) && !seen.questsDone.has(q));
+  it('every quest can be finished', () => {
+    const missing = QUEST_IDS.filter(q => !seen.questsDone.has(q));
     expect(missing).toEqual([]);
   });
 
-  it('every story step of a ported act can be reached', () => {
+  it('every story step can be reached', () => {
     const missing: string[] = [];
     for (const act of ACT_ORDER) {
-      if (isPendingAct(act)) continue;
       const steps = ACT_STEPS[act] as readonly string[];
       for (const [i, step] of steps.entries()) {
         const prev = i > 0 ? (ACTS[act] as Record<string, StepDef>)[steps[i - 1]!] : undefined;
@@ -273,7 +264,7 @@ describe('coverage', () => {
     expect([...seen.offered].filter(k => !seen.chosen.has(k))).toEqual([]);
   });
 
-  it("every option written in a ported district's scenes is offered in some state", () => {
+  it("every option written in a district's scenes is offered in some state", () => {
     const missing: string[] = [];
     for (const d of PORTED) {
       const dir = path.resolve('src/content/districts', d);
@@ -286,10 +277,9 @@ describe('coverage', () => {
     expect(missing).toEqual([]);
   });
 
-  it('every shop has a keeper, and every shopkeeper of a ported district runs a shop', () => {
+  it('every shop has a keeper, and every shopkeeper runs a shop', () => {
     expect([...seen.shopsWithoutKeeper]).toEqual([]);
     const idle = Object.entries(SHOPKEEPERS)
-      .filter(([, place]) => !isPendingDistrict(PLACES[place].district))
       .map(([id]) => id)
       .filter(id => !seen.keepers.has(id));
     expect(idle).toEqual([]);
@@ -312,13 +302,12 @@ describe('coverage', () => {
         for (const id of [...g.gearBag, ...Object.values(g.gear)]) if (id) got.add(obtainableKey(id));
       }
     for (const id of [...LOOT.common, LOOT.rare, ...QUEST_DROPS.map(r => r.item)]) got.add(id);
-    const missing = all.filter(k => !got.has(k) && !NEVER[k] && !PENDING_SOURCES[k]);
-    const stale = Object.keys(PENDING_SOURCES).filter(k => got.has(k));
-    expect({ missing, stale }).toEqual({ missing: [], stale: [] });
+    const missing = all.filter(k => !got.has(k) && !NEVER[k]);
+    expect(missing).toEqual([]);
   });
 
-  it('crawls every place of every ported district', () => {
-    const places = PLACE_IDS.filter(p => !isPendingDistrict(PLACES[p].district));
+  it('crawls every place of every district', () => {
+    const places = PLACE_IDS;
     expect(places.filter(p => !PLACE_SCENES[p])).toEqual([]);
   });
 });

@@ -2,19 +2,14 @@
  * All content as the app sees it: the data (content/data.ts) plus every scene. The engine and the
  * sim never import this file (they use data.ts), which keeps prose out of their module graph.
  *
- * The scene registries are complete except for the Tower and its bosses, which arrive with the ending
- * in P4 (src/content/pending.ts; their places show TEXT.placeNotBuilt). Everything else is required by
- * the types, so a missing place or boss scene doesn't compile; the completeness tests and the crawler
- * check the rest (hint places, options, quests). At the end of P4 these become plain Records.
+ * The scene registries are total: every place and every boss must have scenes, or this file doesn't
+ * compile. The completeness tests and the crawler check the rest (hint places, options, quests).
  */
 import type { BossId } from '@core/ids/enemies';
 import type { PlaceId } from '@core/ids/world';
 import type { PlaceScenes } from '@narrative/define';
 import type { Scene } from '@narrative/types';
 
-/** The Tower's place and bosses: their scenes come with the ending (P4). */
-type TowerPlace = 'towerlobby';
-type TowerBoss = 'conductor' | 'the_click';
 /** A boss's scenes: `pre` plays the first time you go in, `post` after you win. */
 interface BossScenes {
   /** Before the first fight. */
@@ -60,8 +55,7 @@ export { cuttingContest } from './districts/quarter/cutting.scene';
 export { mamaRouxTalk } from './districts/treme/places.scene';
 
 /** Each boss's scenes: `pre` plays the first time you go in, `post` after you win. */
-export const BOSS_SCENES: Record<Exclude<BossId, TowerBoss>, BossScenes> &
-  Partial<Record<TowerBoss, BossScenes>> = {
+export const BOSS_SCENES: Record<BossId, BossScenes> = {
   captain_hush: captainHush,
   vox_perfecta: voxPerfecta,
   mr_ledger: mrLedger,
@@ -73,8 +67,7 @@ export const BOSS_SCENES: Record<Exclude<BossId, TowerBoss>, BossScenes> &
 };
 
 /** What you can do at each place. */
-export const PLACE_SCENES: Record<Exclude<PlaceId, TowerPlace>, PlaceScenes> &
-  Partial<Record<TowerPlace, PlaceScenes>> = {
+export const PLACE_SCENES: Record<PlaceId, PlaceScenes> = {
   club,
   kitchen,
   pawn,

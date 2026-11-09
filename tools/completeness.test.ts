@@ -1,4 +1,4 @@
-/** The game is whole for every ported district (see src/content/pending.ts), enforced in CI. */
+/** The game is whole: every place, boss, story hint and lexicon link is wired up, enforced in CI. */
 import { describe, expect, it } from 'vitest';
 import { checkCompleteness } from './completeness';
 

@@ -1,7 +1,7 @@
 /**
  * Is the game whole? Checks that every place has something to do, every boss has its scenes, every
- * story step points somewhere real and every [[lexicon]] link resolves, for every district that has
- * been ported (src/content/pending.ts lists the ones that haven't). Runs in CI as a test
+ * story step points somewhere real and every [[lexicon]] link resolves. The registries' types already
+ * require every place and boss; this keeps the message friendly and covers the rest. Runs in CI as a test
  * (completeness.test.ts) and on demand:
  *
  *   npx tsx tools/completeness.ts
@@ -14,10 +14,9 @@ import path from 'node:path';
 import { pathToFileURL } from 'node:url';
 import { BOSS_IDS } from '@core/ids/enemies';
 import { ACT_ORDER, ACT_STEPS } from '@core/ids/story';
-import { DISTRICT_IDS, PLACE_IDS, type DistrictId, type PlaceId } from '@core/ids/world';
+import { DISTRICT_IDS, PLACE_IDS, type PlaceId } from '@core/ids/world';
 import type { StepDef } from '@core/types';
 import { ACTS, BOSSES, DISTRICTS, GLOSSARY, PLACES, BOSS_SCENES, PLACE_SCENES } from '@content/index';
-import { PENDING_DISTRICTS, isPendingAct, isPendingDistrict } from '@content/pending';
 
 /**
  * [[links]] that knowingly name no glossary entry. Each is a v1 bug kept for parity (ADR-0003) and
@@ -46,9 +45,8 @@ export function checkCompleteness(): string[] {
       fail(`Place ${p} says it is in ${PLACES[p].district}, but ${ds[0]} lists it.`);
   }
 
-  // Ported districts are whole: every place has scenes and the boss has its pre/post scenes.
+  // Every place has scenes and every boss its pre/post scenes (the registries' types insist too).
   for (const d of DISTRICT_IDS) {
-    if (isPendingDistrict(d)) continue;
     for (const p of DISTRICTS[d].places)
       if (!PLACE_SCENES[p])
         fail(
@@ -56,26 +54,14 @@ export function checkCompleteness(): string[] {
         );
   }
   for (const b of BOSS_IDS) {
-    if (isPendingDistrict(BOSSES[b].district)) continue;
     if (!BOSS_SCENES[b])
       fail(
         `${BOSSES[b].district}: boss ${b} has no pre/post scenes. Add it to BOSS_SCENES in src/content/index.ts.`,
       );
   }
 
-  // A district still marked pending but fully ported should come off the list, so its tests run.
-  for (const d of PENDING_DISTRICTS as readonly DistrictId[]) {
-    const places = DISTRICTS[d].places.every(p => PLACE_SCENES[p]);
-    const bosses = BOSS_IDS.filter(b => BOSSES[b].district === d).every(b => BOSS_SCENES[b]);
-    if (places && bosses)
-      fail(
-        `${d}: every place and boss has scenes now. Remove it from PENDING_DISTRICTS in src/content/pending.ts.`,
-      );
-  }
-
-  // Every story step of a ported act points the "!" at a place that has something to do.
+  // Every story step points the "!" at a place that has something to do.
   for (const act of ACT_ORDER) {
-    if (isPendingAct(act)) continue;
     for (const step of ACT_STEPS[act] as readonly string[]) {
       const def = (ACTS[act] as Record<string, StepDef>)[step]!;
       if (def.hintPlace && !PLACE_SCENES[def.hintPlace])

@@ -37,23 +37,21 @@ docker compose up --build -d --wait                       # the production stack
 E2E_STACK_URL=http://localhost:8080 npx playwright test   # the stack suite
 ```
 
-## Porting a district
+## Adding a place or boss
 
-[src/content/pending.ts](../../src/content/pending.ts) lists the districts whose scenes aren't ported yet. Their places show "Closed tonight…" (`data-testid="not-built"`), and the tests leave them alone. To port one:
+`PLACE_SCENES` and `BOSS_SCENES` ([content/index.ts](../../src/content/index.ts)) are total records, so a place or boss without scenes doesn't compile. To add one:
 
-1. Write its scenes and register them in `PLACE_SCENES` and `BOSS_SCENES` ([content/index.ts](../../src/content/index.ts)).
-2. Delete the district from `PENDING_DISTRICTS`.
-3. Run `npm test` and fix what it reports:
-   - `completeness`: unwired places, bosses and hints
-   - the crawler: a place with nothing to do, an option that throws, broken text, a quest nobody can finish, an item nobody can get
-   - `PENDING_SOURCES` entries in `explore.test.ts` that now fail to typecheck: delete them
-4. Run `npm run e2e`: `world.spec.ts` now walks the district in the phone.
+1. Write its scenes (`definePlace` for a place; `pre`/`post` in `content/bosses/<boss>.scene.ts` for a boss) and register them.
+2. Run `npm test` and fix what it reports:
+   - `completeness`: hint places, lexicon links
+   - the crawler: a place with nothing to do in some state, an option that throws, broken text, a quest nobody can finish, an item nobody can get, an option written but never offered
+3. Run `npm run e2e`: `world.spec.ts` walks the new place in the phone.
 
-The playthrough plays through the new district on its own, and forks at its boss choice if it has one (add the keys to `CHOICE_BOSSES`).
+The playthrough plays it on its own if the story goes through it, and forks at a boss's choice if it has one (add the keys to `CHOICE_BOSSES`).
 
 ## The crawler
 
-`tests/integration/explore.test.ts` (helpers in `tests/integration/support/crawl.ts`) builds saves for each ported district:
+`tests/integration/explore.test.ts` (helpers in `tests/integration/support/crawl.ts`) builds saves for each district:
 - **Positions:** every step of the district's act, after its boss, and late game
 - **Profiles:** `fresh` (broke), `started` (quests just taken), `busy` (quests ready to hand in, one of everything, flush), `done` (every flag, the whole band, the other boss choices)
 

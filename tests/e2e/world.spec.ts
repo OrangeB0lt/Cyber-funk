@@ -1,20 +1,13 @@
 /**
- * The world walk: in a 360×740 phone, visit every place of every ported district and tap every
+ * The world walk: in a 360×740 phone, visit every place of every district and tap every
  * option, playing through whatever it starts (story, choices, shops, fights), checking for sideways
  * overflow on every screen and sheet and for console errors. This is the UI path the empty French
  * Quarter broke; the headless crawler (tests/integration/explore.test.ts) covers every branch, this
  * covers the real screens.
- *
- * Districts still in src/content/pending.ts get a lighter check: every place says it's not built yet,
- * and nothing overflows.
  */
 import { expect, test, type Page } from '@playwright/test';
 import { DISTRICT_IDS } from '../../src/core/ids/world';
-import { PENDING_DISTRICTS } from '../../src/content/pending';
 import { cf, expectNoOverflow, playUntil, quickStart, tid, watchErrors } from './helpers';
-
-const pending = new Set<string>(PENDING_DISTRICTS);
-const PORTED = DISTRICT_IDS.filter(d => !pending.has(d));
 
 /**
  * Options that only start fights; the boss and spar specs cover fights, and they're slow here. The
@@ -81,7 +74,7 @@ const ids = (page: Page, prefix: string) =>
     .locator(`[data-testid^="${prefix}"]`)
     .evaluateAll((els, pre) => els.map(e => e.getAttribute('data-testid')!.slice(pre.length)), prefix);
 
-for (const d of PORTED) {
+for (const d of DISTRICT_IDS) {
   test(`${d}: every place and option works at 360px`, async ({ page }) => {
     test.setTimeout(240_000);
     const errors = watchErrors(page);
@@ -99,7 +92,6 @@ for (const d of PORTED) {
       };
       await enter();
       await expectNoOverflow(page, `${d} ${place}`);
-      await expect(tid(page, 'not-built'), `${place} says it isn't built`).toHaveCount(0);
       // Options change as you use them (talking to someone opens their quest), so look again
       // after each pass and tap whatever is new.
       const done = new Set<string>();
@@ -128,23 +120,6 @@ for (const d of PORTED) {
     }
     expect(places.length, 'places on the district screen').toBeGreaterThan(0);
     expect(tapped, 'options tapped').toBeGreaterThanOrEqual(places.length);
-    expect(errors).toEqual([]);
-  });
-}
-
-for (const d of PENDING_DISTRICTS) {
-  test(`${d} (not ported yet): every place says so, and fits at 360px`, async ({ page }) => {
-    const errors = watchErrors(page);
-    await arrive(page, d);
-    await expectNoOverflow(page, `${d} district`);
-    for (const place of await ids(page, 'place:')) {
-      await tid(page, `place:${place}`).click();
-      await expect(tid(page, 'not-built')).toBeVisible();
-      await expectNoOverflow(page, `${d} ${place}`);
-      if (process.env.WORLD_SHOTS)
-        await page.screenshot({ path: `${process.env.WORLD_SHOTS}/${d}-${place}.png` });
-      await tid(page, 'leave').click();
-    }
     expect(errors).toEqual([]);
   });
 }

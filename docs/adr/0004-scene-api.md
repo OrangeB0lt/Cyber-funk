@@ -84,7 +84,7 @@ The Tower and the ending needed four things the API couldn't do. Each is generic
 
 - Writers work in TypeScript. The scene API is small, documented in `docs/guides/writing-scenes.md`, and enforced by the compiler.
 - Shared shapes are extracted from real scenes, not designed in advance. `definePlace` and `defineEvent` exist. Helpers used by more than one district (instrument stock, bar rumors, the ball invitation) live in `src/content/world/shared.scene.ts`. A `defineBossPlace` or `defineNpc` gets added when enough scenes share that shape to justify it.
-- Completeness is tested, not assumed. `tools/completeness.test.ts` and `tests/integration/explore.test.ts` check that every place outside `src/content/pending.ts` has scenes and that every option runs.
+- Completeness is tested, not assumed. The scene registries are total records (a missing place or boss doesn't compile), and `tools/completeness.test.ts` and `tests/integration/explore.test.ts` check that every hint points somewhere real and every option runs.
 - The runtime sits behind interfaces, so a different authoring format (such as Ink) could plug in later without touching the UI or the engine.
 
 ## Alternatives considered

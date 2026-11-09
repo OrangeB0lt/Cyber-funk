@@ -24,7 +24,6 @@ flowchart LR
   n_items["items"]
   n_notes["notes"]
   n_npcs["npcs"]
-  n_pending["pending"]
   n_places["places"]
   n_quests["quests"]
   n_roots["roots"]
@@ -169,7 +168,6 @@ flowchart LR
 | [src/content/items.ts](#src-content-items-ts) | Consumables and key items. |
 | [src/content/notes.ts](#src-content-notes-ts) | The six Blue Notes of the blues scale, in scale order. |
 | [src/content/npcs.ts](#src-content-npcs-ts) | Everyone who speaks in scenes, with the color their name shows in. |
-| [src/content/pending.ts](#src-content-pending-ts) | The districts whose scenes haven't been ported from v1 yet (the 2.0 migration, P3–P4). |
 | [src/content/places.ts](#src-content-places-ts) | Places inside districts. |
 | [src/content/quests.ts](#src-content-quests-ts) | Side quests as the journal shows them. |
 | [src/content/roots.ts](#src-content-roots-ts) | Character roots: where you grew up. |
@@ -1530,15 +1528,11 @@ All content as the app sees it: the data (content/data.ts) plus every scene. The
 
 Declarations:
 
-- <a id="src-content-index-ts--towerplace"></a>**TowerPlace** · *type, internal* `= 'towerlobby'` — The Tower's place and bosses: their scenes come with the ending (P4).
-  - used by: here [PLACE_SCENES](#src-content-index-ts--place-scenes)
-- <a id="src-content-index-ts--towerboss"></a>**TowerBoss** · *type, internal* `= 'conductor' | 'the_click'`
-  - used by: here [BOSS_SCENES](#src-content-index-ts--boss-scenes)
 - <a id="src-content-index-ts--bossscenes"></a>**BossScenes** · *interface, internal* — A boss's scenes: `pre` plays the first time you go in, `post` after you win.
   - used by: here [BOSS_SCENES](#src-content-index-ts--boss-scenes)
-- <a id="src-content-index-ts--boss-scenes"></a>**BOSS_SCENES** · *const* `: Record<Exclude<BossId, TowerBoss>, BossScenes> & Partial<Record<TowerBoss, BossScenes>>` — Each boss's scenes: `pre` plays the first time you go in, `post` after you win.
+- <a id="src-content-index-ts--boss-scenes"></a>**BOSS_SCENES** · *const* `: Record<BossId, BossScenes>` — Each boss's scenes: `pre` plays the first time you go in, `post` after you win.
   - used by: **[app/sceneContext](app.md#src-app-scenecontext-ts)** [createSceneContext](app.md#src-app-scenecontext-ts--createscenecontext), [finishBoss](app.md#src-app-scenecontext-ts--finishboss) · **[tools/completeness](tools.md#tools-completeness-ts)** [checkCompleteness](tools.md#tools-completeness-ts--checkcompleteness) · tests: [playthrough.test](tests.md#tests-integration-playthrough-test-ts)
-- <a id="src-content-index-ts--place-scenes"></a>**PLACE_SCENES** · *const* `: Record<Exclude<PlaceId, TowerPlace>, PlaceScenes> & Partial<Record<TowerPlace, PlaceScenes>>` — What you can do at each place.
+- <a id="src-content-index-ts--place-scenes"></a>**PLACE_SCENES** · *const* `: Record<PlaceId, PlaceScenes>` — What you can do at each place.
   - uses: **[content/districts/bayou/places.scene](#src-content-districts-bayou-places-scene-ts)** [boudin](#src-content-districts-bayou-places-scene-ts--boudin), [cabin](#src-content-districts-bayou-places-scene-ts--cabin), [faisdodo](#src-content-districts-bayou-places-scene-ts--faisdodo), [pump](#src-content-districts-bayou-places-scene-ts--pump) · **[content/districts/cemetery/places.scene](#src-content-districts-cemetery-places-scene-ts)** [crypts](#src-content-districts-cemetery-places-scene-ts--crypts), [mausoleum](#src-content-districts-cemetery-places-scene-ts--mausoleum), [temple](#src-content-districts-cemetery-places-scene-ts--temple) · **[content/districts/garden/places.scene](#src-content-districts-garden-places-scene-ts)** [maison](#src-content-districts-garden-places-scene-ts--maison), [manor](#src-content-districts-garden-places-scene-ts--manor), [tuxedo](#src-content-districts-garden-places-scene-ts--tuxedo) · **[content/districts/quarter/places.scene](#src-content-districts-quarter-places-scene-ts)** [feufollet](#src-content-districts-quarter-places-scene-ts--feufollet), [jackson](#src-content-districts-quarter-places-scene-ts--jackson), [market](#src-content-districts-quarter-places-scene-ts--market), [pelican](#src-content-districts-quarter-places-scene-ts--pelican), [strip](#src-content-districts-quarter-places-scene-ts--strip) · **[content/districts/storyville/places.scene](#src-content-districts-storyville-places-scene-ts)** [chopshop](#src-content-districts-storyville-places-scene-ts--chopshop) · … +7 more
   - used by: **[app/session](app.md#src-app-session-ts)** [Session.placeIntro](app.md#src-app-session-ts--session-placeintro), [Session.placeOptions](app.md#src-app-session-ts--session-placeoptions) · **[tools/completeness](tools.md#tools-completeness-ts)** [checkCompleteness](tools.md#tools-completeness-ts--checkcompleteness) · tests: [explore.test](tests.md#tests-integration-explore-test-ts)
 
@@ -1594,31 +1588,6 @@ Declarations:
 - <a id="src-content-npcs-ts--npcs"></a>**NPCS** · *const* `: Table<NpcId, NpcDef>`
   - used by: **[app/sceneContext](app.md#src-app-scenecontext-ts)** [createSceneContext](app.md#src-app-scenecontext-ts--createscenecontext) · **[tools/sprites](tools.md#tools-sprites-ts)** [nameOf](tools.md#tools-sprites-ts--nameof) · tests: [content.test](tests.md#tools-parity-content-test-ts)
 
-<a id="src-content-pending-ts"></a>
-
-### src/content/pending.ts
-
-The districts whose scenes haven't been ported from v1 yet (the 2.0 migration, P3–P4).
-
-- Source: [src/content/pending.ts](../../../src/content/pending.ts)
-- Imports: core: [ids/story](core.md#src-core-ids-story-ts), [ids/world](core.md#src-core-ids-world-ts)
-- Imported by: tools: [completeness](tools.md#tools-completeness-ts)
-- Tested by: [world.spec](tests.md#tests-e2e-world-spec-ts), [explore.test](tests.md#tests-integration-explore-test-ts), [playthrough.test](tests.md#tests-integration-playthrough-test-ts)
-- Types used: **[core/ids/story](core.md#src-core-ids-story-ts)** [ActId](core.md#src-core-ids-story-ts--actid) · **[core/ids/world](core.md#src-core-ids-world-ts)** [DistrictId](core.md#src-core-ids-world-ts--districtid)
-
-Declarations:
-
-- <a id="src-content-pending-ts--pending-districts"></a>**PENDING_DISTRICTS** · *const* `satisfies readonly DistrictId[]`
-  - used by: here [PendingDistrict](#src-content-pending-ts--pendingdistrict), [isPendingDistrict](#src-content-pending-ts--ispendingdistrict) · **[tools/completeness](tools.md#tools-completeness-ts)** [checkCompleteness](tools.md#tools-completeness-ts--checkcompleteness) · tests: [world.spec](tests.md#tests-e2e-world-spec-ts)
-- <a id="src-content-pending-ts--pendingdistrict"></a>**PendingDistrict** · *type* `= (typeof PENDING_DISTRICTS)[number]` — A district still waiting for its scenes.
-  - used by: here [isPendingDistrict](#src-content-pending-ts--ispendingdistrict) · tests: [explore.test](tests.md#tests-integration-explore-test-ts)
-- <a id="src-content-pending-ts--ispendingdistrict"></a>**isPendingDistrict** · *function* `(d: DistrictId): d is PendingDistrict` — Is this district still waiting for its scenes?
-  - uses: here [PENDING_DISTRICTS](#src-content-pending-ts--pending-districts)
-  - used by: here [isPendingAct](#src-content-pending-ts--ispendingact) · **[tools/completeness](tools.md#tools-completeness-ts)** [checkCompleteness](tools.md#tools-completeness-ts--checkcompleteness) · tests: [explore.test](tests.md#tests-integration-explore-test-ts), [playthrough.test](tests.md#tests-integration-playthrough-test-ts)
-- <a id="src-content-pending-ts--ispendingact"></a>**isPendingAct** · *function* `(a: ActId): boolean` — Is this act still waiting for its scenes?
-  - uses: here [isPendingDistrict](#src-content-pending-ts--ispendingdistrict)
-  - used by: **[tools/completeness](tools.md#tools-completeness-ts)** [checkCompleteness](tools.md#tools-completeness-ts--checkcompleteness) · tests: [explore.test](tests.md#tests-integration-explore-test-ts), [playthrough.test](tests.md#tests-integration-playthrough-test-ts)
-
 <a id="src-content-places-ts"></a>
 
 ### src/content/places.ts
@@ -1645,13 +1614,13 @@ Side quests as the journal shows them. Each quest's logic lives in its giver's s
 - Source: [src/content/quests.ts](../../../src/content/quests.ts)
 - Imports: core: [ids/world](core.md#src-core-ids-world-ts), [types/index](core.md#src-core-types-index-ts)
 - Imported by: content: [data](#src-content-data-ts), [districts/bayou/places.scene](#src-content-districts-bayou-places-scene-ts), [districts/cemetery/places.scene](#src-content-districts-cemetery-places-scene-ts), [districts/quarter/cutting.scene](#src-content-districts-quarter-cutting-scene-ts), [districts/quarter/places.scene](#src-content-districts-quarter-places-scene-ts), [districts/storyville/places.scene](#src-content-districts-storyville-places-scene-ts), [districts/treme/places.scene](#src-content-districts-treme-places-scene-ts)
-- Tested by: [explore.test](tests.md#tests-integration-explore-test-ts), [content.test](tests.md#tools-parity-content-test-ts)
+- Tested by: [content.test](tests.md#tools-parity-content-test-ts)
 - Types used: **[core/ids/world](core.md#src-core-ids-world-ts)** [QuestId](core.md#src-core-ids-world-ts--questid) · **[core/types/content](core.md#src-core-types-content-ts)** [QuestDef](core.md#src-core-types-content-ts--questdef), [Table](core.md#src-core-types-content-ts--table)
 
 Declarations:
 
 - <a id="src-content-quests-ts--quests"></a>**QUESTS** · *const* `: Table<QuestId, QuestDef>`
-  - used by: **[content/districts/bayou/places.scene](#src-content-districts-bayou-places-scene-ts)** [herbsQuest](#src-content-districts-bayou-places-scene-ts--herbsquest), [remyQuest](#src-content-districts-bayou-places-scene-ts--remyquest) · **[content/districts/cemetery/places.scene](#src-content-districts-cemetery-places-scene-ts)** [haintsQuest](#src-content-districts-cemetery-places-scene-ts--haintsquest) · **[content/districts/quarter/cutting.scene](#src-content-districts-quarter-cutting-scene-ts)** [cuttingContest](#src-content-districts-quarter-cutting-scene-ts--cuttingcontest) · **[content/districts/quarter/places.scene](#src-content-districts-quarter-places-scene-ts)** [hornQuest](#src-content-districts-quarter-places-scene-ts--hornquest), [lostEyeQuest](#src-content-districts-quarter-places-scene-ts--losteyequest) · **[content/districts/storyville/places.scene](#src-content-districts-storyville-places-scene-ts)** [staticQuest](#src-content-districts-storyville-places-scene-ts--staticquest), [theoTalk](#src-content-districts-storyville-places-scene-ts--theotalk) · **[content/districts/treme/places.scene](#src-content-districts-treme-places-scene-ts)** [kitchen](#src-content-districts-treme-places-scene-ts--kitchen) · **[ui/sheets/MenuSheets](ui.md#src-ui-sheets-menusheets-tsx)** [JournalSheet](ui.md#src-ui-sheets-menusheets-tsx--journalsheet) · **[tests/integration/support/crawl](tests.md#tests-integration-support-crawl-ts)** [buildState](tests.md#tests-integration-support-crawl-ts--buildstate) · tests: [explore.test](tests.md#tests-integration-explore-test-ts), [content.test](tests.md#tools-parity-content-test-ts)
+  - used by: **[content/districts/bayou/places.scene](#src-content-districts-bayou-places-scene-ts)** [herbsQuest](#src-content-districts-bayou-places-scene-ts--herbsquest), [remyQuest](#src-content-districts-bayou-places-scene-ts--remyquest) · **[content/districts/cemetery/places.scene](#src-content-districts-cemetery-places-scene-ts)** [haintsQuest](#src-content-districts-cemetery-places-scene-ts--haintsquest) · **[content/districts/quarter/cutting.scene](#src-content-districts-quarter-cutting-scene-ts)** [cuttingContest](#src-content-districts-quarter-cutting-scene-ts--cuttingcontest) · **[content/districts/quarter/places.scene](#src-content-districts-quarter-places-scene-ts)** [hornQuest](#src-content-districts-quarter-places-scene-ts--hornquest), [lostEyeQuest](#src-content-districts-quarter-places-scene-ts--losteyequest) · **[content/districts/storyville/places.scene](#src-content-districts-storyville-places-scene-ts)** [staticQuest](#src-content-districts-storyville-places-scene-ts--staticquest), [theoTalk](#src-content-districts-storyville-places-scene-ts--theotalk) · **[content/districts/treme/places.scene](#src-content-districts-treme-places-scene-ts)** [kitchen](#src-content-districts-treme-places-scene-ts--kitchen) · **[ui/sheets/MenuSheets](ui.md#src-ui-sheets-menusheets-tsx)** [JournalSheet](ui.md#src-ui-sheets-menusheets-tsx--journalsheet) · **[tests/integration/support/crawl](tests.md#tests-integration-support-crawl-ts)** [buildState](tests.md#tests-integration-support-crawl-ts--buildstate) · tests: [content.test](tests.md#tools-parity-content-test-ts)
 
 <a id="src-content-roots-ts"></a>
 
@@ -2146,9 +2115,9 @@ The game's system copy: lines the app shows around scenes and battles (recoverin
 
 Declarations:
 
-- <a id="src-content-text-ts--text"></a>**TEXT** · *const* `= { … } (15 keys)`
+- <a id="src-content-text-ts--text"></a>**TEXT** · *const* `= { … } (14 keys)`
   - uses: **[content/format](#src-content-format-ts)** [fmtDoubloons](#src-content-format-ts--fmtdoubloons)
-  - used by: **[app/battleController](app.md#src-app-battlecontroller-ts)** [runBattle](app.md#src-app-battlecontroller-ts--runbattle) · **[app/reactPresenter](app.md#src-app-reactpresenter-ts)** [ReactPresenter.battle](app.md#src-app-reactpresenter-ts--reactpresenter-battle) · **[app/sceneContext](app.md#src-app-scenecontext-ts)** [advanceAfterBoss](app.md#src-app-scenecontext-ts--advanceafterboss), [createSceneContext](app.md#src-app-scenecontext-ts--createscenecontext) · **[app/session](app.md#src-app-session-ts)** [Session.constructor](app.md#src-app-session-ts--session-constructor), [Session.resume](app.md#src-app-session-ts--session-resume) · **[ui/screens/Place](ui.md#src-ui-screens-place-tsx)** [PlaceScreen](ui.md#src-ui-screens-place-tsx--placescreen)
+  - used by: **[app/battleController](app.md#src-app-battlecontroller-ts)** [runBattle](app.md#src-app-battlecontroller-ts--runbattle) · **[app/reactPresenter](app.md#src-app-reactpresenter-ts)** [ReactPresenter.battle](app.md#src-app-reactpresenter-ts--reactpresenter-battle) · **[app/sceneContext](app.md#src-app-scenecontext-ts)** [advanceAfterBoss](app.md#src-app-scenecontext-ts--advanceafterboss), [createSceneContext](app.md#src-app-scenecontext-ts--createscenecontext) · **[app/session](app.md#src-app-session-ts)** [Session.constructor](app.md#src-app-session-ts--session-constructor), [Session.resume](app.md#src-app-session-ts--session-resume)
 
 <a id="src-content-world-arrivals-scene-ts"></a>
 

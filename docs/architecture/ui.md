@@ -129,7 +129,6 @@ Every interactive element gets a stable `data-testid`, and Playwright uses `test
 | Save slots, history | `save:2`, `save-del:2`, `save-history:2`, `restore:7` (a server revision) |
 | Cloud saves (Settings) | `cloud:status`, `cloud:code`, `cloud:link`, `cloud:link-text`, `cloud:dolink`, `cloud:unlink` |
 | Sprites (not interactive; for tests), gallery size | `sprite:hush_patrol`, `sprite:hero_trumpet`, `gallery-scale:2` |
-| A place with nothing to do yet (not interactive; its district is still in `src/content/pending.ts`) | `not-built` |
 
 Keys come from content ids and choice keys, never from labels, so rewording copy never breaks a test.
 

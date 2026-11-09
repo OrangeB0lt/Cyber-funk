@@ -48,7 +48,7 @@ Node 24 (`.nvmrc`). `npm run depcruise` calls dependency-cruiser's API (`tools/d
 - P1 core + content data + engine (exact parity gate) (done)
 - P2 vertical slice (prologue + Tremé + Captain Hush, React shell) (done; SceneContext v1 accepted, ADR-0004)
 - P2.5 Docker + Compose + cloud saves in PostgreSQL (three slots, history, anonymous player codes; ADR-0006) (done)
-- P3 remaining districts (all five, Quarter through Garden, with the Ball) and the accessibility pass (done; axe on every screen, no allowlist). `src/content/pending.ts` lists what's still unported (the Tower)
+- P3 remaining districts (all five, Quarter through Garden, with the Ball) and the accessibility pass (done; axe on every screen, no allowlist)
 - P4 finale + persistence
 - P5 PWA, cutover (delete `legacy/`), docs
 - P6 post-parity fixes

@@ -1,8 +1,6 @@
 /**
- * The whole game so far, played headlessly with real battles: new game → prologue → every ported
- * district's story → its boss, down every branch of the big boss choices, until the story reaches a
- * district that hasn't been ported yet (src/content/pending.ts). As districts are ported, this test
- * plays further on its own.
+ * The whole game, played headlessly with real battles: new game → prologue → every district's story
+ * → its boss → the second line → the Tower → the ending, down every branch of the big boss choices.
  *
  * The scripted player follows the "!" hints the way a person would: the hinted option at the step's
  * hint place, street fights for steps that count wins, kills or drops, a few levels of grinding
@@ -17,7 +15,6 @@ import { BOSS_IDS, type BossId } from '@core/ids/enemies';
 import type { DistrictId, PlaceId } from '@core/ids/world';
 import type { StepDef } from '@core/types';
 import { ACTS, BOSS_SCENES, BOSSES, DISTRICTS, PLACES } from '@content/index';
-import { isPendingAct, isPendingDistrict } from '@content/pending';
 import { defaultSettings, storyIs } from '@engine/index';
 
 /** The big boss choices: the keys of each branch, in the order they're played. */
@@ -139,7 +136,7 @@ function bossHere(p: Player): BossId | null {
 type Stop = { kind: 'end' } | { kind: 'choice'; boss: BossId };
 
 /**
- * Play until the story reaches a pending act, or (if `stopBefore` says so) just before a boss whose
+ * Play until the ending, or (if `stopBefore` says so) just before a boss whose
  * choice the caller wants to fork on.
  */
 async function drive(p: Player, stopBefore: (b: BossId) => boolean): Promise<Stop> {
@@ -147,7 +144,7 @@ async function drive(p: Player, stopBefore: (b: BossId) => boolean): Promise<Sto
   for (;;) {
     const g = s.game;
     const { act: a, step } = g.story;
-    if (a === 'done' || isPendingAct(a)) return { kind: 'end' };
+    if (a === 'done') return { kind: 'end' };
     const key = `${a}.${step}`;
     const def = (ACTS[a] as Record<string, StepDef>)[step]!;
     const district = (a in DISTRICTS ? a : 'tower') as DistrictId;
@@ -173,7 +170,7 @@ async function drive(p: Player, stopBefore: (b: BossId) => boolean): Promise<Sto
     // The hinted option at the hint place, then any hinted option anywhere unlocked.
     const places: PlaceId[] = [
       ...(def.hintPlace ? [def.hintPlace] : []),
-      ...g.unlocked.flatMap(d => (isPendingDistrict(d) ? [] : DISTRICTS[d].places)),
+      ...g.unlocked.flatMap(d => DISTRICTS[d].places),
     ];
     let progressed = false;
     for (let attempt = 0; attempt < ATTEMPTS && !progressed; attempt++)
@@ -228,18 +225,17 @@ async function playAll(seed: number): Promise<Leaf[]> {
 }
 
 describe('playthrough', () => {
-  it('plays from a new game through every ported district, down every branch of the boss choices', async () => {
+  it('plays from a new game to the ending, down every branch of the boss choices', async () => {
     const leaves = await playAll(17);
-    const ported = BOSS_IDS.filter(b => !isPendingDistrict(BOSSES[b].district));
-    const choiceBosses = ported.filter(b => CHOICE_BOSSES[b]);
+    const choiceBosses = BOSS_IDS.filter(b => CHOICE_BOSSES[b]);
     expect(leaves).toHaveLength(2 ** choiceBosses.length);
     const problems: string[] = [];
     for (const { path, p } of leaves) {
       const g = p.session.game;
       const where = path.join(' ') || 'the only path';
       if (g.story.act !== 'done') problems.push(`${where}: stopped at ${g.story.act}.${g.story.step}`);
-      for (const b of ported) if (!g.bossesDefeated.includes(b)) problems.push(`${where}: never beat ${b}`);
-      const notes = ported.filter(b => BOSSES[b].note).length;
+      for (const b of BOSS_IDS) if (!g.bossesDefeated.includes(b)) problems.push(`${where}: never beat ${b}`);
+      const notes = BOSS_IDS.filter(b => BOSSES[b].note).length;
       if (g.notes.length !== notes)
         problems.push(`${where}: ${g.notes.length} Blue Notes, expected ${notes}`);
       for (const step of path) {

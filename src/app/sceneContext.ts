@@ -259,7 +259,7 @@ export function createSceneContext(session: SessionPort, signal: AbortSignal): S
     const place = Object.values(PLACES).find(p => p.boss === id);
     P.story(place?.name ?? BOSSES[id].name);
     if (!g().bossIntros.includes(id)) {
-      if (scenes) await scenes.pre(ctx);
+      await scenes.pre(ctx);
       g().bossIntros.push(id);
     } else await ctx.narrate(TEXT.goBackIn);
     session.save();
@@ -289,7 +289,7 @@ export async function finishBoss(session: SessionPort, ctx: SceneContext, id: Bo
   const g = session.game;
   if (!g.bossesDefeated.includes(id)) g.bossesDefeated.push(id);
   session.deps.presenter.story(null);
-  await BOSS_SCENES[id]?.post(ctx);
+  await BOSS_SCENES[id].post(ctx);
   // New Game+ (after the Click's post) replaces the save: whatever follows applies to the new one.
   advanceAfterBoss(session, id);
   const now = session.game;
