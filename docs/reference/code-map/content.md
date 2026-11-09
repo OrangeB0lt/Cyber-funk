@@ -32,7 +32,7 @@ flowchart LR
   n_sheetMusic["sheetMusic"]
   n_sprites_["sprites/ (16)"]
   n_stats["stats"]
-  n_story_["story/ (2)"]
+  n_story_["story/ (3)"]
   n_text["text"]
   n_world_["world/ (4)"]
   n_ext_narrative[["narrative"]]
@@ -64,6 +64,7 @@ flowchart LR
   n_districts_ --> n_quests
   n_districts_ --> n_sheetMusic
   n_districts_ --> n_stats
+  n_districts_ --> n_story_
   n_districts_ --> n_world_
   n_enemies_ --> n_districts_
   n_gear_ --> n_classes_
@@ -75,6 +76,7 @@ flowchart LR
   n_index --> n_story_
   n_index --> n_text
   n_index --> n_world_
+  n_story_ --> n_band_
   n_story_ --> n_ext_narrative
   n_text --> n_format
   n_world_ --> n_classes_
@@ -185,6 +187,7 @@ flowchart LR
 | [src/content/stats.ts](#src-content-stats-ts) | Display names for the six stats (v1: STAT_NAMES). |
 | [src/content/story/acts.ts](#src-content-story-acts-ts) | The main quest, step by step: what the journal says, which place gets the "!" hint, and how a step completes on its own after battles. |
 | [src/content/story/prologue.scene.ts](#src-content-story-prologue-scene-ts) | Prologue: The Dirge. |
+| [src/content/story/secondLine.scene.ts](#src-content-story-secondline-scene-ts) | Forming the second line at the Lagniappe club, the Tower act's first step (v1: secondLineScene, legacy/src/09_story.js:200-213). |
 | [src/content/text.ts](#src-content-text-ts) | The game's system copy: lines the app shows around scenes and battles (recovering a Blue Note, unlocking a district, escaping, victory and defeat screens). |
 | [src/content/world/arrivals.scene.ts](#src-content-world-arrivals-scene-ts) | What you see the first time you arrive in a district, after its intro text. |
 | [src/content/world/shared.scene.ts](#src-content-world-shared-scene-ts) | Scenes and helpers more than one district uses: instrument stock for shops, bar rumors (the Pelican, the Fais Do-Do, the Silver Tuxedo, Zinnia's tarot), and th… |
@@ -218,14 +221,14 @@ Who marches in the second line on the Tower, in order. `when` decides if they've
 
 - Source: [src/content/band/secondLine.ts](../../../src/content/band/secondLine.ts)
 - Imports: core: [types/index](core.md#src-core-types-index-ts)
-- Imported by: content: [data](#src-content-data-ts)
+- Imported by: content: [data](#src-content-data-ts), [story/secondLine.scene](#src-content-story-secondline-scene-ts)
 - Tested by: [content.test](tests.md#tools-parity-content-test-ts)
 - Types used: **[core/types/content](core.md#src-core-types-content-ts)** [SecondLineMemberDef](core.md#src-core-types-content-ts--secondlinememberdef)
 
 Declarations:
 
 - <a id="src-content-band-secondline-ts--second-line"></a>**SECOND_LINE** · *const* `: readonly SecondLineMemberDef[]`
-  - used by: **[tools/parity/tsAdapter](tools.md#tools-parity-tsadapter-ts)** [tsAdapter](tools.md#tools-parity-tsadapter-ts--tsadapter) · **[tools/validate-content](tools.md#tools-validate-content-ts)** [validateContent](tools.md#tools-validate-content-ts--validatecontent) · tests: [content.test](tests.md#tools-parity-content-test-ts)
+  - used by: **[content/story/secondLine.scene](#src-content-story-secondline-scene-ts)** [secondLineScene](#src-content-story-secondline-scene-ts--secondlinescene) · **[tools/parity/tsAdapter](tools.md#tools-parity-tsadapter-ts)** [tsAdapter](tools.md#tools-parity-tsadapter-ts--tsadapter) · **[tools/validate-content](tools.md#tools-validate-content-ts)** [validateContent](tools.md#tools-validate-content-ts--validatecontent) · tests: [content.test](tests.md#tools-parity-content-test-ts)
 
 <a id="src-content-bosses-archivist-scene-ts"></a>
 
@@ -1234,14 +1237,14 @@ Declarations:
 Tremé's places: the Lagniappe club, Mama Roux's kitchen, Ti-Jacques' pawn shop, Congo Square. (v1: legacy/src/08_world.js PLACE_FLOWS club/kitchen/pawn/congo and mamaRouxTalk.)
 
 - Source: [src/content/districts/treme/places.scene.ts](../../../src/content/districts/treme/places.scene.ts)
-- Imports: narrative: [define](narrative.md#src-narrative-define-ts), [types](narrative.md#src-narrative-types-ts) · content: [classes/index](#src-content-classes-index-ts), [enemies/index](#src-content-enemies-index-ts), [places](#src-content-places-ts), [quests](#src-content-quests-ts), [world/shared.scene](#src-content-world-shared-scene-ts), [world/streets.scene](#src-content-world-streets-scene-ts)
+- Imports: narrative: [define](narrative.md#src-narrative-define-ts), [types](narrative.md#src-narrative-types-ts) · content: [classes/index](#src-content-classes-index-ts), [enemies/index](#src-content-enemies-index-ts), [places](#src-content-places-ts), [quests](#src-content-quests-ts), [story/secondLine.scene](#src-content-story-secondline-scene-ts), [world/shared.scene](#src-content-world-shared-scene-ts), [world/streets.scene](#src-content-world-streets-scene-ts)
 - Imported by: content: [index](#src-content-index-ts)
 - Types used: **[narrative/types](narrative.md#src-narrative-types-ts)** [Scene](narrative.md#src-narrative-types-ts--scene), [SceneContext](narrative.md#src-narrative-types-ts--scenecontext)
 
 Declarations:
 
 - <a id="src-content-districts-treme-places-scene-ts--club"></a>**club** · *const*
-  - uses: **[core/rng](core.md#src-core-rng-ts)** [Rng.pick](core.md#src-core-rng-ts--rng-pick) · **[narrative/define](narrative.md#src-narrative-define-ts)** [definePlace](narrative.md#src-narrative-define-ts--defineplace) · **[narrative/types](narrative.md#src-narrative-types-ts)** [SceneContext.rest](narrative.md#src-narrative-types-ts--scenecontext-rest), [SceneContext.save](narrative.md#src-narrative-types-ts--scenecontext-save), [SceneContext.say](narrative.md#src-narrative-types-ts--scenecontext-say), [SceneContext.sheet](narrative.md#src-narrative-types-ts--scenecontext-sheet), [SceneContext.title](narrative.md#src-narrative-types-ts--scenecontext-title), [SceneContext.toast](narrative.md#src-narrative-types-ts--scenecontext-toast)
+  - uses: **[content/story/secondLine.scene](#src-content-story-secondline-scene-ts)** [secondLineScene](#src-content-story-secondline-scene-ts--secondlinescene) · **[core/rng](core.md#src-core-rng-ts)** [Rng.pick](core.md#src-core-rng-ts--rng-pick) · **[narrative/define](narrative.md#src-narrative-define-ts)** [PlaceHelpers.is](narrative.md#src-narrative-define-ts--placehelpers-is), [definePlace](narrative.md#src-narrative-define-ts--defineplace) · **[narrative/types](narrative.md#src-narrative-types-ts)** [SceneContext.rest](narrative.md#src-narrative-types-ts--scenecontext-rest), [SceneContext.save](narrative.md#src-narrative-types-ts--scenecontext-save), [SceneContext.say](narrative.md#src-narrative-types-ts--scenecontext-say), [SceneContext.sheet](narrative.md#src-narrative-types-ts--scenecontext-sheet), [SceneContext.title](narrative.md#src-narrative-types-ts--scenecontext-title), [SceneContext.toast](narrative.md#src-narrative-types-ts--scenecontext-toast)
   - used by: **[content/index](#src-content-index-ts)** [PLACE_SCENES](#src-content-index-ts--place-scenes)
 - <a id="src-content-districts-treme-places-scene-ts--mamarouxtalk"></a>**mamaRouxTalk** · *function* `(s): Promise<void>` — Talking to Mama Roux.
   - uses: **[core/rng](core.md#src-core-rng-ts)** [Rng.pick](core.md#src-core-rng-ts--rng-pick) · **[narrative/types](narrative.md#src-narrative-types-ts)** [SceneContext.choose](narrative.md#src-narrative-types-ts--scenecontext-choose), [SceneContext.quest](narrative.md#src-narrative-types-ts--scenecontext-quest), [SceneContext.say](narrative.md#src-narrative-types-ts--scenecontext-say), [SceneContext.setQuest](narrative.md#src-narrative-types-ts--scenecontext-setquest)
@@ -2006,6 +2009,23 @@ Declarations:
 - <a id="src-content-story-prologue-scene-ts--resumetutorial"></a>**resumeTutorial** · *function* `(step: 1 | 2): Scene` — Picking a tutorial fight back up after a reload (v1: resumeGame).
   - uses: here [prologueEnd](#src-content-story-prologue-scene-ts--prologueend), [tutorialFight](#src-content-story-prologue-scene-ts--tutorialfight) · **[narrative/types](narrative.md#src-narrative-types-ts)** [SceneContext.narrate](narrative.md#src-narrative-types-ts--scenecontext-narrate), [SceneContext.title](narrative.md#src-narrative-types-ts--scenecontext-title)
   - used by: **[app/session](app.md#src-app-session-ts)** [Session.resume](app.md#src-app-session-ts--session-resume)
+
+<a id="src-content-story-secondline-scene-ts"></a>
+
+### src/content/story/secondLine.scene.ts
+
+Forming the second line at the Lagniappe club, the Tower act's first step (v1: secondLineScene, legacy/src/09_story.js:200-213). Everyone who'll march is listed, the line forms, and the parade takes Claiborne to Canal to Poydras: the Tower district opens.
+
+- Source: [src/content/story/secondLine.scene.ts](../../../src/content/story/secondLine.scene.ts)
+- Imports: narrative: [types](narrative.md#src-narrative-types-ts) · content: [band/secondLine](#src-content-band-secondline-ts)
+- Imported by: content: [districts/treme/places.scene](#src-content-districts-treme-places-scene-ts)
+- Types used: **[narrative/types](narrative.md#src-narrative-types-ts)** [Scene](narrative.md#src-narrative-types-ts--scene)
+
+Declarations:
+
+- <a id="src-content-story-secondline-scene-ts--secondlinescene"></a>**secondLineScene** · *function* `(s): Promise<void>` — Form the second line and march on the Tower.
+  - uses: **[content/band/secondLine](#src-content-band-secondline-ts)** [SECOND_LINE](#src-content-band-secondline-ts--second-line) · **[core/types/content](core.md#src-core-types-content-ts)** [SecondLineMemberDef.when](core.md#src-core-types-content-ts--secondlinememberdef-when) · **[narrative/types](narrative.md#src-narrative-types-ts)** [SceneContext.cards](narrative.md#src-narrative-types-ts--scenecontext-cards), [SceneContext.goto](narrative.md#src-narrative-types-ts--scenecontext-goto), [SceneContext.narrate](narrative.md#src-narrative-types-ts--scenecontext-narrate), [SceneContext.save](narrative.md#src-narrative-types-ts--scenecontext-save), [SceneContext.say](narrative.md#src-narrative-types-ts--scenecontext-say), [SceneContext.title](narrative.md#src-narrative-types-ts--scenecontext-title)
+  - used by: **[content/districts/treme/places.scene](#src-content-districts-treme-places-scene-ts)** [club](#src-content-districts-treme-places-scene-ts--club)
 
 <a id="src-content-text-ts"></a>
 

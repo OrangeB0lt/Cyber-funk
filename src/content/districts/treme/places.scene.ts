@@ -8,6 +8,7 @@ import { CLASSES } from '../../classes';
 import { ENEMIES } from '../../enemies';
 import { PLACES } from '../../places';
 import { QUESTS } from '../../quests';
+import { secondLineScene } from '../../story/secondLine.scene';
 import { instrumentStock } from '../../world/shared.scene';
 import { fmtD } from '../../world/streets.scene';
 
@@ -17,7 +18,7 @@ import { fmtD } from '../../world/streets.scene';
 
 export const club = definePlace('club', {
   intro: g => ({ notes: true, text: `${g.notes.length}/6 Blue Notes on the trophy wall.` }),
-  options: g => [
+  options: (g, h) => [
     {
       key: 'rest',
       label: 'Rest (free)',
@@ -38,7 +39,10 @@ export const club = definePlace('club', {
     },
     { key: 'band', label: 'Swap bandmates', run: s => s.sheet({ kind: 'band' }) },
     { key: 'board', label: 'Quest board', run: s => s.sheet({ kind: 'journal' }) },
-    // P4 adds "Form the Second Line" (tower) and "March again (New Game+)" here.
+    ...(h.is({ act: 'tower', step: 'form_second_line' })
+      ? [{ key: 'secondline', label: 'Form the Second Line', hint: true, run: secondLineScene }]
+      : []),
+    // "March again (New Game+)" comes with the ending.
     ...(g.flags.hasCassette
       ? [
           {

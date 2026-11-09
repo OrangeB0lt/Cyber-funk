@@ -252,6 +252,51 @@ function inAct(act: DistrictId, step: number, more: Partial<CaseState> = {}): Ca
     ...more,
   };
 }
+/** Everyone the second line can hold: Gus, the band, the three spared or freed, four quests done. */
+const EVERYONE: Partial<CaseState> = {
+  flags: ['metRoux', 'gusFreed'],
+  recruited: ['sugar', 'static', 'remy', 'moses'],
+  choices: { vox: 'reprogrammed', contracts: 'burned', lucien: 'spared' },
+  quests: { lost_eye: 'done', herbs: 'done', haints: 'done', rolls: 'done' },
+};
+
+/**
+ * At the Lagniappe club, ready to form the second line: every boss before the Tower beaten, the
+ * Tower district not yet open (unless `more` says so).
+ */
+function atSecondLine(more: Partial<CaseState> = {}): CaseState {
+  return inAct('tower', 0, {
+    district: 'treme',
+    unlocked: ['treme', 'quarter', 'storyville', 'bayou', 'cemetery', 'garden'],
+    ...more,
+  });
+}
+
+function secondLineCases(): Case[] {
+  return [
+    placeCase('second line: three marchers', 'club', 'secondline', atSecondLine()),
+    placeCase(
+      'second line: Gus and the band',
+      'club',
+      'secondline',
+      atSecondLine({ flags: ['metRoux', 'gusFreed'], recruited: ['sugar', 'static', 'remy', 'moses'] }),
+    ),
+    placeCase('second line: everyone (the bonus caps at 25%)', 'club', 'secondline', atSecondLine(EVERYONE)),
+    placeCase(
+      'second line: the Tower district already seen',
+      'club',
+      'secondline',
+      atSecondLine({ unlocked: ['treme', 'quarter', 'storyville', 'bayou', 'cemetery', 'garden', 'tower'] }),
+    ),
+    placeCase(
+      "second line: Gus's cassette is still there",
+      'club',
+      'cassette',
+      atSecondLine({ flags: ['metRoux', 'gusFreed', 'hasCassette'] }),
+    ),
+  ];
+}
+
 const cases: Case[] = [
   {
     name: 'prologue',
@@ -876,6 +921,8 @@ const cases: Case[] = [
       ts: (s: Session) => s.run(c => runEvent(c, ev.id), `event:${ev.id}`),
     })),
   ),
+  /* ---------------- The Tower act: the second line (v1 09:200, 08:171) ---------------- */
+  ...secondLineCases(),
 ];
 
 /* ------------------------------------------------------------------ */
