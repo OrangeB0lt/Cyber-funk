@@ -12,7 +12,7 @@ import type { Battle, BattleEvent, BattleOptions, GameState } from '@core/types'
 import { TIMING } from '@content/data';
 import { addItem, createBattle, fullRest, makeEnemy, newGame, playerAction, runUntilPlayer } from '../index';
 import { applyStatusRaw } from './statuses';
-import { endTurn } from './turns';
+import { endTurn, runAssists } from './turns';
 
 function setup(
   cls: ClassId,
@@ -197,5 +197,22 @@ describe('the pull loop', () => {
     expect(b.waiting).toBe(true);
     expect(b.events.some(e => e.type === 'round')).toBe(true);
     expect(b.events.some(e => e.type === 'turn' && e.actor === b.player.id)).toBe(true);
+  });
+});
+
+describe('assists', () => {
+  it("a bandmate's assist that gets countered and cut doesn't end the battle", () => {
+    // The assist helper is a 1-Heart actor on the player's side. A Countermelody answering its hit
+    // used to run the player's death path and lose the fight.
+    const b = setup('clarinet', [{ id: 'nutria', level: 10 }], {}, s => {
+      s.band.recruited = ['remy'];
+      s.band.active = ['remy'];
+    });
+    applyStatusRaw(b, b.enemies[0]!, 'countermelody');
+    runAssists(b);
+    expect(b.events.some(e => e.type === 'assist')).toBe(true);
+    expect(b.over).toBe(false);
+    expect(b.player.alive).toBe(true);
+    expect(ofType(b, 'death').map(e => e.target)).not.toContain(b.player.id);
   });
 });

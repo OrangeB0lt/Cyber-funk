@@ -342,8 +342,14 @@ export function healActor(b: Battle, a: Actor, amount: number): number {
  */
 export function checkDeath(b: Battle, a: Actor): void {
   if (a.hp > 0 || !a.alive) return;
-  // PARITY: assist helpers are side 'player', so a helper's death takes this path and loses the
-  // battle (docs/known-issues.md). Fixed after parity.
+  // An assist helper is a momentary 1-Heart actor on the player's side. If it's cut (a counter or
+  // a reflect answering its hit), it just leaves; the battle goes on.
+  if (a.assist) {
+    a.hp = 0;
+    a.alive = false;
+    logLine(b, `${a.name} is cut, but the song goes on.`);
+    return;
+  }
   if (a.side === 'player') {
     if (a.secondWind && !a.onceUsed.secondWind) {
       a.onceUsed.secondWind = true;
