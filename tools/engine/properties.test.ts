@@ -1,5 +1,5 @@
 /**
- * Properties of the TypeScript engine that the parity oracle doesn't cover:
+ * Properties of the engine, checked over a seeded corpus of 400 fights:
  * - determinism: the same seed replays the same fight, with no hidden global state;
  * - presentation: folding Heart events (hpAfter) always reproduces every actor's real Heart, so the
  *   UI can animate events without ever reading the battle's final state.
@@ -7,13 +7,15 @@
 import { describe, expect, it } from 'vitest';
 import { createRng } from '@core/rng';
 import type { Battle } from '@core/types';
-import { CORPUS_SEED } from './corpus';
 import { firstDifference, generateCorpus, runFight } from './driver';
 import { tsFacts } from './facts';
 import { tsAdapter } from './tsAdapter';
 
+/** The corpus seed. */
+const SEED = 20841985;
+
 const facts = tsFacts();
-const specs = generateCorpus(facts, CORPUS_SEED + 1, 400);
+const specs = generateCorpus(facts, SEED, 400);
 
 describe('engine properties', () => {
   it('is deterministic: the same seed replays identically', () => {

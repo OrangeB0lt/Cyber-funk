@@ -6,11 +6,12 @@
       "viewport": { "width": 360, "height": 740 },
       "deviceScaleFactor": 2,
       "isMobile": true,
-      "hasTouch": true
+      "hasTouch": true,
+      "serviceWorkers": "block"
     },
     "initPage": ["init-page.ts"]
   },
-  "testIdAttribute": "data-act",
+  "testIdAttribute": "data-testid",
   "outputDir": ".playwright-mcp",
   "console": { "level": "warning" }
 }

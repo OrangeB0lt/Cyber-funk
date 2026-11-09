@@ -4,7 +4,7 @@
  * checks that *nothing* in the tables breaks: no throw, no NaN, no runaway fight, no "undefined" in the
  * battle log. It reads every id list, so new content is covered the moment it's added.
  *
- * The parity oracles sample fights at random and are deleted at cutover (P5); this file stays.
+ * The parity oracles sampled fights at random until cutover; this file reaches every id on purpose.
  */
 import { describe, expect, it } from 'vitest';
 import { livingEnemies } from '@core/helpers';

@@ -22,7 +22,7 @@ describe('Rng', () => {
     expect(r.draws).toBe(5);
   });
 
-  it('matches the legacy helper formulas exactly', () => {
+  it("matches v1's helper formulas exactly", () => {
     const ref = createRng(7);
     const r = createRng(7);
     const x1 = ref.next();

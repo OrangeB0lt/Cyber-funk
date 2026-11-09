@@ -44,8 +44,8 @@ export interface SessionDeps {
   /** A scene started or finished (for a busy indicator). */
   onBusy?: (busy: boolean) => void;
   /**
-   * Replace real battles (tests only): the transcript oracle stubs every fight as a win so it can
-   * compare scenes against v1 without battle noise.
+   * Replace real battles (tests only): the transcript cases script every fight's outcome so a scene's
+   * transcript has no battle noise.
    */
   battle?: (spec: FightSpec, opts: { boss?: BossId }) => Promise<BattleOutcome>;
 }

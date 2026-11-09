@@ -1,8 +1,8 @@
 /**
  * Runtime combat state: actors, the battle object, and the event stream the UI animates.
  *
- * Field names follow v1 deliberately (`hp`, `fp`, `charged`, `onceUsed`…): the parity oracle compares
- * these objects field-for-field against the legacy engine (ADR-0003). Battles are plain objects owned
+ * Field names follow v1 deliberately (`hp`, `fp`, `charged`, `onceUsed`…): until cutover the parity
+ * oracle compared these objects field for field with v1's (ADR-0003). Battles are plain objects owned
  * by the engine; they are never put in a Valtio proxy.
  */
 import type { ClassId } from '../ids/characters';

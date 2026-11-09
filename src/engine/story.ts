@@ -2,7 +2,7 @@
  * Main-quest position helpers. Steps are compared by name and by their order within the act
  * (core/ids/story.ts), never by raw index in game code.
  */
-import { ACT_ORDER, ACT_STEPS, type ActId, type StoryPosition } from '@core/ids/story';
+import { ACT_ORDER, ACT_STEPS, type StoryPosition } from '@core/ids/story';
 import type { ItemId } from '@core/ids/items';
 import type { GameState, QuestDef, StepDef } from '@core/types';
 import { ACTS } from '@content/data';
@@ -23,12 +23,6 @@ export function storyReached(s: Readonly<GameState>, p: StoryPosition): boolean 
   const a = ACT_ORDER.indexOf(s.story.act);
   const b = ACT_ORDER.indexOf(p.act);
   return a > b || (a === b && stepIndex(s.story) >= stepIndex(p));
-}
-
-/** The story position for a legacy `{act, step: index}` pair. Migration and parity tooling only. */
-export function storyFromIndex(act: ActId, index: number): StoryPosition {
-  const steps = ACT_STEPS[act] as readonly string[];
-  return { act, step: steps[Math.min(index, steps.length - 1)] } as StoryPosition;
 }
 
 /** The current main-quest step as the journal shows it: its definition plus a "(n/goal)" suffix. */

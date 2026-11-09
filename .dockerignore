@@ -17,7 +17,6 @@ coverage
 playwright-report
 test-results
 shots
-legacy
 docs
 tests
 tools

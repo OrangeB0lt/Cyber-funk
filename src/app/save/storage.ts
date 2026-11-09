@@ -66,7 +66,7 @@ export function memoryKv(initial: Record<string, string> = {}): KeyValue & { dat
   };
 }
 
-/** In-memory storage for one save (headless sessions and the transcript oracle). */
+/** In-memory storage for one save (headless sessions and the transcript cases). */
 export function memorySaveStorage(initial: string | null = null): SaveStorage & { raw: string | null } {
   return {
     raw: initial,

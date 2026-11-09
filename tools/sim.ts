@@ -7,8 +7,8 @@
  *   npm run sim -- --json            # machine-readable rows, for diffing two runs
  *   npm run sim:baseline             # rewrite tests/fixtures/sim (tools/simBaseline.ts)
  *
- * The scripted player, loadouts and output format match v1's sim (legacy/sim/sim.js) exactly; the
- * baseline in tests/fixtures/sim was written while they were byte-identical. A change to balance,
+ * The scripted player, loadouts and output format match v1's sim (legacy/sim/sim.js, removed at
+ * cutover) exactly; the baseline in tests/fixtures/sim was written while they were byte-identical. A change to balance,
  * the player or the output rewrites the baseline in the same commit, and the diff is the review.
  */
 import { pathToFileURL } from 'node:url';

@@ -1,4 +1,4 @@
-# Every push, on every branch: types, lint, formatting, layer rules, unit + integration + parity
+# Every push, on every branch: types, lint, formatting, layer rules, unit + integration + baseline
 # tests (the completeness tests, the crawler, combat coverage, the playthrough), build, e2e, the
 # server against PostgreSQL, and the Docker stack end to end. A pull request shows the result of its
 # branch's latest push. Run it by hand from the Actions tab with "Run workflow".
@@ -27,7 +27,6 @@ jobs:
       - run: npm run format:check
       - run: npm run depcruise
       - run: npm test
-      - run: npm run parity:coverage
       - run: npm run build
       - run: npm run build:server
 

@@ -1,8 +1,8 @@
 /**
  * The content facts the fight-corpus and rules generators need (driver.ts `ContentFacts`), read from
- * the v2 tables. Order matters: the generators pick from these lists by index, so the same seed
- * gives the same fights only while the order is v1's (the parity content test pinned that before
- * cutover).
+ * the v2 tables. Order matters: the generators pick from these lists by index, so the same seed gives
+ * the same cases only while the order stays as it is (v1's order, which the parity content test
+ * pinned until cutover). Reordering a table moves tests/fixtures/rules.json.
  */
 import { ACT_ORDER, ACT_STEPS } from '@core/ids/story';
 import {

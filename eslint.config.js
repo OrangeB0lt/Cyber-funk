@@ -23,7 +23,6 @@ const noMathRandom = {
 export default defineConfig(
   {
     ignores: [
-      'legacy/**',
       'dist/**',
       'dist-e2e/**',
       'dist-server/**',

@@ -108,7 +108,7 @@ const AREAS: Area[] = [
     title: 'tools',
     root: 'tools/',
     blurb:
-      'Node scripts: the parity oracles against v1, the balance sim and fight trace, the content validator, the layer check, the one-time migration codegen, and this generator.',
+      'Node scripts: the balance sim and fight trace, the engine baselines and fight driver, the content validator, the layer check, the sprite and icon exporters, screenshots, and this generator.',
     owns: /^tools\//,
   },
   {
@@ -985,7 +985,7 @@ function renderIndex(model: Model): string {
   const src = [...model.files.values()].filter(f => !f.test);
   const edgeCount = nodes.reduce((s, n) => s + n.uses.size, 0);
   out.push(
-    `Every source file in \`src/\`, \`server/\`, \`tools/\` and \`tests/\`, with its declarations and who uses what, generated from the TypeScript program by [tools/codemap.ts](${SRC_LINK}tools/codemap.ts). **Don't edit these pages:** run \`npm run docs:codemap\` after changing code. A test (\`tools/codemap.test.ts\`) fails when they are out of date. \`legacy/\` (the v1 oracle) is not mapped.`,
+    `Every source file in \`src/\`, \`server/\`, \`tools/\` and \`tests/\`, with its declarations and who uses what, generated from the TypeScript program by [tools/codemap.ts](${SRC_LINK}tools/codemap.ts). **Don't edit these pages:** run \`npm run docs:codemap\` after changing code. A test (\`tools/codemap.test.ts\`) fails when they are out of date.`,
     '',
     `For how the pieces work together (boot, a story line, a battle, a save reaching Postgres), read the hand-written [guide](${GUIDE_LINK}) first.`,
     '',

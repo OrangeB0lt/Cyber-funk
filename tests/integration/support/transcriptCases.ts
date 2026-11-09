@@ -1,10 +1,9 @@
 /**
- * The scene-transcript cases: a save, a scene, and what 2.0 shows and saves when it runs.
+ * The scene-transcript cases: a save, a scene, and what the game shows and saves when it runs.
  *
- * - Until cutover, tools/parity/transcripts.test.ts runs each case in v1 too (`legacy`) and requires
- *   the same transcript and save.
- * - tests/fixtures/transcripts.jsonl freezes what 2.0 gives (written while it matched v1), and
- *   tests/integration/transcripts.test.ts keeps it there after cutover.
+ * tests/fixtures/transcripts.jsonl freezes the results, and tests/integration/transcripts.test.ts
+ * keeps the game to them. The fixture was written while the parity oracle ran every case in v1 too
+ * and the two matched (until cutover), so it holds v1's behavior.
  */
 import { Session } from '@app/session';
 import { memorySaveStorage } from '@app/save/storage';
@@ -33,18 +32,10 @@ import {
 import { defaultSettings } from '@engine/index';
 import { SceneInterrupt } from '@narrative/types';
 
-/* eslint-disable @typescript-eslint/no-explicit-any */
-
-/** What a case's v1 side gets: the legacy page's window and the recorder. */
-export interface LegacyEnv {
-  w: any;
-  rec(e: Entry): void;
-}
-
 /** v1 numbered its story steps; cases do too. */
 const stepAt = (act: ActId, step: number) => ({ act, step: ACT_STEPS[act][step] }) as StoryPosition;
 
-/** One thing the player saw, in the form both sides record. */
+/** One thing the player saw, as the transcript records it. */
 export type Entry =
   | { t: 'title'; text: string | null }
   | { t: 'line'; who: string | null; text: string }
@@ -60,9 +51,6 @@ export type Entry =
 
 /** How a scripted fight ends: as asked, or `cut` (a street loss: wake up at the club). */
 export type Fight = 'win' | 'retry' | 'lose' | 'cut';
-
-/** Strip [[lexicon]] markup. */
-export const strip = (s: string) => s.replace(/\[\[([^\]|]+)(?:\|([^\]]+))?\]\]/g, (_m, a, b) => b || a);
 
 export interface CaseState {
   roots?: RootsId;
@@ -104,43 +92,30 @@ export interface Case {
   pick?: number;
   /** Choice indexes for the first choices, in order (then `pick`): for menus that come back. */
   picks?: number[];
-  /** The v1 side (the parity oracle, until cutover): run the same scene in the legacy page. */
-  legacy: (v1: LegacyEnv) => Promise<unknown>;
+  /** Play the scene. */
   ts: (session: Session) => Promise<unknown>;
-  /** Compare only the transcript, not the save (scenes v1 split differently). */
-  transcriptOnly?: boolean;
   /** How each fight ends, in order (then `win`). */
   fights?: Fight[];
   /** The answer to every confirm dialog (default yes). */
   confirm?: boolean;
 }
 
-/** Run an option at a place, matched by its label in v1's rendered place screen. */
+/** Run an option at a place, after recording the place's option labels. */
 function placeCase(name: string, place: PlaceId, key: string, state: CaseState, pick = 0): Case {
-  let label = '';
   return {
     name,
     state,
     pick,
-    legacy: async ({ w, rec }) => {
-      await w.enterPlace(place);
-      const buttons = [...w.document.querySelectorAll('#options [data-act^="opt:"]')];
-      rec({ t: 'options', labels: buttons.map((b: any) => b.querySelector('span').textContent) });
-      const i = buttons.findIndex((b: any) => b.querySelector('span').textContent === label);
-      if (i < 0) throw new Error(`v1 has no option "${label}" at ${place}`);
-      await w.CF.UI.h.opt(String(i));
-    },
     ts: async session => {
       const opts = session.placeOptions(place);
       tsExtra.push({ t: 'options', labels: opts.map(o => o.label) });
       const o = opts.find(x => x.key === key);
-      if (!o) throw new Error(`2.0 has no option "${key}" at ${place}`);
-      label = o.label;
+      if (!o) throw new Error(`no option "${key}" at ${place}`);
       await session.chooseOption(place, key);
     },
   };
 }
-/** Entries the 2.0 side records itself (a place's option labels), ahead of the transcript. */
+/** Entries a case records itself (a place's option labels), ahead of the transcript. */
 let tsExtra: Entry[] = [];
 
 const T = (step: number, more: Partial<CaseState> = {}): CaseState => ({
@@ -250,28 +225,24 @@ function finaleCases(): Case[] {
       name: `ending (${choices.vox}, ${choices.contracts}, ${choices.lucien})`,
       pick: 1,
       state: afterClick({ choices }),
-      legacy: ({ w }) => w.ending(),
       ts: s => s.run(ending, 'ending'),
     })),
     {
       name: 'ending with no choices on record, three marchers',
       pick: 1,
       state: afterClick({ secondLine: THREE }),
-      legacy: ({ w }) => w.ending(),
       ts: s => s.run(ending, 'ending'),
     },
     {
       name: 'credits, keep playing',
       pick: 1,
       state: finished(),
-      legacy: ({ w }) => w.creditsAndNewGamePlus(),
       ts: s => s.run(creditsAndNewGamePlus, 'credits'),
     },
     {
       name: 'credits at New Game+2',
       pick: 1,
       state: finished({ ngPlus: 2 }),
-      legacy: ({ w }) => w.creditsAndNewGamePlus(),
       ts: s => s.run(creditsAndNewGamePlus, 'credits'),
     },
     {
@@ -279,7 +250,6 @@ function finaleCases(): Case[] {
       pick: 0,
       confirm: false,
       state: finished(),
-      legacy: ({ w }) => w.creditsAndNewGamePlus(),
       ts: s => s.run(creditsAndNewGamePlus, 'credits'),
     },
     {
@@ -287,14 +257,12 @@ function finaleCases(): Case[] {
       name: 'credits, New Game+',
       pick: 0,
       state: finished(),
-      legacy: ({ w }) => w.creditsAndNewGamePlus(),
       ts: s => s.run(creditsAndNewGamePlus, 'credits'),
     },
     {
       name: 'credits, New Game+ from New Game+1',
       pick: 0,
       state: finished({ ngPlus: 1 }),
-      legacy: ({ w }) => w.creditsAndNewGamePlus(),
       ts: s => s.run(creditsAndNewGamePlus, 'credits'),
     },
     placeCase('club: march again', 'club', 'ngplus', finished(), 1),
@@ -323,7 +291,6 @@ function towerCases(): Case[] {
   const climb = (name: string, state: CaseState, more: Partial<Case> = {}): Case => ({
     name,
     state,
-    legacy: ({ w }) => w.towerFlow(),
     ts: s => s.run(towerFlow, 'tower'),
     ...more,
   });
@@ -386,13 +353,11 @@ export const cases: Case[] = [
   {
     name: 'prologue',
     state: T(0, { flags: [] }),
-    legacy: ({ w }) => w.prologue(),
     ts: s => s.startPrologue(),
   },
   {
     name: 'prologue (creole)',
     state: T(0, { roots: 'creole', flags: [] }),
-    legacy: ({ w }) => w.prologue(),
     ts: s => s.startPrologue(),
   },
   ...[0, 1].map(pick => placeCase(`kitchen talk at step 0`, 'kitchen', 'talk', T(0, { flags: [] }), pick)),
@@ -445,7 +410,6 @@ export const cases: Case[] = [
   {
     name: 'hit the streets',
     state: T(1),
-    legacy: ({ w }) => w.hitTheStreets(),
     ts: s => s.hitTheStreets(),
   },
   // ---- The French Quarter ----
@@ -943,14 +907,12 @@ export const cases: Case[] = [
   {
     name: 'vox perfecta boss flow',
     state: inAct('quarter', 2),
-    legacy: ({ w }) => w.bossFlow('vox_perfecta'),
     ts: s => s.run(c => c.boss('vox_perfecta').then(() => {}), 'vox'),
   },
   {
     name: 'vox perfecta boss flow (shutdown)',
     pick: 1,
     state: inAct('quarter', 2),
-    legacy: ({ w }) => w.bossFlow('vox_perfecta'),
     ts: s => s.run(c => c.boss('vox_perfecta').then(() => {}), 'vox'),
   },
   ...[0, 1].map((pick): Case => ({
@@ -962,7 +924,6 @@ export const cases: Case[] = [
       unlocked: ['treme', 'quarter'],
       quests: { cutting: 'active' },
     },
-    legacy: ({ w }) => w.cuttingContest(),
     ts: (s: Session) => s.run(cuttingContest, 'cutting'),
   })),
   {
@@ -973,23 +934,16 @@ export const cases: Case[] = [
       unlocked: ['treme', 'quarter', 'storyville'],
       quests: { cutting: 'done' },
     },
-    legacy: ({ w }) => w.cuttingContest(),
     ts: s => s.run(cuttingContest, 'cutting'),
   },
   ...(['quarter', 'bayou'] as const).map((to): Case => ({
     name: `travel to ${to}`,
     state: T(1, { unlocked: ['treme', 'quarter', 'bayou'] }),
-    legacy: async ({ w }) => {
-      w.openTravel();
-      await w.CF.UI.sh.go(to);
-    },
     ts: (s: Session) => s.travel(to),
   })),
   {
     name: 'wake up at the club',
     state: T(1),
-    transcriptOnly: true,
-    legacy: ({ w }) => w.wakeUpAtClub(),
     ts: s => s.run(wakeUpAtClub, 'wake'),
   },
   ...STREET_EVENTS.flatMap(ev =>
@@ -1002,7 +956,6 @@ export const cases: Case[] = [
         quests: { rolls: 'active', herbs: 'active' } as CaseState['quests'],
         doubloons: i === 0 ? 3 : 300,
       }),
-      legacy: ({ w }) => w.runEvent(ev.id),
       ts: (s: Session) => s.run(c => runEvent(c, ev.id), `event:${ev.id}`),
     })),
   ),
@@ -1121,18 +1074,18 @@ export function tsTranscript(p: ScriptedPresenter): Entry[] {
     else if (e.t === 'fight') out.push({ t: 'fight', context: e.context });
     else if (e.t === 'cards') out.push({ t: 'cards', style: e.style, items: e.items });
   }
-  // v1 draws the board into the page; the oracle reads its final text after the scene.
+  // The board's final text comes last (v1 drew it into the page, and the oracle read it at the end).
   if (board !== null) out.push({ t: 'board', text: board });
   return out;
 }
 
-/** The 2.0 side of a run: its transcript (with the option labels first) and the save it leaves. */
+/** A run: its transcript (with the option labels first) and the save it leaves. */
 export interface TsRun {
   entries: Entry[];
   view: ReturnType<typeof tsView>;
 }
 
-/** Run a case's 2.0 side at a constant random value. */
+/** Run a case at a constant random value. */
 export async function runTs(c: Case, rnd: number): Promise<TsRun> {
   const fights: Fight[] = [...(c.fights ?? [])];
   const picks = [...(c.picks ?? [])];

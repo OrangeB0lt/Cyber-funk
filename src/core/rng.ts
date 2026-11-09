@@ -2,13 +2,13 @@
  * Seeded randomness for everything that affects game state.
  *
  * Why: a fight replayed from the same seed must play out identically. That is what makes the
- * balance sim reproducible, lets a bug report carry a seed, and lets the parity tests compare the
- * TypeScript engine against the legacy engine draw-for-draw. Game logic never calls Math.random
- * (ESLint enforces this outside ui/ and app/audio).
+ * balance sim and the baselines in tests/fixtures reproducible, and lets a bug report carry a seed.
+ * (Until cutover it also let the parity oracles compare the engine with v1's draw for draw.) Game
+ * logic never calls Math.random (ESLint enforces this outside ui/ and app/audio).
  *
- * The helper formulas (`float`, `int`, `pick`, `chance`) are copied exactly from the legacy engine
- * (`rnd`, `irnd`, `pick`, `chance`), including the fact that `chance` always consumes a draw, even
- * for p = 0 or p = 1. Changing any of them changes every seeded result in the game.
+ * The helper formulas (`float`, `int`, `pick`, `chance`) are copied exactly from v1's engine (`rnd`,
+ * `irnd`, `pick`, `chance`), including the fact that `chance` always consumes a draw, even for p = 0
+ * or p = 1. Changing any of them changes every seeded result in the game.
  */
 
 /** Serializable generator state, stored in the save so a reload continues the same stream. */
@@ -23,20 +23,20 @@ export interface RngState {
 export interface Rng {
   /** Uniform float in [0, 1). Every helper below is built on this. */
   next(): number;
-  /** Number of `next()` calls so far. Parity diagnostics stamp events with it. */
+  /** Number of `next()` calls so far. The fight driver's traces stamp events with it. */
   readonly draws: number;
-  /** Uniform float in [a, b). Legacy `rnd`. */
+  /** Uniform float in [a, b). v1's `rnd`. */
   float(a: number, b: number): number;
-  /** Uniform integer in [a, b], inclusive. Legacy `irnd`. */
+  /** Uniform integer in [a, b], inclusive. v1's `irnd`. */
   int(a: number, b: number): number;
-  /** Uniform element of a non-empty array. Legacy `pick`. */
+  /** Uniform element of a non-empty array. v1's `pick`. */
   pick<T>(items: readonly T[]): T;
-  /** True with probability p. Always consumes one draw. Legacy `chance`. */
+  /** True with probability p. Always consumes one draw. v1's `chance`. */
   chance(p: number): boolean;
   /**
    * A stream for a sub-system (a battle, a scene). In the current implementation a fork shares
-   * this stream, which keeps every game action on one sequence (required for parity with the
-   * legacy engine). The label documents intent and leaves room for independent streams later.
+   * this stream, which keeps every game action on one sequence (as v1 had it, and as the baselines
+   * expect). The label documents intent and leaves room for independent streams later.
    */
   fork(label: string): Rng;
   /** Snapshot for saving. */
@@ -104,13 +104,4 @@ export function createRng(seed: number): Rng {
 /** Resume a stream from a saved snapshot. */
 export function restoreRng(state: RngState): Rng {
   return new SeededRng(state);
-}
-
-/**
- * A bare `() => number` view of a seeded stream, for code that expects `Math.random`'s shape
- * (the parity tools inject it into the legacy engine as its `Math.random`).
- */
-export function seededRandom(seed: number): { random: () => number; draws: () => number } {
-  const rng = createRng(seed);
-  return { random: () => rng.next(), draws: () => rng.draws };
 }

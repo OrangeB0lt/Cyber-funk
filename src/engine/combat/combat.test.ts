@@ -1,7 +1,7 @@
 /**
  * Combat mechanics, one behavior per test. These double as executable documentation of the rules in
- * docs/systems/combat.md. Exact damage numbers are covered by the parity oracle; these assert the
- * mechanics themselves.
+ * docs/systems/combat.md. Exact damage numbers are pinned by the baselines (the sim, the rules and the
+ * transcripts in tests/fixtures); these assert the mechanics themselves.
  */
 import { describe, expect, it } from 'vitest';
 import { hasStatus } from '@core/helpers';

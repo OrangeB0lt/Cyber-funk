@@ -75,7 +75,7 @@ module.exports = {
       name: 'src-does-not-import-tooling',
       severity: 'error',
       from: { path: '^src/' },
-      to: { path: '^(tools|tests|legacy)/' },
+      to: { path: '^(tools|tests)/' },
     },
     {
       name: 'src-does-not-import-server',
@@ -107,7 +107,7 @@ module.exports = {
   ],
   options: {
     doNotFollow: { path: 'node_modules' },
-    exclude: { path: '(^legacy/)|(\\.test\\.tsx?$)' },
+    exclude: { path: '\\.test\\.tsx?$' },
     tsConfig: { fileName: 'tsconfig.json' },
     tsPreCompilationDeps: true,
     enhancedResolveOptions: {

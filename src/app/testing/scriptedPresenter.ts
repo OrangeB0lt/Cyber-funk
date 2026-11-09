@@ -43,8 +43,6 @@ export type TranscriptEntry =
 export interface ScriptPolicy {
   /** Pick a choice key (default: the first option). */
   choose?(options: readonly ChoiceView[]): string;
-  /** Pick a choice by position instead (wraps around; used by the transcript oracle). */
-  chooseIndex?: number;
   /** Pick a battle action (default: a simple competent player). */
   intent?(b: Battle): PlayerIntent;
   /** Where to tap the timing bar (default: dead center = ON THE ONE). */
@@ -101,10 +99,7 @@ export class ScriptedPresenter implements Presenter {
   echo(): void {}
   async choose(options: readonly ChoiceView[], signal: AbortSignal): Promise<string> {
     abortable(signal);
-    const byIndex = this.policy.chooseIndex;
-    const picked =
-      this.policy.choose?.(options) ??
-      (byIndex !== undefined ? options[byIndex % options.length]!.key : options[0]!.key);
+    const picked = this.policy.choose?.(options) ?? options[0]!.key;
     const label = options.find(o => o.key === picked)?.label ?? '';
     this.transcript.push({ t: 'choose', options: options.map(o => o.label), picked, label });
     return picked;

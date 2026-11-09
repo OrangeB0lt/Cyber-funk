@@ -955,7 +955,7 @@ Declarations:
   - used by: **[app/game](#src-app-game-ts)** [GameApp.constructor](#src-app-game-ts--gameapp-constructor) · **[app/save/slots](#src-app-save-slots-ts)** [SaveSlots.constructor](#src-app-save-slots-ts--saveslots-constructor)
 - <a id="src-app-save-storage-ts--memorykv"></a>**memoryKv** · *function* `(initial: Record<string, string> = {}): KeyValue & { data: Map<string, string> }` — An in-memory key-value store for tests and headless runs.
   - used by: tests: [sync.test](tests.md#server-sync-test-ts), [slots.test](tests.md#src-app-save-slots-test-ts), [sync.test](tests.md#src-app-save-sync-test-ts)
-- <a id="src-app-save-storage-ts--memorysavestorage"></a>**memorySaveStorage** · *function* `(initial: string | null = null): SaveStorage & { raw: string | null }` — In-memory storage for one save (headless sessions and the transcript oracle).
+- <a id="src-app-save-storage-ts--memorysavestorage"></a>**memorySaveStorage** · *function* `(initial: string | null = null): SaveStorage & { raw: string | null }` — In-memory storage for one save (headless sessions and the transcript cases).
   - used by: **[tests/integration/support/crawl](tests.md#tests-integration-support-crawl-ts)** [runOnce](tests.md#tests-integration-support-crawl-ts--runonce) · **[tests/integration/support/transcriptCases](tests.md#tests-integration-support-transcriptcases-ts)** [runTs](tests.md#tests-integration-support-transcriptcases-ts--runts) · tests: [session.test](tests.md#src-app-session-test-ts), [playthrough.test](tests.md#tests-integration-playthrough-test-ts), [slice.test](tests.md#tests-integration-slice-test-ts)
 
 <a id="src-app-save-sync-ts"></a>
@@ -1136,7 +1136,7 @@ Declarations:
   - <a id="src-app-session-ts--sessiondeps-onbusy"></a>**onBusy** · *interface member* `(busy: boolean) => void` — A scene started or finished (for a busy indicator).
     - implemented by: **[app/game](#src-app-game-ts)** [GameApp.constructor](#src-app-game-ts--gameapp-constructor)
     - called from: here [Session.constructor](#src-app-session-ts--session-constructor)
-  - <a id="src-app-session-ts--sessiondeps-battle"></a>**battle** · *interface member* `(spec: FightSpec, opts: { boss?: BossId }) => Promise<BattleOutcome>` — Replace real battles (tests only): the transcript oracle stubs every fight as a win so it can compare scenes against v1 without battle noise.
+  - <a id="src-app-session-ts--sessiondeps-battle"></a>**battle** · *interface member* `(spec: FightSpec, opts: { boss?: BossId }) => Promise<BattleOutcome>` — Replace real battles (tests only): the transcript cases script every fight's outcome so a scene's transcript has no battle noise.
     - implemented by: **[app/session.test](tests.md#src-app-session-test-ts)** · **[tests/integration/support/crawl](tests.md#tests-integration-support-crawl-ts)** [runOnce](tests.md#tests-integration-support-crawl-ts--runonce) · **[tests/integration/support/transcriptCases](tests.md#tests-integration-support-transcriptcases-ts)** [runTs](tests.md#tests-integration-support-transcriptcases-ts--runts)
 - <a id="src-app-session-ts--randomseed"></a>**randomSeed** · *function* `(): number` — A random 31-bit seed from the platform's crypto source.
   - used by: here [Session.constructor](#src-app-session-ts--session-constructor), [Session.newGame](#src-app-session-ts--session-newgame)
@@ -1254,7 +1254,7 @@ Random streams for tests. Game code takes an `Rng`; these let a test decide exac
 
 Declarations:
 
-- <a id="src-app-testing-rng-ts--constantrng"></a>**constantRng** · *function* `(c: number): Rng` — A random stream that always returns `c`, so every pick/chance lands the same way (the parity oracle uses it to keep v1 and 2.0 in step).
+- <a id="src-app-testing-rng-ts--constantrng"></a>**constantRng** · *function* `(c: number): Rng` — A random stream that always returns `c`, so every pick/chance lands the same way (the transcript cases run at 0, 0.5 and 0.99).
   - used by: **[tests/integration/support/transcriptCases](tests.md#tests-integration-support-transcriptcases-ts)** [runTs](tests.md#tests-integration-support-transcriptcases-ts--runts)
 - <a id="src-app-testing-rng-ts--pickrecord"></a>**PickRecord** · *interface* — One `pick` call seen by a scripted stream: the pool it chose from and the index it took.
   - used by: here [scriptedRng](#src-app-testing-rng-ts--scriptedrng) · **[tests/integration/support/crawl](tests.md#tests-integration-support-crawl-ts)** [RunOutcome](tests.md#tests-integration-support-crawl-ts--runoutcome), [runOnce](tests.md#tests-integration-support-crawl-ts--runonce)

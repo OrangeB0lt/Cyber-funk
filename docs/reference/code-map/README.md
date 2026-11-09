@@ -2,11 +2,11 @@
 
 # Code map: generated reference
 
-Every source file in `src/`, `server/`, `tools/` and `tests/`, with its declarations and who uses what, generated from the TypeScript program by [tools/codemap.ts](../../../tools/codemap.ts). **Don't edit these pages:** run `npm run docs:codemap` after changing code. A test (`tools/codemap.test.ts`) fails when they are out of date. `legacy/` (the v1 oracle) is not mapped.
+Every source file in `src/`, `server/`, `tools/` and `tests/`, with its declarations and who uses what, generated from the TypeScript program by [tools/codemap.ts](../../../tools/codemap.ts). **Don't edit these pages:** run `npm run docs:codemap` after changing code. A test (`tools/codemap.test.ts`) fails when they are out of date.
 
 For how the pieces work together (boot, a story line, a battle, a save reaching Postgres), read the hand-written [guide](../../architecture/code-map.md) first.
 
-**254** source files · **42** test files · **1145** top-level declarations · **422** members · **3192** "uses" edges
+**242** source files · **36** test files · **1058** top-level declarations · **410** members · **3051** "uses" edges
 
 ## Pages
 
@@ -19,8 +19,8 @@ For how the pieces work together (boot, a story line, a battle, a save reaching 
 | [src/app](app.md) | 19 | Runs the game without React: GameApp (every command the UI can issue), Session, the SceneContext implementation, the battle controller, the presenters, the view store, saves, and cloud sync. |
 | [src/ui and src/main.tsx](ui.md) | 40 | React components that render the two stores (game and view) and call GameApp commands, plus the browser entry point src/main.tsx. |
 | [server](server.md) | 15 | The cloud-save API: the Fastify app, its routes, the PostgreSQL repository and Drizzle schema, migrations and player-code auth. |
-| [tools](tools.md) | 27 | Node scripts: the parity oracles against v1, the balance sim and fight trace, the content validator, the layer check, the one-time migration codegen, and this generator. |
-| [tests (and every test file)](tests.md) | 47 | The integration and e2e suites in tests/, plus every co-located *.test.ts and *.spec.ts file in the repo, each listed with what it covers. |
+| [tools](tools.md) | 15 | Node scripts: the balance sim and fight trace, the engine baselines and fight driver, the content validator, the layer check, the sprite and icon exporters, screenshots, and this generator. |
+| [tests (and every test file)](tests.md) | 41 | The integration and e2e suites in tests/, plus every co-located *.test.ts and *.spec.ts file in the repo, each listed with what it covers. |
 
 ## Layers
 
@@ -49,15 +49,15 @@ flowchart TD
   server -->|8| app
   server -->|1| core
   tests -->|45| app
-  tests -->|12| content
-  tests -->|65| core
-  tests -->|25| engine
+  tests -->|11| content
+  tests -->|59| core
+  tests -->|23| engine
   tests -->|6| narrative
   tests -->|6| server
-  tests -->|32| tools
+  tests -->|14| tools
   tests -->|1| ui
   tools -->|15| content
-  tools -->|41| core
+  tools -->|39| core
   tools -->|5| engine
   ui -->|12| app
   ui -->|24| content
@@ -81,7 +81,7 @@ The forbidden imports in [.dependency-cruiser.cjs](../../../.dependency-cruiser.
 | `sprites-ui-and-tools-only` | `^src/(core\|narrative\|engine\|app)/\|^src/content/(?!sprites/)` | `^src/content/sprites/` | Character art is for the UI and tools. The engine, app, scenes and other content never load it (docs/adr/0007-character-sprites.md). |
 | `engine-no-scenes` | `^src/engine/` | `(^src/(narrative\|app\|ui)/)\|(\.scene\.ts$)\|(^src/content/index\.ts$)` |  |
 | `app-has-no-react` | `^src/app/` | `(^src/ui/)\|(^node_modules/(react\|react-dom)/)` |  |
-| `src-does-not-import-tooling` | `^src/` | `^(tools\|tests\|legacy)/` |  |
+| `src-does-not-import-tooling` | `^src/` | `^(tools\|tests)/` |  |
 | `src-does-not-import-server` | `^src/` | `^server/` |  |
 | `server-shares-only-the-save-format` | `^server/` | `^src/` except `^src/(core/\|app/save/(format\|protocol)\.ts$)` | The server may use core and the save format/protocol, nothing else from the game. |
 | `save-format-stays-portable` | `^src/app/save/(format\|protocol)\.ts$` | `(^src/(?!core/\|app/save/(format\|protocol)\.ts$))\|(^node_modules/(?!zod/))` | format.ts and protocol.ts run in the browser and on the server: core and Zod only. |
@@ -101,9 +101,9 @@ Interfaces with methods are where one part of the code calls into another withou
 | [SessionDeps](app.md#src-app-session-ts--sessiondeps) (app/session) | 4 | [app/game](app.md#src-app-game-ts), [app/session.test](tests.md#src-app-session-test-ts), [tests/integration/playthrough.test](tests.md#tests-integration-playthrough-test-ts), [tests/integration/slice.test](tests.md#tests-integration-slice-test-ts), [tests/integration/support/crawl](tests.md#tests-integration-support-crawl-ts), [tests/integration/support/transcriptCases](tests.md#tests-integration-support-transcriptcases-ts) | [app/session](app.md#src-app-session-ts) |
 | [SessionPort](app.md#src-app-sessionport-ts--sessionport) (app/sessionPort) | 2 | [app/session](app.md#src-app-session-ts) | [app/battleController](app.md#src-app-battlecontroller-ts), [app/sceneContext](app.md#src-app-scenecontext-ts) |
 | [ScriptPolicy](app.md#src-app-testing-scriptedpresenter-ts--scriptpolicy) (app/testing/scriptedPresenter) | 6 | [app/session.test](tests.md#src-app-session-test-ts), [tests/integration/playthrough.test](tests.md#tests-integration-playthrough-test-ts), [tests/integration/slice.test](tests.md#tests-integration-slice-test-ts), [tests/integration/support/crawl](tests.md#tests-integration-support-crawl-ts), [tests/integration/support/transcriptCases](tests.md#tests-integration-support-transcriptcases-ts) | [app/testing/scriptedPresenter](app.md#src-app-testing-scriptedpresenter-ts) |
-| [Rng](core.md#src-core-rng-ts--rng) (core/rng) | 7 | [app/testing/rng](app.md#src-app-testing-rng-ts), [core/rng](core.md#src-core-rng-ts) | [app/battleController](app.md#src-app-battlecontroller-ts), [app/game](app.md#src-app-game-ts), [app/sceneContext](app.md#src-app-scenecontext-ts), [app/session](app.md#src-app-session-ts), [content/bosses/captain_hush](content.md#src-content-bosses-captain-hush-ts), [content/bosses/rougarou](content.md#src-content-bosses-rougarou-ts) … +25 |
+| [Rng](core.md#src-core-rng-ts--rng) (core/rng) | 7 | [app/testing/rng](app.md#src-app-testing-rng-ts), [core/rng](core.md#src-core-rng-ts) | [app/battleController](app.md#src-app-battlecontroller-ts), [app/game](app.md#src-app-game-ts), [app/sceneContext](app.md#src-app-scenecontext-ts), [app/session](app.md#src-app-session-ts), [content/bosses/captain_hush](content.md#src-content-bosses-captain-hush-ts), [content/bosses/rougarou](content.md#src-content-bosses-rougarou-ts) … +22 |
 | [BossDef](core.md#src-core-types-content-ts--bossdef) (core/types/content) | 4 | [content/bosses/archivist](content.md#src-content-bosses-archivist-ts), [content/bosses/captain_hush](content.md#src-content-bosses-captain-hush-ts), [content/bosses/conductor](content.md#src-content-bosses-conductor-ts), [content/bosses/isolde](content.md#src-content-bosses-isolde-ts), [content/bosses/mr_ledger](content.md#src-content-bosses-mr-ledger-ts), [content/bosses/rougarou](content.md#src-content-bosses-rougarou-ts) … +2 | [engine/combat/resolve](engine.md#src-engine-combat-resolve-ts), [engine/combat/turns](engine.md#src-engine-combat-turns-ts) |
-| [SecondLineMemberDef](core.md#src-core-types-content-ts--secondlinememberdef) (core/types/content) | 1 | [content/band/secondLine](content.md#src-content-band-secondline-ts) | [app/devStates](app.md#src-app-devstates-ts), [content/story/secondLine.scene](content.md#src-content-story-secondline-scene-ts), [tests/integration/support/crawl](tests.md#tests-integration-support-crawl-ts), [tools/engine/tsAdapter](tools.md#tools-engine-tsadapter-ts) |
+| [SecondLineMemberDef](core.md#src-core-types-content-ts--secondlinememberdef) (core/types/content) | 1 | [content/band/secondLine](content.md#src-content-band-secondline-ts) | [app/devStates](app.md#src-app-devstates-ts), [content/story/secondLine.scene](content.md#src-content-story-secondline-scene-ts), [tests/integration/support/crawl](tests.md#tests-integration-support-crawl-ts) |
 | [CustomEffect](core.md#src-core-types-effects-ts--customeffect) (core/types/effects) | 1 | [content/classes/bassdrum](content.md#src-content-classes-bassdrum-ts), [content/classes/trombone](content.md#src-content-classes-trombone-ts), [content/combat/bossSkills](content.md#src-content-combat-bossskills-ts), [content/combat/enemySkills](content.md#src-content-combat-enemyskills-ts), [content/items](content.md#src-content-items-ts) | [engine/combat/resolve](engine.md#src-engine-combat-resolve-ts) |
 | [DamageEffect](core.md#src-core-types-effects-ts--damageeffect) (core/types/effects) | 1 | [content/classes/trombone](content.md#src-content-classes-trombone-ts) | [engine/combat/resolve](engine.md#src-engine-combat-resolve-ts), [tools/sim](tools.md#tools-sim-ts) |
 | [EffectBase](core.md#src-core-types-effects-ts--effectbase) (core/types/effects) | 1 | [content/classes/trombone](content.md#src-content-classes-trombone-ts) | [engine/combat/resolve](engine.md#src-engine-combat-resolve-ts) |
@@ -115,12 +115,8 @@ Interfaces with methods are where one part of the code calls into another withou
 | [BattlePresenter](narrative.md#src-narrative-types-ts--battlepresenter) (narrative/types) | 10 | [app/reactPresenter](app.md#src-app-reactpresenter-ts) | [app/battleController](app.md#src-app-battlecontroller-ts), [app/sceneContext](app.md#src-app-scenecontext-ts) |
 | [Presenter](narrative.md#src-narrative-types-ts--presenter) (narrative/types) | 14 | [app/reactPresenter](app.md#src-app-reactpresenter-ts), [app/testing/scriptedPresenter](app.md#src-app-testing-scriptedpresenter-ts) | [app/battleController](app.md#src-app-battlecontroller-ts), [app/sceneContext](app.md#src-app-scenecontext-ts), [app/session](app.md#src-app-session-ts) |
 | [SceneContext](narrative.md#src-narrative-types-ts--scenecontext) (narrative/types) | 42 | [app/sceneContext](app.md#src-app-scenecontext-ts) | [app/game](app.md#src-app-game-ts), [app/sceneContext](app.md#src-app-scenecontext-ts), [app/session](app.md#src-app-session-ts), [content/bosses/archivist.scene](content.md#src-content-bosses-archivist-scene-ts), [content/bosses/captain_hush.scene](content.md#src-content-bosses-captain-hush-scene-ts), [content/bosses/conductor.scene](content.md#src-content-bosses-conductor-scene-ts) … +22 |
-| [Case](tests.md#tests-integration-support-transcriptcases-ts--case) (tests/integration/support/transcriptCases) | 2 | [tests/integration/support/transcriptCases](tests.md#tests-integration-support-transcriptcases-ts) | [tests/integration/support/transcriptCases](tests.md#tests-integration-support-transcriptcases-ts) |
-| [LegacyEnv](tests.md#tests-integration-support-transcriptcases-ts--legacyenv) (tests/integration/support/transcriptCases) | 1 | [tools/parity/transcripts.test](tests.md#tools-parity-transcripts-test-ts) | — |
-| [EngineAdapter](tools.md#tools-engine-driver-ts--engineadapter) (tools/engine/driver) | 17 | [tools/engine/properties.test](tests.md#tools-engine-properties-test-ts), [tools/engine/tsAdapter](tools.md#tools-engine-tsadapter-ts), [tools/parity/legacyAdapter](tools.md#tools-parity-legacyadapter-ts) | [tools/engine/driver](tools.md#tools-engine-driver-ts), [tools/engine/rules](tools.md#tools-engine-rules-ts) |
-| [SerializeOptions](tools.md#tools-migrate-serialize-ts--serializeoptions) (tools/migrate/serialize) | 3 | [tools/migrate/codegen-content](tools.md#tools-migrate-codegen-content-ts) | [tools/migrate/serialize](tools.md#tools-migrate-serialize-ts) |
-| [LegacyRuntime](tools.md#tools-parity-legacy-ts--legacyruntime) (tools/parity/legacy) | 2 | [tools/parity/legacy](tools.md#tools-parity-legacy-ts) | [tools/parity/legacyAdapter](tools.md#tools-parity-legacyadapter-ts) |
-| [LegacyDom](tools.md#tools-parity-legacydom-ts--legacydom) (tools/parity/legacyDom) | 3 | [tools/parity/legacyDom](tools.md#tools-parity-legacydom-ts) | — |
+| [Case](tests.md#tests-integration-support-transcriptcases-ts--case) (tests/integration/support/transcriptCases) | 1 | [tests/integration/support/transcriptCases](tests.md#tests-integration-support-transcriptcases-ts) | [tests/integration/support/transcriptCases](tests.md#tests-integration-support-transcriptcases-ts) |
+| [EngineAdapter](tools.md#tools-engine-driver-ts--engineadapter) (tools/engine/driver) | 15 | [tools/engine/properties.test](tests.md#tools-engine-properties-test-ts), [tools/engine/tsAdapter](tools.md#tools-engine-tsadapter-ts) | [tools/engine/driver](tools.md#tools-engine-driver-ts), [tools/engine/rules](tools.md#tools-engine-rules-ts) |
 
 ## How to read an entry
 

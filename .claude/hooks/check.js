@@ -16,13 +16,12 @@ const { execFileSync, spawn } = require('child_process');
 
 const root = process.env.CLAUDE_PROJECT_DIR || path.resolve(__dirname, '..', '..');
 const STATE = path.join(__dirname, '.check-state.json');
-/** What the checks read. A change anywhere else (docs, legacy/dist) doesn't need a run. */
+/** What the checks read. A change anywhere else (docs, for example) doesn't need a run. */
 const WATCH = [
   'src',
   'tools',
   'tests',
   'server',
-  'legacy/src',
   'docs/reference',
   'docs/vision/character-design.md',
   'package.json',

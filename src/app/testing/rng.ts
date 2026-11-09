@@ -4,7 +4,7 @@
  */
 import type { Rng } from '@core/rng';
 
-/** A random stream that always returns `c`, so every pick/chance lands the same way (the parity oracle uses it to keep v1 and 2.0 in step). */
+/** A random stream that always returns `c`, so every pick/chance lands the same way (the transcript cases run at 0, 0.5 and 0.99). */
 export function constantRng(c: number): Rng {
   const r: Rng = {
     next: () => c,

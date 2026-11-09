@@ -41,19 +41,13 @@ Generated reference. Start with the [guide](../../architecture/code-map.md) for 
 | [tests/integration/playthrough.test.ts](#tests-integration-playthrough-test-ts) | The whole game, played headlessly with real battles: new game → prologue → every district's story → its boss → the second line → the Tower → the ending, down e… |
 | [tests/integration/slice.test.ts](#tests-integration-slice-test-ts) | The vertical slice, played headlessly: new game → prologue → Tremé → three street wins → Captain Hush → the Quarter unlocks. |
 | [tests/integration/support/crawl.ts](#tests-integration-support-crawl-ts) | The crawler's toolkit: build saves at every point of a district's story, run any scene in a fresh headless Session with a scripted player, and explore every br… |
-| [tests/integration/support/transcriptCases.ts](#tests-integration-support-transcriptcases-ts) | The scene-transcript cases: a save, a scene, and what 2.0 shows and saves when it runs. |
+| [tests/integration/support/transcriptCases.ts](#tests-integration-support-transcriptcases-ts) | The scene-transcript cases: a save, a scene, and what the game shows and saves when it runs. |
 | [tests/integration/support/transcriptsBaseline.ts](#tests-integration-support-transcriptsbaseline-ts) | Write tests/fixtures/transcripts.jsonl: every transcript case's 2.0 transcript and save, at random values 0, 0.5 and 0.99, one run per line. |
 | [tests/integration/transcripts.test.ts](#tests-integration-transcripts-test-ts) | Every transcript case shows and saves what tests/fixtures/transcripts.jsonl says: v1's behavior, frozen at cutover (tests/integration/support/transcriptCases.t… |
 | [tools/codemap.test.ts](#tools-codemap-test-ts) | The generated code map (docs/reference/code-map/) must match the code. |
 | [tools/completeness.test.ts](#tools-completeness-test-ts) | The game is whole: every place, boss, story hint and lexicon link is wired up, enforced in CI. |
-| [tools/engine/properties.test.ts](#tools-engine-properties-test-ts) | Properties of the TypeScript engine that the parity oracle doesn't cover: - determinism: the same seed replays the same fight, with no hidden global state; - p… |
+| [tools/engine/properties.test.ts](#tools-engine-properties-test-ts) | Properties of the engine, checked over a seeded corpus of 400 fights: - determinism: the same seed replays the same fight, with no hidden global state; - prese… |
 | [tools/engine/rules.test.ts](#tools-engine-rules-test-ts) | The engine's rules (enemy groups, field items, shops, victory bookkeeping) give the results in tests/fixtures/rules.json for every seeded case: v1's results, f… |
-| [tools/parity/content.test.ts](#tools-parity-content-test-ts) | Content oracle: every typed table, mapped back through the documented renames, deep-equals the legacy table it came from. |
-| [tools/parity/engine.test.ts](#tools-parity-engine-test-ts) | Engine parity: the TypeScript engine must replay the whole corpus draw-for-draw like legacy v1. |
-| [tools/parity/facts.test.ts](#tools-parity-facts-test-ts) | The v2 content facts the generators use are v1's, order included (so seeds keep their fights). |
-| [tools/parity/rules.test.ts](#tools-parity-rules-test-ts) | Rule oracle: rules that lived in v1's UI layer, now engine functions, checked against the legacy UI code itself (legacy/dist loaded in jsdom) with the same see… |
-| [tools/parity/sim.test.ts](#tools-parity-sim-test-ts) | The TypeScript sim prints byte-identical output to legacy/sim/sim.js for the same seed. |
-| [tools/parity/transcripts.test.ts](#tools-parity-transcripts-test-ts) | Transcript oracle: ported scenes show the player exactly what v1 showed and leave the save in the same state. |
 | [tools/sim.test.ts](#tools-sim-test-ts) | The sim's output for the baseline seeds is unchanged (tests/fixtures/sim; npm run sim:baseline). |
 | [tools/sprites.test.ts](#tools-sprites-test-ts) | The sprite gallery (docs/reference/sprites/) must match the art. |
 | [tools/validate-content.test.ts](#tools-validate-content-test-ts) | Content validation and engine/content separation, enforced in CI. |
@@ -160,7 +154,7 @@ Sprite compilation: grids and variants resolve to the right pixels, and runs dra
 
 ### src/engine/combat/combat.test.ts
 
-Combat mechanics, one behavior per test. These double as executable documentation of the rules in docs/systems/combat.md. Exact damage numbers are covered by the parity oracle; these assert the mechanics themselves.
+Combat mechanics, one behavior per test. These double as executable documentation of the rules in docs/systems/combat.md. Exact damage numbers are pinned by the baselines (the sim, the rules and the transcripts in tests/fixtures); these assert the mechanics themselves.
 
 - Source: [src/engine/combat/combat.test.ts](../../../src/engine/combat/combat.test.ts)
 - Imports: core: [helpers](core.md#src-core-helpers-ts), [ids/characters](core.md#src-core-ids-characters-ts), [ids/enemies](core.md#src-core-ids-enemies-ts), [rng](core.md#src-core-rng-ts), [types/index](core.md#src-core-types-index-ts) · content: [data](content.md#src-content-data-ts) · engine: [combat/statuses](engine.md#src-engine-combat-statuses-ts), [combat/turns](engine.md#src-engine-combat-turns-ts), [index](engine.md#src-engine-index-ts)
@@ -473,43 +467,34 @@ Declarations:
 
 ### tests/integration/support/transcriptCases.ts
 
-The scene-transcript cases: a save, a scene, and what 2.0 shows and saves when it runs.
+The scene-transcript cases: a save, a scene, and what the game shows and saves when it runs.
 
 - Source: [tests/integration/support/transcriptCases.ts](../../../tests/integration/support/transcriptCases.ts)
 - Imports: core: [ids/band](core.md#src-core-ids-band-ts), [ids/characters](core.md#src-core-ids-characters-ts), [ids/enemies](core.md#src-core-ids-enemies-ts), [ids/flags](core.md#src-core-ids-flags-ts), [ids/items](core.md#src-core-ids-items-ts), [ids/story](core.md#src-core-ids-story-ts), [ids/world](core.md#src-core-ids-world-ts), [types/index](core.md#src-core-types-index-ts) · narrative: [types](narrative.md#src-narrative-types-ts) · content: [index](content.md#src-content-index-ts) · engine: [index](engine.md#src-engine-index-ts) · app: [save/storage](app.md#src-app-save-storage-ts), [session](app.md#src-app-session-ts), [testing/rng](app.md#src-app-testing-rng-ts), [testing/scriptedPresenter](app.md#src-app-testing-scriptedpresenter-ts)
 - Imported by: tests: [integration/support/transcriptsBaseline](#tests-integration-support-transcriptsbaseline-ts)
-- Tested by: [transcripts.test](#tests-integration-transcripts-test-ts), [transcripts.test](#tools-parity-transcripts-test-ts)
+- Tested by: [transcripts.test](#tests-integration-transcripts-test-ts)
 - Types used: **[app/session](app.md#src-app-session-ts)** [Session](app.md#src-app-session-ts--session) · **[app/testing/scriptedPresenter](app.md#src-app-testing-scriptedpresenter-ts)** [ScriptedPresenter](app.md#src-app-testing-scriptedpresenter-ts--scriptedpresenter), [TranscriptEntry](app.md#src-app-testing-scriptedpresenter-ts--transcriptentry) · **[core/ids/band](core.md#src-core-ids-band-ts)** [BandmateId](core.md#src-core-ids-band-ts--bandmateid), [SecondLineId](core.md#src-core-ids-band-ts--secondlineid) · **[core/ids/characters](core.md#src-core-ids-characters-ts)** [ClassId](core.md#src-core-ids-characters-ts--classid), [RootsId](core.md#src-core-ids-characters-ts--rootsid) · **[core/ids/enemies](core.md#src-core-ids-enemies-ts)** [BossId](core.md#src-core-ids-enemies-ts--bossid), [NoteId](core.md#src-core-ids-enemies-ts--noteid), [OpponentId](core.md#src-core-ids-enemies-ts--opponentid) · **[core/ids/flags](core.md#src-core-ids-flags-ts)** [FlagId](core.md#src-core-ids-flags-ts--flagid), [StoryChoices](core.md#src-core-ids-flags-ts--storychoices) · **[core/ids/items](core.md#src-core-ids-items-ts)** [ItemId](core.md#src-core-ids-items-ts--itemid), [SheetMusicId](core.md#src-core-ids-items-ts--sheetmusicid) · **[core/ids/story](core.md#src-core-ids-story-ts)** [ActId](core.md#src-core-ids-story-ts--actid), [StoryPosition](core.md#src-core-ids-story-ts--storyposition) · **[core/ids/world](core.md#src-core-ids-world-ts)** [DistrictId](core.md#src-core-ids-world-ts--districtid), [GlossaryId](core.md#src-core-ids-world-ts--glossaryid), [PlaceId](core.md#src-core-ids-world-ts--placeid), [QuestId](core.md#src-core-ids-world-ts--questid) · **[core/types/state](core.md#src-core-types-state-ts)** [GameState](core.md#src-core-types-state-ts--gamestate)
 
 Declarations:
 
-- <a id="tests-integration-support-transcriptcases-ts--legacyenv"></a>**LegacyEnv** · *interface, capability* — What a case's v1 side gets: the legacy page's window and the recorder.
-  - used by: here [Case](#tests-integration-support-transcriptcases-ts--case)
-  - <a id="tests-integration-support-transcriptcases-ts--legacyenv-rec"></a>**rec** · *interface member* `(e: Entry): void`
-    - implemented by: **[tools/parity/transcripts.test](#tools-parity-transcripts-test-ts)**
 - <a id="tests-integration-support-transcriptcases-ts--stepat"></a>**stepAt** · *function, internal* `(act: ActId, step: number): StoryPosition` — v1 numbered its story steps; cases do too.
   - uses: **[core/ids/story](core.md#src-core-ids-story-ts)** [ACT_STEPS](core.md#src-core-ids-story-ts--act-steps)
   - used by: here [setupTs](#tests-integration-support-transcriptcases-ts--setupts)
-- <a id="tests-integration-support-transcriptcases-ts--entry"></a>**Entry** · *type* `= union of 11` — One thing the player saw, in the form both sides record.
-  - used by: here [LegacyEnv](#tests-integration-support-transcriptcases-ts--legacyenv), [TsRun](#tests-integration-support-transcriptcases-ts--tsrun), [tsExtra](#tests-integration-support-transcriptcases-ts--tsextra), [tsTranscript](#tests-integration-support-transcriptcases-ts--tstranscript) · tests: [transcripts.test](#tools-parity-transcripts-test-ts)
+- <a id="tests-integration-support-transcriptcases-ts--entry"></a>**Entry** · *type* `= union of 11` — One thing the player saw, as the transcript records it.
+  - used by: here [TsRun](#tests-integration-support-transcriptcases-ts--tsrun), [tsExtra](#tests-integration-support-transcriptcases-ts--tsextra), [tsTranscript](#tests-integration-support-transcriptcases-ts--tstranscript)
 - <a id="tests-integration-support-transcriptcases-ts--fight"></a>**Fight** · *type* `= 'win' | 'retry' | 'lose' | 'cut'` — How a scripted fight ends: as asked, or `cut` (a street loss: wake up at the club).
-  - used by: here [Case](#tests-integration-support-transcriptcases-ts--case), [runTs](#tests-integration-support-transcriptcases-ts--runts) · tests: [transcripts.test](#tools-parity-transcripts-test-ts)
-- <a id="tests-integration-support-transcriptcases-ts--strip"></a>**strip** · *function* `(s: string): string` — Strip [[lexicon]] markup.
-  - used by: tests: [transcripts.test](#tools-parity-transcripts-test-ts)
+  - used by: here [Case](#tests-integration-support-transcriptcases-ts--case), [runTs](#tests-integration-support-transcriptcases-ts--runts)
 - <a id="tests-integration-support-transcriptcases-ts--casestate"></a>**CaseState** · *interface*
-  - used by: here [Case](#tests-integration-support-transcriptcases-ts--case), [EVERYONE](#tests-integration-support-transcriptcases-ts--everyone), [T](#tests-integration-support-transcriptcases-ts--t), [afterClick](#tests-integration-support-transcriptcases-ts--afterclick), [atSecondLine](#tests-integration-support-transcriptcases-ts--atsecondline), [cases](#tests-integration-support-transcriptcases-ts--cases), [finished](#tests-integration-support-transcriptcases-ts--finished), [inAct](#tests-integration-support-transcriptcases-ts--inact), [onFloor](#tests-integration-support-transcriptcases-ts--onfloor), [placeCase](#tests-integration-support-transcriptcases-ts--placecase), [setupTs](#tests-integration-support-transcriptcases-ts--setupts), [towerCases](#tests-integration-support-transcriptcases-ts--towercases) · tests: [transcripts.test](#tools-parity-transcripts-test-ts)
+  - used by: here [Case](#tests-integration-support-transcriptcases-ts--case), [EVERYONE](#tests-integration-support-transcriptcases-ts--everyone), [T](#tests-integration-support-transcriptcases-ts--t), [afterClick](#tests-integration-support-transcriptcases-ts--afterclick), [atSecondLine](#tests-integration-support-transcriptcases-ts--atsecondline), [cases](#tests-integration-support-transcriptcases-ts--cases), [finished](#tests-integration-support-transcriptcases-ts--finished), [inAct](#tests-integration-support-transcriptcases-ts--inact), [onFloor](#tests-integration-support-transcriptcases-ts--onfloor), [placeCase](#tests-integration-support-transcriptcases-ts--placecase), [setupTs](#tests-integration-support-transcriptcases-ts--setupts), [towerCases](#tests-integration-support-transcriptcases-ts--towercases)
 - <a id="tests-integration-support-transcriptcases-ts--case"></a>**Case** · *interface, capability*
   - used by: here [cases](#tests-integration-support-transcriptcases-ts--cases), [finaleCases](#tests-integration-support-transcriptcases-ts--finalecases), [placeCase](#tests-integration-support-transcriptcases-ts--placecase), [runTs](#tests-integration-support-transcriptcases-ts--runts), [secondLineCases](#tests-integration-support-transcriptcases-ts--secondlinecases), [towerCases](#tests-integration-support-transcriptcases-ts--towercases)
-  - <a id="tests-integration-support-transcriptcases-ts--case-legacy"></a>**legacy** · *interface member* `(v1: LegacyEnv) => Promise<unknown>` — The v1 side (the parity oracle, until cutover): run the same scene in the legacy page.
-    - implemented by: here [cases](#tests-integration-support-transcriptcases-ts--cases), [finaleCases](#tests-integration-support-transcriptcases-ts--finalecases), [placeCase](#tests-integration-support-transcriptcases-ts--placecase), [towerCases](#tests-integration-support-transcriptcases-ts--towercases)
-    - called from: tests: [transcripts.test](#tools-parity-transcripts-test-ts)
-  - <a id="tests-integration-support-transcriptcases-ts--case-ts"></a>**ts** · *interface member* `(session: Session) => Promise<unknown>`
+  - <a id="tests-integration-support-transcriptcases-ts--case-ts"></a>**ts** · *interface member* `(session: Session) => Promise<unknown>` — Play the scene.
     - implemented by: here [cases](#tests-integration-support-transcriptcases-ts--cases), [finaleCases](#tests-integration-support-transcriptcases-ts--finalecases), [placeCase](#tests-integration-support-transcriptcases-ts--placecase), [towerCases](#tests-integration-support-transcriptcases-ts--towercases)
     - called from: here [runTs](#tests-integration-support-transcriptcases-ts--runts)
-- <a id="tests-integration-support-transcriptcases-ts--placecase"></a>**placeCase** · *function, internal* `(name: string, place: PlaceId, key: string, state: CaseState, pick = 0): Case` — Run an option at a place, matched by its label in v1's rendered place screen.
+- <a id="tests-integration-support-transcriptcases-ts--placecase"></a>**placeCase** · *function, internal* `(name: string, place: PlaceId, key: string, state: CaseState, pick = 0): Case` — Run an option at a place, after recording the place's option labels.
   - uses: here [tsExtra](#tests-integration-support-transcriptcases-ts--tsextra) · **[app/session](app.md#src-app-session-ts)** [Session.chooseOption](app.md#src-app-session-ts--session-chooseoption), [Session.placeOptions](app.md#src-app-session-ts--session-placeoptions)
   - used by: here [cases](#tests-integration-support-transcriptcases-ts--cases), [finaleCases](#tests-integration-support-transcriptcases-ts--finalecases), [secondLineCases](#tests-integration-support-transcriptcases-ts--secondlinecases), [towerCases](#tests-integration-support-transcriptcases-ts--towercases)
-- <a id="tests-integration-support-transcriptcases-ts--tsextra"></a>**tsExtra** · *let, internal* `: Entry[]` — Entries the 2.0 side records itself (a place's option labels), ahead of the transcript.
+- <a id="tests-integration-support-transcriptcases-ts--tsextra"></a>**tsExtra** · *let, internal* `: Entry[]` — Entries a case records itself (a place's option labels), ahead of the transcript.
   - used by: here [placeCase](#tests-integration-support-transcriptcases-ts--placecase), [runTs](#tests-integration-support-transcriptcases-ts--runts)
 - <a id="tests-integration-support-transcriptcases-ts--t"></a>**T** · *function, internal* `(step: number, more: Partial<CaseState> = {}): CaseState`
   - used by: here [cases](#tests-integration-support-transcriptcases-ts--cases)
@@ -548,10 +533,10 @@ Declarations:
   - used by: here [cases](#tests-integration-support-transcriptcases-ts--cases)
 - <a id="tests-integration-support-transcriptcases-ts--cases"></a>**cases** · *const* `: Case[]` — Every transcript case.
   - uses: here [T](#tests-integration-support-transcriptcases-ts--t), [finaleCases](#tests-integration-support-transcriptcases-ts--finalecases), [inAct](#tests-integration-support-transcriptcases-ts--inact), [placeCase](#tests-integration-support-transcriptcases-ts--placecase), [secondLineCases](#tests-integration-support-transcriptcases-ts--secondlinecases), [towerCases](#tests-integration-support-transcriptcases-ts--towercases) · **[app/session](app.md#src-app-session-ts)** [Session.hitTheStreets](app.md#src-app-session-ts--session-hitthestreets), [Session.run](app.md#src-app-session-ts--session-run), [Session.startPrologue](app.md#src-app-session-ts--session-startprologue), [Session.travel](app.md#src-app-session-ts--session-travel) · **[content/districts/quarter/cutting.scene](content.md#src-content-districts-quarter-cutting-scene-ts)** [cuttingContest](content.md#src-content-districts-quarter-cutting-scene-ts--cuttingcontest) · **[content/world/streetEvents.scene](content.md#src-content-world-streetevents-scene-ts)** [STREET_EVENTS](content.md#src-content-world-streetevents-scene-ts--street-events) · **[content/world/streets.scene](content.md#src-content-world-streets-scene-ts)** [runEvent](content.md#src-content-world-streets-scene-ts--runevent), [wakeUpAtClub](content.md#src-content-world-streets-scene-ts--wakeupatclub) · **[narrative/types](narrative.md#src-narrative-types-ts)** [SceneContext.boss](narrative.md#src-narrative-types-ts--scenecontext-boss)
-  - used by: **[tests/integration/support/transcriptsBaseline](#tests-integration-support-transcriptsbaseline-ts)** [(top level)](#tests-integration-support-transcriptsbaseline-ts--top-level) · tests: [transcripts.test](#tests-integration-transcripts-test-ts), [transcripts.test](#tools-parity-transcripts-test-ts)
+  - used by: **[tests/integration/support/transcriptsBaseline](#tests-integration-support-transcriptsbaseline-ts)** [(top level)](#tests-integration-support-transcriptsbaseline-ts--top-level) · tests: [transcripts.test](#tests-integration-transcripts-test-ts)
 - <a id="tests-integration-support-transcriptcases-ts--settings"></a>**settings** · *const* `= { … } (4 keys)` — The settings every case plays with.
   - uses: **[engine/state](engine.md#src-engine-state-ts)** [defaultSettings](engine.md#src-engine-state-ts--defaultsettings)
-  - used by: here [setupTs](#tests-integration-support-transcriptcases-ts--setupts) · tests: [transcripts.test](#tools-parity-transcripts-test-ts)
+  - used by: here [setupTs](#tests-integration-support-transcriptcases-ts--setupts)
 - <a id="tests-integration-support-transcriptcases-ts--setupts"></a>**setupTs** · *function* `(session: Session, st: CaseState): GameState`
   - uses: here [settings](#tests-integration-support-transcriptcases-ts--settings), [stepAt](#tests-integration-support-transcriptcases-ts--stepat) · **[app/session](app.md#src-app-session-ts)** [Session.game](app.md#src-app-session-ts--session-game), [Session.newGame](app.md#src-app-session-ts--session-newgame) · **[content/band/secondLine](content.md#src-content-band-secondline-ts)** [SECOND_LINE](content.md#src-content-band-secondline-ts--second-line)
   - used by: here [runTs](#tests-integration-support-transcriptcases-ts--runts)
@@ -560,11 +545,11 @@ Declarations:
 - <a id="tests-integration-support-transcriptcases-ts--tstranscript"></a>**tsTranscript** · *function* `(p: ScriptedPresenter): Entry[]`
   - uses: **[app/testing/scriptedPresenter](app.md#src-app-testing-scriptedpresenter-ts)** [ScriptedPresenter.transcript](app.md#src-app-testing-scriptedpresenter-ts--scriptedpresenter-transcript)
   - used by: here [runTs](#tests-integration-support-transcriptcases-ts--runts)
-- <a id="tests-integration-support-transcriptcases-ts--tsrun"></a>**TsRun** · *interface* — The 2.0 side of a run: its transcript (with the option labels first) and the save it leaves.
+- <a id="tests-integration-support-transcriptcases-ts--tsrun"></a>**TsRun** · *interface* — A run: its transcript (with the option labels first) and the save it leaves.
   - used by: here [runTs](#tests-integration-support-transcriptcases-ts--runts)
-- <a id="tests-integration-support-transcriptcases-ts--runts"></a>**runTs** · *function* `(c: Case, rnd: number): Promise<TsRun>` — Run a case's 2.0 side at a constant random value.
+- <a id="tests-integration-support-transcriptcases-ts--runts"></a>**runTs** · *function* `(c: Case, rnd: number): Promise<TsRun>` — Run a case at a constant random value.
   - uses: here [Case.ts](#tests-integration-support-transcriptcases-ts--case-ts), [setupTs](#tests-integration-support-transcriptcases-ts--setupts), [tsExtra](#tests-integration-support-transcriptcases-ts--tsextra), [tsTranscript](#tests-integration-support-transcriptcases-ts--tstranscript), [tsView](#tests-integration-support-transcriptcases-ts--tsview) · **[app/save/storage](app.md#src-app-save-storage-ts)** [memorySaveStorage](app.md#src-app-save-storage-ts--memorysavestorage) · **[app/session](app.md#src-app-session-ts)** [Session](app.md#src-app-session-ts--session), [Session.game](app.md#src-app-session-ts--session-game), [Session.rng](app.md#src-app-session-ts--session-rng) · **[app/testing/rng](app.md#src-app-testing-rng-ts)** [constantRng](app.md#src-app-testing-rng-ts--constantrng) · **[app/testing/scriptedPresenter](app.md#src-app-testing-scriptedpresenter-ts)** [ScriptedPresenter](app.md#src-app-testing-scriptedpresenter-ts--scriptedpresenter), [ScriptedPresenter.transcript](app.md#src-app-testing-scriptedpresenter-ts--scriptedpresenter-transcript) · **[narrative/types](narrative.md#src-narrative-types-ts)** [SceneInterrupt](narrative.md#src-narrative-types-ts--sceneinterrupt)
-  - used by: **[tests/integration/support/transcriptsBaseline](#tests-integration-support-transcriptsbaseline-ts)** [(top level)](#tests-integration-support-transcriptsbaseline-ts--top-level) · tests: [transcripts.test](#tests-integration-transcripts-test-ts), [transcripts.test](#tools-parity-transcripts-test-ts)
+  - used by: **[tests/integration/support/transcriptsBaseline](#tests-integration-support-transcriptsbaseline-ts)** [(top level)](#tests-integration-support-transcriptsbaseline-ts--top-level) · tests: [transcripts.test](#tests-integration-transcripts-test-ts)
 
 <a id="tests-integration-support-transcriptsbaseline-ts"></a>
 
@@ -625,10 +610,10 @@ The game is whole: every place, boss, story hint and lexicon link is wired up, e
 
 ### tools/engine/properties.test.ts
 
-Properties of the TypeScript engine that the parity oracle doesn't cover: - determinism: the same seed replays the same fight, with no hidden global state; - presentation: folding Heart events (hpAfter) always reproduces every actor's real Heart, so the UI can animate events without ever reading the battle's final state.
+Properties of the engine, checked over a seeded corpus of 400 fights: - determinism: the same seed replays the same fight, with no hidden global state; - presentation: folding Heart events (hpAfter) always reproduces every actor's real Heart, so the UI can animate events without ever reading the battle's final state.
 
 - Source: [tools/engine/properties.test.ts](../../../tools/engine/properties.test.ts)
-- Imports: core: [rng](core.md#src-core-rng-ts), [types/index](core.md#src-core-types-index-ts) · tools: [engine/corpus](tools.md#tools-engine-corpus-ts), [engine/driver](tools.md#tools-engine-driver-ts), [engine/facts](tools.md#tools-engine-facts-ts), [engine/tsAdapter](tools.md#tools-engine-tsadapter-ts)
+- Imports: core: [rng](core.md#src-core-rng-ts), [types/index](core.md#src-core-types-index-ts) · tools: [engine/driver](tools.md#tools-engine-driver-ts), [engine/facts](tools.md#tools-engine-facts-ts), [engine/tsAdapter](tools.md#tools-engine-tsadapter-ts)
 - Packages: `vitest`
 - Suites: “engine properties”
 
@@ -642,72 +627,6 @@ The engine's rules (enemy groups, field items, shops, victory bookkeeping) give 
 - Imports: tools: [engine/driver](tools.md#tools-engine-driver-ts), [engine/facts](tools.md#tools-engine-facts-ts), [engine/rules](tools.md#tools-engine-rules-ts), [engine/rulesBaseline](tools.md#tools-engine-rulesbaseline-ts)
 - Packages: `node:fs`, `vitest`
 - Suites: “rules baseline”
-
-<a id="tools-parity-content-test-ts"></a>
-
-### tools/parity/content.test.ts
-
-Content oracle: every typed table, mapped back through the documented renames, deep-equals the legacy table it came from. Function-valued fields are compared by position only (both sides become "&lt;fn>"); their behavior is covered by the engine oracle. Data that moved (bounty gold, journal text, hint places, note pitches, passives) is checked against its legacy source.
-
-- Source: [tools/parity/content.test.ts](../../../tools/parity/content.test.ts)
-- Imports: core: [ids/combat](core.md#src-core-ids-combat-ts), [ids/enemies](core.md#src-core-ids-enemies-ts), [ids/story](core.md#src-core-ids-story-ts), [ids/world](core.md#src-core-ids-world-ts) · content: [data](content.md#src-content-data-ts) · tools: [engine/driver](tools.md#tools-engine-driver-ts), [parity/legacy](tools.md#tools-parity-legacy-ts)
-- Packages: `vitest`
-- Suites: “content parity with legacy v1 tables”
-
-<a id="tools-parity-engine-test-ts"></a>
-
-### tools/parity/engine.test.ts
-
-Engine parity: the TypeScript engine must replay the whole corpus draw-for-draw like legacy v1. On failure, the message names the fight, the first differing path, and the events around it. See docs/adr/0003-determinism-and-parity.md.
-
-- Source: [tools/parity/engine.test.ts](../../../tools/parity/engine.test.ts)
-- Imports: tools: [engine/corpus](tools.md#tools-engine-corpus-ts), [engine/driver](tools.md#tools-engine-driver-ts), [engine/micro](tools.md#tools-engine-micro-ts), [engine/tsAdapter](tools.md#tools-engine-tsadapter-ts), [parity/legacyAdapter](tools.md#tools-parity-legacyadapter-ts)
-- Packages: `vitest`
-- Suites: “engine parity with legacy v1”
-
-<a id="tools-parity-facts-test-ts"></a>
-
-### tools/parity/facts.test.ts
-
-The v2 content facts the generators use are v1's, order included (so seeds keep their fights).
-
-- Source: [tools/parity/facts.test.ts](../../../tools/parity/facts.test.ts)
-- Imports: tools: [engine/facts](tools.md#tools-engine-facts-ts), [parity/legacyAdapter](tools.md#tools-parity-legacyadapter-ts)
-- Packages: `vitest`
-- Suites: “content facts”
-
-<a id="tools-parity-rules-test-ts"></a>
-
-### tools/parity/rules.test.ts
-
-Rule oracle: rules that lived in v1's UI layer, now engine functions, checked against the legacy UI code itself (legacy/dist loaded in jsdom) with the same seeded randomness. The cases and the v2 side are in tools/engine/rules.ts (they outlive this file); see docs/adr/0003-determinism-and-parity.md.
-
-- Source: [tools/parity/rules.test.ts](../../../tools/parity/rules.test.ts)
-- Imports: core: [ids/world](core.md#src-core-ids-world-ts), [rng](core.md#src-core-rng-ts) · engine: [index](engine.md#src-engine-index-ts) · tools: [engine/driver](tools.md#tools-engine-driver-ts), [engine/facts](tools.md#tools-engine-facts-ts), [engine/rules](tools.md#tools-engine-rules-ts), [parity/legacyDom](tools.md#tools-parity-legacydom-ts)
-- Packages: `vitest`
-- Suites: “rule parity with legacy v1 UI code”
-
-<a id="tools-parity-sim-test-ts"></a>
-
-### tools/parity/sim.test.ts
-
-The TypeScript sim prints byte-identical output to legacy/sim/sim.js for the same seed.
-
-- Source: [tools/parity/sim.test.ts](../../../tools/parity/sim.test.ts)
-- Imports: tools: [parity/legacySim](tools.md#tools-parity-legacysim-ts), [sim](tools.md#tools-sim-ts)
-- Packages: `vitest`
-- Suites: “sim parity with legacy v1”
-
-<a id="tools-parity-transcripts-test-ts"></a>
-
-### tools/parity/transcripts.test.ts
-
-Transcript oracle: ported scenes show the player exactly what v1 showed and leave the save in the same state. v1 runs in jsdom with its UI functions replaced by recorders; both sides use a constant random value (so every pick/chance lands the same way) and scripted fights. The cases and the 2.0 side live in tests/integration/support/transcriptCases.ts (they outlive this file).
-
-- Source: [tools/parity/transcripts.test.ts](../../../tools/parity/transcripts.test.ts)
-- Imports: engine: [index](engine.md#src-engine-index-ts) · tools: [engine/driver](tools.md#tools-engine-driver-ts), [parity/legacyDom](tools.md#tools-parity-legacydom-ts) · tests: [integration/support/transcriptCases](#tests-integration-support-transcriptcases-ts)
-- Packages: `vitest`
-- Suites: “scene transcripts match v1”
 
 <a id="tools-sim-test-ts"></a>
 

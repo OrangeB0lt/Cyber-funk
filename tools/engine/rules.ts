@@ -2,11 +2,10 @@
  * Rules that lived in v1's UI layer (building enemy groups, field items, shops, victory bookkeeping),
  * now engine functions: seeded random cases and what the v2 engine does with them.
  *
- * - Until cutover, tools/parity/rules.test.ts runs the same cases through v1's UI code and requires
- *   identical results.
- * - tests/fixtures/rules.json holds the results as v1 gave them (written while the two matched), and
- *   tools/engine/rules.test.ts keeps the engine to them after cutover. `npm run rules:baseline`
- *   rewrites the file when a change is meant to move them.
+ * - tests/fixtures/rules.json holds the results as v1 gave them: it was written while the parity
+ *   oracle ran the same cases through v1's UI code and the two matched (until cutover).
+ * - tools/engine/rules.test.ts keeps the engine to them. `npm run rules:baseline` rewrites the file
+ *   when a change is meant to move them.
  *
  * Every case is drawn from one spec stream in a fixed order, so the inputs regenerate exactly.
  */
@@ -70,7 +69,7 @@ export interface RuleCases {
   victories: VictoryCase[];
 }
 
-/** Draw every case from the spec stream (seed 4242), in the order v1's rule oracle did. */
+/** Draw every case from the spec stream (seed 4242), in a fixed order (the rule oracle's, until cutover). */
 export function ruleCases(facts: ContentFacts): RuleCases {
   const specRng = createRng(4242);
   const districtIds = Object.keys(DISTRICTS) as DistrictId[];
@@ -158,8 +157,7 @@ export function ruleCases(facts: ContentFacts): RuleCases {
 }
 
 /** The parts of an enemy actor the rules decide. */
-// eslint-disable-next-line @typescript-eslint/no-explicit-any -- also applied to v1 actors
-export const actorView = (a: any) => ({
+export const actorView = (a: Actor) => ({
   defId: a.defId,
   name: a.name,
   level: a.level,
@@ -171,8 +169,7 @@ export const actorView = (a: any) => ({
 });
 
 /** The save, as a field item leaves it. */
-// eslint-disable-next-line @typescript-eslint/no-explicit-any -- also applied to v1 saves
-export const fieldItemView = (s: any) => ({
+export const fieldItemView = (s: GameState) => ({
   hp: s.hp,
   fp: s.fp,
   bag: s.bag,
@@ -181,8 +178,7 @@ export const fieldItemView = (s: any) => ({
 });
 
 /** The save, as shopping leaves it. */
-// eslint-disable-next-line @typescript-eslint/no-explicit-any -- also applied to v1 saves
-export const shopView = (s: any) => ({
+export const shopView = (s: GameState) => ({
   doubloons: s.doubloons,
   bag: s.bag,
   gear: s.gear,
@@ -192,13 +188,12 @@ export const shopView = (s: any) => ({
   fp: s.fp,
 });
 
-/** The save, as a victory leaves it (with the story as a named step). */
-// eslint-disable-next-line @typescript-eslint/no-explicit-any -- also applied to v1 saves
-export const victoryView = (s: any, story: unknown) => ({
+/** The save, as a victory leaves it. */
+export const victoryView = (s: GameState) => ({
   doubloons: s.doubloons,
   bag: s.bag,
   counters: s.counters,
-  story,
+  story: s.story,
   bounty: s.bounty,
   bountiesDone: s.bountiesDone,
   level: s.level,
@@ -262,7 +257,7 @@ export function runRules(cases: RuleCases): RuleResults {
       b.over = true;
       b.result = 'win';
       gainXp(g, resolveVictory(b).rewards.xp);
-      return victoryView(g, g.story);
+      return victoryView(g);
     }),
   };
 }

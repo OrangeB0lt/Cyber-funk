@@ -1,17 +1,17 @@
 /**
  * The fight driver. It generates a seeded corpus of fights and plays each one against an
- * EngineAdapter, recording a trace. Until cutover the parity test played it against the legacy vm
- * and the TypeScript engine and compared the traces exactly; the engine's own property tests
- * (properties.test.ts) use it after.
+ * EngineAdapter, recording a trace. The engine's property tests (properties.test.ts) replay fights
+ * with it. Until cutover the parity oracle also played every fight on v1 and compared the traces
+ * exactly, which is why the trace format and the rules below exist.
  *
  * Design rules (see docs/adr/0003-determinism-and-parity.md):
- * - Fight setups come from a *spec* rng that is independent of the engine, so both engines start
- *   from identical inputs.
+ * - Fight setups come from a *spec* rng that is independent of the engine, so two runs start from
+ *   identical inputs.
  * - The player policy draws from its own *policy* rng and only reads observable battle state, so as
- *   long as the engines agree, the policy makes identical choices on both sides.
+ *   long as two runs agree, the policy makes identical choices in both.
  * - The engine draws from its own stream; every event is stamped with the draw count at the moment it
  *   was pushed, so the first divergence is pinpointed to an exact draw.
- * - Actor ids are never compared (legacy ids come from a global counter). They are mapped to roles:
+ * - Actor ids are never compared (v1's came from a global counter). They are mapped to roles:
  *   P (player), E<index in b.enemies>, A:<bandmate> (assist helpers).
  *
  */
@@ -86,7 +86,7 @@ export interface ContentFacts {
 /* Adapter                                                              */
 /* ------------------------------------------------------------------ */
 
-/** A player intent in the legacy action shape (both engines accept it). */
+/** A player intent in v1's action shape (the engine accepts it as is). */
 export interface Intent {
   type: 'riff' | 'play' | 'solo' | 'vamp' | 'bag' | 'split' | 'blues';
   targetId?: string;
@@ -118,12 +118,9 @@ export interface EngineAdapter {
   view(b: Opaque): BattleView;
   projectState(state: Opaque): Record<string, unknown>;
   skill(id: string): { fp: number; once: boolean; damaging: boolean };
-  /** Out-of-battle rules sampled by the misc section. */
-  misc(state: Opaque): Record<string, unknown>;
-  priceFor(state: Opaque, base: number, district: string): number;
 }
 
-/** The observable parts of a battle (field names follow the legacy battle object). */
+/** The observable parts of a battle (field names follow v1's battle object). */
 export interface BattleView {
   over: boolean;
   result: string | null;
@@ -470,25 +467,6 @@ export function runFight(a: EngineAdapter, spec: FightSpec, maxActions = 60): Fi
   end.state = a.projectState(state);
   end.draws = a.draws();
   return { index: spec.index, kind: spec.kind, events, checkpoints, end };
-}
-
-/** Out-of-battle rules (stats, prices, unlocks) on random states. */
-export function runMisc(a: EngineAdapter, f: ContentFacts, seed: number, count: number): unknown[] {
-  const rng = createRng(seed);
-  const out: unknown[] = [];
-  for (let i = 0; i < count; i++) {
-    const cls = rng.pick(f.classes).id;
-    const spec = randomState(rng, f, cls, rng.int(1, 15));
-    const state = a.buildState(spec);
-    const prices = f.districts.map(d => [10, 25, 99, 350].map(p => a.priceFor(state, p, d.id)));
-    out.push({
-      misc: a.misc(state),
-      prices,
-      xp: a.gainXp(state, rng.int(0, 4000)),
-      state: a.projectState(state),
-    });
-  }
-  return out;
 }
 
 /* ------------------------------------------------------------------ */

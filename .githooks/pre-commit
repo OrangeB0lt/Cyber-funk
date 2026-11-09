@@ -9,7 +9,7 @@ set -e
 if ! command -v npm >/dev/null 2>&1 && [ -s "$HOME/.nvm/nvm.sh" ]; then
   . "$HOME/.nvm/nvm.sh"
 fi
-CODE='^(src|tools|tests|server|legacy|docs/reference|docs/vision/character-design\.md|package(-lock)?\.json|tsconfig[^/]*\.json|vite[^/]*\.ts|vitest[^/]*\.ts|eslint\.config\.js|playwright\.config\.ts|\.dependency-cruiser\.cjs|\.prettier)'
+CODE='^(src|tools|tests|server|docs/reference|docs/vision/character-design\.md|package(-lock)?\.json|tsconfig[^/]*\.json|vite[^/]*\.ts|vitest[^/]*\.ts|eslint\.config\.js|playwright\.config\.ts|\.dependency-cruiser\.cjs|\.prettier)'
 if git diff --cached --name-only | grep -qE "$CODE"; then
   echo "pre-commit: npm run check (skip once with git commit --no-verify)"
   npm run -s check
