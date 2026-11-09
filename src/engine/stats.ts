@@ -154,6 +154,17 @@ export function clampVitals(s: GameState): void {
   s.fp = clamp(Math.round(s.fp), 0, st.maxFp);
 }
 
+/**
+ * Cap Heart and Funk at their maximums, without rounding: what v1's renderTopbar did every time it
+ * drew the top bar (06_ui_core.js:76). It only matters when a maximum drops without an explicit
+ * clamp: leaving the Tower, where the second line's bonus ends.
+ */
+export function capVitals(s: GameState): void {
+  const st = derivedStats(s);
+  if (s.hp > st.maxHp) s.hp = st.maxHp;
+  if (s.fp > st.maxFp) s.fp = st.maxFp;
+}
+
 /** Heal a fraction of max Heart. */
 export function healPct(s: GameState, p: number): void {
   const st = derivedStats(s);

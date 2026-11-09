@@ -28,12 +28,15 @@ import * as mrLedger from './bosses/mr_ledger.scene';
 import * as rougarou from './bosses/rougarou.scene';
 import * as archivist from './bosses/archivist.scene';
 import * as isolde from './bosses/isolde.scene';
+import * as conductor from './bosses/conductor.scene';
+import * as theClick from './bosses/the_click.scene';
 import { club, congo, kitchen, pawn } from './districts/treme/places.scene';
 import { feufollet, jackson, market, pelican, strip } from './districts/quarter/places.scene';
 import { chopshop, counting, lantern } from './districts/storyville/places.scene';
 import { boudin, cabin, faisdodo, pump } from './districts/bayou/places.scene';
 import { crypts, mausoleum, temple } from './districts/cemetery/places.scene';
 import { maison, manor, tuxedo } from './districts/garden/places.scene';
+import { towerlobby } from './districts/tower/places.scene';
 
 export * from './data';
 export { TEXT } from './text';
@@ -51,6 +54,8 @@ export {
 export { ARRIVALS } from './world/arrivals.scene';
 export { prologue, prologueEnd, resumeTutorial } from './story/prologue.scene';
 export { ending, creditsAndNewGamePlus } from './story/finale.scene';
+export { towerFlow } from './districts/tower/climb.scene';
+export { TOWER_FLOORS } from './world/tower';
 export { cuttingContest } from './districts/quarter/cutting.scene';
 export { mamaRouxTalk } from './districts/treme/places.scene';
 
@@ -63,6 +68,8 @@ export const BOSS_SCENES: Record<Exclude<BossId, TowerBoss>, BossScenes> &
   rougarou,
   archivist,
   isolde,
+  conductor,
+  the_click: theClick,
 };
 
 /** What you can do at each place. */
@@ -90,4 +97,5 @@ export const PLACE_SCENES: Record<Exclude<PlaceId, TowerPlace>, PlaceScenes> &
   maison,
   tuxedo,
   manor,
+  towerlobby,
 };

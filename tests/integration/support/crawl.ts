@@ -19,8 +19,17 @@ import { ITEM_IDS, type ItemId } from '@core/ids/items';
 import { ACT_ORDER, ACT_STEPS, type ActId, type StoryPosition } from '@core/ids/story';
 import { QUEST_IDS, type DistrictId, type PlaceId } from '@core/ids/world';
 import type { GameState } from '@core/types';
-import { BOSSES, GEAR, GLOSSARY, ITEMS, QUESTS } from '@content/index';
-import { addItem, buy, defaultSettings, newGame, sell, sellables, shopRow } from '@engine/index';
+import { BOSSES, GEAR, GLOSSARY, ITEMS, QUESTS, SECOND_LINE } from '@content/index';
+import {
+  addItem,
+  buy,
+  defaultSettings,
+  newGame,
+  sell,
+  sellables,
+  shopRow,
+  storyReached,
+} from '@engine/index';
 import { SceneInterrupt, type RunResult, type Scene, type SheetRequest } from '@narrative/types';
 import { ALLOWED_UNLINKED } from '../../../tools/completeness';
 
@@ -111,6 +120,16 @@ export function buildState(
     g.choices = choicesFor(g, true);
     g.bossIntros = BOSS_IDS.filter(b => BOSSES[b].district === d);
   }
+  // The Tower act from the climb on, and the finale: the second line has formed (from whoever this
+  // profile has on side), the climb is on the floor its step is fought at, and the finale comes
+  // after the ending. The busy profile stops at the Studio Floor's vending machine.
+  if (g.story.act === 'done' || storyReached(g, { act: 'tower', step: 'climb_tower' })) {
+    g.secondLine = SECOND_LINE.filter(m => m.when(g)).map(m => ({ id: m.id, name: m.name }));
+    const step = g.story.act === 'tower' ? g.story.step : null;
+    g.towerFloor =
+      step === 'face_conductor' ? 3 : step === 'break_the_click' ? 4 : profile === 'busy' ? 2 : 0;
+    if (g.story.act === 'done') g.flags.ending = true;
+  }
   const where = typeof pos === 'object' ? `${pos.act}.${pos.step}` : pos;
   return { label: `${d} ${where}/${profile}`, game: g };
 }
@@ -118,8 +137,12 @@ export function buildState(
 /** Every save to crawl a district from: each step of its act, after its boss and late game, × every profile. */
 export function districtStates(d: DistrictId): CrawlState[] {
   const act = d as ActId;
+  // Nobody stands in the Tower district before the second line forms (the club forms it).
+  const steps = (ACT_STEPS[act] as readonly string[]).filter(
+    s => !(d === 'tower' && s === 'form_second_line'),
+  );
   const positions: (StoryPosition | 'after' | 'late')[] = [
-    ...(ACT_STEPS[act] as readonly string[]).map(step => ({ act, step }) as StoryPosition),
+    ...steps.map(step => ({ act, step }) as StoryPosition),
     'after',
     ...(d === 'tower' ? [] : (['late'] as const)),
   ];
@@ -182,9 +205,16 @@ export interface RunOutcome {
   shops: ShopSeen[];
   /** The save round-trips through the save format. */
   saveOk: boolean;
+  /** Every story position the run saved at, in order (steps a long scene passes through). */
+  savedSteps: string[];
 }
 
 const plain = <T>(x: T): T => JSON.parse(JSON.stringify(x)) as T;
+
+/** How often one menu may come back before the default pick becomes its last option. */
+const LOOP_LIMIT = 8;
+/** Most choices one run may make. */
+const CHOICE_CAP = 200;
 
 /** Run `scene` (or a place option) once from `state` in a fresh Session. */
 export async function runOnce(
@@ -201,8 +231,17 @@ export async function runOnce(
   const errors: unknown[] = [];
   const picks: PickRecord[] = [];
   let point = 0;
-  const next = (width: number) => {
-    const i = Math.min(script[point] ?? 0, width - 1);
+  // A menu that comes back after each pick (the Tower's vending machine) would loop forever on the
+  // default first option: once the same menu has been offered LOOP_LIMIT times, take its last option
+  // (the way out), and past CHOICE_CAP choices in one run, give up with an error.
+  const menus = new Map<string, number>();
+  let choices = 0;
+  const next = (width: number, menu?: string) => {
+    if (++choices > CHOICE_CAP) throw new Error(`more than ${CHOICE_CAP} choices in one run: a choice loop`);
+    const seen = menu ? (menus.get(menu) ?? 0) + 1 : 0;
+    if (menu) menus.set(menu, seen);
+    const i =
+      seen > LOOP_LIMIT && script[point] === undefined ? width - 1 : Math.min(script[point] ?? 0, width - 1);
     widths.push(width);
     taken.push(i);
     point++;
@@ -212,7 +251,7 @@ export async function runOnce(
   const box: { session?: Session } = {};
   const presenter = new ScriptedPresenter({
     choose: opts => {
-      const i = next(opts.length);
+      const i = next(opts.length, opts.map(o => o.key).join(','));
       offered.push(...opts.map(o => o.key));
       chosen.push(opts[i]!.key);
       return opts[i]!.key;
@@ -236,9 +275,17 @@ export async function runOnce(
     },
   });
   const mode = spec.battle ?? 'win';
+  const savedSteps: string[] = [];
+  const storage = memorySaveStorage();
+  const write = storage.write.bind(storage);
+  storage.write = raw => {
+    const saved = decodeSave(raw);
+    if (typeof saved !== 'string') savedSteps.push(`${saved.game.story.act}.${saved.game.story.step}`);
+    return write(raw);
+  };
   const session = (box.session = new Session({
     presenter,
-    storage: memorySaveStorage(),
+    storage,
     seed: () => 1,
     onError: e => errors.push(e),
     battle: async (_spec, opts) => {
@@ -269,6 +316,7 @@ export async function runOnce(
     picks,
     shops,
     saveOk,
+    savedSteps,
   };
 }
 

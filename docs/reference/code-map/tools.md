@@ -253,7 +253,7 @@ Is the game whole? Checks that every place has something to do, every boss has i
 - Packages: `node:fs`, `node:path`, `node:url`
 - Imported by: tests: [integration/support/crawl](tests.md#tests-integration-support-crawl-ts)
 - Tested by: [completeness.test](tests.md#tools-completeness-test-ts)
-- Types used: **[core/ids/world](core.md#src-core-ids-world-ts)** [PlaceId](core.md#src-core-ids-world-ts--placeid) · **[core/types/content](core.md#src-core-types-content-ts)** [StepDef](core.md#src-core-types-content-ts--stepdef)
+- Types used: **[core/ids/world](core.md#src-core-ids-world-ts)** [DistrictId](core.md#src-core-ids-world-ts--districtid), [PlaceId](core.md#src-core-ids-world-ts--placeid) · **[core/types/content](core.md#src-core-types-content-ts)** [StepDef](core.md#src-core-types-content-ts--stepdef)
 
 Declarations:
 

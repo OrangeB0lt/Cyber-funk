@@ -11,11 +11,11 @@ Generated reference. Start with the [guide](../../architecture/code-map.md) for 
 ```mermaid
 flowchart LR
   n_band_["band/ (2)"]
-  n_bosses_["bosses/ (15)"]
+  n_bosses_["bosses/ (17)"]
   n_classes_["classes/ (8)"]
   n_combat_["combat/ (7)"]
   n_data["data"]
-  n_districts_["districts/ (22)"]
+  n_districts_["districts/ (24)"]
   n_enemies_["enemies/ (3)"]
   n_format["format"]
   n_gear_["gear/ (5)"]
@@ -34,9 +34,11 @@ flowchart LR
   n_stats["stats"]
   n_story_["story/ (4)"]
   n_text["text"]
-  n_world_["world/ (4)"]
+  n_world_["world/ (5)"]
   n_ext_narrative[["narrative"]]
   n_bosses_ --> n_ext_narrative
+  n_bosses_ --> n_story_
+  n_bosses_ --> n_world_
   n_combat_ --> n_classes_
   n_data --> n_band_
   n_data --> n_bosses_
@@ -100,6 +102,7 @@ flowchart LR
 | [src/content/bosses/archivist.ts](#src-content-bosses-archivist-ts) | The Archivist, Act 5 (Cities of the Dead, the Data Mausoleum). |
 | [src/content/bosses/captain_hush.scene.ts](#src-content-bosses-captain-hush-scene-ts) | Captain Hush: before and after the fight in Congo Square. |
 | [src/content/bosses/captain_hush.ts](#src-content-bosses-captain-hush-ts) | Captain Hush, Act 1 (Tremé, Congo Square). |
+| [src/content/bosses/conductor.scene.ts](#src-content-bosses-conductor-scene-ts) | The Conductor, at the Booth (v1: towerFlow's Booth floor, legacy/src/09_story.js:251-261). |
 | [src/content/bosses/conductor.ts](#src-content-bosses-conductor-ts) | The Conductor (Maestro Aurelius Quant), Act 7 (Metronome Tower, the Booth). |
 | [src/content/bosses/index.ts](#src-content-bosses-index-ts) | Every boss, in story order. |
 | [src/content/bosses/isolde.scene.ts](#src-content-bosses-isolde-scene-ts) | Lady Concertmaster Isolde Vane: the duel in her ballroom, and the last Blue Note. |
@@ -108,6 +111,7 @@ flowchart LR
 | [src/content/bosses/mr_ledger.ts](#src-content-bosses-mr-ledger-ts) | Mr. |
 | [src/content/bosses/rougarou.scene.ts](#src-content-bosses-rougarou-scene-ts) | Le Rougarou Chromé: Pump Station 13, and the third big choice. |
 | [src/content/bosses/rougarou.ts](#src-content-bosses-rougarou-ts) | Le Rougarou Chromé (Lucien), Act 4 (Manchac Swamp, Pump Station 13). |
+| [src/content/bosses/the_click.scene.ts](#src-content-bosses-the-click-scene-ts) | The Click, at the Crown (v1: towerFlow's Crown floor, legacy/src/09_story.js:262-269). |
 | [src/content/bosses/the_click.ts](#src-content-bosses-the-click-ts) | THE CLICK, the finale (Metronome Tower, the Crown). |
 | [src/content/bosses/vox_perfecta.scene.ts](#src-content-bosses-vox-perfecta-scene-ts) | Vox Perfecta: before and after the fight on the Bourbon Strip, and the first big choice. |
 | [src/content/bosses/vox_perfecta.ts](#src-content-bosses-vox-perfecta-ts) | Vox Perfecta, Act 2 (French Quarter, the Bourbon Strip main stage). |
@@ -144,8 +148,10 @@ flowchart LR
 | [src/content/districts/storyville/district.ts](#src-content-districts-storyville-district-ts) | Storyville. |
 | [src/content/districts/storyville/enemies.ts](#src-content-districts-storyville-enemies-ts) | Storyville: street enemies and the district elite. |
 | [src/content/districts/storyville/places.scene.ts](#src-content-districts-storyville-places-scene-ts) | Storyville's places: the Velvet Lantern (Madame Céleste, her Whispers, Professor Theo's piano, the DJ in the corner booth), the Basin Street Chop Shop and Ledg… |
+| [src/content/districts/tower/climb.scene.ts](#src-content-districts-tower-climb-scene-ts) | The climb up Metronome Tower (v1: towerFlow, legacy/src/09_story.js:222-270), transliterated: the Lobby and the Server Floors (two fights each, no fleeing), th… |
 | [src/content/districts/tower/district.ts](#src-content-districts-tower-district-ts) | Central Business District. |
 | [src/content/districts/tower/enemies.ts](#src-content-districts-tower-enemies-ts) | Central Business District: street enemies and the district elite. |
+| [src/content/districts/tower/places.scene.ts](#src-content-districts-tower-places-scene-ts) | The Central Business District's one place: the Metronome Tower lobby (v1: PLACE_FLOWS.towerlobby, legacy/src/08_world.js:371). |
 | [src/content/districts/treme/district.ts](#src-content-districts-treme-district-ts) | Tremé. |
 | [src/content/districts/treme/enemies.ts](#src-content-districts-treme-enemies-ts) | Tremé: street enemies and the district elite. |
 | [src/content/districts/treme/places.scene.ts](#src-content-districts-treme-places-scene-ts) | Tremé's places: the Lagniappe club, Mama Roux's kitchen, Ti-Jacques' pawn shop, Congo Square. |
@@ -195,6 +201,7 @@ flowchart LR
 | [src/content/world/shared.scene.ts](#src-content-world-shared-scene-ts) | Scenes and helpers more than one district uses: instrument stock for shops, bar rumors (the Pelican, the Fais Do-Do, the Silver Tuxedo, Zinnia's tarot), and th… |
 | [src/content/world/streetEvents.scene.ts](#src-content-world-streetevents-scene-ts) | Street events: the non-fight encounters of Hit the Streets. |
 | [src/content/world/streets.scene.ts](#src-content-world-streets-scene-ts) | The streets: what happens when you Hit the Streets, the Praline Lady, bounty hunts, travel, and waking up at the club after getting cut. |
+| [src/content/world/tower.ts](#src-content-world-tower-ts) | Metronome Tower's five floors, bottom to top (v1: TOWER_FLOORS, legacy/src/09_story.js:215). |
 
 ## Details
 
@@ -230,7 +237,7 @@ Who marches in the second line on the Tower, in order. `when` decides if they've
 Declarations:
 
 - <a id="src-content-band-secondline-ts--second-line"></a>**SECOND_LINE** · *const* `: readonly SecondLineMemberDef[]`
-  - used by: **[content/story/secondLine.scene](#src-content-story-secondline-scene-ts)** [secondLineScene](#src-content-story-secondline-scene-ts--secondlinescene) · **[tools/parity/tsAdapter](tools.md#tools-parity-tsadapter-ts)** [tsAdapter](tools.md#tools-parity-tsadapter-ts--tsadapter) · **[tools/validate-content](tools.md#tools-validate-content-ts)** [validateContent](tools.md#tools-validate-content-ts--validatecontent) · tests: [content.test](tests.md#tools-parity-content-test-ts), [transcripts.test](tests.md#tools-parity-transcripts-test-ts)
+  - used by: **[app/devStates](app.md#src-app-devstates-ts)** [towerBossSetup](app.md#src-app-devstates-ts--towerbosssetup) · **[content/story/secondLine.scene](#src-content-story-secondline-scene-ts)** [secondLineScene](#src-content-story-secondline-scene-ts--secondlinescene) · **[tests/integration/support/crawl](tests.md#tests-integration-support-crawl-ts)** [buildState](tests.md#tests-integration-support-crawl-ts--buildstate) · **[tools/parity/tsAdapter](tools.md#tools-parity-tsadapter-ts)** [tsAdapter](tools.md#tools-parity-tsadapter-ts--tsadapter) · **[tools/validate-content](tools.md#tools-validate-content-ts)** [validateContent](tools.md#tools-validate-content-ts--validatecontent) · tests: [content.test](tests.md#tools-parity-content-test-ts), [transcripts.test](tests.md#tools-parity-transcripts-test-ts)
 
 <a id="src-content-bosses-archivist-scene-ts"></a>
 
@@ -304,6 +311,26 @@ Declarations:
 - <a id="src-content-bosses-captain-hush-ts--captainhush"></a>**captainHush** · *const* `satisfies BossDef`
   - uses: **[core/rng](core.md#src-core-rng-ts)** [Rng.next](core.md#src-core-rng-ts--rng-next) · **[core/types/effects](core.md#src-core-types-effects-ts)** [EffectOps.summon](core.md#src-core-types-effects-ts--effectops-summon)
   - used by: **[content/bosses/index](#src-content-bosses-index-ts)** [BOSSES](#src-content-bosses-index-ts--bosses)
+
+<a id="src-content-bosses-conductor-scene-ts"></a>
+
+### src/content/bosses/conductor.scene.ts
+
+The Conductor, at the Booth (v1: towerFlow's Booth floor, legacy/src/09_story.js:251-261). The Tower runs the fight itself (s.bossFight); these are the scenes around it.
+
+- Source: [src/content/bosses/conductor.scene.ts](../../../src/content/bosses/conductor.scene.ts)
+- Imports: narrative: [types](narrative.md#src-narrative-types-ts) · content: [world/tower](#src-content-world-tower-ts)
+- Imported by: content: [districts/tower/climb.scene](#src-content-districts-tower-climb-scene-ts), [index](#src-content-index-ts)
+- Types used: **[narrative/types](narrative.md#src-narrative-types-ts)** [Scene](narrative.md#src-narrative-types-ts--scene)
+
+Declarations:
+
+- <a id="src-content-bosses-conductor-scene-ts--pre"></a>**pre** · *function* `(s): Promise<void>` — First time in the Booth: Maestro Aurelius Quant introduces himself.
+  - uses: **[narrative/types](narrative.md#src-narrative-types-ts)** [SceneContext.narrate](narrative.md#src-narrative-types-ts--scenecontext-narrate), [SceneContext.say](narrative.md#src-narrative-types-ts--scenecontext-say)
+  - used by: **[content/districts/tower/climb.scene](#src-content-districts-tower-climb-scene-ts)** [towerFlow](#src-content-districts-tower-climb-scene-ts--towerflow)
+- <a id="src-content-bosses-conductor-scene-ts--post"></a>**post** · *function* `(s): Promise<void>` — The baton drops; the second line rallies (+50% Heart and Funk); next, the Crown.
+  - uses: **[content/world/tower](#src-content-world-tower-ts)** [TOWER_FLOORS](#src-content-world-tower-ts--tower-floors) · **[narrative/types](narrative.md#src-narrative-types-ts)** [SceneContext.funk](narrative.md#src-narrative-types-ts--scenecontext-funk), [SceneContext.heal](narrative.md#src-narrative-types-ts--scenecontext-heal), [SceneContext.narrate](narrative.md#src-narrative-types-ts--scenecontext-narrate), [SceneContext.save](narrative.md#src-narrative-types-ts--scenecontext-save), [SceneContext.title](narrative.md#src-narrative-types-ts--scenecontext-title)
+  - used by: **[content/districts/tower/climb.scene](#src-content-districts-tower-climb-scene-ts)** [towerFlow](#src-content-districts-tower-climb-scene-ts--towerflow)
 
 <a id="src-content-bosses-conductor-ts"></a>
 
@@ -448,6 +475,26 @@ Declarations:
 - <a id="src-content-bosses-rougarou-ts--rougarou"></a>**rougarou** · *const* `satisfies BossDef`
   - uses: **[core/helpers](core.md#src-core-helpers-ts)** [hasStatus](core.md#src-core-helpers-ts--hasstatus) · **[core/rng](core.md#src-core-rng-ts)** [Rng.next](core.md#src-core-rng-ts--rng-next) · **[core/types/effects](core.md#src-core-types-effects-ts)** [EffectOps.applyStatus](core.md#src-core-types-effects-ts--effectops-applystatus), [EffectOps.log](core.md#src-core-types-effects-ts--effectops-log)
   - used by: **[content/bosses/index](#src-content-bosses-index-ts)** [BOSSES](#src-content-bosses-index-ts--bosses)
+
+<a id="src-content-bosses-the-click-scene-ts"></a>
+
+### src/content/bosses/the_click.scene.ts
+
+The Click, at the Crown (v1: towerFlow's Crown floor, legacy/src/09_story.js:262-269). The Tower runs the fight itself (s.bossFight with the Click's shield); its post-fight scene is the ending.
+
+- Source: [src/content/bosses/the_click.scene.ts](../../../src/content/bosses/the_click.scene.ts)
+- Imports: narrative: [types](narrative.md#src-narrative-types-ts) · content: [story/finale.scene](#src-content-story-finale-scene-ts)
+- Imported by: content: [districts/tower/climb.scene](#src-content-districts-tower-climb-scene-ts), [index](#src-content-index-ts)
+- Types used: **[narrative/types](narrative.md#src-narrative-types-ts)** [Scene](narrative.md#src-narrative-types-ts--scene)
+
+Declarations:
+
+- <a id="src-content-bosses-the-click-scene-ts--pre"></a>**pre** · *function* `(s): Promise<void>` — First time at the Crown: the Play the Blues tutorial.
+  - uses: **[narrative/types](narrative.md#src-narrative-types-ts)** [SceneContext.narrate](narrative.md#src-narrative-types-ts--scenecontext-narrate)
+  - used by: **[content/districts/tower/climb.scene](#src-content-districts-tower-climb-scene-ts)** [towerFlow](#src-content-districts-tower-climb-scene-ts--towerflow)
+- <a id="src-content-bosses-the-click-scene-ts--post"></a>**post** · *function* `(s): Promise<void>` — Out of the Tower, and the ending.
+  - uses: **[content/story/finale.scene](#src-content-story-finale-scene-ts)** [ending](#src-content-story-finale-scene-ts--ending)
+  - used by: **[content/districts/tower/climb.scene](#src-content-districts-tower-climb-scene-ts)** [towerFlow](#src-content-districts-tower-climb-scene-ts--towerflow)
 
 <a id="src-content-bosses-the-click-ts"></a>
 
@@ -1168,6 +1215,24 @@ Declarations:
   - uses: **[content/places](#src-content-places-ts)** [PLACES](#src-content-places-ts--places) · **[narrative/define](narrative.md#src-narrative-define-ts)** [PlaceHelpers.is](narrative.md#src-narrative-define-ts--placehelpers-is), [definePlace](narrative.md#src-narrative-define-ts--defineplace) · **[narrative/types](narrative.md#src-narrative-types-ts)** [SceneContext.boss](narrative.md#src-narrative-types-ts--scenecontext-boss), [SceneContext.narrate](narrative.md#src-narrative-types-ts--scenecontext-narrate), [SceneContext.nextFight](narrative.md#src-narrative-types-ts--scenecontext-nextfight), [SceneContext.title](narrative.md#src-narrative-types-ts--scenecontext-title)
   - used by: **[content/index](#src-content-index-ts)** [PLACE_SCENES](#src-content-index-ts--place-scenes)
 
+<a id="src-content-districts-tower-climb-scene-ts"></a>
+
+### src/content/districts/tower/climb.scene.ts
+
+The climb up Metronome Tower (v1: towerFlow, legacy/src/09_story.js:222-270), transliterated: the Lobby and the Server Floors (two fights each, no fleeing), the Studio Floor's vending machine, the Conductor in the Booth, and the Click at the Crown. Progress is kept in `towerFloor` and `towerFight` and saved at every floor and fight.
+
+- Source: [src/content/districts/tower/climb.scene.ts](../../../src/content/districts/tower/climb.scene.ts)
+- Imports: core: [ids/flags](core.md#src-core-ids-flags-ts) · narrative: [types](narrative.md#src-narrative-types-ts) · content: [bosses/conductor.scene](#src-content-bosses-conductor-scene-ts), [bosses/the_click.scene](#src-content-bosses-the-click-scene-ts), [world/tower](#src-content-world-tower-ts)
+- Imported by: content: [districts/tower/places.scene](#src-content-districts-tower-places-scene-ts), [index](#src-content-index-ts)
+- Tested by: [transcripts.test](tests.md#tools-parity-transcripts-test-ts)
+- Types used: **[core/ids/flags](core.md#src-core-ids-flags-ts)** [FlagId](core.md#src-core-ids-flags-ts--flagid) · **[narrative/types](narrative.md#src-narrative-types-ts)** [Scene](narrative.md#src-narrative-types-ts--scene)
+
+Declarations:
+
+- <a id="src-content-districts-tower-climb-scene-ts--towerflow"></a>**towerFlow** · *function* `(s): Promise<void>` — March into the Tower, or pick the climb back up where it stopped.
+  - uses: **[content/bosses/conductor.scene](#src-content-bosses-conductor-scene-ts)** [post](#src-content-bosses-conductor-scene-ts--post), [pre](#src-content-bosses-conductor-scene-ts--pre) · **[content/bosses/the_click.scene](#src-content-bosses-the-click-scene-ts)** [post](#src-content-bosses-the-click-scene-ts--post), [pre](#src-content-bosses-the-click-scene-ts--pre) · **[content/world/tower](#src-content-world-tower-ts)** [TOWER_FLOORS](#src-content-world-tower-ts--tower-floors) · **[core/rng](core.md#src-core-rng-ts)** [Rng.pick](core.md#src-core-rng-ts--rng-pick) · **[narrative/types](narrative.md#src-narrative-types-ts)** [SceneContext.bossFight](narrative.md#src-narrative-types-ts--scenecontext-bossfight), [SceneContext.choose](narrative.md#src-narrative-types-ts--scenecontext-choose), [SceneContext.clampVitals](narrative.md#src-narrative-types-ts--scenecontext-clampvitals), [SceneContext.fight](narrative.md#src-narrative-types-ts--scenecontext-fight), [SceneContext.funk](narrative.md#src-narrative-types-ts--scenecontext-funk), [SceneContext.heal](narrative.md#src-narrative-types-ts--scenecontext-heal), [SceneContext.narrate](narrative.md#src-narrative-types-ts--scenecontext-narrate), [SceneContext.returnTo](narrative.md#src-narrative-types-ts--scenecontext-returnto), [SceneContext.save](narrative.md#src-narrative-types-ts--scenecontext-save), [SceneContext.say](narrative.md#src-narrative-types-ts--scenecontext-say) · … +3 more
+  - used by: **[app/game](app.md#src-app-game-ts)** [GameApp.dev](app.md#src-app-game-ts--gameapp-dev) · **[content/districts/tower/places.scene](#src-content-districts-tower-places-scene-ts)** [towerlobby](#src-content-districts-tower-places-scene-ts--towerlobby) · tests: [transcripts.test](tests.md#tools-parity-transcripts-test-ts)
+
 <a id="src-content-districts-tower-district-ts"></a>
 
 ### src/content/districts/tower/district.ts
@@ -1199,6 +1264,22 @@ Declarations:
 
 - <a id="src-content-districts-tower-enemies-ts--towerenemies"></a>**towerEnemies** · *const* `satisfies Partial<Table<EnemyId, EnemyDef>>`
   - used by: **[content/enemies/index](#src-content-enemies-index-ts)** [ENEMIES](#src-content-enemies-index-ts--enemies)
+
+<a id="src-content-districts-tower-places-scene-ts"></a>
+
+### src/content/districts/tower/places.scene.ts
+
+The Central Business District's one place: the Metronome Tower lobby (v1: PLACE_FLOWS.towerlobby, legacy/src/08_world.js:371). March on the Tower, or continue the climb; after the ending, look up.
+
+- Source: [src/content/districts/tower/places.scene.ts](../../../src/content/districts/tower/places.scene.ts)
+- Imports: narrative: [define](narrative.md#src-narrative-define-ts) · content: [districts/tower/climb.scene](#src-content-districts-tower-climb-scene-ts), [places](#src-content-places-ts), [world/tower](#src-content-world-tower-ts)
+- Imported by: content: [index](#src-content-index-ts)
+
+Declarations:
+
+- <a id="src-content-districts-tower-places-scene-ts--towerlobby"></a>**towerlobby** · *const*
+  - uses: **[content/districts/tower/climb.scene](#src-content-districts-tower-climb-scene-ts)** [towerFlow](#src-content-districts-tower-climb-scene-ts--towerflow) · **[content/places](#src-content-places-ts)** [PLACES](#src-content-places-ts--places) · **[content/world/tower](#src-content-world-tower-ts)** [TOWER_FLOORS](#src-content-world-tower-ts--tower-floors) · **[narrative/define](narrative.md#src-narrative-define-ts)** [PlaceHelpers.reached](narrative.md#src-narrative-define-ts--placehelpers-reached), [definePlace](narrative.md#src-narrative-define-ts--defineplace) · **[narrative/types](narrative.md#src-narrative-types-ts)** [SceneContext.narrate](narrative.md#src-narrative-types-ts--scenecontext-narrate), [SceneContext.title](narrative.md#src-narrative-types-ts--scenecontext-title)
+  - used by: **[content/index](#src-content-index-ts)** [PLACE_SCENES](#src-content-index-ts--place-scenes)
 
 <a id="src-content-districts-treme-district-ts"></a>
 
@@ -1441,8 +1522,8 @@ Declarations:
 All content as the app sees it: the data (content/data.ts) plus every scene. The engine and the sim never import this file (they use data.ts), which keeps prose out of their module graph.
 
 - Source: [src/content/index.ts](../../../src/content/index.ts)
-- Imports: core: [ids/enemies](core.md#src-core-ids-enemies-ts), [ids/world](core.md#src-core-ids-world-ts) · narrative: [define](narrative.md#src-narrative-define-ts), [types](narrative.md#src-narrative-types-ts) · content: [bosses/archivist.scene](#src-content-bosses-archivist-scene-ts), [bosses/captain_hush.scene](#src-content-bosses-captain-hush-scene-ts), [bosses/isolde.scene](#src-content-bosses-isolde-scene-ts), [bosses/mr_ledger.scene](#src-content-bosses-mr-ledger-scene-ts), [bosses/rougarou.scene](#src-content-bosses-rougarou-scene-ts), [bosses/vox_perfecta.scene](#src-content-bosses-vox-perfecta-scene-ts), [data](#src-content-data-ts), [districts/bayou/places.scene](#src-content-districts-bayou-places-scene-ts), [districts/cemetery/places.scene](#src-content-districts-cemetery-places-scene-ts), [districts/garden/places.scene](#src-content-districts-garden-places-scene-ts), [districts/quarter/cutting.scene](#src-content-districts-quarter-cutting-scene-ts), [districts/quarter/places.scene](#src-content-districts-quarter-places-scene-ts), [districts/storyville/places.scene](#src-content-districts-storyville-places-scene-ts), [districts/treme/places.scene](#src-content-districts-treme-places-scene-ts), [format](#src-content-format-ts), [story/finale.scene](#src-content-story-finale-scene-ts), [story/prologue.scene](#src-content-story-prologue-scene-ts), [text](#src-content-text-ts), [world/arrivals.scene](#src-content-world-arrivals-scene-ts), [world/streetEvents.scene](#src-content-world-streetevents-scene-ts), [world/streets.scene](#src-content-world-streets-scene-ts)
-- Re-exports: `* from './data'`, `{ TEXT } from './text'`, `{ fmtDoubloons } from './format'`, `{ STREET_EVENTS } from './world/streetEvents.scene'`, `{ hitTheStreets, pralineLady, trackBounty, travel, wakeUpAtClub, runEvent, fmtD } from './world/streets.scene'`, `{ ARRIVALS } from './world/arrivals.scene'`, `{ prologue, prologueEnd, resumeTutorial } from './story/prologue.scene'`, `{ ending, creditsAndNewGamePlus } from './story/finale.scene'`, `{ cuttingContest } from './districts/quarter/cutting.scene'`, `{ mamaRouxTalk } from './districts/treme/places.scene'`
+- Imports: core: [ids/enemies](core.md#src-core-ids-enemies-ts), [ids/world](core.md#src-core-ids-world-ts) · narrative: [define](narrative.md#src-narrative-define-ts), [types](narrative.md#src-narrative-types-ts) · content: [bosses/archivist.scene](#src-content-bosses-archivist-scene-ts), [bosses/captain_hush.scene](#src-content-bosses-captain-hush-scene-ts), [bosses/conductor.scene](#src-content-bosses-conductor-scene-ts), [bosses/isolde.scene](#src-content-bosses-isolde-scene-ts), [bosses/mr_ledger.scene](#src-content-bosses-mr-ledger-scene-ts), [bosses/rougarou.scene](#src-content-bosses-rougarou-scene-ts), [bosses/the_click.scene](#src-content-bosses-the-click-scene-ts), [bosses/vox_perfecta.scene](#src-content-bosses-vox-perfecta-scene-ts), [data](#src-content-data-ts), [districts/bayou/places.scene](#src-content-districts-bayou-places-scene-ts), [districts/cemetery/places.scene](#src-content-districts-cemetery-places-scene-ts), [districts/garden/places.scene](#src-content-districts-garden-places-scene-ts), [districts/quarter/cutting.scene](#src-content-districts-quarter-cutting-scene-ts), [districts/quarter/places.scene](#src-content-districts-quarter-places-scene-ts), [districts/storyville/places.scene](#src-content-districts-storyville-places-scene-ts), [districts/tower/climb.scene](#src-content-districts-tower-climb-scene-ts), [districts/tower/places.scene](#src-content-districts-tower-places-scene-ts), [districts/treme/places.scene](#src-content-districts-treme-places-scene-ts), [format](#src-content-format-ts), [story/finale.scene](#src-content-story-finale-scene-ts), [story/prologue.scene](#src-content-story-prologue-scene-ts), [text](#src-content-text-ts), [world/arrivals.scene](#src-content-world-arrivals-scene-ts), [world/streetEvents.scene](#src-content-world-streetevents-scene-ts), [world/streets.scene](#src-content-world-streets-scene-ts), [world/tower](#src-content-world-tower-ts)
+- Re-exports: `* from './data'`, `{ TEXT } from './text'`, `{ fmtDoubloons } from './format'`, `{ STREET_EVENTS } from './world/streetEvents.scene'`, `{ hitTheStreets, pralineLady, trackBounty, travel, wakeUpAtClub, runEvent, fmtD } from './world/streets.scene'`, `{ ARRIVALS } from './world/arrivals.scene'`, `{ prologue, prologueEnd, resumeTutorial } from './story/prologue.scene'`, `{ ending, creditsAndNewGamePlus } from './story/finale.scene'`, `{ towerFlow } from './districts/tower/climb.scene'`, `{ TOWER_FLOORS } from './world/tower'`, `{ cuttingContest } from './districts/quarter/cutting.scene'`, `{ mamaRouxTalk } from './districts/treme/places.scene'`
 - Imported by: app: [battleController](app.md#src-app-battlecontroller-ts), [game](app.md#src-app-game-ts), [lexicon](app.md#src-app-lexicon-ts), [reactPresenter](app.md#src-app-reactpresenter-ts), [sceneContext](app.md#src-app-scenecontext-ts), [session](app.md#src-app-session-ts) · ui: [combat/BattleActions](ui.md#src-ui-combat-battleactions-tsx), [combat/BattleScreen](ui.md#src-ui-combat-battlescreen-tsx), [combat/TimingOverlay](ui.md#src-ui-combat-timingoverlay-tsx), [components/Chips](ui.md#src-ui-components-chips-tsx), [components/Notes](ui.md#src-ui-components-notes-tsx), [components/StatGrid](ui.md#src-ui-components-statgrid-tsx), [layers/PopupLayer](ui.md#src-ui-layers-popuplayer-tsx), [layers/Topbar](ui.md#src-ui-layers-topbar-tsx), [screens/Create](ui.md#src-ui-screens-create-tsx), [screens/District](ui.md#src-ui-screens-district-tsx), [screens/Place](ui.md#src-ui-screens-place-tsx), [sheets/HistorySheet](ui.md#src-ui-sheets-historysheet-tsx), [sheets/MenuSheets](ui.md#src-ui-sheets-menusheets-tsx), [sheets/SavesSheet](ui.md#src-ui-sheets-savessheet-tsx), [sheets/ShopSheet](ui.md#src-ui-sheets-shopsheet-tsx), [sheets/SpritesSheet](ui.md#src-ui-sheets-spritessheet-tsx), [sheets/WorldSheets](ui.md#src-ui-sheets-worldsheets-tsx), [sheets/format](ui.md#src-ui-sheets-format-ts) · tools: [completeness](tools.md#tools-completeness-ts) · tests: [integration/support/crawl](tests.md#tests-integration-support-crawl-ts)
 - Tested by: [explore.test](tests.md#tests-integration-explore-test-ts), [playthrough.test](tests.md#tests-integration-playthrough-test-ts), [transcripts.test](tests.md#tools-parity-transcripts-test-ts)
 - Types used: **[core/ids/enemies](core.md#src-core-ids-enemies-ts)** [BossId](core.md#src-core-ids-enemies-ts--bossid) · **[core/ids/world](core.md#src-core-ids-world-ts)** [PlaceId](core.md#src-core-ids-world-ts--placeid) · **[narrative/define](narrative.md#src-narrative-define-ts)** [PlaceScenes](narrative.md#src-narrative-define-ts--placescenes) · **[narrative/types](narrative.md#src-narrative-types-ts)** [Scene](narrative.md#src-narrative-types-ts--scene)
@@ -1458,7 +1539,7 @@ Declarations:
 - <a id="src-content-index-ts--boss-scenes"></a>**BOSS_SCENES** · *const* `: Record<Exclude<BossId, TowerBoss>, BossScenes> & Partial<Record<TowerBoss, BossScenes>>` — Each boss's scenes: `pre` plays the first time you go in, `post` after you win.
   - used by: **[app/sceneContext](app.md#src-app-scenecontext-ts)** [createSceneContext](app.md#src-app-scenecontext-ts--createscenecontext), [finishBoss](app.md#src-app-scenecontext-ts--finishboss) · **[tools/completeness](tools.md#tools-completeness-ts)** [checkCompleteness](tools.md#tools-completeness-ts--checkcompleteness) · tests: [playthrough.test](tests.md#tests-integration-playthrough-test-ts)
 - <a id="src-content-index-ts--place-scenes"></a>**PLACE_SCENES** · *const* `: Record<Exclude<PlaceId, TowerPlace>, PlaceScenes> & Partial<Record<TowerPlace, PlaceScenes>>` — What you can do at each place.
-  - uses: **[content/districts/bayou/places.scene](#src-content-districts-bayou-places-scene-ts)** [boudin](#src-content-districts-bayou-places-scene-ts--boudin), [cabin](#src-content-districts-bayou-places-scene-ts--cabin), [faisdodo](#src-content-districts-bayou-places-scene-ts--faisdodo), [pump](#src-content-districts-bayou-places-scene-ts--pump) · **[content/districts/cemetery/places.scene](#src-content-districts-cemetery-places-scene-ts)** [crypts](#src-content-districts-cemetery-places-scene-ts--crypts), [mausoleum](#src-content-districts-cemetery-places-scene-ts--mausoleum), [temple](#src-content-districts-cemetery-places-scene-ts--temple) · **[content/districts/garden/places.scene](#src-content-districts-garden-places-scene-ts)** [maison](#src-content-districts-garden-places-scene-ts--maison), [manor](#src-content-districts-garden-places-scene-ts--manor), [tuxedo](#src-content-districts-garden-places-scene-ts--tuxedo) · **[content/districts/quarter/places.scene](#src-content-districts-quarter-places-scene-ts)** [feufollet](#src-content-districts-quarter-places-scene-ts--feufollet), [jackson](#src-content-districts-quarter-places-scene-ts--jackson), [market](#src-content-districts-quarter-places-scene-ts--market), [pelican](#src-content-districts-quarter-places-scene-ts--pelican), [strip](#src-content-districts-quarter-places-scene-ts--strip) · **[content/districts/storyville/places.scene](#src-content-districts-storyville-places-scene-ts)** [chopshop](#src-content-districts-storyville-places-scene-ts--chopshop) · … +6 more
+  - uses: **[content/districts/bayou/places.scene](#src-content-districts-bayou-places-scene-ts)** [boudin](#src-content-districts-bayou-places-scene-ts--boudin), [cabin](#src-content-districts-bayou-places-scene-ts--cabin), [faisdodo](#src-content-districts-bayou-places-scene-ts--faisdodo), [pump](#src-content-districts-bayou-places-scene-ts--pump) · **[content/districts/cemetery/places.scene](#src-content-districts-cemetery-places-scene-ts)** [crypts](#src-content-districts-cemetery-places-scene-ts--crypts), [mausoleum](#src-content-districts-cemetery-places-scene-ts--mausoleum), [temple](#src-content-districts-cemetery-places-scene-ts--temple) · **[content/districts/garden/places.scene](#src-content-districts-garden-places-scene-ts)** [maison](#src-content-districts-garden-places-scene-ts--maison), [manor](#src-content-districts-garden-places-scene-ts--manor), [tuxedo](#src-content-districts-garden-places-scene-ts--tuxedo) · **[content/districts/quarter/places.scene](#src-content-districts-quarter-places-scene-ts)** [feufollet](#src-content-districts-quarter-places-scene-ts--feufollet), [jackson](#src-content-districts-quarter-places-scene-ts--jackson), [market](#src-content-districts-quarter-places-scene-ts--market), [pelican](#src-content-districts-quarter-places-scene-ts--pelican), [strip](#src-content-districts-quarter-places-scene-ts--strip) · **[content/districts/storyville/places.scene](#src-content-districts-storyville-places-scene-ts)** [chopshop](#src-content-districts-storyville-places-scene-ts--chopshop) · … +7 more
   - used by: **[app/session](app.md#src-app-session-ts)** [Session.placeIntro](app.md#src-app-session-ts--session-placeintro), [Session.placeOptions](app.md#src-app-session-ts--session-placeoptions) · **[tools/completeness](tools.md#tools-completeness-ts)** [checkCompleteness](tools.md#tools-completeness-ts--checkcompleteness) · tests: [explore.test](tests.md#tests-integration-explore-test-ts)
 
 <a id="src-content-items-ts"></a>
@@ -1546,14 +1627,14 @@ Places inside districts. What you can do at each one is its scene (districts/&lt
 
 - Source: [src/content/places.ts](../../../src/content/places.ts)
 - Imports: core: [ids/world](core.md#src-core-ids-world-ts), [types/index](core.md#src-core-types-index-ts)
-- Imported by: content: [data](#src-content-data-ts), [districts/bayou/places.scene](#src-content-districts-bayou-places-scene-ts), [districts/cemetery/places.scene](#src-content-districts-cemetery-places-scene-ts), [districts/garden/places.scene](#src-content-districts-garden-places-scene-ts), [districts/quarter/places.scene](#src-content-districts-quarter-places-scene-ts), [districts/storyville/places.scene](#src-content-districts-storyville-places-scene-ts), [districts/treme/places.scene](#src-content-districts-treme-places-scene-ts)
+- Imported by: content: [data](#src-content-data-ts), [districts/bayou/places.scene](#src-content-districts-bayou-places-scene-ts), [districts/cemetery/places.scene](#src-content-districts-cemetery-places-scene-ts), [districts/garden/places.scene](#src-content-districts-garden-places-scene-ts), [districts/quarter/places.scene](#src-content-districts-quarter-places-scene-ts), [districts/storyville/places.scene](#src-content-districts-storyville-places-scene-ts), [districts/tower/places.scene](#src-content-districts-tower-places-scene-ts), [districts/treme/places.scene](#src-content-districts-treme-places-scene-ts)
 - Tested by: [explore.test](tests.md#tests-integration-explore-test-ts), [playthrough.test](tests.md#tests-integration-playthrough-test-ts), [content.test](tests.md#tools-parity-content-test-ts)
 - Types used: **[core/ids/world](core.md#src-core-ids-world-ts)** [PlaceId](core.md#src-core-ids-world-ts--placeid) · **[core/types/content](core.md#src-core-types-content-ts)** [PlaceDef](core.md#src-core-types-content-ts--placedef), [Table](core.md#src-core-types-content-ts--table)
 
 Declarations:
 
 - <a id="src-content-places-ts--places"></a>**PLACES** · *const* `: Table<PlaceId, PlaceDef>`
-  - used by: **[app/devStates](app.md#src-app-devstates-ts)** [bossStep](app.md#src-app-devstates-ts--bossstep) · **[app/sceneContext](app.md#src-app-scenecontext-ts)** [createSceneContext](app.md#src-app-scenecontext-ts--createscenecontext) · **[content/districts/bayou/places.scene](#src-content-districts-bayou-places-scene-ts)** [boudin](#src-content-districts-bayou-places-scene-ts--boudin), [cabin](#src-content-districts-bayou-places-scene-ts--cabin), [faisdodo](#src-content-districts-bayou-places-scene-ts--faisdodo), [pump](#src-content-districts-bayou-places-scene-ts--pump) · **[content/districts/cemetery/places.scene](#src-content-districts-cemetery-places-scene-ts)** [crypts](#src-content-districts-cemetery-places-scene-ts--crypts), [mausoleum](#src-content-districts-cemetery-places-scene-ts--mausoleum), [temple](#src-content-districts-cemetery-places-scene-ts--temple) · **[content/districts/garden/places.scene](#src-content-districts-garden-places-scene-ts)** [maison](#src-content-districts-garden-places-scene-ts--maison), [manor](#src-content-districts-garden-places-scene-ts--manor), [tuxedo](#src-content-districts-garden-places-scene-ts--tuxedo) · **[content/districts/quarter/places.scene](#src-content-districts-quarter-places-scene-ts)** [feufollet](#src-content-districts-quarter-places-scene-ts--feufollet), [jackson](#src-content-districts-quarter-places-scene-ts--jackson), [market](#src-content-districts-quarter-places-scene-ts--market), [pelican](#src-content-districts-quarter-places-scene-ts--pelican) · … +10 more · tests: [explore.test](tests.md#tests-integration-explore-test-ts), [playthrough.test](tests.md#tests-integration-playthrough-test-ts), [content.test](tests.md#tools-parity-content-test-ts)
+  - used by: **[app/devStates](app.md#src-app-devstates-ts)** [bossStep](app.md#src-app-devstates-ts--bossstep) · **[app/sceneContext](app.md#src-app-scenecontext-ts)** [createSceneContext](app.md#src-app-scenecontext-ts--createscenecontext) · **[content/districts/bayou/places.scene](#src-content-districts-bayou-places-scene-ts)** [boudin](#src-content-districts-bayou-places-scene-ts--boudin), [cabin](#src-content-districts-bayou-places-scene-ts--cabin), [faisdodo](#src-content-districts-bayou-places-scene-ts--faisdodo), [pump](#src-content-districts-bayou-places-scene-ts--pump) · **[content/districts/cemetery/places.scene](#src-content-districts-cemetery-places-scene-ts)** [crypts](#src-content-districts-cemetery-places-scene-ts--crypts), [mausoleum](#src-content-districts-cemetery-places-scene-ts--mausoleum), [temple](#src-content-districts-cemetery-places-scene-ts--temple) · **[content/districts/garden/places.scene](#src-content-districts-garden-places-scene-ts)** [maison](#src-content-districts-garden-places-scene-ts--maison), [manor](#src-content-districts-garden-places-scene-ts--manor), [tuxedo](#src-content-districts-garden-places-scene-ts--tuxedo) · **[content/districts/quarter/places.scene](#src-content-districts-quarter-places-scene-ts)** [feufollet](#src-content-districts-quarter-places-scene-ts--feufollet), [jackson](#src-content-districts-quarter-places-scene-ts--jackson), [market](#src-content-districts-quarter-places-scene-ts--market), [pelican](#src-content-districts-quarter-places-scene-ts--pelican) · … +11 more · tests: [explore.test](tests.md#tests-integration-explore-test-ts), [playthrough.test](tests.md#tests-integration-playthrough-test-ts), [content.test](tests.md#tools-parity-content-test-ts)
 
 <a id="src-content-quests-ts"></a>
 
@@ -1989,7 +2070,7 @@ The ending, the credits and New Game+ (v1: ending, creditsAndNewGamePlus, startN
 
 - Source: [src/content/story/finale.scene.ts](../../../src/content/story/finale.scene.ts)
 - Imports: narrative: [types](narrative.md#src-narrative-types-ts) · content: [classes/index](#src-content-classes-index-ts), [story/prologue.scene](#src-content-story-prologue-scene-ts)
-- Imported by: content: [districts/treme/places.scene](#src-content-districts-treme-places-scene-ts), [index](#src-content-index-ts)
+- Imported by: content: [bosses/the_click.scene](#src-content-bosses-the-click-scene-ts), [districts/treme/places.scene](#src-content-districts-treme-places-scene-ts), [index](#src-content-index-ts)
 - Tested by: [transcripts.test](tests.md#tools-parity-transcripts-test-ts)
 - Types used: **[narrative/types](narrative.md#src-narrative-types-ts)** [Scene](narrative.md#src-narrative-types-ts--scene)
 
@@ -1997,7 +2078,7 @@ Declarations:
 
 - <a id="src-content-story-finale-scene-ts--ending"></a>**ending** · *function* `(s): Promise<void>` — After the Click: the second line comes down the Tower, the epilogue, THE END, the credits.
   - uses: here [creditsAndNewGamePlus](#src-content-story-finale-scene-ts--creditsandnewgameplus) · **[narrative/types](narrative.md#src-narrative-types-ts)** [SceneContext.cards](narrative.md#src-narrative-types-ts--scenecontext-cards), [SceneContext.narrate](narrative.md#src-narrative-types-ts--scenecontext-narrate), [SceneContext.save](narrative.md#src-narrative-types-ts--scenecontext-save), [SceneContext.say](narrative.md#src-narrative-types-ts--scenecontext-say), [SceneContext.title](narrative.md#src-narrative-types-ts--scenecontext-title), [SceneContext.xp](narrative.md#src-narrative-types-ts--scenecontext-xp)
-  - used by: tests: [transcripts.test](tests.md#tools-parity-transcripts-test-ts)
+  - used by: **[content/bosses/the_click.scene](#src-content-bosses-the-click-scene-ts)** [post](#src-content-bosses-the-click-scene-ts--post) · tests: [transcripts.test](tests.md#tools-parity-transcripts-test-ts)
 - <a id="src-content-story-finale-scene-ts--creditsandnewgameplus"></a>**creditsAndNewGamePlus** · *function* `(s): Promise<void>` — The credits, then New Game+ or back to the city.
   - uses: here [startNewGamePlus](#src-content-story-finale-scene-ts--startnewgameplus) · **[content/classes/index](#src-content-classes-index-ts)** [CLASSES](#src-content-classes-index-ts--classes) · **[narrative/types](narrative.md#src-narrative-types-ts)** [SceneContext.cards](narrative.md#src-narrative-types-ts--scenecontext-cards), [SceneContext.choose](narrative.md#src-narrative-types-ts--scenecontext-choose), [SceneContext.confirm](narrative.md#src-narrative-types-ts--scenecontext-confirm), [SceneContext.goto](narrative.md#src-narrative-types-ts--scenecontext-goto), [SceneContext.title](narrative.md#src-narrative-types-ts--scenecontext-title)
   - used by: here [ending](#src-content-story-finale-scene-ts--ending) · **[content/districts/treme/places.scene](#src-content-districts-treme-places-scene-ts)** [club](#src-content-districts-treme-places-scene-ts--club) · tests: [transcripts.test](tests.md#tools-parity-transcripts-test-ts)
@@ -2163,3 +2244,21 @@ Declarations:
 - <a id="src-content-world-streets-scene-ts--wakeupatclub"></a>**wakeUpAtClub** · *function* `(s): Promise<void>` — After getting cut on the streets: Mama Roux patches you up at the club.
   - uses: **[core/rng](core.md#src-core-rng-ts)** [Rng.pick](core.md#src-core-rng-ts--rng-pick) · **[narrative/types](narrative.md#src-narrative-types-ts)** [SceneContext.say](narrative.md#src-narrative-types-ts--scenecontext-say), [SceneContext.title](narrative.md#src-narrative-types-ts--scenecontext-title)
   - used by: **[app/session](app.md#src-app-session-ts)** [Session.constructor](app.md#src-app-session-ts--session-constructor) · tests: [transcripts.test](tests.md#tools-parity-transcripts-test-ts)
+
+<a id="src-content-world-tower-ts"></a>
+
+### src/content/world/tower.ts
+
+Metronome Tower's five floors, bottom to top (v1: TOWER_FLOORS, legacy/src/09_story.js:215). `towerFloor` in the save indexes this list.
+
+- Source: [src/content/world/tower.ts](../../../src/content/world/tower.ts)
+- Imports: core: [ids/enemies](core.md#src-core-ids-enemies-ts)
+- Imported by: content: [bosses/conductor.scene](#src-content-bosses-conductor-scene-ts), [districts/tower/climb.scene](#src-content-districts-tower-climb-scene-ts), [districts/tower/places.scene](#src-content-districts-tower-places-scene-ts), [index](#src-content-index-ts)
+- Types used: **[core/ids/enemies](core.md#src-core-ids-enemies-ts)** [EnemyId](core.md#src-core-ids-enemies-ts--enemyid)
+
+Declarations:
+
+- <a id="src-content-world-tower-ts--towerfloordef"></a>**TowerFloorDef** · *interface* — One floor of the climb.
+  - used by: here [TOWER_FLOORS](#src-content-world-tower-ts--tower-floors)
+- <a id="src-content-world-tower-ts--tower-floors"></a>**TOWER_FLOORS** · *const* `: readonly TowerFloorDef[]`
+  - used by: **[content/bosses/conductor.scene](#src-content-bosses-conductor-scene-ts)** [post](#src-content-bosses-conductor-scene-ts--post) · **[content/districts/tower/climb.scene](#src-content-districts-tower-climb-scene-ts)** [towerFlow](#src-content-districts-tower-climb-scene-ts--towerflow) · **[content/districts/tower/places.scene](#src-content-districts-tower-places-scene-ts)** [towerlobby](#src-content-districts-tower-places-scene-ts--towerlobby)

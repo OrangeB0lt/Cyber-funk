@@ -82,8 +82,10 @@ const seen = {
 function record(scope: string, out: RunOutcome, choices = true): void {
   for (const q of QUEST_IDS)
     if (out.before.quests[q] !== 'done' && out.after.quests[q] === 'done') seen.questsDone.add(q);
-  const { act, step } = out.after.story;
-  if (out.before.story.act !== act || out.before.story.step !== step) seen.steps.add(`${act}.${step}`);
+  // Every step the run ended on or saved at (a long scene, like the Tower, passes through several).
+  const from = `${out.before.story.act}.${out.before.story.step}`;
+  for (const s of [...out.savedSteps, `${out.after.story.act}.${out.after.story.step}`])
+    if (s !== from) seen.steps.add(s);
   if (choices) for (const k of out.offered) seen.offered.add(`${scope}|${k}`);
   for (const k of out.chosen) seen.chosen.add(`${scope}|${k}`);
   for (const x of obtainedBy(out)) seen.obtainable.add(x);

@@ -12,7 +12,7 @@
 import type { ActId } from '@core/ids/story';
 import type { DistrictId } from '@core/ids/world';
 
-export const PENDING_DISTRICTS = ['tower'] as const satisfies readonly DistrictId[];
+export const PENDING_DISTRICTS = [] as const satisfies readonly DistrictId[];
 
 /** A district still waiting for its scenes. */
 export type PendingDistrict = (typeof PENDING_DISTRICTS)[number];

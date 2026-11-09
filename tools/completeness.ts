@@ -14,7 +14,7 @@ import path from 'node:path';
 import { pathToFileURL } from 'node:url';
 import { BOSS_IDS } from '@core/ids/enemies';
 import { ACT_ORDER, ACT_STEPS } from '@core/ids/story';
-import { DISTRICT_IDS, PLACE_IDS, type PlaceId } from '@core/ids/world';
+import { DISTRICT_IDS, PLACE_IDS, type DistrictId, type PlaceId } from '@core/ids/world';
 import type { StepDef } from '@core/types';
 import { ACTS, BOSSES, DISTRICTS, GLOSSARY, PLACES, BOSS_SCENES, PLACE_SCENES } from '@content/index';
 import { PENDING_DISTRICTS, isPendingAct, isPendingDistrict } from '@content/pending';
@@ -64,7 +64,7 @@ export function checkCompleteness(): string[] {
   }
 
   // A district still marked pending but fully ported should come off the list, so its tests run.
-  for (const d of PENDING_DISTRICTS) {
+  for (const d of PENDING_DISTRICTS as readonly DistrictId[]) {
     const places = DISTRICTS[d].places.every(p => PLACE_SCENES[p]);
     const bosses = BOSS_IDS.filter(b => BOSSES[b].district === d).every(b => BOSS_SCENES[b]);
     if (places && bosses)

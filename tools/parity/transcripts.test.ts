@@ -27,6 +27,7 @@ import {
   creditsAndNewGamePlus,
   cuttingContest,
   ending,
+  towerFlow,
   runEvent,
   STREET_EVENTS,
   wakeUpAtClub,
@@ -64,6 +65,8 @@ const w = dom.w;
 afterAll(() => dom.close());
 let legacyLog: Entry[] = [];
 let legacyPick = 0;
+/** Choice indexes still to pick, in order (then legacyPick). */
+let legacyPicks: number[] = [];
 /** The fights the v1 side still has to play this case, and its answer to confirm dialogs. */
 let legacyFights: Fight[] = [];
 let legacyConfirm = true;
@@ -130,7 +133,7 @@ function installRecorders() {
   const choose = async (options: any[], prompt?: string) => {
     const opts = options.filter(o => o && (o.cond === undefined || o.cond));
     if (prompt) rec({ t: 'prompt', text: prompt });
-    const o = opts[legacyPick % opts.length];
+    const o = opts[(legacyPicks.length ? legacyPicks.shift()! : legacyPick) % opts.length];
     rec({ t: 'choose', options: opts.map(x => strip(x.label)), picked: strip(o.label) });
     return options.indexOf(o);
   };
@@ -204,6 +207,8 @@ interface CaseState {
   inTower?: boolean;
   lexicon?: GlossaryId[];
   book?: Partial<Record<OpponentId, { seen: boolean; weak: boolean }>>;
+  /** Heart (default: the new save's, at level 1). */
+  hp?: number;
 }
 
 interface Case {
@@ -211,6 +216,8 @@ interface Case {
   state: CaseState;
   /** Choice index the scripted player picks at every choice. */
   pick?: number;
+  /** Choice indexes for the first choices, in order (then `pick`): for menus that come back. */
+  picks?: number[];
   legacy: () => Promise<unknown>;
   ts: (session: Session) => Promise<unknown>;
   /** Compare only the transcript, not the save (scenes v1 split differently). */
@@ -403,6 +410,86 @@ function finaleCases(): Case[] {
       ts: s => s.run(creditsAndNewGamePlus, 'credits'),
     },
     placeCase('club: march again', 'club', 'ngplus', finished(), 1),
+  ];
+}
+
+/** On Tower floor `floor` (fight 0), the second line formed, every boss before the Tower beaten. */
+function onFloor(floor: number, more: Partial<CaseState> = {}): CaseState {
+  return inAct('tower', floor === 4 ? 3 : 1, {
+    district: 'tower',
+    secondLine: ALL_MARCHERS,
+    tower: { floor, fight: 0 },
+    ...more,
+  });
+}
+const BEEN_IN: FlagId[] = [
+  'metRoux',
+  'gusFreed',
+  'towerEntered',
+  'towerintro_0',
+  'towerintro_1',
+  'towerintro_2',
+];
+
+function towerCases(): Case[] {
+  const climb = (name: string, state: CaseState, more: Partial<Case> = {}): Case => ({
+    name,
+    state,
+    legacy: () => w.towerFlow(),
+    ts: s => s.run(towerFlow, 'tower'),
+    ...more,
+  });
+  const afterConductor = onFloor(4, { flags: BEEN_IN });
+  afterConductor.defeated = [...(afterConductor.defeated ?? []), 'conductor'];
+  return [
+    // Vending: snacks, save, rest, then up (rest is gone from the menu); at the credits, stay.
+    {
+      ...placeCase('tower: the whole climb, first time in', 'towerlobby', 'march', onFloor(0)),
+      picks: [0, 1, 2, 2, 1],
+    },
+    {
+      ...climb('tower: from the Server Floors, second fight', {
+        ...onFloor(1, { flags: BEEN_IN.slice(0, 5) }),
+        tower: { floor: 1, fight: 1 },
+      }),
+      picks: [3, 1],
+    },
+    {
+      ...placeCase(
+        'tower: continue the climb at the Studio Floor, rested already',
+        'towerlobby',
+        'march',
+        onFloor(2, { flags: [...BEEN_IN, 'towerRested'] }),
+      ),
+      picks: [2, 1],
+    },
+    climb('tower: the Booth, first time, run it back once', onFloor(3, { flags: BEEN_IN }), {
+      fights: ['retry', 'win'],
+      picks: [1],
+    }),
+    climb(
+      'tower: the Booth again, walk away',
+      onFloor(3, { flags: BEEN_IN, story: { act: 'tower', step: 2 }, intros: ['conductor'] }),
+      { fights: ['lose'] },
+    ),
+    // 200 Heart: over the street maximum (175 at level 13), under the Tower's. The rally fills it to
+    // the Tower maximum; walking away from the Click brings it down to the street one.
+    climb(
+      'tower: the Booth, then walk away from the Click (Heart comes down)',
+      onFloor(3, { flags: BEEN_IN, hp: 200 }),
+      { fights: ['win', 'lose'] },
+    ),
+    climb('tower: the Crown, run it back, then the ending', afterConductor, {
+      fights: ['retry', 'win'],
+      picks: [1],
+    }),
+    climb(
+      'tower: the Crown again, walk away',
+      { ...afterConductor, intros: ['the_click'] },
+      { fights: ['lose'] },
+    ),
+    climb('tower: a loss in the Lobby wakes you at the club', onFloor(0), { fights: ['cut'] }),
+    placeCase('tower lobby after the ending: look up', 'towerlobby', 'look', finished({ district: 'tower' })),
   ];
 }
 
@@ -1035,6 +1122,9 @@ const cases: Case[] = [
 
   /* ---------------- The ending, the credits, New Game+ (v1 09:271-319) ---------------- */
   ...finaleCases(),
+
+  /* ---------------- Metronome Tower (v1 09:215-270, 08:371) ---------------- */
+  ...towerCases(),
 ];
 
 /* ------------------------------------------------------------------ */
@@ -1064,7 +1154,9 @@ function setupLegacy(st: CaseState) {
   Object.assign(S.bag, st.bag ?? {});
   S.notes = [...(st.notes ?? [])];
   for (const b of st.defeated ?? []) S.flags['boss_' + b] = true;
-  for (const b of st.intros ?? []) S.flags['bosspre_' + b] = true;
+  // v1's Tower bosses keep their intros in their own flags.
+  for (const b of st.intros ?? [])
+    S.flags[b === 'conductor' ? 'conductorPre' : b === 'the_click' ? 'clickPre' : 'bosspre_' + b] = true;
   Object.assign(S.counters, st.counters ?? {});
   if (st.day !== undefined) S.day = st.day;
   if (st.sitInDay !== undefined) S.sitInDay = st.sitInDay;
@@ -1085,6 +1177,7 @@ function setupLegacy(st: CaseState) {
   if (st.inTower) S.inTower = true;
   if (st.lexicon) S.lexicon = [...st.lexicon];
   if (st.book) S.book = JSON.parse(JSON.stringify(st.book));
+  if (st.hp !== undefined) S.hp = st.hp;
   w.CF.S = S;
   return S;
 }
@@ -1122,6 +1215,7 @@ function setupTs(session: Session, st: CaseState): GameState {
   if (st.inTower) g.inTower = true;
   if (st.lexicon) g.lexicon = [...st.lexicon];
   if (st.book) g.book = JSON.parse(JSON.stringify(st.book));
+  if (st.hp !== undefined) g.hp = st.hp;
   return g;
 }
 
@@ -1280,6 +1374,8 @@ describe('scene transcripts match v1', () => {
         // v1
         legacyLog = [];
         legacyPick = c.pick ?? 0;
+        legacyPicks = [...(c.picks ?? [])];
+        const tsPicks = [...(c.picks ?? [])];
         legacyFights = [...(c.fights ?? [])];
         legacyConfirm = c.confirm ?? true;
         const tsFights: Fight[] = [...(c.fights ?? [])];
@@ -1287,7 +1383,7 @@ describe('scene transcripts match v1', () => {
         setupLegacy(c.state);
         // 2.0 (run first to learn place-option labels for the legacy lookup)
         const presenter = new ScriptedPresenter({
-          chooseIndex: c.pick ?? 0,
+          choose: opts => opts[(tsPicks.length ? tsPicks.shift()! : (c.pick ?? 0)) % opts.length]!.key,
           confirm: () => c.confirm ?? true,
         });
         const session = new Session({

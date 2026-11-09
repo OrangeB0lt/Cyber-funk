@@ -14,8 +14,8 @@ import type { DistrictId, GlossaryId, PlaceId } from '@core/ids/world';
 import type { StatusId } from '@core/ids/combat';
 import { SAVE_SLOT_IDS, type SaveSlotId } from '@core/ids/saves';
 import type { PlayerIntent, Settings } from '@core/types';
-import { BOSSES, CLASSES, DISTRICTS, ENEMIES, GEAR, cuttingContest } from '@content/index';
-import { bossStep, setupAct } from './devStates';
+import { BOSSES, CLASSES, DISTRICTS, ENEMIES, GEAR, cuttingContest, towerFlow } from '@content/index';
+import { bossStep, setupAct, towerBossSetup } from './devStates';
 import {
   addItem,
   buy,
@@ -695,6 +695,12 @@ export class GameApp {
       if (g.level < bd.level) {
         g.level = bd.level;
         fullRest(g);
+      }
+      // The Tower's bosses are fought inside the climb, from their floor.
+      if (id === 'conductor' || id === 'the_click') {
+        towerBossSetup(g, id);
+        void this.session.run(towerFlow, `dev:boss:${id}`);
+        return;
       }
       void this.session.run(s => s.boss(id).then(() => {}), `dev:boss:${id}`);
     },

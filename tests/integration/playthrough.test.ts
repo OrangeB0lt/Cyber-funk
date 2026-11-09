@@ -59,6 +59,16 @@ const STEP_FALLBACK: Partial<Record<string, (s: Session) => Promise<unknown>>> =
 /** Most actions (options, fights, trips) one playthrough may take. */
 const MAX_ACTIONS = 3000;
 
+/**
+ * Choices the player always makes when offered: go up from the Studio Floor's vending machine (its
+ * menu comes back after every other pick), and keep playing at the credits (New Game+ is tested
+ * on its own).
+ */
+const ALWAYS = ['up', 'stay'];
+
+/** Tries at a step's hinted options before giving up (a Tower defeat sends you back to the club). */
+const ATTEMPTS = 6;
+
 interface Player {
   session: Session;
   presenter: ScriptedPresenter;
@@ -69,7 +79,7 @@ interface Player {
 }
 
 function player(seed: number, save?: string, prefer: Iterable<string> = []): Player {
-  const pref = new Set(prefer);
+  const pref = new Set([...ALWAYS, ...prefer]);
   const policy: ScriptPolicy = {
     choose: opts => opts.find(o => pref.has(o.key))?.key ?? opts.find(o => o.hint)?.key ?? opts[0]!.key,
   };
@@ -126,7 +136,7 @@ function bossHere(p: Player): BossId | null {
   );
 }
 
-type Stop = { kind: 'pending' } | { kind: 'choice'; boss: BossId };
+type Stop = { kind: 'end' } | { kind: 'choice'; boss: BossId };
 
 /**
  * Play until the story reaches a pending act, or (if `stopBefore` says so) just before a boss whose
@@ -137,7 +147,7 @@ async function drive(p: Player, stopBefore: (b: BossId) => boolean): Promise<Sto
   for (;;) {
     const g = s.game;
     const { act: a, step } = g.story;
-    if (isPendingAct(a)) return { kind: 'pending' };
+    if (a === 'done' || isPendingAct(a)) return { kind: 'end' };
     const key = `${a}.${step}`;
     const def = (ACTS[a] as Record<string, StepDef>)[step]!;
     const district = (a in DISTRICTS ? a : 'tower') as DistrictId;
@@ -166,24 +176,25 @@ async function drive(p: Player, stopBefore: (b: BossId) => boolean): Promise<Sto
       ...g.unlocked.flatMap(d => (isPendingDistrict(d) ? [] : DISTRICTS[d].places)),
     ];
     let progressed = false;
-    for (const [i, place] of [...new Set(places)].entries()) {
-      // Hinted options first; at the step's own hint place, then everything else there too (v1
-      // doesn't highlight every story option: Céleste's Whispers move Storyville on unmarked).
-      const all = s.placeOptions(place);
-      const hinted = all.filter(o => o.hint || o.key === 'boss');
-      const opts = i === 0 && def.hintPlace ? [...hinted, ...all.filter(o => !hinted.includes(o))] : hinted;
-      for (const o of opts) {
-        await goTo(p, PLACES[place].district);
-        s.enterPlace(place);
-        await act(p, `${key}: ${place}:${o.key}`, () => s.chooseOption(place, o.key));
-        if (moved()) {
-          progressed = true;
-          break;
+    for (let attempt = 0; attempt < ATTEMPTS && !progressed; attempt++)
+      for (const [i, place] of [...new Set(places)].entries()) {
+        // Hinted options first; at the step's own hint place, then everything else there too (v1
+        // doesn't highlight every story option: Céleste's Whispers move Storyville on unmarked).
+        const all = s.placeOptions(place);
+        const hinted = all.filter(o => o.hint || o.key === 'boss');
+        const opts = i === 0 && def.hintPlace ? [...hinted, ...all.filter(o => !hinted.includes(o))] : hinted;
+        for (const o of opts) {
+          await goTo(p, PLACES[place].district);
+          s.enterPlace(place);
+          await act(p, `${key}: ${place}:${o.key}`, () => s.chooseOption(place, o.key));
+          if (moved()) {
+            progressed = true;
+            break;
+          }
+          await rest(p);
         }
-        await rest(p);
+        if (progressed) break;
       }
-      if (progressed) break;
-    }
     if (!progressed) throw new Error(`${key}: no hinted option moves the story on\n  ${tail(p)}`);
   }
 }
@@ -199,7 +210,7 @@ async function playAll(seed: number): Promise<Leaf[]> {
   const leaves: Leaf[] = [];
   const go = async (p: Player, path: string[], picked: Set<BossId>): Promise<void> => {
     const stop = await drive(p, b => !!CHOICE_BOSSES[b] && !!BOSS_SCENES[b] && !picked.has(b));
-    if (stop.kind === 'pending') {
+    if (stop.kind === 'end') {
       leaves.push({ path, p });
       return;
     }
@@ -226,7 +237,7 @@ describe('playthrough', () => {
     for (const { path, p } of leaves) {
       const g = p.session.game;
       const where = path.join(' ') || 'the only path';
-      if (!isPendingAct(g.story.act)) problems.push(`${where}: stopped at ${g.story.act}.${g.story.step}`);
+      if (g.story.act !== 'done') problems.push(`${where}: stopped at ${g.story.act}.${g.story.step}`);
       for (const b of ported) if (!g.bossesDefeated.includes(b)) problems.push(`${where}: never beat ${b}`);
       const notes = ported.filter(b => BOSSES[b].note).length;
       if (g.notes.length !== notes)

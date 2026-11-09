@@ -16,8 +16,11 @@ import { cf, expectNoOverflow, playUntil, quickStart, tid, watchErrors } from '.
 const pending = new Set<string>(PENDING_DISTRICTS);
 const PORTED = DISTRICT_IDS.filter(d => !pending.has(d));
 
-/** Options that only start a fight; the boss and spar specs cover fights, and they're slow here. */
-const FIGHT_KEYS = new Set(['boss', 'spar', 'spar2']);
+/**
+ * Options that only start fights; the boss and spar specs cover fights, and they're slow here. The
+ * Tower's climb (`march`) is played end to end by finale.spec.ts.
+ */
+const FIGHT_KEYS = new Set(['boss', 'spar', 'spar2', 'march']);
 
 interface At {
   screen: string;
@@ -52,6 +55,13 @@ async function arrive(page: Page, d: string): Promise<void> {
     (app, dist) => {
       app.dev.act(dist);
       const g = app.store.game;
+      // The Tower is walked after the ending ("Look up"); its climb is all fights, which
+      // finale.spec.ts plays end to end.
+      if (dist === 'tower') {
+        g.story = { act: 'done', step: 'finale' };
+        g.flags.ending = true;
+        g.secondLine = [{ id: 'gus', name: 'Gus Thibodeaux (Grand Marshal)' }];
+      }
       g.level = 15;
       // The timing bar has its own spec; here it would only make every fight slow.
       g.settings.rhythm = 'auto';

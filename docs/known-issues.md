@@ -40,7 +40,6 @@ These go away by construction. Where the visible sequence changes, the change is
 | Fixed prices (Ð30, Ð80, Ð150…) bypass the district/roots price modifier. | `08_world.js` | design call |
 | `towerFight` survives travel and waking at the club, so after a defeat on a floor's second fight the next climb starts the Lobby at its second fight. | `09_story.js:229`, `08_world.js:35` | bug |
 | Climbing again after beating the Conductor (walk away from the Click, leave, come back) sets the story back to `face_conductor`, refights him (floor 3 never reads `boss_conductor`) and repeats the +50% rally (`towerRested2` is never read). Should leaving the Tower restart the climb at all? | `09_story.js:251-260`, `08_world.js:35` | design call |
-| Leaving the Tower (a boss walk-away, the Click win, travel) never re-clamps Heart and Funk, so they can stay up to 25% over the maximum. | `09_story.js:255,266,268`, `08_world.js:35` | bug |
 | The second line is fixed when it forms: anyone recruited, or any quest finished, afterwards never joins. | `09_story.js:204` | design call |
 | The credits' New Game+ button always says "enemies +30%" (the confirm shows the real number), and the confirm doesn't say half your Doubloons go. | `09_story.js:302,304` | text |
 | Quest description drift: *Lost Eye* says "on the streets" but it's a scripted fight at the square. | `04_data_world.js` | text |

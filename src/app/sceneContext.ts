@@ -23,6 +23,7 @@ import {
 } from '@content/index';
 import {
   addItem,
+  capVitals,
   clampVitals,
   countItem,
   derivedStats,
@@ -67,6 +68,8 @@ export async function gotoDistrict(
   // PARITY: v1 resets the floor but not the fight (known-issues).
   if (!opts.keepClimb) game.towerFloor = 0;
   session.save();
+  // PARITY: v1 then redraws the top bar, which caps Heart and Funk (leaving the Tower lowers them).
+  capVitals(game);
   session.route = { kind: 'district' };
   if (!game.districtIntros.includes(id)) {
     game.districtIntros.push(id);
@@ -146,6 +149,8 @@ export function createSceneContext(session: SessionPort, signal: AbortSignal): S
     },
     async xp(n) {
       const ups = gainXp(g(), n);
+      // PARITY: v1's rewardXp redraws the top bar here, which caps Heart and Funk.
+      capVitals(g());
       P.toast(`+${n} XP`);
       if (ups.length) await P.levelUps(ups, signal);
     },
