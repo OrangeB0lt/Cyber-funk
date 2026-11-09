@@ -22,11 +22,13 @@ import { BOSSES, ENEMIES, ITEMS, TEXT, TONES, fmtDoubloons } from '@content/inde
 import { legalActions } from '@engine/index';
 import type {
   BattlePresenter,
+  CardStyle,
   ChoiceView,
   Presenter,
   Route,
   SheetRequest,
   SoundCue,
+  StoryCard,
   StoryLineSpec,
 } from '@narrative/types';
 import type { Sfx } from './audio/sfx';
@@ -137,6 +139,17 @@ export class ReactPresenter implements Presenter {
   typed(lineId: number): void {
     const line = this.view.lines.find(l => l.id === lineId);
     if (line) line.typed = true;
+  }
+
+  cards(style: CardStyle, items: readonly StoryCard[]): void {
+    this.view.lines.push({
+      id: this.nextId(),
+      kind: 'cards',
+      text: '',
+      typed: true,
+      style,
+      items: [...items],
+    });
   }
 
   board(text: string): void {

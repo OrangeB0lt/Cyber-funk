@@ -32,13 +32,15 @@ import {
   gradeTiming,
   healPct,
   makePlayerActor,
+  newGamePlus,
   playerTimingSpec,
+  clampVitals as clampGameVitals,
   removeItem,
   rollAutoTiming,
   storyIs,
   storyReached,
 } from '@engine/index';
-import type { ChoiceOption, SceneContext } from '@narrative/types';
+import type { BossFightOutcome, ChoiceOption, SceneContext } from '@narrative/types';
 import { runBattle } from './battleController';
 import type { SessionPort } from './sessionPort';
 
@@ -224,6 +226,26 @@ export function createSceneContext(session: SessionPort, signal: AbortSignal): S
       return r === 'fled' ? 'fled' : 'win';
     },
     boss: id => bossFlow(id),
+    async bossFight(id, opts = {}): Promise<BossFightOutcome> {
+      const spec = { enemies: [], context: 'boss', noFlee: true } as const;
+      const battleOpts = { boss: id, clickPhase: opts.clickPhase };
+      const res = session.deps.battle
+        ? await session.deps.battle(spec, battleOpts)
+        : await runBattle(session, spec, signal, battleOpts);
+      if (res === 'retry') return 'retry';
+      if (res !== 'win') return 'lose';
+      // The checkpoint: a reload from here replays the post-fight scene instead of the fight.
+      if (!g().bossesDefeated.includes(id)) g().bossesDefeated.push(id);
+      g().resume = { kind: 'afterBoss', boss: id };
+      session.save();
+      return 'win';
+    },
+    cards: (style, items) => P.cards(style, items),
+    newGamePlus() {
+      session.replaceGame(newGamePlus(session.game));
+      session.save();
+    },
+    clampVitals: () => clampGameVitals(g()),
   };
 
   /** The full boss sequence (v1: bossFlow). */
@@ -236,12 +258,9 @@ export function createSceneContext(session: SessionPort, signal: AbortSignal): S
       g().bossIntros.push(id);
     } else await ctx.narrate(TEXT.goBackIn);
     session.save();
-    let res: Awaited<ReturnType<typeof runBattle>>;
+    let res: BossFightOutcome;
     do {
-      const spec = { enemies: [], context: 'boss', noFlee: true } as const;
-      res = session.deps.battle
-        ? await session.deps.battle(spec, { boss: id })
-        : await runBattle(session, spec, signal, { boss: id });
+      res = await ctx.bossFight(id);
       if (res === 'retry') {
         P.story(null);
         await ctx.narrate(TEXT.runItBack);
@@ -249,22 +268,36 @@ export function createSceneContext(session: SessionPort, signal: AbortSignal): S
     } while (res === 'retry');
     session.route = { kind: 'district' };
     if (res !== 'win') return 'lose';
-    g().bossesDefeated.push(id);
-    P.story(null);
-    if (scenes) await scenes.post(ctx);
-    advanceAfterBoss(id);
-    session.save();
+    await finishBoss(session, ctx, id);
     return 'win';
   }
 
-  /** Open the next act (v1: advanceAfterBoss). */
-  function advanceAfterBoss(id: BossId): void {
-    const nx = BOSSES[id].next;
-    if (!nx) return;
-    if (nx.unlock && !g().unlocked.includes(nx.unlock)) g().unlocked.push(nx.unlock);
-    g().story = { act: nx.act, step: ACT_STEPS[nx.act][0] } as StoryPosition;
-    if (nx.unlock) P.toast(TEXT.districtUnlocked(DISTRICTS[nx.unlock].name));
-  }
-
   return ctx;
+}
+
+/**
+ * After a boss win (v1: the tail of bossFlow): its post-fight scene, the next act, then clear the
+ * `afterBoss` checkpoint and save. The checkpoint stays until that save, so a save during the scene
+ * (a setting change) keeps it. `Session.resume` runs this when a save holds the checkpoint.
+ */
+export async function finishBoss(session: SessionPort, ctx: SceneContext, id: BossId): Promise<void> {
+  const g = session.game;
+  if (!g.bossesDefeated.includes(id)) g.bossesDefeated.push(id);
+  session.deps.presenter.story(null);
+  await BOSS_SCENES[id]?.post(ctx);
+  // New Game+ (after the Click's post) replaces the save: whatever follows applies to the new one.
+  advanceAfterBoss(session, id);
+  const now = session.game;
+  if (now.resume?.kind === 'afterBoss' && now.resume.boss === id) now.resume = null;
+  session.save();
+}
+
+/** Open the next act (v1: advanceAfterBoss). */
+function advanceAfterBoss(session: SessionPort, id: BossId): void {
+  const g = session.game;
+  const nx = BOSSES[id].next;
+  if (!nx) return;
+  if (nx.unlock && !g.unlocked.includes(nx.unlock)) g.unlocked.push(nx.unlock);
+  g.story = { act: nx.act, step: ACT_STEPS[nx.act][0] } as StoryPosition;
+  if (nx.unlock) session.deps.presenter.toast(TEXT.districtUnlocked(DISTRICTS[nx.unlock].name));
 }

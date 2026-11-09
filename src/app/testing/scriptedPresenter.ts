@@ -7,7 +7,16 @@ import { livingEnemies } from '@core/helpers';
 import type { NpcId } from '@core/ids/world';
 import type { Battle, LevelUp, PlayerIntent, TimingGradeDef, TimingSpec, VictorySummary } from '@core/types';
 import { BLUES_STEP_MS, legalActions } from '@engine/index';
-import type { ChoiceView, Presenter, Route, SheetRequest, SoundCue, StoryLineSpec } from '@narrative/types';
+import type {
+  CardStyle,
+  ChoiceView,
+  Presenter,
+  Route,
+  SheetRequest,
+  SoundCue,
+  StoryCard,
+  StoryLineSpec,
+} from '@narrative/types';
 
 /** One thing the player saw or did. */
 export type TranscriptEntry =
@@ -16,6 +25,8 @@ export type TranscriptEntry =
   | { t: 'prompt'; text: string }
   /** The board's text each time it's drawn. */
   | { t: 'board'; text: string }
+  /** A block of cards (the roster, the epilogue, the credits). */
+  | { t: 'cards'; style: CardStyle; items: StoryCard[] }
   | { t: 'choose'; options: string[]; picked: string; label: string }
   | { t: 'confirm'; title: string; answer: boolean }
   | { t: 'sheet'; req: SheetRequest }
@@ -80,6 +91,9 @@ export class ScriptedPresenter implements Presenter {
   }
   promptLine(text: string): void {
     this.transcript.push({ t: 'prompt', text });
+  }
+  cards(style: CardStyle, items: readonly StoryCard[]): void {
+    this.transcript.push({ t: 'cards', style, items: [...items] });
   }
   board(text: string): void {
     this.transcript.push({ t: 'board', text });

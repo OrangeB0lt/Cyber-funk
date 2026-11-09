@@ -22,6 +22,7 @@ Generated reference. Start with the [guide](../../architecture/code-map.md) for 
 | [src/engine/combat/combat.test.ts](#src-engine-combat-combat-test-ts) | Combat mechanics, one behavior per test. |
 | [src/engine/combat/coverage.test.ts](#src-engine-combat-coverage-test-ts) | Everything in combat, once each: every skill, boss move, assist, status, item, gear piece, sheet of music, enemy and boss. |
 | [src/engine/rules.test.ts](#src-engine-rules-test-ts) | Stats, progression, prices, timing and Blues scoring. |
+| [src/engine/state.test.ts](#src-engine-state-test-ts) | — |
 | [src/narrative/director.test.ts](#src-narrative-director-test-ts) | — |
 | [src/ui/components/Sprite.test.tsx](#src-ui-components-sprite-test-tsx) | The Sprite component: crisp, decorative SVG at whole-number scales; hits replay the flash. |
 | [tests/e2e/a11y.spec.ts](#tests-e2e-a11y-spec-ts) | Every screen and layer of the game, checked with axe (WCAG 2.2 A and AA) at 360×740. |
@@ -112,9 +113,9 @@ The React presenter's story view: what the screen holds as a scene runs.
 ### src/app/session.test.ts
 
 - Source: [src/app/session.test.ts](../../../src/app/session.test.ts)
-- Imports: engine: [index](engine.md#src-engine-index-ts) · app: [save/storage](app.md#src-app-save-storage-ts), [session](app.md#src-app-session-ts), [testing/scriptedPresenter](app.md#src-app-testing-scriptedpresenter-ts)
+- Imports: engine: [index](engine.md#src-engine-index-ts) · app: [devStates](app.md#src-app-devstates-ts), [save/storage](app.md#src-app-save-storage-ts), [session](app.md#src-app-session-ts), [testing/scriptedPresenter](app.md#src-app-testing-scriptedpresenter-ts)
 - Packages: `vitest`
-- Suites: “the Tower climb across a reload”
+- Suites: “the Tower climb across a reload”, “the after-boss checkpoint”
 
 <a id="src-content-sprites-compile-test-ts"></a>
 
@@ -168,6 +169,15 @@ Stats, progression, prices, timing and Blues scoring.
 - Imports: core: [rng](core.md#src-core-rng-ts) · content: [data](content.md#src-content-data-ts) · engine: [index](engine.md#src-engine-index-ts)
 - Packages: `vitest`
 - Suites: “stats”, “progression”, “prices”, “On the One”, “story”
+
+<a id="src-engine-state-test-ts"></a>
+
+### src/engine/state.test.ts
+
+- Source: [src/engine/state.test.ts](../../../src/engine/state.test.ts)
+- Imports: engine: [state](engine.md#src-engine-state-ts), [stats](engine.md#src-engine-stats-ts)
+- Packages: `vitest`
+- Suites: “newGamePlus (v1 startNewGamePlus)”
 
 <a id="src-narrative-director-test-ts"></a>
 
@@ -490,7 +500,7 @@ The TypeScript sim prints byte-identical output to legacy/sim/sim.js for the sam
 Transcript oracle: ported scenes show the player exactly what v1 showed and leave the save in the same state. v1 runs in jsdom with its UI functions replaced by recorders; both sides use a constant random value (so every pick/chance lands the same way) and fights stubbed as wins.
 
 - Source: [tools/parity/transcripts.test.ts](../../../tools/parity/transcripts.test.ts)
-- Imports: core: [ids/band](core.md#src-core-ids-band-ts), [ids/characters](core.md#src-core-ids-characters-ts), [ids/enemies](core.md#src-core-ids-enemies-ts), [ids/flags](core.md#src-core-ids-flags-ts), [ids/items](core.md#src-core-ids-items-ts), [ids/story](core.md#src-core-ids-story-ts), [ids/world](core.md#src-core-ids-world-ts), [types/index](core.md#src-core-types-index-ts) · content: [index](content.md#src-content-index-ts) · engine: [index](engine.md#src-engine-index-ts) · app: [save/storage](app.md#src-app-save-storage-ts), [session](app.md#src-app-session-ts), [testing/rng](app.md#src-app-testing-rng-ts), [testing/scriptedPresenter](app.md#src-app-testing-scriptedpresenter-ts) · tools: [parity/driver](tools.md#tools-parity-driver-ts), [parity/legacyDom](tools.md#tools-parity-legacydom-ts)
+- Imports: core: [ids/band](core.md#src-core-ids-band-ts), [ids/characters](core.md#src-core-ids-characters-ts), [ids/enemies](core.md#src-core-ids-enemies-ts), [ids/flags](core.md#src-core-ids-flags-ts), [ids/items](core.md#src-core-ids-items-ts), [ids/story](core.md#src-core-ids-story-ts), [ids/world](core.md#src-core-ids-world-ts), [types/index](core.md#src-core-types-index-ts) · narrative: [types](narrative.md#src-narrative-types-ts) · content: [index](content.md#src-content-index-ts) · engine: [index](engine.md#src-engine-index-ts) · app: [save/storage](app.md#src-app-save-storage-ts), [session](app.md#src-app-session-ts), [testing/rng](app.md#src-app-testing-rng-ts), [testing/scriptedPresenter](app.md#src-app-testing-scriptedpresenter-ts) · tools: [parity/driver](tools.md#tools-parity-driver-ts), [parity/legacyDom](tools.md#tools-parity-legacydom-ts)
 - Packages: `vitest`
 - Suites: “scene transcripts match v1”
 

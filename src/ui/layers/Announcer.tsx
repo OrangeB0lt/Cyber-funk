@@ -30,6 +30,14 @@ export function Announcer() {
       if (l.id <= lastLine.current) continue;
       lastLine.current = l.id;
       if (l.kind === 'board' || l.kind === 'you') continue;
+      if (l.kind === 'cards') {
+        say(
+          (l.items ?? [])
+            .map(c => [c.title, c.text.replace(/\n/g, ' ')].filter(Boolean).join(': '))
+            .join('. '),
+        );
+        continue;
+      }
       say((l.who ? `${l.who}: ` : '') + plainText(l.text));
     }
   }, [lines, say]);

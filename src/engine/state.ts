@@ -2,7 +2,7 @@
 import type { ClassId, RootsId } from '@core/ids/characters';
 import type { GameState, Settings } from '@core/types';
 import { GEAR, NEW_GAME, ROOTS } from '@content/data';
-import { derivedStats } from './stats';
+import { derivedStats, fullRest } from './stats';
 
 /** Settings for a brand-new player. */
 export function defaultSettings(): Settings {
@@ -82,4 +82,32 @@ export function newGame(
   s.hp = st.maxHp;
   s.fp = st.maxFp;
   return s;
+}
+
+/** A deep copy of plain save data (v1's deepClone; structuredClone can't copy a Valtio proxy). */
+const clone = <T>(x: T): T => JSON.parse(JSON.stringify(x)) as T;
+
+/**
+ * New Game+ (v1: startNewGamePlus, 09:311-315): a fresh save for the same character one cycle up,
+ * carrying level, XP, gear, the gear bag, sheet music, permanent stats, blessings, the bag, half the
+ * Doubloons, the Lexicon, the Blue Book (every entry marked seen) and the day, then a full rest.
+ * The story, Blue Notes, band, quests and flags start over.
+ */
+export function newGamePlus(old: GameState): GameState {
+  const ns = newGame(old.name, old.roots, old.cls, old.settings, (old.ngPlus || 0) + 1);
+  ns.level = old.level;
+  ns.xp = old.xp;
+  ns.gear = clone(old.gear);
+  ns.gearBag = old.gearBag.slice();
+  ns.sheet = old.sheet.slice();
+  ns.perm = clone(old.perm);
+  ns.blessings = old.blessings;
+  ns.bag = clone(old.bag);
+  ns.doubloons = Math.round(old.doubloons * 0.5);
+  ns.lexicon = old.lexicon.slice();
+  ns.book = clone(old.book);
+  ns.day = old.day;
+  for (const entry of Object.values(ns.book)) if (entry) entry.seen = true;
+  fullRest(ns);
+  return ns;
 }

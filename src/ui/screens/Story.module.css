@@ -91,3 +91,42 @@
   overflow-x: auto;
   max-width: 100%;
 }
+/* Cards (SceneContext.cards), styled after v1's .roster, .epilogue and .credits. */
+.roster {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  margin: 6px 0;
+}
+.rosterRow {
+  padding: 6px 10px;
+  border-left: 2px solid var(--purple);
+  background: rgba(177, 74, 255, 0.06);
+}
+.epilogue {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin: 8px 0;
+}
+.card {
+  background: var(--bg2);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  padding: 10px 12px;
+}
+.credits {
+  text-align: center;
+  padding: 12px 0;
+}
+.creditsLogo {
+  font-family: var(--font-logo);
+  font-weight: 400;
+  font-size: 2rem;
+  color: #fff;
+  text-shadow:
+    0 0 6px #fff,
+    0 0 18px var(--magenta);
+  margin: 0.2em 0;
+  overflow-wrap: anywhere;
+}

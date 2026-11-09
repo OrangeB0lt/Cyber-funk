@@ -1,6 +1,7 @@
 # ADR-0004: Story is written as typed TypeScript scenes
 
 - **Status:** Accepted (2026-11-08). The owner played the Tremé slice through to the French Quarter. This page describes the API as built, plus the two members P3's minigames needed (`timing`, `board`). From here on, a change to `SceneContext` or `Presenter` goes through an ADR.
+- **Amended (2026-11-08, P4):** four members for the Tower and the finale: `bossFight`, `cards`, `newGamePlus` and `clampVitals`, plus `Presenter.cards`. See [Finale (P4)](#finale-p4).
 
 ## Context
 
@@ -49,18 +50,35 @@ export const post: Scene = async s => {
   | Moving | `goto(district)`, `returnTo(route)` |
   | Items, money, character | `give`, `take`, `count`, `gold`, `xp`, `heal`, `funk`, `rest`, `check`, `scaleXp`, `scaleGold`, `nextFight`, `bookHint`, `permStat` (any of the six stats), `keyItem`, `gainGear`, `recruit`, `giveNote` |
   | Story state | `flags.has/set`, `story.is/reached/set`, `quest`, `setQuest`, `counter`, `choice` (the three big boss decisions), `save` |
-  | Fights | `fight(spec)` returns `'win' \| 'fled'`. A lost street fight never returns: it throws `SceneInterrupt('cut')`. `boss(id)` runs the pre-scene, the fight with retries, the post-scene and the next act |
+  | Fights | `fight(spec)` returns `'win' \| 'fled'`. A lost street fight never returns: it throws `SceneInterrupt('cut')`. `boss(id)` runs the pre-scene, the fight with retries, the post-scene and the next act. `bossFight(id, { clickPhase? })` is one boss battle for scenes that run their own sequence (P4) |
+  | Finale (P4) | `cards(style, items)`: a static block of cards (the second-line roster, the epilogue, the credits). `newGamePlus()`: the save becomes the New Game+ save. `clampVitals()`: re-clamp Heart and Funk after the maximums change |
   | Escape hatches | `game` (read anything; write simple fields directly), `rng` (the seeded stream; never `Math.random`), `signal` |
 
 - **Keyed choices.** `choose({ key: label })` resolves to the typed key. Buttons get `data-testid="choice:<key>"`, so tests survive rewording and reordering.
 - **Places are routes, not scenes.** A place is persisted navigation state. `definePlace(id, { intro?, options })` computes its options from the save every time it's shown. Tapping an option runs one scene, and when that scene settles the player is back on the current route. This makes the silent dead end impossible.
 - **Director.** It runs one scene at a time (single-flight) and owns an `AbortController`, so going to the title aborts the running scene cleanly. A street defeat throws a typed `SceneInterrupt('cut')`, which the Director handles by running the wake-up-at-the-club scene. An unexpected error goes to `onError`, which toasts and returns to the district.
 - **Presenter interface.** Scenes never touch the DOM. `ReactPresenter` writes to a view store that React renders. `ScriptedPresenter` auto-answers prompts in tests and records a transcript. Story flows and full playthroughs therefore run headlessly in Vitest (the crawler, the playthrough, the transcript oracle).
-- **Surviving a reload** is handled by the save's typed `ResumePoint` (P4), not by a scene-level `checkpoint` call. That fixes v1's lost-choice-on-reload bug.
+- **Surviving a reload** is handled by the save's typed `ResumePoint`, not by a scene-level `checkpoint` call. A boss win sets `{ kind: 'afterBoss', boss }`, and a reload replays that boss's post-fight scene. That fixes v1's lost-choice-on-reload bug.
 
 ### Why `timing` and `board`, not a generic `minigame`
 
 v1 had two interactive bits outside battle. The sit-in plays eight On the One bars, and the crawfish race draws a `<pre>` straight into the story. Both reuse existing pieces: the timing rules and overlay from battle, and story lines for the race. A generic `minigame(kind)` would have needed a registry and a presenter case per game anyway. The rest of P3's "minigames" (tarot, whispers, blessings) are dialogue, choices and random rolls, so they need nothing new.
+
+### Finale (P4)
+
+The Tower and the ending needed four things the API couldn't do. Each is generic; none is Tower-specific.
+
+- **`bossFight(id, { clickPhase? }): Promise<'win' | 'retry' | 'lose'>`.** One boss battle with nothing around it. The Tower runs its own boss sequence, which `boss(id)` can't express:
+  - a different retry line
+  - no "You go back in."
+  - the floor intro replayed every time
+  - the Click's shield (`clickPhase`)
+  - a walk-away that leaves the Tower
+  
+  A loss shows the defeat screen and restores state, as before. A win records the boss and sets the `afterBoss` checkpoint. `boss(id)` is now built on it, and the transcript oracle shows no change.
+- **`cards(style, items)`.** v1 drew the second-line roster, the epilogue and the credits as HTML in the story. One member with a `style` (`'roster' | 'epilogue' | 'credits'`) covers all three, with items `{ title?, text, dim? }`. Like `board`, it's drawn once below the lines so far, and a new screen clears it.
+- **`newGamePlus()`.** New Game+ replaces the whole save. `s.game` is read-only, and content can't import the engine, so the scene asks for it. The carry-over rules are a pure engine function, `newGamePlus(old)` (unit-tested). The session swaps the save in (`SessionPort.replaceGame`) and saves it. The random stream carries on.
+- **`clampVitals()`.** Entering the Tower raises the maximums, and v1 rounds and clamps Heart and Funk there. That's observable, so the scene asks for it explicitly; it isn't hidden in an `inTower` setter, because v1 doesn't clamp on the way out (a logged bug).
 
 ## Consequences
 

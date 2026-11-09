@@ -29,7 +29,7 @@ import type { BossId } from '@core/ids/enemies';
 import type { BattleOutcome, SessionPort } from './sessionPort';
 import { decodeSave, encodeSave, type LoadError } from './save/format';
 import type { SaveStorage } from './save/storage';
-import { createSceneContext, gotoDistrict } from './sceneContext';
+import { createSceneContext, finishBoss, gotoDistrict } from './sceneContext';
 
 /** What a session needs from its environment. */
 export interface SessionDeps {
@@ -107,6 +107,12 @@ export class Session implements SessionPort {
     this.route = { kind: 'district' };
   }
 
+  /** Make `next` the current save (New Game+). The random stream carries on; no reseed. */
+  replaceGame(next: GameState): void {
+    this.store.game = next;
+    this.route = { kind: 'district' };
+  }
+
   /** Load the saved game. Returns why not, or null on success. */
   load(raw: string | null = this.deps.storage.read()): LoadError | null {
     const r = decodeSave(raw);
@@ -155,6 +161,13 @@ export class Session implements SessionPort {
     const pending = g.resume;
     g.resume = null;
     if (pending?.kind === 'tutorial') return this.run(resumeTutorial(pending.step), 'resume-tutorial');
+    if (pending?.kind === 'afterBoss') {
+      // A boss was beaten and its post-fight scene never finished: play it now. The checkpoint
+      // stays in the save until that scene's final save (finishBoss).
+      g.resume = pending;
+      this.route = { kind: 'district' };
+      return this.run(s => finishBoss(this, s, pending.boss), 'resume-after-boss');
+    }
     if (storyIs(g, { act: 'treme', step: 'meet_roux' }) && !g.flags.metRoux && !g.flags.hasCassette) {
       return this.startPrologue();
     }

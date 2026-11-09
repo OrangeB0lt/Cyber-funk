@@ -25,8 +25,10 @@ export interface SessionPort {
     /** How scenes and battles are shown. */
     presenter: Presenter;
     /** Test seam: replaces real battles. */
-    battle?: (spec: FightSpec, opts: { boss?: BossId }) => Promise<BattleOutcome>;
+    battle?: (spec: FightSpec, opts: { boss?: BossId; clickPhase?: boolean }) => Promise<BattleOutcome>;
   };
   /** Autosave (manual saves report failure). */
   save(manual?: boolean): boolean;
+  /** Make `next` the current save (New Game+); the random stream carries on. */
+  replaceGame(next: GameState): void;
 }

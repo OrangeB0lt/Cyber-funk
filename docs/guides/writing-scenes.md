@@ -113,6 +113,19 @@ await s.fight({ enemies: ['hush_sergeant'], level: 4, noFlee: true, ambush: true
 
 - **Losing a street fight never returns.** The player wakes at the club, and the code after the `await` doesn't run, as in v1. So write the win path straight after the fight, and handle `'fled'` if SPLIT is allowed.
 - **Bosses** use `await s.boss('captain_hush')`. It runs the boss's `pre` scene (first time), the fight with retries, then the `post` scene and the next act. Write `pre`/`post` in `content/bosses/<boss>.scene.ts` and register them in `BOSS_SCENES`.
+- **A boss sequence of your own** (the Tower's floors) uses `s.bossFight(id)`, one battle at a time:
+
+  ```ts
+  let res;
+  do {
+    res = await s.bossFight('conductor');               // 'win' | 'retry' | 'lose'
+    if (res === 'retry') await s.narrate('Gus counts you in again.');
+  } while (res === 'retry');
+  if (res === 'lose') return s.returnTo({ kind: 'district' });
+  await post(s);                                        // the boss's post scene
+  ```
+
+  A win already checkpoints the save. Make sure the post scene clears it at its final save, the way `finishBoss` does, so a reload after that doesn't replay it.
 
 ## Minigames
 
@@ -123,6 +136,16 @@ await s.wait(220);                // between frames (instant in tests and turbo)
 ```
 
 The sit-in at Club Feu Follet uses `timing` eight times. The crawfish race at the Thirsty Pelican redraws its track with `board`. Tarot, whispers and blessings are ordinary choices and `s.rng` rolls.
+
+## Cards and New Game+
+
+```ts
+s.cards('roster', marchers.map(m => ({ title: m.name, text: m.line })));   // or 'epilogue', 'credits'
+s.newGamePlus();     // the save becomes the NG+ save (s.game now points at it), saved
+s.clampVitals();     // after changing something that moves the maximums (entering the Tower)
+```
+
+`cards` draws a static block below the lines so far, with no Continue. For `'credits'`, the first card is the logo (its title) and subtitle (its text), and each later card is a paragraph (`dim` for the small print). A `\n` in `text` is a line break.
 
 ## Shared helpers
 

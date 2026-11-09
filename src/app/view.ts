@@ -11,7 +11,7 @@ import type { DistrictId, GlossaryId, NpcId } from '@core/ids/world';
 import type { ClassId, RootsId } from '@core/ids/characters';
 import type { LevelUp, LogClass, Settings, TimingGradeDef, TimingSpec } from '@core/types';
 import type { LegalActions } from '@engine/index';
-import type { ChoiceView, Route, ShopStock } from '@narrative/types';
+import type { CardStyle, ChoiceView, Route, ShopStock, StoryCard } from '@narrative/types';
 import { SAVE_SLOT_IDS, type SaveSlotId } from '@core/ids/saves';
 import { defaultSettings } from '@engine/index';
 import type { HistoryEntry } from './save/cloud';
@@ -30,7 +30,7 @@ export interface StoryLine {
    * Narration, a character's line, the player's echoed choice, a choice prompt, or a fixed-width
    * board that redraws in place (the crawfish race).
    */
-  kind: 'narr' | 'spoken' | 'you' | 'prompt' | 'board';
+  kind: 'narr' | 'spoken' | 'you' | 'prompt' | 'board' | 'cards';
   /** Speaker name. */
   who?: string;
   /** Speaker color. */
@@ -43,6 +43,10 @@ export interface StoryLine {
   text: string;
   /** Fully revealed (typewriter finished or skipped). */
   typed: boolean;
+  /** A `cards` line: how the block is drawn. */
+  style?: CardStyle;
+  /** A `cards` line: its cards. */
+  items?: StoryCard[];
 }
 
 /** What the action bar is waiting for in a story. */

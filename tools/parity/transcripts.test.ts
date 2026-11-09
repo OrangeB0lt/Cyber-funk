@@ -9,6 +9,7 @@ import { afterAll, describe, expect, it } from 'vitest';
 import { Session } from '@app/session';
 import { memorySaveStorage } from '@app/save/storage';
 import { ScriptedPresenter, type TranscriptEntry } from '@app/testing/scriptedPresenter';
+import { SceneInterrupt } from '@narrative/types';
 import { constantRng } from '@app/testing/rng';
 import type { ClassId, RootsId } from '@core/ids/characters';
 import type { BossId, NoteId } from '@core/ids/enemies';
@@ -35,7 +36,11 @@ type Entry =
   | { t: 'confirm'; title: string }
   | { t: 'fight'; context: string }
   | { t: 'options'; labels: string[] }
-  | { t: 'board'; text: string };
+  | { t: 'board'; text: string }
+  | { t: 'cards'; style: string; items: { title?: string; text: string; dim?: boolean }[] };
+
+/** How a scripted fight ends: as asked, or `cut` (a street loss: wake up at the club). */
+type Fight = 'win' | 'retry' | 'lose' | 'cut';
 
 const strip = (s: string) => s.replace(/\[\[([^\]|]+)(?:\|([^\]]+))?\]\]/g, (_m, a, b) => b || a);
 
@@ -48,11 +53,58 @@ const w = dom.w;
 afterAll(() => dom.close());
 let legacyLog: Entry[] = [];
 let legacyPick = 0;
+/** The fights the v1 side still has to play this case, and its answer to confirm dialogs. */
+let legacyFights: Fight[] = [];
+let legacyConfirm = true;
 /** The text of v1's crawfish-race <pre>, captured when the result is narrated. */
 let legacyRace: string | null = null;
 
+/** v1 card blocks already recorded (the roster, the epilogue, the credits are HTML in #story). */
+const seenBlocks = new WeakSet<object>();
+
+/** Text with each <br> as a line break. */
+function brText(el: any): string {
+  const c = el.cloneNode(true);
+  c.querySelectorAll('br').forEach((br: any) => br.replaceWith('\n'));
+  return (c.textContent ?? '').trim();
+}
+
+/**
+ * Record any v1 card block that appeared since the last entry. v1 inserts them as HTML, and the next
+ * storyScreen wipes them, so they're read before every recorded entry (which keeps v1's order: the
+ * epilogue comes before the +500 XP toast) and once at the end of a case.
+ */
+function flushBlocks() {
+  for (const el of w.document.querySelectorAll('#story > .roster, #story > .epilogue, #story > .credits')) {
+    if (seenBlocks.has(el)) continue;
+    seenBlocks.add(el);
+    if (el.classList.contains('credits')) {
+      const items: { title?: string; text: string; dim?: boolean }[] = [
+        { title: el.querySelector('h2').textContent, text: el.querySelector(':scope > .dim').textContent },
+      ];
+      for (const p of el.querySelectorAll('p'))
+        items.push({ text: brText(p), ...(p.classList.contains('dim') ? { dim: true } : {}) });
+      legacyLog.push({ t: 'cards', style: 'credits', items });
+    } else {
+      const roster = el.classList.contains('roster');
+      const rows = [...el.querySelectorAll(roster ? '.roster-row' : '.card')];
+      legacyLog.push({
+        t: 'cards',
+        style: roster ? 'roster' : 'epilogue',
+        items: rows.map((r: any) => ({
+          title: r.querySelector('b').textContent,
+          text: r.querySelector('.small').textContent,
+        })),
+      });
+    }
+  }
+}
+
 function installRecorders() {
-  const rec = (e: Entry) => legacyLog.push(e);
+  const rec = (e: Entry) => {
+    flushBlocks();
+    legacyLog.push(e);
+  };
   const origStory = w.storyScreen;
   w.storyScreen = (title?: string) => {
     rec({ t: 'title', text: title || null });
@@ -76,7 +128,7 @@ function installRecorders() {
   w.toast = (text: string) => rec({ t: 'toast', text });
   w.confirmBox = async (title: string) => {
     rec({ t: 'confirm', title });
-    return true;
+    return legacyConfirm;
   };
   w.showLevelUps = async () => {};
   const sheet = (title: string) => {
@@ -87,9 +139,13 @@ function installRecorders() {
   w.openBand = () => sheet('band');
   w.openJournal = () => sheet('journal');
   w.openBountyBoard = () => sheet('bounties');
+  const FlowAbort = dom.evaluate<any>('FlowAbort');
   w.runBattle = async (_enemies: unknown, opts: any) => {
     rec({ t: 'fight', context: opts?.context || 'street' });
-    return 'win';
+    const r = legacyFights.shift() ?? 'win';
+    // v1's street loss: runBattle throws, and safeFlow wakes you at the club (the runner does that).
+    if (r === 'cut') throw new FlowAbort('cut');
+    return r;
   };
   // No real waiting: the crawfish race sleeps between frames, the auto-rhythm bar holds its grade.
   w.sleep = async () => {};
@@ -141,6 +197,10 @@ interface Case {
   ts: (session: Session) => Promise<unknown>;
   /** Compare only the transcript, not the save (scenes v1 split differently). */
   transcriptOnly?: boolean;
+  /** How each fight ends, in order (then `win`). */
+  fights?: Fight[];
+  /** The answer to every confirm dialog (default yes). */
+  confirm?: boolean;
 }
 
 /** Run an option at a place, matched by its label in v1's rendered place screen. */
@@ -892,7 +952,19 @@ function legacyView(S: any) {
         S.flags[k] &&
         !/^(intro_|boss_|bosspre_)/.test(k) &&
         // boudinGiven: a v1 counter nothing reads (known-issues "Dead fields and flags"); not ported.
-        !['vox', 'contracts', 'lucien', 'tremeStepToast', 'pupToast', 'boudinGiven'].includes(k),
+        // conductorPre/clickPre are the Tower bosses' intros (2.0: bossIntros); endingCount is a
+        // number (2.0: counters).
+        ![
+          'vox',
+          'contracts',
+          'lucien',
+          'tremeStepToast',
+          'pupToast',
+          'boudinGiven',
+          'conductorPre',
+          'clickPre',
+          'endingCount',
+        ].includes(k),
     )
     .sort();
   return {
@@ -910,10 +982,13 @@ function legacyView(S: any) {
       .filter(k => k.startsWith('boss_') && S.flags[k])
       .map(k => k.slice(5))
       .sort(),
-    intros: Object.keys(S.flags)
-      .filter(k => k.startsWith('bosspre_'))
-      .map(k => k.slice(8))
-      .sort(),
+    intros: [
+      ...Object.keys(S.flags)
+        .filter(k => k.startsWith('bosspre_'))
+        .map(k => k.slice(8)),
+      ...(S.flags.conductorPre ? ['conductor'] : []),
+      ...(S.flags.clickPre ? ['the_click'] : []),
+    ].sort(),
     districtIntros: Object.keys(S.flags)
       .filter(k => k.startsWith('intro_'))
       .map(k => k.slice(6))
@@ -932,9 +1007,18 @@ function legacyView(S: any) {
     xp: S.xp,
     district: S.district,
     unlocked: S.unlocked,
-    counters: S.counters,
+    counters: { ...S.counters, ...(S.flags.endingCount ? { endingCount: S.flags.endingCount } : {}) },
     perm: S.perm,
-    book: Object.fromEntries(Object.entries(S.book).map(([k, v]: [string, any]) => [k, { hint: !!v.hint }])),
+    book: Object.fromEntries(
+      Object.entries(S.book).map(([k, v]: [string, any]) => [k, { hint: !!v.hint, seen: !!v.seen }]),
+    ),
+    towerFloor: S.towerFloor ?? 0,
+    towerFight: S.towerFight ?? 0,
+    inTower: S.inTower,
+    ngPlus: S.ngPlus,
+    secondLine: S.secondLine ? S.secondLine.map((m: any) => ({ id: m.id, name: m.name })) : null,
+    lexicon: S.lexicon,
+    settings: S.settings,
   };
 }
 function tsView(g: GameState) {
@@ -968,7 +1052,16 @@ function tsView(g: GameState) {
     unlocked: g.unlocked,
     counters: g.counters,
     perm: g.perm,
-    book: Object.fromEntries(Object.entries(g.book).map(([k, v]) => [k, { hint: !!v?.hint }])),
+    book: Object.fromEntries(
+      Object.entries(g.book).map(([k, v]) => [k, { hint: !!v?.hint, seen: !!v?.seen }]),
+    ),
+    towerFloor: g.towerFloor,
+    towerFight: g.towerFight,
+    inTower: g.inTower,
+    ngPlus: g.ngPlus,
+    secondLine: g.secondLine ? g.secondLine.map(m => ({ id: m.id, name: m.name })) : null,
+    lexicon: g.lexicon,
+    settings: g.settings,
   };
 }
 
@@ -986,6 +1079,7 @@ function tsTranscript(p: ScriptedPresenter): Entry[] {
       out.push({ t: 'sheet', title: e.req.kind === 'shop' ? e.req.title : e.req.kind });
     else if (e.t === 'confirm') out.push({ t: 'confirm', title: e.title });
     else if (e.t === 'fight') out.push({ t: 'fight', context: e.context });
+    else if (e.t === 'cards') out.push({ t: 'cards', style: e.style, items: e.items });
   }
   // v1 draws the board into the page; the oracle reads its final text after the scene.
   if (board !== null) out.push({ t: 'board', text: board });
@@ -1005,10 +1099,16 @@ describe('scene transcripts match v1', () => {
         // v1
         legacyLog = [];
         legacyPick = c.pick ?? 0;
+        legacyFights = [...(c.fights ?? [])];
+        legacyConfirm = c.confirm ?? true;
+        const tsFights: Fight[] = [...(c.fights ?? [])];
         dom.setRandom(() => rnd);
-        const S = setupLegacy(c.state);
+        setupLegacy(c.state);
         // 2.0 (run first to learn place-option labels for the legacy lookup)
-        const presenter = new ScriptedPresenter({ chooseIndex: c.pick ?? 0 });
+        const presenter = new ScriptedPresenter({
+          chooseIndex: c.pick ?? 0,
+          confirm: () => c.confirm ?? true,
+        });
         const session = new Session({
           presenter,
           storage: memorySaveStorage(),
@@ -1018,18 +1118,27 @@ describe('scene transcripts match v1', () => {
               t: 'fight',
               context: opts.boss ? 'boss' : (spec.context ?? 'street'),
             });
-            return 'win';
+            const r = tsFights.shift() ?? 'win';
+            if (r === 'cut') throw new SceneInterrupt('cut');
+            return r;
           },
           onError: e => {
             throw e;
           },
         });
-        const g = setupTs(session, c.state);
+        setupTs(session, c.state);
         session.rng = constantRng(rnd);
         tsExtra = [];
         await c.ts(session);
-        await c.legacy();
+        try {
+          await c.legacy();
+        } catch (e: any) {
+          // v1's safeFlow: a street loss wakes you up at the club.
+          if (!e?.flowAbort) throw e;
+          await w.wakeUpAtClub();
+        }
         await new Promise(r => setTimeout(r, 0));
+        flushBlocks();
         legacyLog.push(...legacyBoard());
 
         const mine = [...tsExtra, ...tsTranscript(presenter)];
@@ -1040,7 +1149,8 @@ describe('scene transcripts match v1', () => {
           );
         }
         if (!c.transcriptOnly) {
-          const sd = firstDifference(legacyView(S), tsView(g));
+          // Read both saves after the run: New Game+ replaces the save object on both sides.
+          const sd = firstDifference(legacyView(w.CF.S), tsView(session.game));
           if (sd) expect.fail(`${c.name}: save differs at ${sd}`);
         }
       });

@@ -1,9 +1,10 @@
-import { useEffect, useRef } from 'react';
+import { Fragment, useEffect, useRef } from 'react';
 import type { Snapshot } from 'valtio';
 import type { ClassId } from '@core/ids/characters';
 import type { SpriteId } from '@core/ids/sprites';
 import { plainText } from '@app/lexicon';
 import type { StoryLine } from '@app/view';
+import type { CardStyle, StoryCard } from '@narrative/types';
 import { heroSprite, npcSprite } from '@content/sprites';
 import { Button } from '../components/Button';
 import { LexText } from '../components/LexText';
@@ -18,6 +19,50 @@ function portraitOf(l: Snapshot<StoryLine>, cls: ClassId | undefined): SpriteId 
   if (l.kind !== 'spoken') return null;
   if (l.sprite) return l.sprite;
   return l.npc && cls ? npcSprite(l.npc, cls) : null;
+}
+
+/** Text with `\n` line breaks. */
+function withBreaks(text: string) {
+  return text.split('\n').map((part, i) => (
+    <Fragment key={i}>
+      {i > 0 && <br />}
+      {part}
+    </Fragment>
+  ));
+}
+
+/** A block of cards (SceneContext.cards): the second-line roster, the epilogue, the credits. */
+function Cards({ style, items }: { style: CardStyle; items: readonly Snapshot<StoryCard>[] }) {
+  if (style === 'credits') {
+    const [head, ...rest] = items;
+    return (
+      <div className={s.credits} data-testid="cards:credits">
+        {head && (
+          <>
+            <h2 className={s.creditsLogo}>{head.title}</h2>
+            <div className="dim">{withBreaks(head.text)}</div>
+          </>
+        )}
+        {rest.map((c, i) => (
+          <p key={i} className={c.dim ? 'small dim' : undefined}>
+            {c.title && <b>{c.title} </b>}
+            {withBreaks(c.text)}
+          </p>
+        ))}
+      </div>
+    );
+  }
+  const roster = style === 'roster';
+  return (
+    <div className={roster ? s.roster : s.epilogue} data-testid={`cards:${style}`}>
+      {items.map((c, i) => (
+        <div key={i} className={roster ? s.rosterRow : s.card}>
+          {c.title && <b>{c.title}</b>}
+          <div className={roster ? 'small dim' : 'small'}>{withBreaks(c.text)}</div>
+        </div>
+      ))}
+    </div>
+  );
 }
 
 /** The story transcript: narration, dialogue, the player's choices, and battle outcome cards. */
@@ -41,6 +86,7 @@ export function StoryScreen() {
           // One portrait per run: a speaker's follow-up lines don't repeat it.
           const prev = v.lines[i - 1];
           const shown = sprite && !(prev && prev.kind === l.kind && portraitOf(prev, cls) === sprite);
+          if (l.kind === 'cards') return <Cards key={l.id} style={l.style!} items={l.items ?? []} />;
           if (l.kind === 'board')
             return (
               <pre key={l.id} className={s.board} data-testid="board">

@@ -51,6 +51,7 @@ flowchart LR
   n_screens_ --> n_ext_app
   n_screens_ --> n_ext_content
   n_screens_ --> n_ext_engine
+  n_screens_ --> n_ext_narrative
   n_sheets_ --> n_GameContext
   n_sheets_ --> n_components_
   n_sheets_ --> n_ext_app
@@ -630,19 +631,24 @@ Declarations:
 ### src/ui/screens/Story.tsx
 
 - Source: [src/ui/screens/Story.tsx](../../../src/ui/screens/Story.tsx)
-- Imports: core: [ids/characters](core.md#src-core-ids-characters-ts), [ids/sprites](core.md#src-core-ids-sprites-ts) · content: [sprites/index](content.md#src-content-sprites-index-ts) · app: [lexicon](app.md#src-app-lexicon-ts), [view](app.md#src-app-view-ts) · ui: [GameContext](#src-ui-gamecontext-tsx), [components/Button](#src-ui-components-button-tsx), [components/LexText](#src-ui-components-lextext-tsx), [components/Sprite](#src-ui-components-sprite-tsx), [components/Typewriter](#src-ui-components-typewriter-tsx)
+- Imports: core: [ids/characters](core.md#src-core-ids-characters-ts), [ids/sprites](core.md#src-core-ids-sprites-ts) · narrative: [types](narrative.md#src-narrative-types-ts) · content: [sprites/index](content.md#src-content-sprites-index-ts) · app: [lexicon](app.md#src-app-lexicon-ts), [view](app.md#src-app-view-ts) · ui: [GameContext](#src-ui-gamecontext-tsx), [components/Button](#src-ui-components-button-tsx), [components/LexText](#src-ui-components-lextext-tsx), [components/Sprite](#src-ui-components-sprite-tsx), [components/Typewriter](#src-ui-components-typewriter-tsx)
 - Packages: `react`, `valtio`
 - Styles: `Story.module.css`
 - Imported by: ui: [App](#src-ui-app-tsx), [layers/ActionBar](#src-ui-layers-actionbar-tsx)
-- Types used: **[app/view](app.md#src-app-view-ts)** [StoryLine](app.md#src-app-view-ts--storyline) · **[core/ids/characters](core.md#src-core-ids-characters-ts)** [ClassId](core.md#src-core-ids-characters-ts--classid) · **[core/ids/sprites](core.md#src-core-ids-sprites-ts)** [SpriteId](core.md#src-core-ids-sprites-ts--spriteid)
+- Types used: **[app/view](app.md#src-app-view-ts)** [StoryLine](app.md#src-app-view-ts--storyline) · **[core/ids/characters](core.md#src-core-ids-characters-ts)** [ClassId](core.md#src-core-ids-characters-ts--classid) · **[core/ids/sprites](core.md#src-core-ids-sprites-ts)** [SpriteId](core.md#src-core-ids-sprites-ts--spriteid) · **[narrative/types](narrative.md#src-narrative-types-ts)** [CardStyle](narrative.md#src-narrative-types-ts--cardstyle), [StoryCard](narrative.md#src-narrative-types-ts--storycard)
 
 Declarations:
 
 - <a id="src-ui-screens-story-tsx--portraitof"></a>**portraitOf** · *function, internal* `(l: Snapshot<StoryLine>, cls: ClassId | undefined): SpriteId | null` — Who to draw beside a line: the speaker's sprite, your hero on your own lines, nobody on narration.
   - uses: **[content/sprites/refs](content.md#src-content-sprites-refs-ts)** [heroSprite](content.md#src-content-sprites-refs-ts--herosprite), [npcSprite](content.md#src-content-sprites-refs-ts--npcsprite)
   - used by: here [StoryScreen](#src-ui-screens-story-tsx--storyscreen)
+- <a id="src-ui-screens-story-tsx--withbreaks"></a>**withBreaks** · *function, internal* `(text: string): React.JSX.Element[]` — Text with `\n` line breaks.
+  - used by: here [Cards](#src-ui-screens-story-tsx--cards)
+- <a id="src-ui-screens-story-tsx--cards"></a>**Cards** · *component, internal* `({ style, items }: { style: CardStyle; items: readonly Snapshot<StoryCard>[] }): React.JSX.Element` — A block of cards (SceneContext.cards): the second-line roster, the epilogue, the credits.
+  - uses: here [withBreaks](#src-ui-screens-story-tsx--withbreaks)
+  - used by: here [StoryScreen](#src-ui-screens-story-tsx--storyscreen)
 - <a id="src-ui-screens-story-tsx--storyscreen"></a>**StoryScreen** · *component* `(): React.JSX.Element` — The story transcript: narration, dialogue, the player's choices, and battle outcome cards.
-  - uses: here [portraitOf](#src-ui-screens-story-tsx--portraitof) · **[app/game](app.md#src-app-game-ts)** [GameApp.advance](app.md#src-app-game-ts--gameapp-advance) · **[ui/GameContext](#src-ui-gamecontext-tsx)** [useApp](#src-ui-gamecontext-tsx--useapp), [useGame](#src-ui-gamecontext-tsx--usegame), [useView](#src-ui-gamecontext-tsx--useview) · **[ui/components/LexText](#src-ui-components-lextext-tsx)** [LexText](#src-ui-components-lextext-tsx--lextext) · **[ui/components/Sprite](#src-ui-components-sprite-tsx)** [Sprite](#src-ui-components-sprite-tsx--sprite) · **[ui/components/Typewriter](#src-ui-components-typewriter-tsx)** [Typewriter](#src-ui-components-typewriter-tsx--typewriter)
+  - uses: here [Cards](#src-ui-screens-story-tsx--cards), [portraitOf](#src-ui-screens-story-tsx--portraitof) · **[app/game](app.md#src-app-game-ts)** [GameApp.advance](app.md#src-app-game-ts--gameapp-advance) · **[ui/GameContext](#src-ui-gamecontext-tsx)** [useApp](#src-ui-gamecontext-tsx--useapp), [useGame](#src-ui-gamecontext-tsx--usegame), [useView](#src-ui-gamecontext-tsx--useview) · **[ui/components/LexText](#src-ui-components-lextext-tsx)** [LexText](#src-ui-components-lextext-tsx--lextext) · **[ui/components/Sprite](#src-ui-components-sprite-tsx)** [Sprite](#src-ui-components-sprite-tsx--sprite) · **[ui/components/Typewriter](#src-ui-components-typewriter-tsx)** [Typewriter](#src-ui-components-typewriter-tsx--typewriter)
   - used by: **[ui/App](#src-ui-app-tsx)** [Screen](#src-ui-app-tsx--screen)
 - <a id="src-ui-screens-story-tsx--storyactions"></a>**StoryActions** · *component* `(): React.JSX.Element | null` — Continue, choices, or the outcome buttons.
   - uses: **[app/game](app.md#src-app-game-ts)** [GameApp.advance](app.md#src-app-game-ts--gameapp-advance), [GameApp.pick](app.md#src-app-game-ts--gameapp-pick), [GameApp.presenter](app.md#src-app-game-ts--gameapp-presenter) · **[app/lexicon](app.md#src-app-lexicon-ts)** [plainText](app.md#src-app-lexicon-ts--plaintext) · **[app/reactPresenter](app.md#src-app-reactpresenter-ts)** [ReactPresenter.pick](app.md#src-app-reactpresenter-ts--reactpresenter-pick) · **[ui/GameContext](#src-ui-gamecontext-tsx)** [useApp](#src-ui-gamecontext-tsx--useapp), [useView](#src-ui-gamecontext-tsx--useview) · **[ui/components/Button](#src-ui-components-button-tsx)** [Button](#src-ui-components-button-tsx--button)

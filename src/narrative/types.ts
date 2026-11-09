@@ -122,6 +122,22 @@ export interface FightSpec {
 /** How a fight ended for the scene. Losing a street fight never returns (see SceneInterrupt). */
 export type FightOutcome = 'win' | 'fled';
 
+/** How one boss battle ended: won, lost and run back (the player chose a retry), or walked away. */
+export type BossFightOutcome = 'win' | 'retry' | 'lose';
+
+/** One entry in a block of cards (see SceneContext.cards). */
+export interface StoryCard {
+  /** Bold heading (a marcher's name, an epilogue subject). */
+  title?: string;
+  /** The text. `\n` is a line break. */
+  text: string;
+  /** Fainter text (the credits' dedications). */
+  dim?: boolean;
+}
+
+/** How a block of cards is drawn: the second-line roster, the epilogue cards, or the credits. */
+export type CardStyle = 'roster' | 'epilogue' | 'credits';
+
 /** Everything a scene can do. Methods that show something to the player return a Promise; await it. */
 export interface SceneContext {
   /** The live save. Read anything; write simple fields directly (helpers below add toasts and rules). */
@@ -236,6 +252,28 @@ export interface SceneContext {
   fight(spec: FightSpec): Promise<FightOutcome>;
   /** The full boss sequence: pre-scene (first time), the fight (retry on loss), post-scene, next act. */
   boss(id: BossId): Promise<'win' | 'lose'>;
+  /**
+   * One boss battle and nothing around it, for scenes that run their own boss sequence (the Tower).
+   * A loss shows the defeat screen and puts Heart, Funk, the bag and buffs back; the result says
+   * whether the player ran it back (`retry`) or walked away (`lose`). A win records the boss as
+   * beaten and checkpoints the save, so a reload replays its post-fight scene (`BOSS_SCENES[id].post`).
+   * `clickPhase` is the Click's shield, broken by Play the Blues.
+   */
+  bossFight(id: BossId, opts?: { clickPhase?: boolean }): Promise<BossFightOutcome>;
+  /**
+   * A static block of cards below the lines so far, with no Continue: the second-line roster, the
+   * epilogue, the credits. Like `board`, it's drawn once; a new screen (`title`) clears it.
+   */
+  cards(style: CardStyle, items: readonly StoryCard[]): void;
+  /**
+   * Start New Game+: the save becomes a fresh one for the same character, one cycle up, carrying
+   * level, XP, gear, sheet music, blessings, permanent stats, the bag, half the Doubloons, the Lexicon,
+   * the Blue Book (all seen) and the day; Heart and Funk full; saved. `s.game` is the new save
+   * afterwards (a reference taken before the call is the old one).
+   */
+  newGamePlus(): void;
+  /** Round Heart and Funk and clamp them to the current maximums (after something changes those). */
+  clampVitals(): void;
 }
 
 /** Thrown by a scene to stop it and hand control to the Director's interrupt handler. */
@@ -304,6 +342,8 @@ export interface Presenter {
   wait(ms: number, signal: AbortSignal): Promise<void>;
   /** Show or redraw the fixed-width board in the story (see SceneContext.board). */
   board(text: string): void;
+  /** Show a block of cards in the story (see SceneContext.cards). */
+  cards(style: CardStyle, items: readonly StoryCard[]): void;
   /** Show a route (district or place screen). */
   route(r: Route): void;
   /** Battle presentation. */

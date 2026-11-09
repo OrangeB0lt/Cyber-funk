@@ -69,7 +69,8 @@ The full API, with a doc comment on every member, is the `SceneContext` interfac
 | Inventory and money | `give`, `take`, `count`, `gold`, `keyItem`, `gainGear`, `recruit`, `giveNote` |
 | Character | `xp` (awaits level-up popups), `heal`, `funk`, `rest`, `check(stat, base)`, `permStat`, `nextFight`, `bookHint`, `scaleXp`, `scaleGold` |
 | Story state | `flags.has/set`, `story.is/reached/set`, `quest/setQuest`, `counter`, `choice` |
-| Fights | `fight(spec)` → `'win' \| 'fled'`, `boss(id)` → `'win' \| 'lose'` |
+| Fights | `fight(spec)` → `'win' \| 'fled'`, `boss(id)` → `'win' \| 'lose'`, `bossFight(id, { clickPhase? })` → `'win' \| 'retry' \| 'lose'` |
+| Finale | `cards(style, items)` (roster, epilogue, credits), `newGamePlus()`, `clampVitals()` |
 | Other | `game` (the live save), `rng` (the seeded stream), `signal`, `save` |
 
 Design rules:
@@ -80,6 +81,7 @@ Design rules:
 - **Randomness comes from `s.rng`.** It's the game's seeded stream and is saved with the game. ESLint bans `Math.random` in content.
 - **Losing never returns.** `fight()` resolves on a win or an escape. A street loss throws `SceneInterrupt('cut')`, and the code after `await s.fight(...)` never runs, as in v1.
 - **`boss(id)` is the whole sequence:** the pre-scene (first time only) or "you go back in", an autosave, the fight (a loss offers *Run it back*, which restores your pre-fight state and retries), then on a win the post-scene, the next act and district unlock, and an autosave.
+- **`bossFight(id)` is one battle of that sequence,** for scenes that build their own (the Tower's floors). A win records the boss and checkpoints the save with `resume: { kind: 'afterBoss', boss }`. `finishBoss` (the tail of `boss`) plays the post-scene and clears the checkpoint at its final save, and `Session.resume` runs `finishBoss` when a save holds one. So a reload during a post-fight choice replays the choice, not the fight.
 
 ## Presenters
 
@@ -127,10 +129,10 @@ The engine never waits on the UI. It produces events and the controller pulls. `
 
 ## Saves and checkpoints
 
-The Session saves at explicit moments, never on a store subscription: entering a district (`goto`), before and after a boss, after every battle, on a manual save, and when a setting changes. Mid-scene state that must survive a reload is a `ResumePoint` on the save (`game.resume`). See [state-and-saves.md](state-and-saves.md).
+The Session saves at explicit moments, never on a store subscription: entering a district (`goto`), before a boss, on a boss win (the `afterBoss` checkpoint) and after its post-scene, after every battle, on a manual save, and when a setting changes. Mid-scene state that must survive a reload is a `ResumePoint` on the save (`game.resume`). See [state-and-saves.md](state-and-saves.md).
 
 ## Extending the runtime
 
-- **A new scene capability** (as `timing` and `board` were for the sit-in and the crawfish race): write an ADR, add a member to `SceneContext` with a doc comment, implement it in `app/sceneContext.ts`, and add the presenter method to `Presenter`, `ReactPresenter` and `ScriptedPresenter`. The compiler lists every place left to update.
+- **A new scene capability** (as `timing` and `board` were for the sit-in and the crawfish race, and `bossFight`, `cards`, `newGamePlus` and `clampVitals` for the finale): write an ADR, add a member to `SceneContext` with a doc comment, implement it in `app/sceneContext.ts`, and add the presenter method to `Presenter`, `ReactPresenter` and `ScriptedPresenter`. The compiler lists every place left to update.
 - **A new interrupt kind** (say, `'arrested'`): add it to `SceneInterrupt['kind']`. The `DirectorConfig.onInterrupt` record then fails to compile until you give it a handler.
 - **A new authoring format** (Ink, say): compile it to `Scene` functions. Nothing below `narrative/` needs to change.
