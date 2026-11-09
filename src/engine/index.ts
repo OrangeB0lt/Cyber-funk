@@ -23,7 +23,7 @@ export {
 } from './combat/resolve';
 export { applyBattleResult, battleRewards, type BattleRewards } from './combat/rewards';
 export { applyStatus, applyStatusRaw, effStat } from './combat/statuses';
-export { runUntilPlayer } from './combat/turns';
+export { callOff, runUntilPlayer } from './combat/turns';
 export * from './aftermath';
 export * from './band';
 export * from './encounters';

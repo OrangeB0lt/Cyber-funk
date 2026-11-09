@@ -268,6 +268,8 @@ export interface Battle {
   waiting: boolean;
   /** SPLIT is not allowed. */
   noFlee: boolean;
+  /** The fight was called off by the engine's turn guard: it ends as `fled`, with no winner and no penalty. */
+  stalled?: boolean;
   /** The Click's final phase. */
   clickPhase: boolean;
   /** The first Play the Blues of the Click phase costs no Groove. */

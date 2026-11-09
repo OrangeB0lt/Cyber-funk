@@ -233,3 +233,21 @@ describe('items in battle', () => {
     expect(b.result).toBe('fled');
   });
 });
+
+describe('the loop guard', () => {
+  it("a fight that never reaches the player's turn is called off, not lost", () => {
+    // Ambushed, the player acts last in round 1, so 201 enemies against a player they can't cut in
+    // time trip runUntilPlayer's 200-turn guard before the player's turn comes.
+    const rng = createRng(7);
+    const s = newGame('Test', 'yat', 'trumpet');
+    s.level = 10;
+    fullRest(s);
+    const crowd = Array.from({ length: 201 }, () => makeEnemy(rng, s, 'nutria', 1));
+    const b = createBattle(rng, s, crowd, { ambush: true });
+    b.player.maxHp = b.player.hp = 1_000_000;
+    expect(runUntilPlayer(b)).toBe(false);
+    expect(b.over).toBe(true);
+    expect(b.result).toBe('fled');
+    expect(b.stalled).toBe(true);
+  });
+});

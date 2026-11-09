@@ -20,6 +20,8 @@ export const TEXT = {
   fled: (stolen: number) =>
     'You slip off into the neon. Nobody follows. ' +
     (stolen ? `The hustler keeps the ${fmtDoubloons(stolen)}, though.` : ''),
+  /** After a fight the engine called off (its turn guard tripped): no winner, no penalty. */
+  stalled: 'The song stalls out and the crowd drifts off. Nobody won, nobody lost, and the night goes on.',
   /** Victory screen titles. */
   victoryTitle: (boss: boolean) => (boss ? 'CUT THE BODY LOOSE' : 'YOU WON'),
   /** Under the victory numbers. */

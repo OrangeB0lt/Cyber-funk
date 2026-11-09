@@ -24,7 +24,6 @@ These go away by construction. Where the visible sequence changed, the transcrip
 
 | Issue | Where (v1) | Kind |
 |---|---|---|
-| Tripping the 200-iteration loop guard in `runUntilPlayer` counts as a loss in the UI. | `05_engine.js:464`, `07_ui_combat.js:189` | bug |
 | Auto-rhythm and the sim ignore *Quantized* and *In the Pocket*, which change the ONE zone only in the manual timing bar. | `05_engine.js:257`, `07_ui_combat.js:82` | design call |
 | The `cleanse` effect always removes bad statuses; its documented `kind` field is ignored. | `05_engine.js:391` | cleanup |
 | *Cayenne*-style next-tone boosts and Dirge's +50% apply only to the first hit of multi-hit or all-target skills. | `05_engine.js:272-274` | design call |
@@ -51,3 +50,4 @@ Each fix landed in its own commit with a test that failed first; the commit name
 | Seeded fights differ across JS engines: the turn-order sort uses a random comparator, and V8 and JavaScriptCore sort differently. Fix with per-actor jitter, then re-baseline the sim. | Each actor draws its jitter once, before the sort; the comparator is pure | `tools/engine/properties.test.ts`: "doesn't depend on the JavaScript engine's sort algorithm" |
 | **An assist helper's death ends the battle as a loss.** A bandmate assist is a 1-HP `side:'player'` actor; if its hit gets countered (for example by a Countermelody the Archive Drone recorded from you), `checkDeath` runs the *player* death path. Reproduced: 170 of 200 trials in that setup. | `checkDeath` lets an assist helper leave; the battle goes on | `src/engine/combat/combat.test.ts`: "a bandmate's assist that gets countered and cut doesn't end the battle" |
 | Second Line Smoke escapes boss fights; its description says "non-boss". | Items with `escape` are refused, keeping the item and the turn, in boss and no-flee fights | `src/engine/combat/combat.test.ts`: "Second Line Smoke is refused in a boss fight, keeping the item and the turn" |
+| Tripping the 200-iteration loop guard in `runUntilPlayer` counts as a loss in the UI. | `callOff`: the fight ends as `fled` with `stalled` set and its own line; no defeat penalty | `src/engine/combat/combat.test.ts`: "a fight that never reaches the player's turn is called off, not lost" |

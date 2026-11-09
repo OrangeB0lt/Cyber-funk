@@ -15,6 +15,7 @@ import {
   applyBattleResult,
   applyStreetDefeat,
   buildEnemies,
+  callOff,
   createBattle,
   gainXp,
   gradeTiming,
@@ -91,6 +92,8 @@ export async function runBattle(
     playerAction(b, intent, timing);
     await P.battle.play(drain(b), b, signal);
   }
+  // A fight that outlasts the safety limit is called off, never scored as a loss.
+  callOff(b);
   await P.battle.play(drain(b), b, signal);
   g.resume = null;
   const result = b.result || 'lose';
@@ -114,7 +117,7 @@ export async function runBattle(
     P.battle.close();
     session.save();
     P.story(null);
-    await P.line({ who: null, text: TEXT.fled(b.stolen) }, signal);
+    await P.line({ who: null, text: b.stalled ? TEXT.stalled : TEXT.fled(b.stolen) }, signal);
     return 'fled';
   }
   if (opts.boss) {

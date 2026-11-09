@@ -12,7 +12,7 @@ import { hasStatus, livingEnemies } from '@core/helpers';
 import type { Actor, Battle, TimingResult } from '@core/types';
 import { BANDMATES, BASIC_ATTACK, BOSSES, SKILLS, STATUSES, TIMING } from '@content/data';
 import { makeActor } from './actors';
-import { actorById, logLine } from './events';
+import { actorById, endBattle, logLine } from './events';
 import { bossCtx, checkDeath, healActor, resolveSkill, rollAutoTiming } from './resolve';
 import { effStat, removeStatus } from './statuses';
 
@@ -180,5 +180,17 @@ export function runUntilPlayer(b: Battle): boolean {
     if (canAct) enemyAct(b, a);
     if (!b.over) endTurn(b, a);
   }
+  if (!b.over) callOff(b);
   return false;
+}
+
+/**
+ * Call off a fight that can't reach the player's turn (the turn guard tripped): it ends as `fled`,
+ * with no winner and no defeat penalty, so a runaway fight never costs the player anything.
+ */
+export function callOff(b: Battle): void {
+  if (b.over) return;
+  b.stalled = true;
+  logLine(b, 'The song stalls out. Nobody remembers who was winning, so everybody walks away.');
+  endBattle(b, 'fled');
 }
