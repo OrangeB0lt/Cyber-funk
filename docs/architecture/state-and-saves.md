@@ -23,7 +23,9 @@ At runtime the save is a Valtio proxy (`session.store.game`). The engine and sce
 Only at explicit checkpoints, never on every change. A subscription would save mid-battle states that can't be resumed. The checkpoints:
 
 - entering a district (`s.goto`)
-- before a boss fight, and after a boss win once the next act opens
+- before a boss fight; on a boss win (the `afterBoss` checkpoint); after its post-fight scene, once the next act opens
+- at every Tower floor and fight, and the Studio Floor's vending machine (manual)
+- after the ending's XP, and the new New Game+ save
 - after every battle (win, escape, or a street loss)
 - a manual save (Menu → Save)
 - changing a setting
@@ -31,7 +33,7 @@ Only at explicit checkpoints, never on every change. A subscription would save m
 ## The envelope
 
 ```json
-{ "format": "cyberfunk", "version": 2, "savedAt": "2026-10-31T00:00:00.000Z", "rng": { "s": 123456, "draws": 812 }, "game": { … } }
+{ "format": "cyberfunk", "version": 3, "savedAt": "2026-10-31T00:00:00.000Z", "rng": { "s": 123456, "draws": 812 }, "game": { … } }
 ```
 
 - It's stored per slot under `localStorage['cyberfunk_save_v2:<slot>']` (slots 1–3). v1's key is ignored and left alone (decision: fresh start, no migration).
@@ -60,13 +62,24 @@ The server checks every upload with the same `decodeSave`, so a save the game ca
 
 ```ts
 type ResumePoint =
-  | { kind: 'tutorial'; step: 1 | 2 }   // mid-prologue fight: replay from that fight
-  | { kind: 'battle'; context: … };     // any other fight: it restarts when you go back in (toast on load)
+  | { kind: 'tutorial'; step: 1 | 2 }        // mid-prologue fight: replay from that fight
+  | { kind: 'battle'; context: … }           // any other fight: it restarts when you go back in (toast on load)
+  | { kind: 'afterBoss'; boss: BossId };     // a boss beaten, its post-fight scene unfinished: replay that scene
 ```
 
-`Session.resume()` reads and clears it. A pending tutorial replays the remaining tutorial fights; a save at the very start (before Mama Roux) replays the prologue; anything else goes to the saved district.
+`Session.resume()` reads and clears it:
+- A pending tutorial replays the remaining tutorial fights.
+- An `afterBoss` checkpoint replays the boss's post-fight scene through `finishBoss`. The checkpoint stays in the save until that scene's final save; the Click's scene, the ending, clears it before its own save, so the credits never pay the XP twice.
+- A save at the very start (before Mama Roux) replays the prologue.
+- Anything else goes to the saved district.
 
-P4 extends `ResumePoint` for the tower climb and the post-boss choice, which v1 lost on reload.
+**The Tower climb** isn't a `ResumePoint`, because `runBattle` clears `resume` after every fight. It's two save fields, `towerFloor` and `towerFight`, kept the way v1 kept them:
+- Travel resets the floor (not the fight), as v1's `goDistrict` did.
+- A reload keeps both (`gotoDistrict(…, { keepClimb: true })`), so the lobby offers "Continue the climb". v1 restarted the climb on every reload, though its tutorial says otherwise.
+
+**Format versions:**
+- v2: the first v2 format.
+- v3 (P4): `towerFloor`, `towerFight`, and the `afterBoss` resume point. `MIGRATIONS[2]` fills the two fields with 0.
 
 ## Changing the save format
 

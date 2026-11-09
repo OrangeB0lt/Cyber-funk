@@ -15,6 +15,7 @@
 | **Server** | `server/**/*.test.ts` | Vitest project `server`, real PostgreSQL | The API's rules (revisions, conflicts, tombstones, history, auth, rate limits, static files), and the browser's sync engine against the real server |
 | **Headless playthroughs** | `tests/integration/slice.test.ts`, `playthrough.test.ts` | Vitest, with `ScriptedPresenter` | Story flows end to end, no browser, real battles: new game → every ported district → its boss, down every branch of the big boss choices (`playthrough`); the slice's specific checks (`slice`) |
 | **End to end** | `tests/e2e/*.spec.ts` | Playwright, 360×740 touch Chromium | The real UI: tapping through screens, every sheet, the shop, battles with the timing bar, save slots, every place and option of every ported district (`world.spec.ts`), no horizontal overflow, a clean console |
+| **Full game** | `tests/e2e/finale.spec.ts` | Playwright, 360×740 | A new character through the UI to the credits and into New Game+, with dev shortcuts between districts and short fights: every screen fits, the finale's screens pass axe, the console stays clean |
 | **Accessibility** | `tests/e2e/a11y.spec.ts` | Playwright with axe-core | WCAG 2.2 A and AA on every screen and layer, with no allowlist; keyboard focus into and out of sheets and dialogs, Escape closing only the top layer; story lines announced once; reduced motion stopping transitions |
 | **Stack end to end** | `tests/e2e/stack/*.spec.ts` | Playwright against `docker compose up` | Cloud saves for real: two browser contexts as two phones, a player code, offline play, a conflict, restoring a checkpoint |
 
@@ -116,7 +117,9 @@ v1 in `legacy/` is the reference. Each oracle runs v1 and v2 on the same inputs 
 - **Sim:** `tools/sim.ts` output is byte-identical to v1's sim for fixed seeds.
 - **Rules:** pricing, selling, field items, enemy building and victory bookkeeping against v1's UI-layer functions (jsdom).
 - **Content:** the typed tables deep-equal v1's tables after the documented renames.
-- **Transcripts:** scenes run in v1 (jsdom, constant RNG, stubbed fights) and v2 (`ScriptedPresenter`), and the lines, choices, toasts and resulting saves are compared.
+- **Transcripts:** scenes run in v1 (jsdom, constant RNG, stubbed fights) and v2 (`ScriptedPresenter`), and the lines, choices, toasts, card blocks and resulting saves are compared. A case can script each fight's outcome (`fights: ['retry', 'win']`, or `'cut'` for a street loss), a sequence of picks for menus that come back (`picks`), and the confirm answer.
+
+**Screens side by side:** `npx tsx tools/parity/legacyShots.ts` (v1, or `… finale` for just the finale's screens) and `npx tsx tools/shots.ts` (v2) write screenshots of the same screens, and the latter pairs them in `shots/side-by-side/` (gitignored) for review.
 
 If an oracle fails, either the port is wrong (fix it), or the difference is an intended fix. An intended fix goes after parity, in its own commit, with an entry in [known-issues.md](../known-issues.md) and an allowlist entry.
 

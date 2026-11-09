@@ -1,6 +1,6 @@
 # Code map: how the code fits together
 
-*A guided tour of the v2 code (`src/`, `server/`), for a programmer who is new to it. It follows real call paths from a tap on the phone down to the engine and the database, naming every file and function on the way. Status: describes the code at P3 (every district but the Tower; cloud saves).*
+*A guided tour of the v2 code (`src/`, `server/`), for a programmer who is new to it. It follows real call paths from a tap on the phone down to the engine and the database, naming every file and function on the way. Status: describes the code at P4 (the whole game, from the prologue through the Tower and the ending into New Game+; cloud saves).*
 
 There are two halves to the code map:
 
@@ -354,7 +354,7 @@ sequenceDiagram
 | Track bounty | `app.trackBounty()` → `Session.trackBounty()` → `run(trackBounty)` | `trackBounty`: a `context: 'bounty'`, no-flee fight against the district's elite |
 | Travel (sheet) | `app.travel(to)` → `Session.travel(to)` → `run(travel(to))` | `travel(to)`: a streetcar (or airboat) line, then `s.goto(to)` |
 
-[`s.goto(district)`](../../src/app/sceneContext.ts) sets `game.district`, unlocks it, clears `inTower`, **autosaves**, sets the route to the district, and on the first visit plays the district's intro and its `ARRIVALS[id]` scene ([arrivals.scene.ts](../../src/content/world/arrivals.scene.ts)).
+[`s.goto(district)`](../../src/app/sceneContext.ts) (`gotoDistrict`) sets `game.district`, unlocks it, clears `inTower`, resets `towerFloor` (except on a reload: `keepClimb`), **autosaves**, caps Heart and Funk (v1's top bar did), sets the route to the district, and on the first visit plays the district's intro and its `ARRIVALS[id]` scene ([arrivals.scene.ts](../../src/content/world/arrivals.scene.ts)).
 
 ## 9. Flow: a street fight, end to end
 
@@ -472,18 +472,20 @@ flowchart TD
   B -->|no| C2["narrate TEXT.goBackIn"]
   C --> D["bossIntros.push(id), save"]
   C2 --> D
-  D --> E["runBattle(session, spec, signal, { boss: id })"]
+  D --> E["s.bossFight(id)<br/>runBattle(session, spec, signal, { boss: id })"]
   E -->|retry| F["narrate TEXT.runItBack"] --> E
   E -->|lose| G["route = district, return 'lose'"]
-  E -->|win| H["bossesDefeated.push(id)"]
-  H --> I["BOSS_SCENES[id].post(ctx)<br/>the Blue Note, a choice"]
+  E -->|win| H["bossesDefeated.push(id)<br/>resume = afterBoss checkpoint, save"]
+  H --> I["finishBoss: BOSS_SCENES[id].post(ctx)<br/>the Blue Note, a choice"]
   I --> J["advanceAfterBoss(id)<br/>unlock next district, story = next act's first step"]
-  J --> K["save, return 'win'"]
+  J --> K["clear the checkpoint, save, return 'win'"]
 ```
 
 - A boss's **data and AI** are in [`content/bosses/<id>.ts`](../../src/content/bosses/captain_hush.ts) (a `BossDef`). Its **story** is in `content/bosses/<id>.scene.ts`, registered in `BOSS_SCENES` ([content/index.ts](../../src/content/index.ts)).
 - `BossDef.next` says what opens after the win (`{ unlock: 'quarter', act: 'quarter' }`). `advanceAfterBoss` applies it and toasts the unlock.
-- The dev menu's boss jump ([`GameApp.dev.boss`](../../src/app/game.ts)) sets the story to the boss's step (`bossStep`), levels you up if needed, and calls `session.run(s => s.boss(id))`.
+- **A reload during the post-fight scene** finds the `afterBoss` checkpoint, and `Session.resume` runs `finishBoss` again: the choice is offered again, not the fight.
+- **The Tower's bosses** don't use `s.boss`. `towerFlow` ([districts/tower/climb.scene.ts](../../src/content/districts/tower/climb.scene.ts)) loops `s.bossFight` itself, with its own retry lines and the Click's `clickPhase`, and calls their `pre`/`post` scenes directly. The Click's `post` is the ending ([story/finale.scene.ts](../../src/content/story/finale.scene.ts)): the epilogue, the credits, New Game+.
+- The dev menu's boss jump ([`GameApp.dev.boss`](../../src/app/game.ts)) sets the story to the boss's step (`bossStep`), levels you up if needed, and calls `session.run(s => s.boss(id))`. For the Tower's two bosses it sets up the climb at their floor (`towerBossSetup`) and runs `towerFlow`.
 
 ## 11. Inside the combat engine
 
@@ -601,7 +603,7 @@ Each id kind has an `as const` list in [src/core/ids/](../../src/core/ids/), and
 | Registry | In | Read by |
 |---|---|---|
 | `PLACE_SCENES` | [content/index.ts](../../src/content/index.ts) | `Session.placeIntro`, `placeOptions`, `chooseOption` |
-| `BOSS_SCENES` | content/index.ts | `bossFlow` (`pre`, `post`) |
+| `BOSS_SCENES` | content/index.ts | `bossFlow` and `finishBoss` (`pre`, `post`); `towerFlow` calls the Tower bosses' modules directly |
 | `ARRIVALS` | [world/arrivals.scene.ts](../../src/content/world/arrivals.scene.ts) | `SceneContext.goto` (first visit) |
 | `STREET_EVENTS` | [world/streetEvents.scene.ts](../../src/content/world/streetEvents.scene.ts) | `runEvent` in streets.scene.ts |
 | `prologue`, `resumeTutorial`, `wakeUpAtClub`, `hitTheStreets`, `trackBounty`, `travel` | story and world scenes | `Session` |
@@ -618,7 +620,9 @@ The game saves at **checkpoints**, always to the device first and synchronously.
 |---|---|
 | [`SceneContext.goto`](../../src/app/sceneContext.ts) | entering a district |
 | [`runBattle`](../../src/app/battleController.ts) | at the start of every fight (with `game.resume` set) and at every ending |
-| `bossFlow` | after a boss's intro, and after a win |
+| `bossFlow`, `bossFight`, `finishBoss` | after a boss's intro, on a win (the `afterBoss` checkpoint), after the post-fight scene |
+| [`towerFlow`](../../src/content/districts/tower/climb.scene.ts) | at every Tower floor and fight (`towerFloor`, `towerFight`); the vending machine's save point (manual) |
+| [`ending`](../../src/content/story/finale.scene.ts), `newGamePlus` | after the ending's XP; the New Game+ save |
 | [`Session.afterCut`](../../src/app/session.ts) | after losing a street fight |
 | [prologue.scene.ts](../../src/content/story/prologue.scene.ts) | two checkpoints in the opening |
 | [places.scene.ts](../../src/content/districts/treme/places.scene.ts) | resting at the club; "Save game" (manual) |
@@ -854,7 +858,7 @@ What each scene helper really does ([app/sceneContext.ts](../../src/app/sceneCon
 | `returnTo(route)` | sets `session.route` |
 | `give`, `take`, `count` | engine `addItem` (+ toast), `removeItem`, `countItem` |
 | `gold(n)` | changes `doubloons` (fails if it would go negative; toasts gains) |
-| `xp(n)` | engine `gainXp`, toast, `P.levelUps` |
+| `xp(n)` | engine `gainXp`, `capVitals` (v1's top-bar cap), toast, `P.levelUps` |
 | `heal`, `funk`, `rest` | engine `healPct`, `funkPct`, `fullRest` |
 | `check(stat, base, yat?)` | `derivedStats`, then `rng.chance(clamp(base + 1.5% × stat (+15% Yat), 10%, 95%))` |
 | `scaleXp`, `scaleGold` | +35% / +30% per level |
@@ -863,6 +867,10 @@ What each scene helper really does ([app/sceneContext.ts](../../src/app/sceneCon
 | `save(manual?)` | `session.save` |
 | `fight(spec)` | `runBattle` (or `deps.battle` in tests); `'fled'` or `'win'` |
 | `boss(id)` | `bossFlow` ([§10](#10-flow-a-boss)) |
+| `bossFight(id, opts)` | `runBattle` with `{ boss, clickPhase }`; a win sets the `afterBoss` checkpoint |
+| `cards(style, items)` | `P.cards` (a `cards` story line) |
+| `newGamePlus()` | engine `newGamePlus(game)`, `session.replaceGame`, save |
+| `clampVitals()` | engine `clampVitals` |
 
 ### Where do I change…
 

@@ -9,7 +9,7 @@
 | P2 | Vertical slice: prologue, Tremé, Captain Hush, the React shell | done (played through to the Quarter; SceneContext v1 accepted) |
 | P2.5 | Docker, Docker Compose, cloud saves in PostgreSQL (three slots, history, player codes) | done ([ADR-0006](adr/0006-server-and-cloud-saves.md)) |
 | P3 | The remaining districts, the accessibility pass | done |
-| P4 | Finale and persistence | |
+| P4 | Finale and persistence | done, pending the owner's playtest |
 | P5 | PWA, cutover, docs | |
 | P6 | Post-parity fixes | |
 
@@ -38,20 +38,23 @@
   Play the Blues staying timed under auto rhythm is a P6 design call. The rules are in [ui.md](architecture/ui.md#accessibility-phone-first-but-not-phone-only).
 - **Gate per district** (all green):
   - transcript parity with v1 for every option in each meaningful state
-  - off `src/content/pending.ts`, so that:
+  - off the pending list (now deleted), so that:
     - the completeness test and the crawler (every place, option, choice branch, quest and item) cover it
     - the playthrough plays through it, down every branch of the boss choices
     - the e2e world walk taps it at 360px
 
 ## P4: finale and persistence
 
-- **Story:** the second line, the tower floors, the Conductor, the Click with Play the Blues, the ending, credits, New Game+.
-- **Finish the migration's scaffolding:** port the Tower, delete `src/content/pending.ts`, and make `PLACE_SCENES` and `BOSS_SCENES` plain `Record`s. The completeness tests and the crawler then cover the Tower too.
-- **`ResumePoint` for every unfinished state:** a tower floor or fight, and the post-boss choice (v1 loses both on reload).
-- **Gate:**
-  - a headless playthrough to the ending for every combination of the three boss choices (vox × contracts × lucien): `tests/integration/playthrough.test.ts` already plays every combination up to the Tower and goes further on its own
-  - a Playwright full flow
-  - screenshots side by side with v1
+- **Story (done):** the second line at the club, the Tower's five floors (two fights each on the Lobby and Server Floors, the Studio Floor's vending machine, the Conductor, the Click with Play the Blues), the ending with its epilogue, the credits and New Game+. Each is a transliteration of v1, proven by the transcript oracle (the Tower's floors under scripted retries, walk-aways and a street loss; the ending under all 8 choice combinations; the whole New Game+ save).
+- **Scene API (done):** `bossFight`, `cards`, `newGamePlus` and `clampVitals`, an amendment to [ADR-0004](adr/0004-scene-api.md).
+- **Persistence (done):** save format v3. The Tower climb is kept across a reload (v1 restarted it). A boss win checkpoints the save (`afterBoss`), so a reload during a post-fight choice replays the choice, not the fight.
+- **Scaffolding (done):** `src/content/pending.ts` is gone, the scene registries are total records, and the place screen's "not built yet" notice is gone.
+- **Gate (green):**
+  - the playthrough reaches the ending in all 8 combinations, checks each epilogue, and starts New Game+ from each
+  - `tests/e2e/finale.spec.ts` plays the whole game at 360px
+  - screenshots side by side with v1 (`tools/shots.ts`)
+  - the crawler and completeness cover the Tower
+- **Still to do:** the owner's playtest from the Garden District through the credits into New Game+.
 
 ## P5: PWA, cutover, docs
 
