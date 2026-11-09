@@ -69,6 +69,10 @@ export function playerAction(b: Battle, action: PlayerIntent, timing: TimingResu
       logLine(b, "You don't have that.");
       return finishPlayerTurn(b, false);
     }
+    if (it.escape && (b.noFlee || b.enemies.some(e => e.alive && e.boss))) {
+      logLine(b, "The smoke won't cover you here. There's no slipping away from this fight.");
+      return finishPlayerTurn(b, false);
+    }
     removeItem(b.state, it.id, 1);
     logLine(b, `${p.name} uses ${it.name}.`, 'you');
     resolveSkill(b, p, { id: it.id, name: it.name, effects: it.effects ?? [] }, p, null, { item: true });

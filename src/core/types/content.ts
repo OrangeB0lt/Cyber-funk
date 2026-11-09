@@ -314,6 +314,8 @@ export interface ItemDef {
   revive?: { pct: number; line: string };
   /** Drop-only. */
   rare?: boolean;
+  /** Ends the fight as an escape. Refused, keeping the item and the turn, where fleeing isn't allowed (boss and no-flee fights). */
+  escape?: boolean;
   /** Story item; can't be sold or used. */
   key?: boolean;
   /** Drunk outside battle: grants this status at the start of the next fight. */

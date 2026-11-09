@@ -170,6 +170,7 @@ export const ITEMS: Table<ItemId, ItemDef> = {
     desc: 'Guaranteed escape from a non-boss fight.',
     battle: true,
     field: false,
+    escape: true,
     effects: [
       {
         kind: 'custom',

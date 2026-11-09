@@ -216,3 +216,20 @@ describe('assists', () => {
     expect(ofType(b, 'death').map(e => e.target)).not.toContain(b.player.id);
   });
 });
+
+describe('items in battle', () => {
+  it('Second Line Smoke is refused in a boss fight, keeping the item and the turn', () => {
+    const b = setup('trumpet', [{ id: 'captain_hush', level: 3 }], { boss: 'captain_hush' }, s =>
+      addItem(s, 'smoke', 1),
+    );
+    playerAction(b, { type: 'bag', itemId: 'smoke' }, null);
+    expect(b.over).toBe(false);
+    expect(b.state.bag.smoke).toBe(1);
+  });
+
+  it('Second Line Smoke still escapes a street fight', () => {
+    const b = setup('trumpet', [{ id: 'nutria', level: 3 }], {}, s => addItem(s, 'smoke', 1));
+    playerAction(b, { type: 'bag', itemId: 'smoke' }, null);
+    expect(b.result).toBe('fled');
+  });
+});
