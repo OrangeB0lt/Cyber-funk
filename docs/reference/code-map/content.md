@@ -1901,7 +1901,7 @@ Declarations:
   - uses: here [resolveSprite](#src-content-sprites-compile-ts--resolvesprite)
   - used by: **[content/sprites/index](#src-content-sprites-index-ts)** [compiled](#src-content-sprites-index-ts--compiled) · **[tools/sprites](tools.md#tools-sprites-ts)** [contactSheet](tools.md#tools-sprites-ts--contactsheet), [generateSpriteGallery](tools.md#tools-sprites-ts--generatespritegallery) · tests: [compile.test](tests.md#src-content-sprites-compile-test-ts)
 - <a id="src-content-sprites-compile-ts--spritesvg"></a>**spriteSvg** · *function* `(c: CompiledSprite, o: { scale: number; background?: string }): string` — A standalone SVG file for a compiled sprite (the docs gallery).
-  - used by: **[tools/sprites](tools.md#tools-sprites-ts)** [contactSheet](tools.md#tools-sprites-ts--contactsheet), [generateSpriteGallery](tools.md#tools-sprites-ts--generatespritegallery) · tests: [compile.test](tests.md#src-content-sprites-compile-test-ts)
+  - used by: **[tools/icons](tools.md#tools-icons-ts)** [main](tools.md#tools-icons-ts--main) · **[tools/sprites](tools.md#tools-sprites-ts)** [contactSheet](tools.md#tools-sprites-ts--contactsheet), [generateSpriteGallery](tools.md#tools-sprites-ts--generatespritegallery) · tests: [compile.test](tests.md#src-content-sprites-compile-test-ts)
 
 <a id="src-content-sprites-index-ts"></a>
 
@@ -1912,7 +1912,7 @@ Character art, for the UI and tools only. The engine, app, scenes and the rest o
 - Source: [src/content/sprites/index.ts](../../../src/content/sprites/index.ts)
 - Imports: core: [ids/sprites](core.md#src-core-ids-sprites-ts) · content: [sprites/compile](#src-content-sprites-compile-ts), [sprites/palette](#src-content-sprites-palette-ts), [sprites/refs](#src-content-sprites-refs-ts), [sprites/table](#src-content-sprites-table-ts)
 - Re-exports: `{ PALETTE } from './palette'`, `{ SPRITES } from './table'`, `{ MAX_VARIANT_DEPTH, compileSprite, resolveSprite, spriteSvg, type CompiledSprite, type Palette, type ResolvedSprite } from './compile'`, `{ CLONE_RECOLOR, NPC_SPRITE, SHOPKEEPERS, actorSprite, cloneSprite, heroSprite, npcSprite, opponentSprite } from './refs'`
-- Imported by: ui: [combat/BattleScreen](ui.md#src-ui-combat-battlescreen-tsx), [components/Sprite](ui.md#src-ui-components-sprite-tsx), [screens/Create](ui.md#src-ui-screens-create-tsx), [screens/Story](ui.md#src-ui-screens-story-tsx), [sheets/MenuSheets](ui.md#src-ui-sheets-menusheets-tsx), [sheets/WorldSheets](ui.md#src-ui-sheets-worldsheets-tsx) · tools: [sprites](tools.md#tools-sprites-ts), [validate-content](tools.md#tools-validate-content-ts)
+- Imported by: ui: [combat/BattleScreen](ui.md#src-ui-combat-battlescreen-tsx), [components/Sprite](ui.md#src-ui-components-sprite-tsx), [screens/Create](ui.md#src-ui-screens-create-tsx), [screens/Story](ui.md#src-ui-screens-story-tsx), [sheets/MenuSheets](ui.md#src-ui-sheets-menusheets-tsx), [sheets/WorldSheets](ui.md#src-ui-sheets-worldsheets-tsx) · tools: [icons](tools.md#tools-icons-ts), [sprites](tools.md#tools-sprites-ts), [validate-content](tools.md#tools-validate-content-ts)
 - Tested by: [explore.test](tests.md#tests-integration-explore-test-ts)
 - Types used: **[content/sprites/compile](#src-content-sprites-compile-ts)** [CompiledSprite](#src-content-sprites-compile-ts--compiledsprite) · **[core/ids/sprites](core.md#src-core-ids-sprites-ts)** [SpriteId](core.md#src-core-ids-sprites-ts--spriteid)
 
@@ -1922,7 +1922,7 @@ Declarations:
   - used by: here [compiled](#src-content-sprites-index-ts--compiled)
 - <a id="src-content-sprites-index-ts--compiled"></a>**compiled** · *function* `(id: SpriteId): CompiledSprite` — A sprite ready to draw, compiled on first use and cached.
   - uses: here [cache](#src-content-sprites-index-ts--cache) · **[content/sprites/compile](#src-content-sprites-compile-ts)** [compileSprite](#src-content-sprites-compile-ts--compilesprite) · **[content/sprites/palette](#src-content-sprites-palette-ts)** [PALETTE](#src-content-sprites-palette-ts--palette) · **[content/sprites/table](#src-content-sprites-table-ts)** [SPRITES](#src-content-sprites-table-ts--sprites)
-  - used by: **[ui/components/Sprite](ui.md#src-ui-components-sprite-tsx)** [Sprite](ui.md#src-ui-components-sprite-tsx--sprite)
+  - used by: **[ui/components/Sprite](ui.md#src-ui-components-sprite-tsx)** [Sprite](ui.md#src-ui-components-sprite-tsx--sprite) · **[tools/icons](tools.md#tools-icons-ts)** [main](tools.md#tools-icons-ts--main)
 
 <a id="src-content-sprites-palette-ts"></a>
 

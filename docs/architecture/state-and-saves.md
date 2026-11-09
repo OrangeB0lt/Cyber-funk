@@ -56,6 +56,8 @@ The server checks every upload with the same `decodeSave`, so a save the game ca
 | `app/save/slots.ts` | the three slots and their sync bookkeeping |
 | `app/save/protocol.ts`, `cloud.ts`, `sync.ts` | the cloud: the API contract, the HTTP client, the sync engine |
 
+**Keeping the saves.** Once a game exists (a new character, or a continued or imported save), the app asks the browser for persistent storage (`requestPersistentStorage`, `app/save/persist.ts`), so a device short of space is less likely to evict it. The browser may say no, and nothing depends on the answer.
+
 ## Resume
 
 `resume: ResumePoint | null` records where a reload should pick up when that isn't simply "the district screen":

@@ -1,6 +1,7 @@
 import type { PlaceId } from '@core/ids/world';
 import { PLACES } from '@content/index';
 import { Button } from '../components/Button';
+import { UpdateBanner } from '../components/UpdateBanner';
 import { Notes } from '../components/Notes';
 import { useApp, useGame, useView } from '../GameContext';
 import s from './World.module.css';
@@ -16,6 +17,7 @@ export function PlaceScreen() {
   const options = app.session.placeOptions(id);
   return (
     <div className={s.screen}>
+      <UpdateBanner />
       <h1 className={s.name}>{pl.name}</h1>
       <p className="small dim">{pl.desc}</p>
       {intro?.notes && <Notes have={g.notes} />}

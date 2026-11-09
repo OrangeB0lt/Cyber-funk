@@ -1,6 +1,6 @@
 # ADR-0001: TypeScript, React and a multi-file PWA
 
-- **Status:** Accepted (2026-10-30)
+- **Status:** Accepted (2026-10-30). The PWA shipped in P5 as planned: `vite-plugin-pwa` 2. The details are in [ui.md](../architecture/ui.md#the-pwa).
 - **Deciders:** project owner, with the refactor plan
 
 ## Context

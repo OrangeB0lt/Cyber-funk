@@ -20,6 +20,7 @@ flowchart LR
   n_engine_rules["engine/rules"]
   n_engine_rulesBaseline["engine/rulesBaseline"]
   n_engine_tsAdapter["engine/tsAdapter"]
+  n_icons["icons"]
   n_migrate_codegen_content["migrate/codegen-content"]
   n_migrate_codegen_ids["migrate/codegen-ids"]
   n_migrate_codegen_world["migrate/codegen-world"]
@@ -51,6 +52,7 @@ flowchart LR
   n_engine_tsAdapter --> n_engine_driver
   n_engine_tsAdapter --> n_ext_content
   n_engine_tsAdapter --> n_ext_engine
+  n_icons --> n_ext_content
   n_migrate_codegen_content --> n_migrate_serialize
   n_migrate_codegen_content --> n_parity_legacy
   n_migrate_codegen_ids --> n_migrate_serialize
@@ -93,6 +95,7 @@ flowchart LR
 | [tools/engine/rules.ts](#tools-engine-rules-ts) | Rules that lived in v1's UI layer (building enemy groups, field items, shops, victory bookkeeping), now engine functions: seeded random cases and what the v2 e… |
 | [tools/engine/rulesBaseline.ts](#tools-engine-rulesbaseline-ts) | Write tests/fixtures/rules.json: what the engine does with every rule case (tools/engine/rules.ts). |
 | [tools/engine/tsAdapter.ts](#tools-engine-tsadapter-ts) | EngineAdapter over the TypeScript engine, mirroring legacyAdapter.ts field for field so the shared driver can compare traces. |
+| [tools/icons.ts](#tools-icons-ts) | The app icons (the PWA manifest's and Apple's touch icon), drawn from the game's own pixel art: Gus Thibodeaux, Grand Marshal, on the night-purple background. |
 | [tools/migrate/codegen-content.ts](#tools-migrate-codegen-content-ts) | One-time migration: writes the combat/data content files under src/content from the legacy tables, preserving every value and the legacy key order. |
 | [tools/migrate/codegen-ids.ts](#tools-migrate-codegen-ids-ts) | One-time migration: writes src/core/ids/*.ts from the legacy tables, preserving legacy key order (which the engine relies on for iteration). |
 | [tools/migrate/codegen-world.ts](#tools-migrate-codegen-world-ts) | One-time migration: writes the world data tables (places, NPCs, quests, glossary) from legacy. |
@@ -581,6 +584,30 @@ Declarations:
 - <a id="tools-engine-tsadapter-ts--tsadapter"></a>**tsAdapter** · *function* `(): EngineAdapter`
   - uses: here [legacyShape](#tools-engine-tsadapter-ts--legacyshape) · **[content/band/secondLine](content.md#src-content-band-secondline-ts)** [SECOND_LINE](content.md#src-content-band-secondline-ts--second-line) · **[content/combat/skills](content.md#src-content-combat-skills-ts)** [SKILLS](content.md#src-content-combat-skills-ts--skills) · **[content/combat/timing](content.md#src-content-combat-timing-ts)** [TIMING](content.md#src-content-combat-timing-ts--timing) · **[core/rng](core.md#src-core-rng-ts)** [createRng](core.md#src-core-rng-ts--createrng) · **[core/types/content](core.md#src-core-types-content-ts)** [SecondLineMemberDef.when](core.md#src-core-types-content-ts--secondlinememberdef-when) · **[engine/balance](engine.md#src-engine-balance-ts)** [xpToNext](engine.md#src-engine-balance-ts--xptonext) · **[engine/combat/actors](engine.md#src-engine-combat-actors-ts)** [makeEnemy](engine.md#src-engine-combat-actors-ts--makeenemy) · **[engine/combat/battle](engine.md#src-engine-combat-battle-ts)** [createBattle](engine.md#src-engine-combat-battle-ts--createbattle) · **[engine/combat/player](engine.md#src-engine-combat-player-ts)** [playerAction](engine.md#src-engine-combat-player-ts--playeraction) · **[engine/combat/rewards](engine.md#src-engine-combat-rewards-ts)** [applyBattleResult](engine.md#src-engine-combat-rewards-ts--applybattleresult), [battleRewards](engine.md#src-engine-combat-rewards-ts--battlerewards) · **[engine/combat/turns](engine.md#src-engine-combat-turns-ts)** [runUntilPlayer](engine.md#src-engine-combat-turns-ts--rununtilplayer) · **[engine/economy](engine.md#src-engine-economy-ts)** [priceFor](engine.md#src-engine-economy-ts--pricefor) · **[engine/inventory](engine.md#src-engine-inventory-ts)** [addItem](engine.md#src-engine-inventory-ts--additem), [removeItem](engine.md#src-engine-inventory-ts--removeitem) · … +8 more
   - used by: **[tools/engine/rules](#tools-engine-rules-ts)** [state](#tools-engine-rules-ts--state) · tests: [properties.test](tests.md#tools-engine-properties-test-ts), [engine.test](tests.md#tools-parity-engine-test-ts)
+
+<a id="tools-icons-ts"></a>
+
+### tools/icons.ts
+
+The app icons (the PWA manifest's and Apple's touch icon), drawn from the game's own pixel art: Gus Thibodeaux, Grand Marshal, on the night-purple background. Rendered with Playwright, so no image library is needed.
+
+- Source: [tools/icons.ts](../../../tools/icons.ts)
+- Imports: content: [sprites/index](content.md#src-content-sprites-index-ts)
+- Packages: `@playwright/test`, `node:fs`, `node:path`
+
+Declarations:
+
+- <a id="tools-icons-ts--out"></a>**OUT** · *const, internal*
+  - used by: here [main](#tools-icons-ts--main)
+- <a id="tools-icons-ts--bg"></a>**BG** · *const, internal*
+  - used by: here [main](#tools-icons-ts--main)
+- <a id="tools-icons-ts--icons"></a>**ICONS** · *const, internal* `= [ … ] as const (4 entries)` — An icon: its file, its size, and how much of it the sprite may fill.
+  - used by: here [main](#tools-icons-ts--main)
+- <a id="tools-icons-ts--main"></a>**main** · *function, internal* `(): Promise<void>`
+  - uses: here [BG](#tools-icons-ts--bg), [ICONS](#tools-icons-ts--icons), [OUT](#tools-icons-ts--out) · **[content/sprites/compile](content.md#src-content-sprites-compile-ts)** [spriteSvg](content.md#src-content-sprites-compile-ts--spritesvg) · **[content/sprites/index](content.md#src-content-sprites-index-ts)** [compiled](content.md#src-content-sprites-index-ts--compiled)
+  - used by: here [(top level)](#tools-icons-ts--top-level)
+- <a id="tools-icons-ts--top-level"></a>**(top level)** · *module* — Statements that run when the module loads.
+  - uses: here [main](#tools-icons-ts--main)
 
 <a id="tools-migrate-codegen-content-ts"></a>
 

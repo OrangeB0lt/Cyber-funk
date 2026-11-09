@@ -16,6 +16,7 @@ import { SAVE_SLOT_IDS, type SaveSlotId } from '@core/ids/saves';
 import type { PlayerIntent, Settings } from '@core/types';
 import { BOSSES, CLASSES, DISTRICTS, ENEMIES, GEAR, cuttingContest, towerFlow } from '@content/index';
 import { bossStep, setupAct, towerBossSetup } from './devStates';
+import { requestPersistentStorage } from './save/persist';
 import {
   addItem,
   buy,
@@ -161,6 +162,7 @@ export class GameApp {
         this.presenter.toast("That save can't be read.");
         return;
       }
+      requestPersistentStorage();
       void this.session.resume();
       return;
     }
@@ -236,7 +238,26 @@ export class GameApp {
   /** Create the character, then show How to Play with a start button. */
   createCharacter(name: string, roots: RootsId, cls: ClassId): void {
     this.session.newGame(name, roots, cls, { ...this.view.titleSettings });
+    requestPersistentStorage();
     this.presenter.openSheet({ kind: 'howto', start: true });
+  }
+
+  /* ---------------- updates (the service worker) ---------------- */
+
+  private installUpdate: (() => Promise<void>) | null = null;
+
+  /** A new version is downloaded and waiting: the hub screens offer it (main.tsx wires this). */
+  offerUpdate(install: () => Promise<void>): void {
+    this.installUpdate = install;
+    this.view.updateReady = true;
+  }
+
+  /** Install the waiting version: save the game, then reload into it. */
+  async applyUpdate(): Promise<void> {
+    if (!this.installUpdate) return;
+    if (this.store.game) this.session.save();
+    this.view.updateReady = false;
+    await this.installUpdate();
   }
 
   /** Walk the dirge: start the prologue. */
@@ -466,6 +487,7 @@ export class GameApp {
     await this.session.director.abort('import');
     this.slots.active = slot;
     if (this.session.load(raw)) return false;
+    requestPersistentStorage();
     this.session.save();
     this.presenter.closeSheet();
     this.presenter.toast('Save loaded.');

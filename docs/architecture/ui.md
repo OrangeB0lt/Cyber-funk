@@ -105,6 +105,17 @@ The target is WCAG 2.2 AA. `tests/e2e/a11y.spec.ts` runs axe on every screen and
 - The 360px layout must never scroll sideways. The e2e suite fails on any overflow.
 - Play the Blues is always timed, even with auto rhythm. That's a known gap, logged as a P6 design call in known-issues.
 
+## The PWA
+
+`vite-plugin-pwa` ([vite.config.ts](../../vite.config.ts)) builds the manifest and a service worker. [main.tsx](../../src/main.tsx) registers the worker in production builds only.
+
+- **Offline.** The worker precaches the build (JS, CSS, HTML, fonts, icons), so once it has installed, the game loads and plays with no network. Saves are local first anyway; cloud sync waits for the signal.
+- **Never the API.** Nothing under `/api` is cached, and `/api` is excluded from the navigation fallback. A save upload reaches the server or fails, and `CloudSync` retries.
+- **Updates wait for a hub.** A new version downloads in the background, then `GameApp.offerUpdate` sets `view.updateReady`. The `UpdateBanner` shows only on the district and place screens, never mid-scene or mid-battle. Tapping **Update** saves, then reloads into the new version.
+- **Icons** are Gus, drawn from his sprite by `tools/icons.ts` into `public/icons/` (192, 512, a maskable 512, Apple's 180). Rerun it after redrawing him.
+- **Storage.** Once a game exists, the app asks the browser to keep its storage (`navigator.storage.persist()`, [save/persist.ts](../../src/app/save/persist.ts)).
+- **Installing on a phone** needs HTTPS, which the Docker stack's Caddy provides ([docker.md](../guides/docker.md)).
+
 ## Styling
 
 - `ui/styles/tokens.css`: the palette, tone colors, fonts, tap size and radius as CSS variables, ported 1:1 from v1.
@@ -129,6 +140,9 @@ Every interactive element gets a stable `data-testid`, and Playwright uses `test
 | Save slots, history | `save:2`, `save-del:2`, `save-history:2`, `restore:7` (a server revision) |
 | Cloud saves (Settings) | `cloud:status`, `cloud:code`, `cloud:link`, `cloud:link-text`, `cloud:dolink`, `cloud:unlink` |
 | Sprites (not interactive; for tests), gallery size | `sprite:hush_patrol`, `sprite:hero_trumpet`, `gallery-scale:2` |
+| Story cards (the roster, the epilogue, the credits) | `cards:roster`, `cards:epilogue`, `cards:credits` |
+| A waiting update (hub screens), its button | `update-banner`, `update` |
+| The announcer (hidden live log) | `announcer` |
 
 Keys come from content ids and choice keys, never from labels, so rewording copy never breaks a test.
 

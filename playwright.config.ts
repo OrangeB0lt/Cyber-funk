@@ -1,5 +1,6 @@
 /* End-to-end tests drive the production build in a 360×740 touch phone, the game's target device.
-   Service workers are blocked so tests always see the freshly built files (the PWA has its own spec).
+   Service workers are blocked so tests always see the freshly built files, except in the `pwa`
+   project (tests/e2e/pwa.spec.ts), which is about the service worker.
 
    Two suites:
    - local (default, `npm run e2e`): a `test`-mode build with no server (cloud saves off), served by
@@ -30,7 +31,10 @@ export default defineConfig({
   },
   projects: stackUrl
     ? [{ name: 'stack', testMatch: 'stack/**/*.spec.ts', timeout: 120_000 }]
-    : [{ name: 'local', testIgnore: 'stack/**' }],
+    : [
+        { name: 'local', testIgnore: ['stack/**', 'pwa.spec.ts'] },
+        { name: 'pwa', testMatch: 'pwa.spec.ts', testIgnore: 'stack/**', use: { serviceWorkers: 'allow' } },
+      ],
   // A `test`-mode build: production code plus the window.CF handle tests use to set up states.
   webServer: stackUrl
     ? undefined

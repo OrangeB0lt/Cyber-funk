@@ -6,7 +6,7 @@ Every source file in `src/`, `server/`, `tools/` and `tests/`, with its declarat
 
 For how the pieces work together (boot, a story line, a battle, a save reaching Postgres), read the hand-written [guide](../../architecture/code-map.md) first.
 
-**251** source files · **39** test files · **1137** top-level declarations · **419** members · **3167** "uses" edges
+**254** source files · **42** test files · **1145** top-level declarations · **422** members · **3192** "uses" edges
 
 ## Pages
 
@@ -16,11 +16,11 @@ For how the pieces work together (boot, a story line, a battle, a save reaching 
 | [src/narrative](narrative.md) | 3 | The scene API that story content is written against (Scene, SceneContext, Presenter), the Director that runs one scene at a time, and the place/event authoring helpers. |
 | [src/content](content.md) | 105 | Typed game data and story scripts: classes, skills, statuses, enemies, bosses (with their AI), items, gear, districts, acts, and the *.scene.ts files. |
 | [src/engine](engine.md) | 22 | The game rules as plain functions over GameState and Battle: stats, progression, inventory, shops, encounters, aftermath, and the combat loop. |
-| [src/app](app.md) | 18 | Runs the game without React: GameApp (every command the UI can issue), Session, the SceneContext implementation, the battle controller, the presenters, the view store, saves, and cloud sync. |
-| [src/ui and src/main.tsx](ui.md) | 39 | React components that render the two stores (game and view) and call GameApp commands, plus the browser entry point src/main.tsx. |
+| [src/app](app.md) | 19 | Runs the game without React: GameApp (every command the UI can issue), Session, the SceneContext implementation, the battle controller, the presenters, the view store, saves, and cloud sync. |
+| [src/ui and src/main.tsx](ui.md) | 40 | React components that render the two stores (game and view) and call GameApp commands, plus the browser entry point src/main.tsx. |
 | [server](server.md) | 15 | The cloud-save API: the Fastify app, its routes, the PostgreSQL repository and Drizzle schema, migrations and player-code auth. |
-| [tools](tools.md) | 26 | Node scripts: the parity oracles against v1, the balance sim and fight trace, the content validator, the layer check, the one-time migration codegen, and this generator. |
-| [tests (and every test file)](tests.md) | 44 | The integration and e2e suites in tests/, plus every co-located *.test.ts and *.spec.ts file in the repo, each listed with what it covers. |
+| [tools](tools.md) | 27 | Node scripts: the parity oracles against v1, the balance sim and fight trace, the content validator, the layer check, the one-time migration codegen, and this generator. |
+| [tests (and every test file)](tests.md) | 47 | The integration and e2e suites in tests/, plus every co-located *.test.ts and *.spec.ts file in the repo, each listed with what it covers. |
 
 ## Layers
 
@@ -48,15 +48,15 @@ flowchart TD
   narrative -->|13| core
   server -->|8| app
   server -->|1| core
-  tests -->|43| app
+  tests -->|45| app
   tests -->|12| content
-  tests -->|64| core
-  tests -->|24| engine
+  tests -->|65| core
+  tests -->|25| engine
   tests -->|6| narrative
   tests -->|6| server
   tests -->|32| tools
   tests -->|1| ui
-  tools -->|14| content
+  tools -->|15| content
   tools -->|41| core
   tools -->|5| engine
   ui -->|12| app

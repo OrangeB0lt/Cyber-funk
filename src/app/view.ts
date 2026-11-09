@@ -263,6 +263,11 @@ export interface ViewState {
   busy: boolean;
   /** Settings edited on the title screen before a game exists. */
   titleSettings: Settings;
+  /**
+   * A new version of the game is downloaded and waiting (the service worker). The district and place
+   * screens offer it; it's never shown mid-scene or mid-battle.
+   */
+  updateReady: boolean;
   /** Ambient line index per district. */
   ambient: Partial<Record<DistrictId, number>>;
   /** The last graded tap (drives the tap sound). */
@@ -293,6 +298,7 @@ export function createView(): ViewState {
     route: { kind: 'district' },
     busy: false,
     titleSettings: defaultSettings(),
+    updateReady: false,
     ambient: {},
     lastGrade: null,
     create: { step: 1, name: '', roots: 'creole', cls: 'trumpet' },

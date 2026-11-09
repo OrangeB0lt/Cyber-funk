@@ -2,6 +2,7 @@ import type { DistrictId, PlaceId } from '@core/ids/world';
 import { DISTRICTS, PLACES } from '@content/index';
 import { currentStep } from '@engine/index';
 import { Button } from '../components/Button';
+import { UpdateBanner } from '../components/UpdateBanner';
 import { useApp, useGame, useView } from '../GameContext';
 import s from './World.module.css';
 
@@ -17,6 +18,7 @@ export function DistrictScreen() {
   const step = currentStep(g);
   return (
     <div className={s.screen}>
+      <UpdateBanner />
       <h1 className={s.name}>{d.name}</h1>
       <div className="small dim">
         Levels {d.levels[0]}–{d.levels[1]} · Day {g.day}

@@ -22,6 +22,14 @@ if (import.meta.env.DEV || import.meta.env.MODE === 'test') {
   (window as unknown as { CF: unknown }).CF = app;
 }
 
+// The service worker (vite-plugin-pwa): precaches the game so it runs offline, and offers each new
+// version at a hub screen instead of swapping it in mid-fight. Production builds only.
+if (import.meta.env.PROD && 'serviceWorker' in navigator) {
+  void import('virtual:pwa-register').then(({ registerSW }) => {
+    const update = registerSW({ onNeedRefresh: () => app.offerUpdate(() => update(true)) });
+  });
+}
+
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
     <App app={app} />

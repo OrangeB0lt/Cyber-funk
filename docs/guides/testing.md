@@ -17,7 +17,8 @@
 | **End to end** | `tests/e2e/*.spec.ts` | Playwright, 360×740 touch Chromium | The real UI: tapping through screens, every sheet, the shop, battles with the timing bar, save slots, every place and option of every ported district (`world.spec.ts`), no horizontal overflow, a clean console |
 | **Full game** | `tests/e2e/finale.spec.ts` | Playwright, 360×740 | A new character through the UI to the credits and into New Game+, with dev shortcuts between districts and short fights: every screen fits, the finale's screens pass axe, the console stays clean |
 | **Accessibility** | `tests/e2e/a11y.spec.ts` | Playwright with axe-core | WCAG 2.2 A and AA on every screen and layer, with no allowlist; keyboard focus into and out of sheets and dialogs, Escape closing only the top layer; story lines announced once; reduced motion stopping transitions |
-| **Stack end to end** | `tests/e2e/stack/*.spec.ts` | Playwright against `docker compose up` | Cloud saves for real: two browser contexts as two phones, a player code, offline play, a conflict, restoring a checkpoint |
+| **PWA** | `tests/e2e/pwa.spec.ts` (the `pwa` project, service workers allowed) | Playwright | Offline play once the worker is installed; Chromium's installability check (CDP) passes; `/api` is never cached or served from the cache; a waiting update shows only at a hub |
+| **Stack end to end** | `tests/e2e/stack/*.spec.ts` | Playwright against `docker compose up` | Cloud saves for real: two browser contexts as two phones, a player code, offline play, a conflict, restoring a checkpoint; and the PWA with the cloud on (loads offline from the worker, the offline save syncs when the signal is back) |
 
 ## Commands
 
