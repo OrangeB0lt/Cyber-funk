@@ -15,6 +15,7 @@
 | **Server** | `server/**/*.test.ts` | Vitest project `server`, real PostgreSQL | The API's rules (revisions, conflicts, tombstones, history, auth, rate limits, static files), and the browser's sync engine against the real server |
 | **Headless playthroughs** | `tests/integration/slice.test.ts`, `playthrough.test.ts` | Vitest, with `ScriptedPresenter` | Story flows end to end, no browser, real battles: new game → every ported district → its boss, down every branch of the big boss choices (`playthrough`); the slice's specific checks (`slice`) |
 | **End to end** | `tests/e2e/*.spec.ts` | Playwright, 360×740 touch Chromium | The real UI: tapping through screens, every sheet, the shop, battles with the timing bar, save slots, every place and option of every ported district (`world.spec.ts`), no horizontal overflow, a clean console |
+| **Accessibility** | `tests/e2e/a11y.spec.ts` | Playwright with axe-core | WCAG 2.2 A and AA on every screen and layer, with no allowlist; keyboard focus into and out of sheets and dialogs, Escape closing only the top layer; story lines announced once; reduced motion stopping transitions |
 | **Stack end to end** | `tests/e2e/stack/*.spec.ts` | Playwright against `docker compose up` | Cloud saves for real: two browser contexts as two phones, a player code, offline play, a conflict, restoring a checkpoint |
 
 ## Commands
@@ -91,6 +92,7 @@ The e2e build is a production build in `test` mode (`vite build --mode test`), w
 - `cf(page, (app, arg) => …, arg)`: run code against the app in the page, to set up a state fast (`app.dev.boss('captain_hush')`, `app.dev.gold()`) or to read the save.
 - `playUntil(page, done)`: tap through whatever the game asks (Continue, choices, popups, the timing bar, RIFF at a target, outcome buttons) until `done()` holds.
 - `expectNoOverflow(page, label)`: fail if anything sticks out past 360px.
+- `expectAccessible(page, label)` (`tests/e2e/a11y.ts`): run axe and fail on any violation. Call it on every new screen or sheet a spec reaches.
 - `watchErrors(page)`: collect console errors; assert it's empty at the end.
 
 Find elements by `data-testid` (`page.getByTestId('act:riff')`). The conventions are in [ui.md](../architecture/ui.md#test-ids). Never select by visible text: copy changes.

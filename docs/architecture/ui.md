@@ -74,12 +74,36 @@ One more tiny store, `ui/combat/targeting.ts`, holds battle-input UI state (skil
 
 ## Accessibility (phone-first, but not phone-only)
 
-- Everything tappable is a real `<button>` (the `Button` component), at least 48px tall.
-- Dialogs and sheets use `role="dialog"` and `aria-modal`, move focus inside on open, close on Escape, and make the rest of the app `inert`.
-- The typewriter puts the full text in a screen-reader-only copy and hides the partially typed characters (`Typewriter.tsx`, `LexText.tsx`).
-- Meters (`Bar`) are `role="meter"` with values. The battle log is a polite live region.
-- Settings: text size S/M/L and reduce motion (it also follows the OS `prefers-reduced-motion`).
+The target is WCAG 2.2 AA. `tests/e2e/a11y.spec.ts` runs axe on every screen and layer, and **any violation fails**: there's no allowlist. Fix a new one; don't list it. `A11Y_REPORT=1` collects violations into `test-results/a11y-report.jsonl` instead of failing, for when a change trips several.
+
+**Controls**
+- Everything tappable is a real `<button>` (the `Button` component): at least 48px tall, and small buttons at least 44px wide. Chips are 32px with 8px gaps. Lexicon links get a 24px+ hit area from padding that a negative margin takes back, so lines don't move.
+- Buttons never nest. A control that holds other controls (an enemy card with status chips) is a container with a tap-target button and the other controls beside it.
+- A control's accessible name starts with its visible text (Label in Name, so voice control works). Don't put an `aria-label` on a button with visible text. Add what's missing as `sr-only` text after it, the way the Topbar adds "Heart 70 of 70, Funk 25 of 25. Status and skills."
+- A `Bar` inside a button is `decorative` (no meter role). A button flattens its children's roles, and the meter's label would replace the numbers in the button's name.
+
+**Layers** (sheets, dialogs, the timing overlay)
+- `role="dialog"`, `aria-modal`, and the rest of the app `inert`.
+- Focus moves in when a layer opens:
+  - a sheet: `[data-autofocus]`, else the first control in its body, else the body (it's focusable, so the keyboard can scroll it)
+  - a dialog: its first button
+  - the timing bar and Blues pads: the overlay (Space or Enter taps)
+- `useFocusReturn` gives focus back to the control that opened the layer, or to `<main>` if that control is gone or disabled.
+- Escape closes only the top layer.
+- Dialogs have `aria-describedby` pointing at their text (`desc`).
+
+**What a screen reader hears**
+- The `Announcer` (`layers/Announcer.tsx`) is a hidden polite log. It reads each story line once as it starts, a new screen's title, the battle outcome, and timing results.
+- The visible transcript isn't a live region. The Typewriter swaps its text when typing ends, which made a live transcript read every line twice.
+- The battle log is `role="log"`. Meters (`Bar`) are `role="meter"` with values.
+- Headings: one `h1` per screen (its title), `h2` for sheet and dialog titles, `h3` for sections.
+
+**Colour and motion**
+- Body text is at least 4.5:1 on every surface. Faded states (locked, downed, unavailable) use `--dim`, never opacity on text.
+- `--edge` (3.5:1 or better) outlines controls. `--line` is for dividers and card outlines only.
+- Settings: text size S/M/L, and reduce motion. Reduce motion follows the OS `prefers-reduced-motion` too, and stops both animations and transitions.
 - The 360px layout must never scroll sideways. The e2e suite fails on any overflow.
+- Play the Blues is always timed, even with auto rhythm. That's a known gap, logged as a P6 design call in known-issues.
 
 ## Styling
 

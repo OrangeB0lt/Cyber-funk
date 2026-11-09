@@ -8,7 +8,7 @@
 | P1 | Core, typed content, engine at exact parity with v1 | done |
 | P2 | Vertical slice: prologue, Tremé, Captain Hush, the React shell | done (played through to the Quarter; SceneContext v1 accepted) |
 | P2.5 | Docker, Docker Compose, cloud saves in PostgreSQL (three slots, history, player codes) | done ([ADR-0006](adr/0006-server-and-cloud-saves.md)) |
-| P3 | The remaining districts | districts and minigames done; the accessibility pass is left |
+| P3 | The remaining districts, the accessibility pass | done |
 | P4 | Finale and persistence | |
 | P5 | PWA, cutover, docs | |
 | P6 | Post-parity fixes | |
@@ -27,7 +27,15 @@
   - crawfish races (`s.board`)
   - sit-in (`s.timing`)
   - tarot, blessing, whispers (choices and rolls)
-- **Still to do:** an accessibility pass.
+- **Accessibility (done):** WCAG 2.2 AA, checked by axe on every screen with no allowlist (`tests/e2e/a11y.spec.ts`):
+  - focus into and back out of every layer
+  - Label in Name
+  - no nested controls
+  - an announcer that reads each story line once
+  - contrast tokens, and reduced motion stopping transitions
+  - 44px+ targets
+
+  Play the Blues staying timed under auto rhythm is a P6 design call. The rules are in [ui.md](architecture/ui.md#accessibility-phone-first-but-not-phone-only).
 - **Gate per district** (all green):
   - transcript parity with v1 for every option in each meaningful state
   - off `src/content/pending.ts`, so that:
