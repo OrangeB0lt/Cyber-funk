@@ -65,8 +65,11 @@ export async function gotoDistrict(
   game.district = id;
   if (!game.unlocked.includes(id)) game.unlocked.push(id);
   game.inTower = false;
-  // PARITY: v1 resets the floor but not the fight (known-issues).
-  if (!opts.keepClimb) game.towerFloor = 0;
+  // Leaving restarts the climb: the floor and the fight within it (v1 reset only the floor).
+  if (!opts.keepClimb) {
+    game.towerFloor = 0;
+    game.towerFight = 0;
+  }
   session.save();
   // PARITY: v1 then redraws the top bar, which caps Heart and Funk (leaving the Tower lowers them).
   capVitals(game);

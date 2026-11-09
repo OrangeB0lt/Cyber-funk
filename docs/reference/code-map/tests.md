@@ -128,7 +128,7 @@ The React presenter's story view: what the screen holds as a scene runs.
 ### src/app/session.test.ts
 
 - Source: [src/app/session.test.ts](../../../src/app/session.test.ts)
-- Imports: engine: [index](engine.md#src-engine-index-ts) · app: [devStates](app.md#src-app-devstates-ts), [save/storage](app.md#src-app-save-storage-ts), [session](app.md#src-app-session-ts), [testing/scriptedPresenter](app.md#src-app-testing-scriptedpresenter-ts)
+- Imports: narrative: [types](narrative.md#src-narrative-types-ts) · engine: [index](engine.md#src-engine-index-ts) · app: [devStates](app.md#src-app-devstates-ts), [save/storage](app.md#src-app-save-storage-ts), [session](app.md#src-app-session-ts), [testing/scriptedPresenter](app.md#src-app-testing-scriptedpresenter-ts)
 - Packages: `vitest`
 - Suites: “the Tower climb across a reload”, “the after-boss checkpoint”
 

@@ -187,6 +187,9 @@ export class Session implements SessionPort {
     g.district = 'treme';
     g.resume = null;
     g.inTower = false;
+    // Cut in the Tower: the climb is over and starts again from the Lobby.
+    g.towerFloor = 0;
+    g.towerFight = 0;
     clampVitals(g);
     this.save();
     this.route = { kind: 'district' };

@@ -1,5 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { defaultSettings } from '@engine/index';
+import { SceneInterrupt } from '@narrative/types';
 import { bossStep, setupAct } from './devStates';
 import { memorySaveStorage } from './save/storage';
 import { Session } from './session';
@@ -35,14 +36,31 @@ describe('the Tower climb across a reload', () => {
     expect(s.game).toMatchObject({ district: 'tower', inTower: false, towerFloor: 2 });
   });
 
-  it('travel restarts the climb, as in v1 (the floor resets; the fight index does not)', async () => {
+  it('travel restarts the climb: the floor and the fight both reset (v1 kept the fight)', async () => {
     const s = new Session({ presenter: new ScriptedPresenter(), storage: memorySaveStorage() });
     s.load(midClimb());
     s.game.towerFight = 1;
     await s.resume();
     await s.travel('treme');
     await s.travel('tower');
-    expect(s.game).toMatchObject({ district: 'tower', towerFloor: 0, towerFight: 1 });
+    expect(s.game).toMatchObject({ district: 'tower', towerFloor: 0, towerFight: 0 });
+  });
+
+  it('getting cut in the Tower ends the climb: you wake at the club with it reset', async () => {
+    const s = new Session({
+      presenter: new ScriptedPresenter(),
+      storage: memorySaveStorage(),
+      battle: async () => {
+        throw new SceneInterrupt('cut');
+      },
+    });
+    s.load(midClimb());
+    s.game.towerFight = 1;
+    await s.run(
+      c => c.fight({ enemies: ['hush_patrol'], context: 'tower', noFlee: true }).then(() => {}),
+      'cut',
+    );
+    expect(s.game).toMatchObject({ district: 'treme', towerFloor: 0, towerFight: 0 });
   });
 });
 

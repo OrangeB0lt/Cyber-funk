@@ -76,7 +76,7 @@ type ResumePoint =
 - Anything else goes to the saved district.
 
 **The Tower climb** isn't a `ResumePoint`, because `runBattle` clears `resume` after every fight. It's two save fields, `towerFloor` and `towerFight`, kept the way v1 kept them:
-- Travel resets the floor (not the fight), as v1's `goDistrict` did.
+- Travel resets both, and so does getting cut in the Tower (you wake at the club and the climb starts again from the Lobby). v1 reset only the floor, so a climb could start at the Lobby's second fight; fixed in P6.
 - A reload keeps both (`gotoDistrict(…, { keepClimb: true })`), so the lobby offers "Continue the climb". v1 restarted the climb on every reload, though its tutorial says otherwise.
 
 **Format versions:**

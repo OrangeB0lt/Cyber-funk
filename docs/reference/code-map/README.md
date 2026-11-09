@@ -52,7 +52,7 @@ flowchart TD
   tests -->|11| content
   tests -->|59| core
   tests -->|23| engine
-  tests -->|6| narrative
+  tests -->|7| narrative
   tests -->|6| server
   tests -->|15| tools
   tests -->|1| ui
