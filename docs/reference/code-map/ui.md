@@ -290,7 +290,7 @@ Declarations:
 
 - <a id="src-ui-components-bar-tsx--props"></a>**Props** · *interface, internal*
   - used by: here [Bar](#src-ui-components-bar-tsx--bar)
-- <a id="src-ui-components-bar-tsx--bar"></a>**Bar** · *component* `({ value, max, label, kind, full, compact, name }: Props): React.JSX.Element` — A meter: Heart, Funk, Groove, enemy Heart or XP.
+- <a id="src-ui-components-bar-tsx--bar"></a>**Bar** · *component* `({ value, max, label, kind, full, compact, name, decorative }: Props): React.JSX.Element` — A meter: Heart, Funk, Groove, enemy Heart or XP.
   - used by: **[ui/combat/BattleScreen](#src-ui-combat-battlescreen-tsx)** [EnemyCard](#src-ui-combat-battlescreen-tsx--enemycard), [PlayerPanel](#src-ui-combat-battlescreen-tsx--playerpanel) · **[ui/layers/Topbar](#src-ui-layers-topbar-tsx)** [Topbar](#src-ui-layers-topbar-tsx--topbar) · **[ui/sheets/MenuSheets](#src-ui-sheets-menusheets-tsx)** [StatusSheet](#src-ui-sheets-menusheets-tsx--statussheet)
 
 <a id="src-ui-components-button-tsx"></a>
@@ -499,7 +499,7 @@ Declarations:
 
 Declarations:
 
-- <a id="src-ui-layers-popuplayer-tsx--dialog"></a>**Dialog** · *component, internal* `({ title, onDismiss, children, className, }: { title: string; onDismiss(): void; children: ReactNode; className?: string; }): React.JSX.Element` — A modal dialog: focus moves to its first button when it opens, Escape dismisses it, and the rest of the app is inert behind it.
+- <a id="src-ui-layers-popuplayer-tsx--dialog"></a>**Dialog** · *component, internal* `({ title, desc, onDismiss, children, className, }: { title: string; desc: ReactNode; onDismiss(): void; children: ReactNode; className?: string; }): React.JSX.Element` — A modal dialog: focus moves to its first button when it opens, Escape dismisses it, and the rest of the app is inert behind it.
   - used by: here [PopupLayer](#src-ui-layers-popuplayer-tsx--popuplayer)
 - <a id="src-ui-layers-popuplayer-tsx--popuplayer"></a>**PopupLayer** · *component* `(): React.JSX.Element | null` — The first queued dialog: confirm, level-up, lexicon term or status.
   - uses: here [Dialog](#src-ui-layers-popuplayer-tsx--dialog) · **[app/game](app.md#src-app-game-ts)** [GameApp.answerPopup](app.md#src-app-game-ts--gameapp-answerpopup) · **[content/combat/skills](content.md#src-content-combat-skills-ts)** [SKILLS](content.md#src-content-combat-skills-ts--skills) · **[content/combat/statuses](content.md#src-content-combat-statuses-ts)** [STATUSES](content.md#src-content-combat-statuses-ts--statuses) · **[content/glossary](content.md#src-content-glossary-ts)** [GLOSSARY](content.md#src-content-glossary-ts--glossary) · **[ui/GameContext](#src-ui-gamecontext-tsx)** [useApp](#src-ui-gamecontext-tsx--useapp), [useView](#src-ui-gamecontext-tsx--useview) · **[ui/components/Button](#src-ui-components-button-tsx)** [Button](#src-ui-components-button-tsx--button) · **[ui/components/StatGrid](#src-ui-components-statgrid-tsx)** [StatGrid](#src-ui-components-statgrid-tsx--statgrid) · **[ui/components/useFocusReturn](#src-ui-components-usefocusreturn-ts)** [useFocusReturn](#src-ui-components-usefocusreturn-ts--usefocusreturn)

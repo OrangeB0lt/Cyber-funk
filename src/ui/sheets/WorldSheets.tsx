@@ -98,33 +98,33 @@ export function HowToSheet({ start }: { start: boolean }) {
       }
     >
       <div className={s.howto}>
-        <h4>Six actions</h4>
+        <h3>Six actions</h3>
         <p>
           <b>RIFF</b> is your basic attack (+2 Funk, +20 Groove). <b>PLAY</b> spends Funk on a skill.{' '}
           <b>SOLO</b> is your ultimate at 100 Groove. <b>VAMP</b> halves damage until your next turn and
           restores 15% Funk. <b>BAG</b> uses an item. <b>SPLIT</b> runs (never from bosses or elites).
         </p>
-        <h4>On the One</h4>
+        <h3>On the One</h3>
         <p>
           Every RIFF, damaging PLAY, and SOLO pops up a timing bar. Tap anywhere as the marker crosses the
           glowing <b>ONE</b> zone: ×1.5 damage and +10 Groove. The pocket around it is ×1.2, loose is ×1.0,
           and a miss is CLAMS at ×0.6. Set Rhythm Taps to Auto in Settings if you'd rather not tap.
         </p>
-        <h4>Tones & weaknesses</h4>
+        <h3>Tones & weaknesses</h3>
         <p>
           Every attack has a tone: <Tone tone="HOT" /> <Tone tone="LOW" /> <Tone tone="BLUE" />{' '}
           <Tone tone="FUNK" />. Every enemy has a weakness (×1.5) and usually a resistance (×0.5). Metronome's
           machines are usually weak to FUNK. Tone tapes and beads change your next attack's tone. The Blue
           Book remembers what you learn.
         </p>
-        <h4>Groove</h4>
+        <h3>Groove</h3>
         <p>
           Builds from RIFF (+20), any skill (+10), hitting a weakness (+10), ON THE ONE (+10), VAMP (+10), and
           taking damage (+5). At 100, SOLO.
         </p>
-        <h4>Statuses</h4>
+        <h3>Statuses</h3>
         <p>Small chips with turn counters. Tap one to read it.</p>
-        <h4>Save</h4>
+        <h3>Save</h3>
         <p>
           Autosaves when you enter a district, after every fight, and before every boss. Save by hand at the
           Lagniappe club. Export a save code in Settings so progress is never trapped.
@@ -164,9 +164,9 @@ export function DevSheet() {
         {b('cutting', 'Cutting Contest', d.cutting)}
         {b('sprites', 'Sprite gallery', () => app.openSheet({ kind: 'sprites' }))}
       </div>
-      <h4>Jump to boss</h4>
+      <h3>Jump to boss</h3>
       <div className={s.row}>{d.bosses.map(id => b(`boss:${id}`, BOSSES[id].name, () => d.boss(id)))}</div>
-      <h4>Jump to act</h4>
+      <h3>Jump to act</h3>
       <div className={s.row}>{d.acts.map(a => b(`act:${a}`, a, () => d.act(a)))}</div>
     </Sheet>
   );

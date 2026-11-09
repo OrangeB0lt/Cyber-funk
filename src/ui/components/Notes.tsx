@@ -6,7 +6,7 @@ import s from './Notes.module.css';
 /** The six Blue Notes, lit when recovered. */
 export function Notes({ have }: { have: readonly NoteId[] }) {
   return (
-    <div className={s.notes} aria-label={`${have.length} of 6 Blue Notes`}>
+    <div className={s.notes} role="group" aria-label={`${have.length} of 6 Blue Notes`}>
       {NOTE_IDS.map(n => (
         <span key={n} className={`${s.note} ${have.includes(n) ? s.have : ''}`}>
           {NOTES[n].name}

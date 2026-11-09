@@ -16,24 +16,6 @@ const TAGS = ['wcag2a', 'wcag2aa', 'wcag21a', 'wcag21aa', 'wcag22aa'];
 
 /** Known violations: rule id → why it's still there and the screens (labels) it fires on. */
 export const A11Y_ALLOW: Record<string, { reason: string; on: readonly string[] }> = {
-  'label-content-name-mismatch': {
-    reason:
-      'aria-labels that replace the visible text: the Topbar ("Status and skills" hides the name, Heart, Funk, Doubloons), the version button, enemy target cards, the timing bar',
-    on: [
-      'title',
-      'district',
-      'place',
-      'story',
-      'story:choices',
-      'battle',
-      'battle:skills',
-      'battle:target',
-      'battle:timing',
-      'battle:auto',
-      'battle:victory',
-      'battle:defeat',
-    ],
-  },
   'color-contrast': {
     reason: 'locked skills are drawn at 50% opacity (tone badge and level text)',
     on: ['sheet:status'],

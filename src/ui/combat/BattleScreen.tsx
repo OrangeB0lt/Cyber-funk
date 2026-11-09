@@ -64,55 +64,69 @@ function EnemyCard({ e }: { e: Snapshot<ActorView> }) {
   ]
     .filter(Boolean)
     .join(' ');
+  // The card is the tap target; its status chips sit outside the button (each chip is a button of
+  // its own, and buttons can't nest). The button's name is its visible text plus a hidden summary.
   return (
-    <button
-      type="button"
-      className={cls}
-      data-testid={`target:${e.id}`}
-      disabled={!canTarget}
-      aria-label={`${e.name}, level ${e.level}, ${Math.max(0, e.hp)} of ${e.maxHp} Heart${canTarget ? '. Tap to target.' : ''}`}
-      onClick={() => targeting.pick(e.id)}
-    >
-      <div className={s.cardBody}>
-        <span className={s.portrait}>
-          <Sprite id={actorSprite(e, g.cls)} scale={3} idle={e.alive} hit={hit} phase={bobPhase(e.id)} />
-          <Floats id={e.id} />
-        </span>
-        <div className={s.info}>
-          <div className={s.head}>
-            <b>{e.name}</b>
-            <span className="dim small">
-              Lv {e.level}
-              {e.elite ? ' ★' : ''}
-            </span>
-          </div>
-          <Bar
-            kind="enemy"
-            compact
-            name={`${e.name} Heart`}
-            value={e.hp}
-            max={e.maxHp}
-            label={`${Math.max(0, e.hp)}/${e.maxHp}`}
-          />
-          <StatusChips statuses={e.statuses} />
-          <div className="small dim">
-            {known && e.weak ? (
-              <>
-                Weak <Tone tone={e.weak} />
-                {e.resist && (
-                  <>
-                    {' '}
-                    · Resists <Tone tone={e.resist} />
-                  </>
-                )}
-              </>
-            ) : (
-              'Weakness: ?'
-            )}
+    <div className={cls}>
+      <button
+        type="button"
+        className={s.cardHit}
+        data-testid={`target:${e.id}`}
+        disabled={!canTarget}
+        onClick={() => targeting.pick(e.id)}
+      >
+        <div className={s.cardBody}>
+          <span className={s.portrait}>
+            <Sprite id={actorSprite(e, g.cls)} scale={3} idle={e.alive} hit={hit} phase={bobPhase(e.id)} />
+            <Floats id={e.id} />
+          </span>
+          <div className={s.info}>
+            <div className={s.head}>
+              <b>{e.name}</b>
+              <span className="dim small">
+                Lv {e.level}
+                {e.elite ? ' ★' : ''}
+              </span>
+            </div>
+            <Bar
+              kind="enemy"
+              compact
+              decorative
+              name={`${e.name} Heart`}
+              value={e.hp}
+              max={e.maxHp}
+              label={`${Math.max(0, e.hp)}/${e.maxHp}`}
+            />
+            <div className="small dim">
+              {known && e.weak ? (
+                <>
+                  Weak <Tone tone={e.weak} />
+                  {e.resist && (
+                    <>
+                      {' '}
+                      · Resists <Tone tone={e.resist} />
+                    </>
+                  )}
+                </>
+              ) : (
+                'Weakness: ?'
+              )}
+            </div>
           </div>
         </div>
-      </div>
-    </button>
+        <span className="sr-only">
+          . Heart {Math.max(0, e.hp)} of {e.maxHp}
+          {e.elite ? ', elite' : ''}
+          {e.alive ? '' : ', down'}
+          {canTarget ? '. Tap to target.' : ''}
+        </span>
+      </button>
+      {e.statuses.length > 0 && (
+        <div className={s.cardChips}>
+          <StatusChips statuses={e.statuses} />
+        </div>
+      )}
+    </div>
   );
 }
 
@@ -134,7 +148,7 @@ function PlayerPanel({ p, active }: { p: Snapshot<ActorView>; active: boolean })
               Lv {g.level} · {CLASSES[g.cls].name}
             </span>
             {p.bigFour && (
-              <span className={s.beat} aria-label={`Beat ${p.beat} of 4`}>
+              <span className={s.beat} role="img" aria-label={`Beat ${p.beat} of 4`}>
                 {[1, 2, 3, 4].map(n => (
                   <i key={n} className={`${p.beat === n ? s.on : ''} ${n === 4 ? s.four : ''}`}>
                     {n}

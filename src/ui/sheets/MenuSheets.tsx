@@ -154,17 +154,17 @@ export function StatusSheet() {
           </div>
         )}
       </div>
-      <h4>Riff</h4>
+      <h3>Riff</h3>
       <SkillRow id={c.riff} />
-      <h4>Skills</h4>
+      <h3>Skills</h3>
       {c.skills.map((id, i) => (
         <SkillRow key={id} id={id} locked={g.level < SKILL_LEVELS[i]!} />
       ))}
-      <h4>Solo (100 Groove)</h4>
+      <h3>Solo (100 Groove)</h3>
       <SkillRow id={c.solo} />
       {g.sheet.length > 0 && (
         <>
-          <h4>Sheet Music</h4>
+          <h3>Sheet Music</h3>
           {g.sheet.map(id => (
             <div key={id} className="small">
               • <b>{SHEET_MUSIC[id].name}</b>: {SHEET_MUSIC[id].desc}
@@ -172,7 +172,7 @@ export function StatusSheet() {
           ))}
         </>
       )}
-      <h4>Blue Notes</h4>
+      <h3>Blue Notes</h3>
       <Notes have={g.notes} />
     </Sheet>
   );
@@ -219,7 +219,7 @@ export function BagSheet({ battle }: { battle: boolean }) {
       )}
       {g.keyItems.length > 0 && (
         <>
-          <h4>Key Items</h4>
+          <h3>Key Items</h3>
           {g.keyItems.map(k => (
             <div key={k} className="small">
               • {ITEMS[k]?.name ?? k}
@@ -362,7 +362,7 @@ export function JournalSheet() {
   const bounty = g.bounty ? DISTRICTS[g.bounty] : null;
   return (
     <Sheet title="Journal" back>
-      <h4>Main Quest</h4>
+      <h3>Main Quest</h3>
       <div className={s.card2}>
         <b>{step.text}</b>
         <div className="small dim">Where: {step.def.where}</div>
@@ -375,7 +375,7 @@ export function JournalSheet() {
           </div>
         </ItemRow>
       )}
-      <h4>Side Quests</h4>
+      <h3>Side Quests</h3>
       {sides.length ? (
         sides.map(q => {
           const st = g.quests[q.id];
@@ -393,7 +393,7 @@ export function JournalSheet() {
       ) : (
         <p className="dim">No side quests yet. Talk to people.</p>
       )}
-      <h4>Blue Notes</h4>
+      <h3>Blue Notes</h3>
       <Notes have={g.notes} />
     </Sheet>
   );
@@ -455,7 +455,7 @@ export function LexiconSheet() {
       {cats.size ? (
         [...cats.keys()].sort().map(c => (
           <div key={c}>
-            <h4>{c}</h4>
+            <h3>{c}</h3>
             {cats.get(c)!.map(e => (
               <div key={e.id} className="small">
                 <b>{e.term}</b>

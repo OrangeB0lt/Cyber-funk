@@ -16,7 +16,7 @@ export function PlaceScreen() {
   const options = app.session.placeOptions(id);
   return (
     <div className={s.screen}>
-      <h2 className={s.name}>{pl.name}</h2>
+      <h1 className={s.name}>{pl.name}</h1>
       <p className="small dim">{pl.desc}</p>
       {intro?.notes && <Notes have={g.notes} />}
       {intro?.text && <p className="small">{intro.text}</p>}

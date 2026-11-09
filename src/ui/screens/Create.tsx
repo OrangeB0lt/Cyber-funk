@@ -21,7 +21,7 @@ export function CreateScreen() {
     <div className={s.create}>
       {c.step === 1 && (
         <>
-          <h2>Who&apos;s playing?</h2>
+          <h1>Who&apos;s playing?</h1>
           <p className="dim">Every Grand Marshal starts with a name.</p>
           <label className="sr-only" htmlFor="name-input">
             Your name
@@ -42,7 +42,7 @@ export function CreateScreen() {
       )}
       {c.step === 2 && (
         <>
-          <h2>Roots</h2>
+          <h1>Roots</h1>
           <p className="dim">Where you&apos;re from. A small bonus, a starting item, and a way of talking.</p>
           {ROOTS_IDS.map(id => {
             const r = ROOTS[id];
@@ -64,7 +64,7 @@ export function CreateScreen() {
       )}
       {c.step === 3 && (
         <>
-          <h2>Instrument</h2>
+          <h1>Instrument</h1>
           <p className="dim">Your class. Tap a card to pick it.</p>
           {CLASS_IDS.map(id => {
             const cl = CLASSES[id];

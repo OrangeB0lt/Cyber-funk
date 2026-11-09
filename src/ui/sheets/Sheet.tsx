@@ -53,7 +53,7 @@ export function Sheet({ title, lead, back, foot, children }: Props) {
       <div ref={ref} className={s.card} role="dialog" aria-modal="true" aria-label={title}>
         <div className={s.head}>
           {lead}
-          <h3>{title}</h3>
+          <h2>{title}</h2>
           {back && (
             <Button testId="sheet-back" small variant="ghost" onClick={() => app.openSheet({ kind: 'menu' })}>
               ‹ Menu

@@ -70,7 +70,6 @@ function TimingBar() {
       className={s.timing}
       onPointerDown={e => (e.preventDefault(), tap())}
       data-testid="timing"
-      aria-label="Tap on the one"
     >
       <div className={s.label}>
         TAP ON THE <b>ONE</b>
@@ -147,7 +146,6 @@ function BluesPads() {
       className={s.timing}
       onPointerDown={e => (e.preventDefault(), tap())}
       data-testid="blues"
-      aria-label="Play the Blues: tap each note as it lights"
     >
       <div className={s.label}>PLAY THE BLUES · tap each note as it lights</div>
       <div className={s.pads}>

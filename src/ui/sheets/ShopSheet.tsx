@@ -32,10 +32,14 @@ export function ShopSheet({ title, stock, noSell, tab, keeper }: Props) {
         You have <b>{fmtDoubloons(g.doubloons)}</b>
       </div>
       {!noSell && (
-        <div className={s.tabs}>
+        <div className={s.tabs} role="tablist" aria-label="Buy or sell">
           <Button
             testId="tab:buy"
             small
+            role="tab"
+            id="shop-tab-buy"
+            aria-selected={tab === 'buy'}
+            aria-controls="shop-panel"
             variant={tab === 'buy' ? 'primary' : 'ghost'}
             onClick={() => app.shopTab('buy')}
           >
@@ -44,6 +48,10 @@ export function ShopSheet({ title, stock, noSell, tab, keeper }: Props) {
           <Button
             testId="tab:sell"
             small
+            role="tab"
+            id="shop-tab-sell"
+            aria-selected={tab === 'sell'}
+            aria-controls="shop-panel"
             variant={tab === 'sell' ? 'primary' : 'ghost'}
             onClick={() => app.shopTab('sell')}
           >
@@ -51,49 +59,55 @@ export function ShopSheet({ title, stock, noSell, tab, keeper }: Props) {
           </Button>
         </div>
       )}
-      {tab === 'buy' ? (
-        stock
-          .filter(e => e.when !== false)
-          .map(e => {
-            const row = shopRow(g, e, district);
-            const def =
-              row.kind === 'gear'
-                ? GEAR[e.id as GearId]
-                : row.kind === 'sheet'
-                  ? SHEET_MUSIC[e.id as SheetMusicId]
-                  : ITEMS[e.id as ItemId];
-            const unique = row.kind !== 'item';
-            return (
-              <ItemRow
-                key={e.id}
-                action={
-                  <Button
-                    testId={`buy:${e.id}`}
-                    small
-                    variant={row.canBuy ? 'primary' : undefined}
-                    inactive={!row.canBuy}
-                    onClick={() => app.buy(e.id, row.price)}
-                  >
-                    {fmtDoubloons(row.price)}
-                  </Button>
-                }
-              >
-                <b>{def.name}</b>
-                {unique
-                  ? row.owned > 0 && <span className="good small"> owned</span>
-                  : row.owned > 0 && <span className="dim small"> ×{row.owned}</span>}
-                <div className="small">
-                  {row.kind === 'gear' ? `${gearStats(GEAR[e.id as GearId])}. ${def.desc}` : def.desc}
-                </div>
-                {row.levelLocked && (
-                  <div className="small gold">Needs level {GEAR[e.id as GearId].level}</div>
-                )}
-              </ItemRow>
-            );
-          })
-      ) : (
-        <SellList />
-      )}
+      <div
+        id="shop-panel"
+        role={noSell ? undefined : 'tabpanel'}
+        aria-labelledby={noSell ? undefined : `shop-tab-${tab}`}
+      >
+        {tab === 'buy' ? (
+          stock
+            .filter(e => e.when !== false)
+            .map(e => {
+              const row = shopRow(g, e, district);
+              const def =
+                row.kind === 'gear'
+                  ? GEAR[e.id as GearId]
+                  : row.kind === 'sheet'
+                    ? SHEET_MUSIC[e.id as SheetMusicId]
+                    : ITEMS[e.id as ItemId];
+              const unique = row.kind !== 'item';
+              return (
+                <ItemRow
+                  key={e.id}
+                  action={
+                    <Button
+                      testId={`buy:${e.id}`}
+                      small
+                      variant={row.canBuy ? 'primary' : undefined}
+                      inactive={!row.canBuy}
+                      onClick={() => app.buy(e.id, row.price)}
+                    >
+                      {fmtDoubloons(row.price)}
+                    </Button>
+                  }
+                >
+                  <b>{def.name}</b>
+                  {unique
+                    ? row.owned > 0 && <span className="good small"> owned</span>
+                    : row.owned > 0 && <span className="dim small"> ×{row.owned}</span>}
+                  <div className="small">
+                    {row.kind === 'gear' ? `${gearStats(GEAR[e.id as GearId])}. ${def.desc}` : def.desc}
+                  </div>
+                  {row.levelLocked && (
+                    <div className="small gold">Needs level {GEAR[e.id as GearId].level}</div>
+                  )}
+                </ItemRow>
+              );
+            })
+        ) : (
+          <SellList />
+        )}
+      </div>
     </Sheet>
   );
 }

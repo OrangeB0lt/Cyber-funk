@@ -41,6 +41,28 @@
   cursor: pointer;
   animation: pulse 0.8s infinite alternate;
 }
+/* The tap target fills the card; the card itself carries the border and state styles. */
+.cardHit {
+  display: block;
+  width: 100%;
+  padding: 0;
+  border: 0;
+  background: none;
+  color: inherit;
+  font: inherit;
+  text-align: left;
+  cursor: inherit;
+}
+.cardHit:disabled {
+  color: inherit;
+}
+/* Status chips line up under the info column, outside the button. */
+.cardChips {
+  padding-left: calc(var(--box, 72px) + 8px);
+}
+.boss .cardChips {
+  --box: 96px;
+}
 /* Sprite on the left, everything else on the right. A div inside the button, not grid on the
    button itself (WebKit). Bosses get the bigger box. */
 .cardBody {

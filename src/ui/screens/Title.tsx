@@ -23,7 +23,6 @@ export function TitleScreen() {
         type="button"
         className={s.version}
         data-testid="version"
-        aria-label={`Version ${__APP_VERSION__}`}
         onClick={() => {
           taps.current += 1;
           if (taps.current >= 5) {
@@ -32,7 +31,7 @@ export function TitleScreen() {
           }
         }}
       >
-        v{__APP_VERSION__}
+        <span className="sr-only">Version </span>v{__APP_VERSION__}
       </button>
     </div>
   );

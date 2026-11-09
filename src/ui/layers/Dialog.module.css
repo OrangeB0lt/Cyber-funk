@@ -19,11 +19,15 @@
   padding: 14px;
   box-shadow: 0 0 30px rgba(177, 74, 255, 0.4);
 }
-.card h4 {
+.card h2 {
   margin-top: 0;
+  font-size: 1em;
   color: var(--gold);
+  text-shadow: none;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
 }
-.levelup h4 {
+.levelup h2 {
   font-size: 1.4em;
   color: var(--green);
   text-shadow: 0 0 12px var(--green);

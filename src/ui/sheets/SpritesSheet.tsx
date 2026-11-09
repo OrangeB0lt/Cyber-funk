@@ -57,7 +57,7 @@ export function SpritesSheet() {
       />
       {groups().map(g => (
         <section key={g.title}>
-          <h4 className={s.title}>{g.title}</h4>
+          <h3 className={s.title}>{g.title}</h3>
           <div className={s.grid}>
             {g.ids.map(id => (
               <figure key={id} className={s.tile}>

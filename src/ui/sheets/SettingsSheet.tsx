@@ -99,7 +99,7 @@ export function SettingsSheet({ fromTitle }: { fromTitle: boolean }) {
         Tourist: enemy damage −25%. Grand Marshal: enemy damage +25%, enemy Heart +20%. Auto rhythm rolls the
         timing for you, weighted toward IN THE POCKET.
       </p>
-      <h4>Save data</h4>
+      <h3>Save data</h3>
       <div className={s.row}>
         <Button testId="export" small onClick={() => setArea({ kind: 'export', code: app.exportSave() })}>
           Export Save
@@ -196,7 +196,7 @@ function CloudSection({
         : 'Your saves are backed up to the cloud.');
   return (
     <>
-      <h4>Cloud saves</h4>
+      <h3>Cloud saves</h3>
       <p className="small" data-testid="cloud:status">
         {status}
       </p>

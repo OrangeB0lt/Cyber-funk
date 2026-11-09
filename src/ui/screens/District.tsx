@@ -17,7 +17,7 @@ export function DistrictScreen() {
   const step = currentStep(g);
   return (
     <div className={s.screen}>
-      <h2 className={s.name}>{d.name}</h2>
+      <h1 className={s.name}>{d.name}</h1>
       <div className="small dim">
         Levels {d.levels[0]}–{d.levels[1]} · Day {g.day}
       </div>
