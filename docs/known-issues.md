@@ -19,13 +19,13 @@ These go away by construction. Where the visible sequence changed, the transcrip
 | The title-screen mute setting is ignored before a game exists | Audio reads the settings store, not the save |
 | `[[Hush\|the Hush]]` links nothing (the glossary key is `the hush`) | `tools/completeness.ts` checks every `[[link]]`; this one is allowlisted there (`ALLOWED_UNLINKED`) until its P6 fix |
 | Street events' `G.xp` doesn't wait for the level-up popup; other XP grants do | One `s.xp()`, always awaited (allowlisted deviation) |
+| The `cleanse` effect always removes bad statuses; its documented `kind` field is ignored | `CleanseEffect` has no such field (it would clash with the effect's own `kind`); its type documents what it does: remove bad statuses, or `only` one. Removing good statuses is the `strip` effect. Nothing in the content asked for more (checked in P6) |
 
 ## To fix (P6)
 
 | Issue | Where (v1) | Kind |
 |---|---|---|
 | Auto-rhythm and the sim ignore *Quantized* and *In the Pocket*, which change the ONE zone only in the manual timing bar. | `05_engine.js:257`, `07_ui_combat.js:82` | design call |
-| The `cleanse` effect always removes bad statuses; its documented `kind` field is ignored. | `05_engine.js:391` | cleanup |
 | *Cayenne*-style next-tone boosts and Dirge's +50% apply only to the first hit of multi-hit or all-target skills. | `05_engine.js:272-274` | design call |
 | Boss telegraphs are logged on the same turn as the move (only `charge` moves give a real warning). | `05_engine.js:457` | design call |
 | Play the Blues is always timed, even with auto rhythm (auto rhythm covers only the On the One bar), so players who can't tap in time can't land the Click's shield break well. Found in the P3 accessibility pass. | `07_ui_combat.js` (v2: `battleController.ts`) | design call |
