@@ -49,7 +49,7 @@ Node 24 (`.nvmrc`). `npm run depcruise` calls dependency-cruiser's API (`tools/d
 - P2 vertical slice (prologue + Tremé + Captain Hush, React shell) (done; SceneContext v1 accepted, ADR-0004)
 - P2.5 Docker + Compose + cloud saves in PostgreSQL (three slots, history, anonymous player codes; ADR-0006) (done)
 - P3 remaining districts (all five, Quarter through Garden, with the Ball) and the accessibility pass (done; axe on every screen, no allowlist)
-- P4 finale + persistence (done, pending the owner's playtest): the second line, the Tower, the ending, credits, New Game+; save format v3
+- P4 finale + persistence (done; the owner played it): the second line, the Tower, the ending, credits, New Game+; save format v3
 - P5 PWA, cutover (delete `legacy/`), docs
 - P6 post-parity fixes
 

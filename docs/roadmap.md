@@ -9,7 +9,7 @@
 | P2 | Vertical slice: prologue, Tremé, Captain Hush, the React shell | done (played through to the Quarter; SceneContext v1 accepted) |
 | P2.5 | Docker, Docker Compose, cloud saves in PostgreSQL (three slots, history, player codes) | done ([ADR-0006](adr/0006-server-and-cloud-saves.md)) |
 | P3 | The remaining districts, the accessibility pass | done |
-| P4 | Finale and persistence | done, pending the owner's playtest |
+| P4 | Finale and persistence | done (the owner played the finale, 2026-11-09) |
 | P5 | PWA, cutover, docs | |
 | P6 | Post-parity fixes | |
 
@@ -54,7 +54,7 @@
   - `tests/e2e/finale.spec.ts` plays the whole game at 360px
   - screenshots side by side with v1 (`tools/shots.ts`)
   - the crawler and completeness cover the Tower
-- **Still to do:** the owner's playtest from the Garden District through the credits into New Game+.
+- **Owner's playtest (done, 2026-11-09):** the Garden District through the credits into New Game+. Merged to `main`.
 
 ## P5: PWA, cutover, docs
 
