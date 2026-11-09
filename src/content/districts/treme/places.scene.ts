@@ -205,7 +205,9 @@ export const kitchen = definePlace('kitchen', {
 export const pawn = definePlace('pawn', {
   options: g => {
     const cls = CLASSES[g.cls];
-    const legendReady = g.notes.length >= 5 && !g.flags.legendBuilt;
+    // The bag check keeps New Game+ (which resets flags but keeps gear) from building a second one.
+    const legendReady =
+      g.notes.length >= 5 && !g.flags.legendBuilt && !g.gearBag.includes(`inst_${g.cls}_legend`);
     return [
       {
         key: 'talk',

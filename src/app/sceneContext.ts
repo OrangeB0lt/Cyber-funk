@@ -204,7 +204,8 @@ export function createSceneContext(session: SessionPort, signal: AbortSignal): S
       if (!g().keyItems.includes(id)) g().keyItems.push(id);
     },
     gainGear(id, opts) {
-      g().gearBag.push(id);
+      // Owned already (story gear carried into New Game+): no second copy, but still equip it.
+      if (!g().gearBag.includes(id)) g().gearBag.push(id);
       if (opts?.equip) {
         g().gear[GEAR[id].slot] = id;
         clampVitals(g());

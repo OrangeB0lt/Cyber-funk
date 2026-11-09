@@ -17,4 +17,18 @@ describe('scene rules', () => {
     expect(view.story).toEqual({ act: 'quarter', step: 'sabotage_broadcaster' });
     expect(view.flags).not.toContain('broadcasterDone');
   });
+
+  it("New Game+ doesn't hand out story gear you already own", async () => {
+    const { view } = await run('archivist boss flow, New Game+ with the Regalia already owned');
+    expect(view.gearBag.filter(id => id === 'thr_regalia')).toHaveLength(1);
+    expect(view.gear.threads).toBe('thr_regalia');
+  });
+
+  it("New Game+ doesn't offer a second legendary instrument", async () => {
+    const { entries } = await run('pawn talk, New Game+ with five notes and the legendary already owned');
+    const options = entries.find(e => e.t === 'options');
+    expect(options && options.t === 'options' && options.labels.some(l => l.includes('legendary'))).toBe(
+      false,
+    );
+  });
 });

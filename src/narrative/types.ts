@@ -239,7 +239,7 @@ export interface SceneContext {
   choice<K extends keyof StoryChoices>(key: K, value: NonNullable<StoryChoices[K]>): void;
   /** Add a key item to the status screen. */
   keyItem(id: ItemId): void;
-  /** Add gear to the gear bag (optionally equip it). */
+  /** Add gear to the gear bag, unless it is already there (optionally equip it either way). */
   gainGear(id: GearId, opts?: { equip?: boolean }): void;
   /** A bandmate joins (and is brought along if there's room). */
   recruit(id: BandmateId): void;

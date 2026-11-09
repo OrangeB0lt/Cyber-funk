@@ -13,7 +13,7 @@ import type { ClassId, RootsId } from '@core/ids/characters';
 import type { BossId, NoteId, OpponentId } from '@core/ids/enemies';
 import type { BandmateId, SecondLineId } from '@core/ids/band';
 import type { FlagId, StoryChoices } from '@core/ids/flags';
-import type { ItemId, SheetMusicId } from '@core/ids/items';
+import type { GearId, ItemId, SheetMusicId } from '@core/ids/items';
 import { ACT_ORDER, ACT_STEPS, type ActId, type StoryPosition } from '@core/ids/story';
 import type { DistrictId, GlossaryId, PlaceId, QuestId } from '@core/ids/world';
 import type { GameState } from '@core/types';
@@ -74,6 +74,8 @@ export interface CaseState {
   recruited?: BandmateId[];
   keyItems?: ItemId[];
   sheet?: SheetMusicId[];
+  /** Gear owned beyond the starting kit. */
+  gearBag?: GearId[];
   /** The formed second line, by member id (null/absent: not formed). */
   secondLine?: SecondLineId[];
   ngPlus?: number;
@@ -388,6 +390,12 @@ export const cases: Case[] = [
   ),
   placeCase('pawn talk after the hint', 'pawn', 'talk', T(2, { flags: ['metRoux', 'hushHint'] })),
   placeCase('pawn gear shop', 'pawn', 'gear', T(1, { cls: 'bassdrum' })),
+  placeCase(
+    'pawn talk, New Game+ with five notes and the legendary already owned',
+    'pawn',
+    'talk',
+    T(1, { ngPlus: 1, notes: ['C', 'Eb', 'F', 'Gb', 'G'], gearBag: ['inst_trumpet_legend'] }),
+  ),
   placeCase('pawn accessories', 'pawn', 'accessories', T(1)),
   placeCase('pawn legendary', 'pawn', 'legend', T(1, { notes: ['C', 'Eb', 'F', 'G', 'Bb'], doubloons: 400 })),
   placeCase(
@@ -915,6 +923,11 @@ export const cases: Case[] = [
   placeCase('manor boss (again)', 'manor', 'boss', inAct('garden', 2, { intros: ['isolde'] })),
   placeCase('manor grounds', 'manor', 'grounds', inAct('tower', 0, { district: 'garden' })),
   {
+    name: 'archivist boss flow, New Game+ with the Regalia already owned',
+    state: inAct('cemetery', 2, { ngPlus: 1, gearBag: ['thr_regalia'] }),
+    ts: s => s.run(c => c.boss('archivist').then(() => {}), 'archivist'),
+  },
+  {
     name: 'vox perfecta boss flow',
     state: inAct('quarter', 2),
     ts: s => s.run(c => c.boss('vox_perfecta').then(() => {}), 'vox'),
@@ -1010,6 +1023,7 @@ export function setupTs(session: Session, st: CaseState): GameState {
   g.band.recruited = [...(st.recruited ?? [])];
   g.keyItems = [...(st.keyItems ?? [])];
   g.sheet = [...(st.sheet ?? [])];
+  if (st.gearBag) g.gearBag.push(...st.gearBag);
   if (st.secondLine)
     g.secondLine = st.secondLine.map(id => {
       const m = SECOND_LINE.find(x => x.id === id)!;
