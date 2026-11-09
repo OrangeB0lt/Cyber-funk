@@ -111,7 +111,8 @@ async function newGamePlusFrom(where: string, save: string): Promise<string[]> {
     story: { act: 'treme', step: 'meet_roux' },
     secondLine: null,
     flags: {},
-    counters: {},
+    // Every counter starts over except the endings reached, which spans cycles.
+    counters: { endingCount: before.counters.endingCount },
     notes: [],
     quests: {},
     bossesDefeated: [],

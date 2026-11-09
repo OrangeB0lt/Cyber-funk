@@ -76,4 +76,13 @@ describe('newGamePlus (v1 startNewGamePlus)', () => {
   it('counts the cycles', () => {
     expect(newGamePlus(newGamePlus(finished())).ngPlus).toBe(2);
   });
+
+  it('keeps the count of endings reached, and resets the other counters', () => {
+    const old = finished();
+    old.counters.endingCount = 2;
+    old.counters.tremeFights = 3;
+    const ns = newGamePlus(old);
+    expect(ns.counters.endingCount).toBe(2);
+    expect(ns.counters.tremeFights ?? 0).toBe(0);
+  });
 });

@@ -107,6 +107,8 @@ export function newGamePlus(old: GameState): GameState {
   ns.lexicon = old.lexicon.slice();
   ns.book = clone(old.book);
   ns.day = old.day;
+  // The one counter that spans cycles: how many times the player has reached the ending.
+  if (old.counters.endingCount) ns.counters.endingCount = old.counters.endingCount;
   for (const entry of Object.values(ns.book)) if (entry) entry.seen = true;
   fullRest(ns);
   return ns;
