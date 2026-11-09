@@ -4,11 +4,12 @@
  *
  *   npm run sim                      # seed 1, text table
  *   npm run sim -- --seed 7          # another seed
- *   npm run sim -- --json            # machine-readable (tools/compare.ts)
+ *   npm run sim -- --json            # machine-readable rows, for diffing two runs
+ *   npm run sim:baseline             # rewrite tests/fixtures/sim (tools/simBaseline.ts)
  *
- * The scripted player, loadouts and output format match v1's sim (legacy/sim/sim.js) exactly, and
- * the parity tests require byte-identical output for the same seed. Change the player or output
- * only after cutover, together with the baseline.
+ * The scripted player, loadouts and output format match v1's sim (legacy/sim/sim.js) exactly; the
+ * baseline in tests/fixtures/sim was written while they were byte-identical. A change to balance,
+ * the player or the output rewrites the baseline in the same commit, and the diff is the review.
  */
 import { pathToFileURL } from 'node:url';
 import { hasStatus, livingEnemies } from '@core/helpers';
@@ -211,7 +212,7 @@ function runClick(rng: Rng, s: GameState): FightResult {
 const pct = (x: number) => Math.round(x * 100) + '%';
 const avg = (a: number[]) => a.reduce((x, y) => x + y, 0) / a.length;
 
-/** One row of results, for --json and tools/compare.ts. */
+/** One row of results, for --json. */
 export interface SimRow {
   cls: ClassId;
   kind: 'street' | 'boss';

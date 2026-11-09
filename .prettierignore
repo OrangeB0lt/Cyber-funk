@@ -14,3 +14,5 @@ package-lock.json
 .devcontainer/
 .github/dependabot.yml
 *.md
+# Baselines written by tools (one case per line, for readable diffs).
+tests/fixtures/

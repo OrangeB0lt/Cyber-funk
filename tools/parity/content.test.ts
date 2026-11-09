@@ -10,7 +10,7 @@ import { NPC_IDS, PLACE_IDS, QUEST_IDS } from '@core/ids/world';
 import { STAT_KEYS } from '@core/ids/combat';
 import { NOTE_IDS } from '@core/ids/enemies';
 import * as C from '@content/data';
-import { firstDifference } from './driver';
+import { firstDifference } from '../engine/driver';
 import { loadLegacy } from './legacy';
 
 /* eslint-disable @typescript-eslint/no-explicit-any */

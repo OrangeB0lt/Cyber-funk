@@ -7,10 +7,10 @@
  * The parity gate requires >= 95% branch coverage of legacy/src/05_engine.js, so "the TS engine
  * matches legacy on the corpus" actually means something.
  */
-import { generateCorpus, runFight, runMisc } from './driver';
+import { generateCorpus, runFight, runMisc } from '../engine/driver';
 import { legacyAdapter, legacyFacts } from './legacyAdapter';
-import { CORPUS_SEED, CORPUS_SIZE, MISC_SEED, MISC_SIZE } from './corpus';
-import { micro } from './micro';
+import { CORPUS_SEED, CORPUS_SIZE, MISC_SEED, MISC_SIZE } from '../engine/corpus';
+import { micro } from '../engine/micro';
 
 const a = legacyAdapter();
 const facts = legacyFacts(a.E);

@@ -3,7 +3,7 @@
  * Deleted at cutover together with legacy/.
  */
 import { loadLegacy, type LegacyEngine } from './legacy';
-import type { ContentFacts, EngineAdapter, StateSpec } from './driver';
+import type { ContentFacts, EngineAdapter, StateSpec } from '../engine/driver';
 
 /* eslint-disable @typescript-eslint/no-explicit-any */
 

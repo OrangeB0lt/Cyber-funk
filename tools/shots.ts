@@ -6,7 +6,7 @@
  *
  * It builds the test-mode app (the one with window.CF), serves it with vite preview, and reaches each
  * screen through the dev API and real play. A pair is made for every v2 shot that has a v1 shot of
- * the same name (legacy/shots, from `npx tsx tools/parity/legacyShots.ts`).
+ * the same name in docs/reference/v1-shots (v1's screens, frozen at cutover).
  */
 import { execSync, spawn } from 'node:child_process';
 import fs from 'node:fs';
@@ -16,7 +16,7 @@ import { chromium, type Page } from '@playwright/test';
 const ROOT = path.join(import.meta.dirname, '..');
 const OUT = path.join(ROOT, 'shots', 'v2');
 const PAIRS = path.join(ROOT, 'shots', 'side-by-side');
-const V1 = path.join(ROOT, 'legacy', 'shots');
+const V1 = path.join(ROOT, 'docs', 'reference', 'v1-shots');
 const PORT = 4175;
 const sleep = (ms: number) => new Promise(r => setTimeout(r, ms));
 

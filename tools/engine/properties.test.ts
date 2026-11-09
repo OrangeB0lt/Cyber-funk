@@ -9,10 +9,10 @@ import { createRng } from '@core/rng';
 import type { Battle } from '@core/types';
 import { CORPUS_SEED } from './corpus';
 import { firstDifference, generateCorpus, runFight } from './driver';
-import { legacyAdapter, legacyFacts } from './legacyAdapter';
+import { tsFacts } from './facts';
 import { tsAdapter } from './tsAdapter';
 
-const facts = legacyFacts(legacyAdapter().E);
+const facts = tsFacts();
 const specs = generateCorpus(facts, CORPUS_SEED + 1, 400);
 
 describe('engine properties', () => {

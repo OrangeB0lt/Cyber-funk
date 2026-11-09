@@ -4,11 +4,11 @@
  * See docs/adr/0003-determinism-and-parity.md.
  */
 import { describe, expect, it } from 'vitest';
-import { CORPUS_SEED, CORPUS_SIZE, MISC_SEED, MISC_SIZE } from './corpus';
-import { firstDifference, generateCorpus, runFight, runMisc, type FightTrace } from './driver';
+import { CORPUS_SEED, CORPUS_SIZE, MISC_SEED, MISC_SIZE } from '../engine/corpus';
+import { firstDifference, generateCorpus, runFight, runMisc, type FightTrace } from '../engine/driver';
 import { legacyAdapter, legacyFacts } from './legacyAdapter';
-import { micro } from './micro';
-import { tsAdapter } from './tsAdapter';
+import { micro } from '../engine/micro';
+import { tsAdapter } from '../engine/tsAdapter';
 
 const legacy = legacyAdapter();
 const ts = tsAdapter();

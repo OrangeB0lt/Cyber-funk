@@ -1,0 +1,119 @@
+
+=== TRUMPET ===
+treme      L2 n=0: win 100% rounds 2.8 hpLost 15%
+quarter    L4 n=1: win 100% rounds 2.8 hpLost 14%
+storyville L6 n=2: win 100% rounds 4.6 hpLost 34%
+bayou      L8 n=3: win 100% rounds 3.6 hpLost 30%
+cemetery   L10 n=4: win 100% rounds 3.1 hpLost 15%
+garden     L12 n=5: win 100% rounds 2.6 hpLost 9%
+tower      L14 n=6: win 100% rounds 2.9 hpLost 18%
+BOSS captain_hush  L3: win 100% rounds 6.1 items 0.5 beads 0.0 hpLeft 67%
+BOSS vox_perfecta  L5: win 100% rounds 8.4 items 0.5 beads 4.0 hpLeft 70%
+BOSS mr_ledger     L7: win 100% rounds 6.0 items 0.5 beads 0.8 hpLeft 74%
+BOSS rougarou      L9: win 100% rounds 4.4 items 0.5 beads 0.0 hpLeft 72%
+BOSS archivist     L11: win 100% rounds 7.2 items 0.0 beads 0.0 hpLeft 89%
+BOSS isolde        L13: win 100% rounds 4.0 items 0.0 beads 0.0 hpLeft 79%
+BOSS conductor     L15: win 100% rounds 5.2 items 0.0 beads 0.0 hpLeft 75%
+BOSS the_click     L15: win 100% rounds 5.4 items 0.0 beads 0.0 hpLeft 83%
+
+=== TROMBONE ===
+treme      L2 n=0: win 100% rounds 4.6 hpLost 15%
+quarter    L4 n=1: win 100% rounds 5.0 hpLost 13%
+storyville L6 n=2: win 100% rounds 6.4 hpLost 7%
+bayou      L8 n=3: win 100% rounds 5.0 hpLost 15%
+cemetery   L10 n=4: win 100% rounds 6.5 hpLost 5%
+garden     L12 n=5: win 100% rounds 5.0 hpLost 7%
+tower      L14 n=6: win 100% rounds 4.7 hpLost 19%
+BOSS captain_hush  L3: win 100% rounds 11.6 items 1.4 beads 4.8 hpLeft 87%
+BOSS vox_perfecta  L5: win 100% rounds 4.8 items 0.0 beads 0.0 hpLeft 82%
+BOSS mr_ledger     L7: win 100% rounds 8.1 items 1.0 beads 3.2 hpLeft 93%
+BOSS rougarou      L9: win 100% rounds 9.1 items 1.4 beads 0.0 hpLeft 88%
+BOSS archivist     L11: win 100% rounds 9.2 items 0.0 beads 0.0 hpLeft 98%
+BOSS isolde        L13: win 100% rounds 10.4 items 0.9 beads 3.8 hpLeft 82%
+BOSS conductor     L15: win 100% rounds 15.0 items 0.6 beads 3.9 hpLeft 82%
+BOSS the_click     L15: win 100% rounds 5.5 items 0.0 beads 0.0 hpLeft 76%
+
+=== SOUSAPHONE ===
+treme      L2 n=0: win 100% rounds 4.7 hpLost 34%
+quarter    L4 n=1: win 100% rounds 4.2 hpLost 26%
+storyville L6 n=2: win 100% rounds 5.7 hpLost 35%
+bayou      L8 n=3: win 100% rounds 4.2 hpLost 28%
+cemetery   L10 n=4: win 100% rounds 4.9 hpLost 16%
+garden     L12 n=5: win 100% rounds 3.9 hpLost 10%
+tower      L14 n=6: win 100% rounds 3.8 hpLost 14%
+BOSS captain_hush  L3: win 100% rounds 10.1 items 1.1 beads 0.0 hpLeft 73%
+BOSS vox_perfecta  L5: win 100% rounds 8.3 items 0.0 beads 0.0 hpLeft 76%
+BOSS mr_ledger     L7: win 100% rounds 6.5 items 0.1 beads 0.0 hpLeft 68%
+BOSS rougarou      L9: win 100% rounds 11.1 items 0.7 beads 4.7 hpLeft 72%
+BOSS archivist     L11: win 100% rounds 13.2 items 0.0 beads 0.0 hpLeft 97%
+BOSS isolde        L13: win 100% rounds 9.9 items 0.1 beads 0.0 hpLeft 76%
+BOSS conductor     L15: win 100% rounds 13.7 items 0.0 beads 0.0 hpLeft 81%
+BOSS the_click     L15: win 100% rounds 5.7 items 0.0 beads 0.0 hpLeft 83%
+
+=== SAXOPHONE ===
+treme      L2 n=0: win 100% rounds 4.2 hpLost 26%
+quarter    L4 n=1: win 100% rounds 4.3 hpLost 21%
+storyville L6 n=2: win 98% rounds 5.9 hpLost 32%
+bayou      L8 n=3: win 98% rounds 6.2 hpLost 40%
+cemetery   L10 n=4: win 100% rounds 4.4 hpLost 16%
+garden     L12 n=5: win 100% rounds 3.5 hpLost 6%
+tower      L14 n=6: win 100% rounds 4.0 hpLost 14%
+BOSS captain_hush  L3: win 100% rounds 6.7 items 0.5 beads 0.0 hpLeft 72%
+BOSS vox_perfecta  L5: win 100% rounds 8.2 items 0.0 beads 0.0 hpLeft 77%
+BOSS mr_ledger     L7: win 100% rounds 5.7 items 0.1 beads 0.0 hpLeft 75%
+BOSS rougarou      L9: win 100% rounds 9.7 items 1.6 beads 0.0 hpLeft 66%
+BOSS archivist     L11: win 100% rounds 10.9 items 0.0 beads 5.0 hpLeft 95%
+BOSS isolde        L13: win 100% rounds 5.1 items 0.0 beads 0.0 hpLeft 71%
+BOSS conductor     L15: win 100% rounds 6.0 items 0.0 beads 0.0 hpLeft 84%
+BOSS the_click     L15: win 100% rounds 5.6 items 0.0 beads 0.0 hpLeft 75%
+
+=== CLARINET ===
+treme      L2 n=0: win 100% rounds 4.2 hpLost 6%
+quarter    L4 n=1: win 100% rounds 3.8 hpLost 21%
+storyville L6 n=2: win 98% rounds 6.3 hpLost 3%
+bayou      L8 n=3: win 100% rounds 4.7 hpLost 3%
+cemetery   L10 n=4: win 100% rounds 5.3 hpLost 8%
+garden     L12 n=5: win 100% rounds 4.4 hpLost 6%
+tower      L14 n=6: win 100% rounds 3.6 hpLost 10%
+BOSS captain_hush  L3: win 100% rounds 8.8 items 1.2 beads 0.0 hpLeft 91%
+BOSS vox_perfecta  L5: win 100% rounds 11.7 items 0.0 beads 4.9 hpLeft 94%
+BOSS mr_ledger     L7: win 100% rounds 8.9 items 0.9 beads 1.3 hpLeft 97%
+BOSS rougarou      L9: win 98% rounds 6.6 items 0.8 beads 0.0 hpLeft 84%
+BOSS archivist     L11: win 100% rounds 11.3 items 0.0 beads 0.0 hpLeft 96%
+BOSS isolde        L13: win 100% rounds 10.2 items 0.6 beads 0.0 hpLeft 83%
+BOSS conductor     L15: win 100% rounds 17.0 items 1.5 beads 0.0 hpLeft 76%
+BOSS the_click     L15: win 100% rounds 5.8 items 0.0 beads 0.0 hpLeft 80%
+
+=== SNARE ===
+treme      L2 n=0: win 100% rounds 3.1 hpLost 18%
+quarter    L4 n=1: win 100% rounds 3.0 hpLost 13%
+storyville L6 n=2: win 100% rounds 4.5 hpLost 20%
+bayou      L8 n=3: win 100% rounds 4.5 hpLost 23%
+cemetery   L10 n=4: win 100% rounds 4.5 hpLost 13%
+garden     L12 n=5: win 100% rounds 4.0 hpLost 9%
+tower      L14 n=6: win 100% rounds 3.4 hpLost 6%
+BOSS captain_hush  L3: win 100% rounds 3.0 items 0.0 beads 0.0 hpLeft 80%
+BOSS vox_perfecta  L5: win 100% rounds 6.8 items 0.0 beads 0.0 hpLeft 74%
+BOSS mr_ledger     L7: win 100% rounds 3.1 items 0.0 beads 0.0 hpLeft 92%
+BOSS rougarou      L9: win 98% rounds 6.5 items 0.4 beads 0.0 hpLeft 65%
+BOSS archivist     L11: win 100% rounds 19.4 items 0.0 beads 5.0 hpLeft 99%
+BOSS isolde        L13: win 100% rounds 4.1 items 0.1 beads 0.0 hpLeft 79%
+BOSS conductor     L15: win 100% rounds 6.3 items 0.0 beads 0.0 hpLeft 78%
+BOSS the_click     L15: win 100% rounds 5.8 items 0.0 beads 0.0 hpLeft 79%
+
+=== BASSDRUM ===
+treme      L2 n=0: win 100% rounds 2.9 hpLost 15%
+quarter    L4 n=1: win 100% rounds 3.3 hpLost 23%
+storyville L6 n=2: win 100% rounds 3.5 hpLost 27%
+bayou      L8 n=3: win 100% rounds 4.2 hpLost 28%
+cemetery   L10 n=4: win 100% rounds 3.9 hpLost 14%
+garden     L12 n=5: win 100% rounds 3.2 hpLost 10%
+tower      L14 n=6: win 100% rounds 3.8 hpLost 20%
+BOSS captain_hush  L3: win 100% rounds 5.6 items 0.1 beads 0.0 hpLeft 72%
+BOSS vox_perfecta  L5: win 100% rounds 6.3 items 0.0 beads 0.0 hpLeft 74%
+BOSS mr_ledger     L7: win 100% rounds 6.0 items 0.3 beads 0.0 hpLeft 72%
+BOSS rougarou      L9: win 100% rounds 9.4 items 1.2 beads 3.9 hpLeft 70%
+BOSS archivist     L11: win 100% rounds 8.4 items 0.0 beads 0.0 hpLeft 97%
+BOSS isolde        L13: win 100% rounds 5.0 items 0.1 beads 0.0 hpLeft 72%
+BOSS conductor     L15: win 100% rounds 7.0 items 0.0 beads 0.0 hpLeft 73%
+BOSS the_click     L15: win 100% rounds 4.9 items 0.0 beads 0.0 hpLeft 76%

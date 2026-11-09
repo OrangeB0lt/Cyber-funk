@@ -1,6 +1,8 @@
 /**
- * The shared parity driver. It generates a seeded corpus of fights and plays each one against an
- * EngineAdapter (legacy vm or TypeScript), recording a trace that the parity test compares exactly.
+ * The fight driver. It generates a seeded corpus of fights and plays each one against an
+ * EngineAdapter, recording a trace. Until cutover the parity test played it against the legacy vm
+ * and the TypeScript engine and compared the traces exactly; the engine's own property tests
+ * (properties.test.ts) use it after.
  *
  * Design rules (see docs/adr/0003-determinism-and-parity.md):
  * - Fight setups come from a *spec* rng that is independent of the engine, so both engines start
@@ -12,7 +14,6 @@
  * - Actor ids are never compared (legacy ids come from a global counter). They are mapped to roles:
  *   P (player), E<index in b.enemies>, A:<bandmate> (assist helpers).
  *
- * Deleted at cutover together with legacy/.
  */
 import { createRng, type Rng } from '@core/rng';
 
@@ -64,7 +65,7 @@ export interface FightSpec {
   policySeed: number;
 }
 
-/** Content facts the corpus generator needs. Read from the legacy tables (ids are identical). */
+/** Content facts the corpus generator needs (facts.ts reads them from the v2 tables). */
 export interface ContentFacts {
   classes: { id: string; skills: string[] }[];
   roots: string[];

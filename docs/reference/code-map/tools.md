@@ -13,49 +13,62 @@ flowchart LR
   n_codemap["codemap"]
   n_completeness["completeness"]
   n_depcruise["depcruise"]
+  n_engine_corpus["engine/corpus"]
+  n_engine_driver["engine/driver"]
+  n_engine_facts["engine/facts"]
+  n_engine_micro["engine/micro"]
+  n_engine_rules["engine/rules"]
+  n_engine_rulesBaseline["engine/rulesBaseline"]
+  n_engine_tsAdapter["engine/tsAdapter"]
   n_migrate_codegen_content["migrate/codegen-content"]
   n_migrate_codegen_ids["migrate/codegen-ids"]
   n_migrate_codegen_world["migrate/codegen-world"]
   n_migrate_serialize["migrate/serialize"]
-  n_parity_corpus["parity/corpus"]
   n_parity_coverage["parity/coverage"]
-  n_parity_driver["parity/driver"]
   n_parity_legacy["parity/legacy"]
   n_parity_legacyAdapter["parity/legacyAdapter"]
   n_parity_legacyDom["parity/legacyDom"]
   n_parity_legacyShots["parity/legacyShots"]
   n_parity_legacySim["parity/legacySim"]
-  n_parity_micro["parity/micro"]
-  n_parity_tsAdapter["parity/tsAdapter"]
   n_shots["shots"]
   n_sim["sim"]
+  n_simBaseline["simBaseline"]
   n_sprites["sprites"]
   n_trace["trace"]
   n_validate_content["validate-content"]
   n_ext_content[["content"]]
   n_ext_engine[["engine"]]
   n_completeness --> n_ext_content
+  n_engine_facts --> n_engine_driver
+  n_engine_facts --> n_ext_content
+  n_engine_micro --> n_engine_driver
+  n_engine_rules --> n_engine_driver
+  n_engine_rules --> n_engine_tsAdapter
+  n_engine_rules --> n_ext_content
+  n_engine_rules --> n_ext_engine
+  n_engine_rulesBaseline --> n_engine_facts
+  n_engine_rulesBaseline --> n_engine_rules
+  n_engine_tsAdapter --> n_engine_driver
+  n_engine_tsAdapter --> n_ext_content
+  n_engine_tsAdapter --> n_ext_engine
   n_migrate_codegen_content --> n_migrate_serialize
   n_migrate_codegen_content --> n_parity_legacy
   n_migrate_codegen_ids --> n_migrate_serialize
   n_migrate_codegen_ids --> n_parity_legacy
   n_migrate_codegen_world --> n_migrate_serialize
   n_migrate_codegen_world --> n_parity_legacy
-  n_parity_coverage --> n_parity_corpus
-  n_parity_coverage --> n_parity_driver
+  n_parity_coverage --> n_engine_corpus
+  n_parity_coverage --> n_engine_driver
+  n_parity_coverage --> n_engine_micro
   n_parity_coverage --> n_parity_legacyAdapter
-  n_parity_coverage --> n_parity_micro
-  n_parity_legacyAdapter --> n_parity_driver
+  n_parity_legacyAdapter --> n_engine_driver
   n_parity_legacyAdapter --> n_parity_legacy
   n_parity_legacyDom --> n_parity_legacy
   n_parity_legacyShots --> n_parity_legacy
   n_parity_legacySim --> n_parity_legacy
-  n_parity_micro --> n_parity_driver
-  n_parity_tsAdapter --> n_ext_content
-  n_parity_tsAdapter --> n_ext_engine
-  n_parity_tsAdapter --> n_parity_driver
   n_sim --> n_ext_content
   n_sim --> n_ext_engine
+  n_simBaseline --> n_sim
   n_sprites --> n_ext_content
   n_trace --> n_ext_content
   n_trace --> n_ext_engine
@@ -73,22 +86,26 @@ flowchart LR
 | [tools/codemap.ts](#tools-codemap-ts) | Generates the code map reference in docs/reference/code-map/: every source file, its declarations and class members, and who uses what, read from the TypeScrip… |
 | [tools/completeness.ts](#tools-completeness-ts) | Is the game whole? |
 | [tools/depcruise.ts](#tools-depcruise-ts) | Enforces the layer rules in .dependency-cruiser.cjs (see docs/adr/0002-layering.md). |
+| [tools/engine/corpus.ts](#tools-engine-corpus-ts) | — |
+| [tools/engine/driver.ts](#tools-engine-driver-ts) | The fight driver. |
+| [tools/engine/facts.ts](#tools-engine-facts-ts) | The content facts the fight-corpus and rules generators need (driver.ts `ContentFacts`), read from the v2 tables. |
+| [tools/engine/micro.ts](#tools-engine-micro-ts) | Hand-written fight setups for engine branches the random corpus rarely reaches. |
+| [tools/engine/rules.ts](#tools-engine-rules-ts) | Rules that lived in v1's UI layer (building enemy groups, field items, shops, victory bookkeeping), now engine functions: seeded random cases and what the v2 e… |
+| [tools/engine/rulesBaseline.ts](#tools-engine-rulesbaseline-ts) | Write tests/fixtures/rules.json: what the engine does with every rule case (tools/engine/rules.ts). |
+| [tools/engine/tsAdapter.ts](#tools-engine-tsadapter-ts) | EngineAdapter over the TypeScript engine, mirroring legacyAdapter.ts field for field so the shared driver can compare traces. |
 | [tools/migrate/codegen-content.ts](#tools-migrate-codegen-content-ts) | One-time migration: writes the combat/data content files under src/content from the legacy tables, preserving every value and the legacy key order. |
 | [tools/migrate/codegen-ids.ts](#tools-migrate-codegen-ids-ts) | One-time migration: writes src/core/ids/*.ts from the legacy tables, preserving legacy key order (which the engine relies on for iteration). |
 | [tools/migrate/codegen-world.ts](#tools-migrate-codegen-world-ts) | One-time migration: writes the world data tables (places, NPCs, quests, glossary) from legacy. |
 | [tools/migrate/serialize.ts](#tools-migrate-serialize-ts) | Turns legacy table values into TypeScript source text. |
-| [tools/parity/corpus.ts](#tools-parity-corpus-ts) | — |
 | [tools/parity/coverage.ts](#tools-parity-coverage-ts) | Runs the parity corpus against the legacy engine only. |
-| [tools/parity/driver.ts](#tools-parity-driver-ts) | The shared parity driver. |
 | [tools/parity/legacy.ts](#tools-parity-legacy-ts) | Loads the legacy engine (legacy/src/01–05) into a Node vm context with a seeded Math.random, so the parity oracles can replay any fight draw-for-draw against t… |
 | [tools/parity/legacyAdapter.ts](#tools-parity-legacyadapter-ts) | EngineAdapter over the legacy vm engine, plus the ContentFacts the corpus generator needs. |
 | [tools/parity/legacyDom.ts](#tools-parity-legacydom-ts) | Loads the full legacy game (legacy/dist/cyberfunk.html) into jsdom with a controllable Math.random, for the two oracles that need code living in the legacy UI… |
 | [tools/parity/legacyShots.ts](#tools-parity-legacyshots-ts) | Captures reference screenshots of the legacy game at 360×740 (a TypeScript port of legacy/test/shots.py), for side-by-side review while the React UI is rebuilt. |
 | [tools/parity/legacySim.ts](#tools-parity-legacysim-ts) | Runs legacy/sim/sim.js with a seeded Math.random and returns its stdout. |
-| [tools/parity/micro.ts](#tools-parity-micro-ts) | Hand-written fight setups for engine branches the random corpus rarely reaches. |
-| [tools/parity/tsAdapter.ts](#tools-parity-tsadapter-ts) | EngineAdapter over the TypeScript engine, mirroring legacyAdapter.ts field for field so the shared driver can compare traces. |
 | [tools/shots.ts](#tools-shots-ts) | Screenshots of the v2 game at 360×740, and side-by-side pairs with v1's reference shots, for reviewing a screen against the original. |
 | [tools/sim.ts](#tools-sim-ts) | Headless balance sim: every class against every district's streets and every boss, played by a simple scripted player. |
+| [tools/simBaseline.ts](#tools-simbaseline-ts) | The sim baseline: the sim's text output for a few fixed seeds, checked in under tests/fixtures/sim/. |
 | [tools/sprites.ts](#tools-sprites-ts) | The sprite gallery. |
 | [tools/trace.ts](#tools-trace-ts) | Print one fight, turn by turn, as the sim's scripted player plays it. |
 | [tools/validate-content.ts](#tools-validate-content-ts) | Content checks the type system can't express. |
@@ -306,6 +323,265 @@ Declarations:
 - <a id="tools-depcruise-ts--top-level"></a>**(top level)** · *module* — Statements that run when the module loads.
   - uses: here [output](#tools-depcruise-ts--output), [result](#tools-depcruise-ts--result)
 
+<a id="tools-engine-corpus-ts"></a>
+
+### tools/engine/corpus.ts
+
+- Source: [tools/engine/corpus.ts](../../../tools/engine/corpus.ts)
+- Imported by: tools: [parity/coverage](#tools-parity-coverage-ts)
+- Tested by: [properties.test](tests.md#tools-engine-properties-test-ts), [engine.test](tests.md#tools-parity-engine-test-ts)
+
+Declarations:
+
+- <a id="tools-engine-corpus-ts--corpus-seed"></a>**CORPUS_SEED** · *const* — Corpus sizes and seeds shared by the coverage run and the parity tests.
+  - used by: **[tools/parity/coverage](#tools-parity-coverage-ts)** [(top level)](#tools-parity-coverage-ts--top-level) · tests: [properties.test](tests.md#tools-engine-properties-test-ts), [engine.test](tests.md#tools-parity-engine-test-ts)
+- <a id="tools-engine-corpus-ts--corpus-size"></a>**CORPUS_SIZE** · *const*
+  - used by: **[tools/parity/coverage](#tools-parity-coverage-ts)** [(top level)](#tools-parity-coverage-ts--top-level) · tests: [engine.test](tests.md#tools-parity-engine-test-ts)
+- <a id="tools-engine-corpus-ts--misc-seed"></a>**MISC_SEED** · *const*
+  - used by: **[tools/parity/coverage](#tools-parity-coverage-ts)** [(top level)](#tools-parity-coverage-ts--top-level) · tests: [engine.test](tests.md#tools-parity-engine-test-ts)
+- <a id="tools-engine-corpus-ts--misc-size"></a>**MISC_SIZE** · *const*
+  - used by: **[tools/parity/coverage](#tools-parity-coverage-ts)** [(top level)](#tools-parity-coverage-ts--top-level) · tests: [engine.test](tests.md#tools-parity-engine-test-ts)
+
+<a id="tools-engine-driver-ts"></a>
+
+### tools/engine/driver.ts
+
+The fight driver. It generates a seeded corpus of fights and plays each one against an EngineAdapter, recording a trace. Until cutover the parity test played it against the legacy vm and the TypeScript engine and compared the traces exactly; the engine's own property tests (properties.test.ts) use it after.
+
+- Source: [tools/engine/driver.ts](../../../tools/engine/driver.ts)
+- Imports: core: [rng](core.md#src-core-rng-ts)
+- Imported by: tools: [engine/facts](#tools-engine-facts-ts), [engine/micro](#tools-engine-micro-ts), [engine/rules](#tools-engine-rules-ts), [engine/tsAdapter](#tools-engine-tsadapter-ts), [parity/coverage](#tools-parity-coverage-ts), [parity/legacyAdapter](#tools-parity-legacyadapter-ts)
+- Tested by: [properties.test](tests.md#tools-engine-properties-test-ts), [rules.test](tests.md#tools-engine-rules-test-ts), [content.test](tests.md#tools-parity-content-test-ts), [engine.test](tests.md#tools-parity-engine-test-ts), [rules.test](tests.md#tools-parity-rules-test-ts), [transcripts.test](tests.md#tools-parity-transcripts-test-ts)
+- Types used: **[core/rng](core.md#src-core-rng-ts)** [Rng](core.md#src-core-rng-ts--rng)
+
+Declarations:
+
+- <a id="tools-engine-driver-ts--timingid"></a>**TimingId** · *type* `= 'one' | 'pocket' | 'loose' | 'clams'`
+  - used by: here [EngineAdapter](#tools-engine-driver-ts--engineadapter), [TIMINGS](#tools-engine-driver-ts--timings)
+- <a id="tools-engine-driver-ts--statespec"></a>**StateSpec** · *interface*
+  - used by: here [EngineAdapter](#tools-engine-driver-ts--engineadapter), [FightSpec](#tools-engine-driver-ts--fightspec), [randomState](#tools-engine-driver-ts--randomstate) · **[tools/engine/micro](#tools-engine-micro-ts)** [baseState](#tools-engine-micro-ts--basestate) · **[tools/engine/rules](#tools-engine-rules-ts)** [EnemyCase](#tools-engine-rules-ts--enemycase), [FieldItemCase](#tools-engine-rules-ts--fielditemcase), [ShopCase](#tools-engine-rules-ts--shopcase), [VictoryCase](#tools-engine-rules-ts--victorycase), [state](#tools-engine-rules-ts--state) · **[tools/engine/tsAdapter](#tools-engine-tsadapter-ts)** [tsAdapter](#tools-engine-tsadapter-ts--tsadapter) · **[tools/parity/legacyAdapter](#tools-parity-legacyadapter-ts)** [legacyAdapter](#tools-parity-legacyadapter-ts--legacyadapter) · tests: [rules.test](tests.md#tools-parity-rules-test-ts)
+- <a id="tools-engine-driver-ts--enemyspec"></a>**EnemySpec** · *interface*
+  - used by: here [EngineAdapter](#tools-engine-driver-ts--engineadapter), [FightSpec](#tools-engine-driver-ts--fightspec), [generateCorpus](#tools-engine-driver-ts--generatecorpus)
+- <a id="tools-engine-driver-ts--fightspec"></a>**FightSpec** · *interface*
+  - used by: here [EngineAdapter](#tools-engine-driver-ts--engineadapter), [generateCorpus](#tools-engine-driver-ts--generatecorpus), [runFight](#tools-engine-driver-ts--runfight) · **[tools/engine/micro](#tools-engine-micro-ts)** [micro](#tools-engine-micro-ts--micro)
+- <a id="tools-engine-driver-ts--contentfacts"></a>**ContentFacts** · *interface* — Content facts the corpus generator needs (facts.ts reads them from the v2 tables).
+  - used by: here [generateCorpus](#tools-engine-driver-ts--generatecorpus), [randomState](#tools-engine-driver-ts--randomstate), [runMisc](#tools-engine-driver-ts--runmisc) · **[tools/engine/facts](#tools-engine-facts-ts)** [tsFacts](#tools-engine-facts-ts--tsfacts) · **[tools/engine/micro](#tools-engine-micro-ts)** [micro](#tools-engine-micro-ts--micro) · **[tools/engine/rules](#tools-engine-rules-ts)** [ruleCases](#tools-engine-rules-ts--rulecases) · **[tools/parity/legacyAdapter](#tools-parity-legacyadapter-ts)** [legacyFacts](#tools-parity-legacyadapter-ts--legacyfacts)
+- <a id="tools-engine-driver-ts--intent"></a>**Intent** · *interface* — A player intent in the legacy action shape (both engines accept it).
+  - used by: here [EngineAdapter](#tools-engine-driver-ts--engineadapter), [chooseIntent](#tools-engine-driver-ts--chooseintent), [needsTiming](#tools-engine-driver-ts--needstiming)
+- <a id="tools-engine-driver-ts--opaque"></a>**Opaque** · *type, internal* `= any` — Battle objects are engine-specific; the driver reads them only through the adapter.
+  - used by: here [EngineAdapter](#tools-engine-driver-ts--engineadapter), [checkpoint](#tools-engine-driver-ts--checkpoint)
+- <a id="tools-engine-driver-ts--engineadapter"></a>**EngineAdapter** · *interface, capability*
+  - used by: here [checkpoint](#tools-engine-driver-ts--checkpoint), [chooseIntent](#tools-engine-driver-ts--chooseintent), [needsTiming](#tools-engine-driver-ts--needstiming), [runFight](#tools-engine-driver-ts--runfight), [runMisc](#tools-engine-driver-ts--runmisc) · **[tools/engine/tsAdapter](#tools-engine-tsadapter-ts)** [tsAdapter](#tools-engine-tsadapter-ts--tsadapter) · **[tools/parity/legacyAdapter](#tools-parity-legacyadapter-ts)** [legacyAdapter](#tools-parity-legacyadapter-ts--legacyadapter)
+  - <a id="tools-engine-driver-ts--engineadapter-seed"></a>**seed** · *interface member* `(n: number): void`
+    - implemented by: **[tools/engine/tsAdapter](#tools-engine-tsadapter-ts)** [tsAdapter](#tools-engine-tsadapter-ts--tsadapter) · **[tools/parity/legacyAdapter](#tools-parity-legacyadapter-ts)** [legacyAdapter](#tools-parity-legacyadapter-ts--legacyadapter)
+    - called from: here [runFight](#tools-engine-driver-ts--runfight)
+  - <a id="tools-engine-driver-ts--engineadapter-draws"></a>**draws** · *interface member* `(): number`
+    - implemented by: **[tools/engine/tsAdapter](#tools-engine-tsadapter-ts)** [tsAdapter](#tools-engine-tsadapter-ts--tsadapter) · **[tools/parity/legacyAdapter](#tools-parity-legacyadapter-ts)** [legacyAdapter](#tools-parity-legacyadapter-ts--legacyadapter)
+    - called from: here [runFight](#tools-engine-driver-ts--runfight)
+  - <a id="tools-engine-driver-ts--engineadapter-buildstate"></a>**buildState** · *interface member* `(spec: StateSpec): Opaque`
+    - implemented by: **[tools/engine/tsAdapter](#tools-engine-tsadapter-ts)** [tsAdapter](#tools-engine-tsadapter-ts--tsadapter) · **[tools/parity/legacyAdapter](#tools-parity-legacyadapter-ts)** [legacyAdapter](#tools-parity-legacyadapter-ts--legacyadapter)
+    - called from: here [runFight](#tools-engine-driver-ts--runfight), [runMisc](#tools-engine-driver-ts--runmisc) · **[tools/engine/rules](#tools-engine-rules-ts)** [state](#tools-engine-rules-ts--state)
+  - <a id="tools-engine-driver-ts--engineadapter-makeenemy"></a>**makeEnemy** · *interface member* `(state: Opaque, e: EnemySpec): Opaque`
+    - implemented by: **[tools/engine/tsAdapter](#tools-engine-tsadapter-ts)** [tsAdapter](#tools-engine-tsadapter-ts--tsadapter) · **[tools/parity/legacyAdapter](#tools-parity-legacyadapter-ts)** [legacyAdapter](#tools-parity-legacyadapter-ts--legacyadapter)
+    - called from: here [runFight](#tools-engine-driver-ts--runfight)
+  - <a id="tools-engine-driver-ts--engineadapter-createbattle"></a>**createBattle** · *interface member* `(state: Opaque, enemies: Opaque[], opts: FightSpec['battle']): Opaque`
+    - implemented by: **[tools/engine/properties.test](tests.md#tools-engine-properties-test-ts)** · **[tools/engine/tsAdapter](#tools-engine-tsadapter-ts)** [tsAdapter](#tools-engine-tsadapter-ts--tsadapter) · **[tools/parity/legacyAdapter](#tools-parity-legacyadapter-ts)** [legacyAdapter](#tools-parity-legacyadapter-ts--legacyadapter)
+    - called from: here [runFight](#tools-engine-driver-ts--runfight) · tests: [properties.test](tests.md#tools-engine-properties-test-ts)
+  - <a id="tools-engine-driver-ts--engineadapter-rununtilplayer"></a>**runUntilPlayer** · *interface member* `(b: Opaque): boolean`
+    - implemented by: **[tools/engine/properties.test](tests.md#tools-engine-properties-test-ts)** · **[tools/engine/tsAdapter](#tools-engine-tsadapter-ts)** [tsAdapter](#tools-engine-tsadapter-ts--tsadapter) · **[tools/parity/legacyAdapter](#tools-parity-legacyadapter-ts)** [legacyAdapter](#tools-parity-legacyadapter-ts--legacyadapter)
+    - called from: here [runFight](#tools-engine-driver-ts--runfight) · tests: [properties.test](tests.md#tools-engine-properties-test-ts)
+  - <a id="tools-engine-driver-ts--engineadapter-playeraction"></a>**playerAction** · *interface member* `(b: Opaque, intent: Intent, timing: TimingId | null): void`
+    - implemented by: **[tools/engine/properties.test](tests.md#tools-engine-properties-test-ts)** · **[tools/engine/tsAdapter](#tools-engine-tsadapter-ts)** [tsAdapter](#tools-engine-tsadapter-ts--tsadapter) · **[tools/parity/legacyAdapter](#tools-parity-legacyadapter-ts)** [legacyAdapter](#tools-parity-legacyadapter-ts--legacyadapter)
+    - called from: here [runFight](#tools-engine-driver-ts--runfight) · tests: [properties.test](tests.md#tools-engine-properties-test-ts)
+  - <a id="tools-engine-driver-ts--engineadapter-battlerewards"></a>**battleRewards** · *interface member* `(b: Opaque): unknown`
+    - implemented by: **[tools/engine/tsAdapter](#tools-engine-tsadapter-ts)** [tsAdapter](#tools-engine-tsadapter-ts--tsadapter) · **[tools/parity/legacyAdapter](#tools-parity-legacyadapter-ts)** [legacyAdapter](#tools-parity-legacyadapter-ts--legacyadapter)
+    - called from: here [runFight](#tools-engine-driver-ts--runfight)
+  - <a id="tools-engine-driver-ts--engineadapter-applybattleresult"></a>**applyBattleResult** · *interface member* `(b: Opaque): void`
+    - implemented by: **[tools/engine/tsAdapter](#tools-engine-tsadapter-ts)** [tsAdapter](#tools-engine-tsadapter-ts--tsadapter) · **[tools/parity/legacyAdapter](#tools-parity-legacyadapter-ts)** [legacyAdapter](#tools-parity-legacyadapter-ts--legacyadapter)
+    - called from: here [runFight](#tools-engine-driver-ts--runfight)
+  - <a id="tools-engine-driver-ts--engineadapter-gainxp"></a>**gainXp** · *interface member* `(state: Opaque, n: number): unknown`
+    - implemented by: **[tools/engine/tsAdapter](#tools-engine-tsadapter-ts)** [tsAdapter](#tools-engine-tsadapter-ts--tsadapter) · **[tools/parity/legacyAdapter](#tools-parity-legacyadapter-ts)** [legacyAdapter](#tools-parity-legacyadapter-ts--legacyadapter)
+    - called from: here [runFight](#tools-engine-driver-ts--runfight), [runMisc](#tools-engine-driver-ts--runmisc)
+  - <a id="tools-engine-driver-ts--engineadapter-events"></a>**events** · *interface member* `(b: Opaque): unknown[]` — The live events array.
+    - implemented by: **[tools/engine/tsAdapter](#tools-engine-tsadapter-ts)** [tsAdapter](#tools-engine-tsadapter-ts--tsadapter) · **[tools/parity/legacyAdapter](#tools-parity-legacyadapter-ts)** [legacyAdapter](#tools-parity-legacyadapter-ts--legacyadapter)
+    - called from: here [runFight](#tools-engine-driver-ts--runfight)
+  - <a id="tools-engine-driver-ts--engineadapter-normalizeevent"></a>**normalizeEvent** · *interface member* `(e: Opaque, role: (id: string) => string): Record<string, unknown> | null` — Event → comparable record (null skips engine-specific events).
+    - implemented by: **[tools/engine/tsAdapter](#tools-engine-tsadapter-ts)** [tsAdapter](#tools-engine-tsadapter-ts--tsadapter) · **[tools/parity/legacyAdapter](#tools-parity-legacyadapter-ts)** [legacyAdapter](#tools-parity-legacyadapter-ts--legacyadapter)
+    - called from: here [runFight](#tools-engine-driver-ts--runfight)
+  - <a id="tools-engine-driver-ts--engineadapter-view"></a>**view** · *interface member* `(b: Opaque): BattleView`
+    - implemented by: **[tools/engine/tsAdapter](#tools-engine-tsadapter-ts)** [tsAdapter](#tools-engine-tsadapter-ts--tsadapter) · **[tools/parity/legacyAdapter](#tools-parity-legacyadapter-ts)** [legacyAdapter](#tools-parity-legacyadapter-ts--legacyadapter)
+    - called from: here [checkpoint](#tools-engine-driver-ts--checkpoint), [runFight](#tools-engine-driver-ts--runfight)
+  - <a id="tools-engine-driver-ts--engineadapter-projectstate"></a>**projectState** · *interface member* `(state: Opaque): Record<string, unknown>`
+    - implemented by: **[tools/engine/tsAdapter](#tools-engine-tsadapter-ts)** [tsAdapter](#tools-engine-tsadapter-ts--tsadapter) · **[tools/parity/legacyAdapter](#tools-parity-legacyadapter-ts)** [legacyAdapter](#tools-parity-legacyadapter-ts--legacyadapter)
+    - called from: here [runFight](#tools-engine-driver-ts--runfight), [runMisc](#tools-engine-driver-ts--runmisc)
+  - <a id="tools-engine-driver-ts--engineadapter-skill"></a>**skill** · *interface member* `(id: string): { fp: number; once: boolean; damaging: boolean }`
+    - implemented by: **[tools/engine/tsAdapter](#tools-engine-tsadapter-ts)** [tsAdapter](#tools-engine-tsadapter-ts--tsadapter) · **[tools/parity/legacyAdapter](#tools-parity-legacyadapter-ts)** [legacyAdapter](#tools-parity-legacyadapter-ts--legacyadapter)
+    - called from: here [chooseIntent](#tools-engine-driver-ts--chooseintent), [needsTiming](#tools-engine-driver-ts--needstiming)
+  - <a id="tools-engine-driver-ts--engineadapter-misc"></a>**misc** · *interface member* `(state: Opaque): Record<string, unknown>` — Out-of-battle rules sampled by the misc section.
+    - implemented by: **[tools/engine/tsAdapter](#tools-engine-tsadapter-ts)** [tsAdapter](#tools-engine-tsadapter-ts--tsadapter) · **[tools/parity/legacyAdapter](#tools-parity-legacyadapter-ts)** [legacyAdapter](#tools-parity-legacyadapter-ts--legacyadapter)
+    - called from: here [runMisc](#tools-engine-driver-ts--runmisc)
+  - <a id="tools-engine-driver-ts--engineadapter-pricefor"></a>**priceFor** · *interface member* `(state: Opaque, base: number, district: string): number`
+    - implemented by: **[tools/engine/tsAdapter](#tools-engine-tsadapter-ts)** [tsAdapter](#tools-engine-tsadapter-ts--tsadapter) · **[tools/parity/legacyAdapter](#tools-parity-legacyadapter-ts)** [legacyAdapter](#tools-parity-legacyadapter-ts--legacyadapter)
+    - called from: here [runMisc](#tools-engine-driver-ts--runmisc)
+- <a id="tools-engine-driver-ts--battleview"></a>**BattleView** · *interface* — The observable parts of a battle (field names follow the legacy battle object).
+  - used by: here [EngineAdapter](#tools-engine-driver-ts--engineadapter), [chooseIntent](#tools-engine-driver-ts--chooseintent), [roleMapper](#tools-engine-driver-ts--rolemapper) · **[tools/engine/tsAdapter](#tools-engine-tsadapter-ts)** [tsAdapter](#tools-engine-tsadapter-ts--tsadapter)
+- <a id="tools-engine-driver-ts--actorview"></a>**ActorView** · *interface*
+  - used by: here [BattleView](#tools-engine-driver-ts--battleview), [checkpoint](#tools-engine-driver-ts--checkpoint)
+- <a id="tools-engine-driver-ts--difficulties"></a>**DIFFICULTIES** · *const, internal* `= [ … ] as const (5 entries)`
+  - used by: here [randomState](#tools-engine-driver-ts--randomstate)
+- <a id="tools-engine-driver-ts--subset"></a>**subset** · *function, internal* `<T>(rng: Rng, items: readonly T[], p: number): T[]`
+  - uses: **[core/rng](core.md#src-core-rng-ts)** [Rng.next](core.md#src-core-rng-ts--rng-next)
+  - used by: here [randomState](#tools-engine-driver-ts--randomstate)
+- <a id="tools-engine-driver-ts--randomstate"></a>**randomState** · *function* `(rng: Rng, f: ContentFacts, cls: string, level: number): StateSpec`
+  - uses: here [DIFFICULTIES](#tools-engine-driver-ts--difficulties), [subset](#tools-engine-driver-ts--subset) · **[core/rng](core.md#src-core-rng-ts)** [Rng.chance](core.md#src-core-rng-ts--rng-chance), [Rng.int](core.md#src-core-rng-ts--rng-int), [Rng.next](core.md#src-core-rng-ts--rng-next), [Rng.pick](core.md#src-core-rng-ts--rng-pick)
+  - used by: here [generateCorpus](#tools-engine-driver-ts--generatecorpus), [runMisc](#tools-engine-driver-ts--runmisc) · **[tools/engine/rules](#tools-engine-rules-ts)** [ruleCases](#tools-engine-rules-ts--rulecases)
+- <a id="tools-engine-driver-ts--generatecorpus"></a>**generateCorpus** · *function* `(f: ContentFacts, seed: number, count: number): FightSpec[]` — Build `count` fight specs from a seed.
+  - uses: here [randomState](#tools-engine-driver-ts--randomstate) · **[core/rng](core.md#src-core-rng-ts)** [Rng.chance](core.md#src-core-rng-ts--rng-chance), [Rng.int](core.md#src-core-rng-ts--rng-int), [Rng.next](core.md#src-core-rng-ts--rng-next), [Rng.pick](core.md#src-core-rng-ts--rng-pick), [createRng](core.md#src-core-rng-ts--createrng)
+  - used by: **[tools/parity/coverage](#tools-parity-coverage-ts)** [(top level)](#tools-parity-coverage-ts--top-level) · tests: [properties.test](tests.md#tools-engine-properties-test-ts), [engine.test](tests.md#tools-parity-engine-test-ts)
+- <a id="tools-engine-driver-ts--timings"></a>**TIMINGS** · *const, internal* `: TimingId[]`
+  - used by: here [runFight](#tools-engine-driver-ts--runfight)
+- <a id="tools-engine-driver-ts--chooseintent"></a>**chooseIntent** · *function, internal* `(rng: Rng, a: EngineAdapter, v: BattleView, bag: Record<string, number>): Intent` — A seeded, mostly-random player that also sends illegal intents to exercise every rejection branch.
+  - uses: here [EngineAdapter.skill](#tools-engine-driver-ts--engineadapter-skill) · **[core/rng](core.md#src-core-rng-ts)** [Rng.chance](core.md#src-core-rng-ts--rng-chance), [Rng.next](core.md#src-core-rng-ts--rng-next), [Rng.pick](core.md#src-core-rng-ts--rng-pick)
+  - used by: here [runFight](#tools-engine-driver-ts--runfight)
+- <a id="tools-engine-driver-ts--needstiming"></a>**needsTiming** · *function, internal* `(a: EngineAdapter, intent: Intent): boolean`
+  - uses: here [EngineAdapter.skill](#tools-engine-driver-ts--engineadapter-skill)
+  - used by: here [runFight](#tools-engine-driver-ts--runfight)
+- <a id="tools-engine-driver-ts--fighttrace"></a>**FightTrace** · *interface*
+  - used by: here [runFight](#tools-engine-driver-ts--runfight) · tests: [engine.test](tests.md#tools-parity-engine-test-ts)
+- <a id="tools-engine-driver-ts--rolemapper"></a>**roleMapper** · *function, internal* `(v: BattleView): (id: string) => string`
+  - used by: here [checkpoint](#tools-engine-driver-ts--checkpoint), [runFight](#tools-engine-driver-ts--runfight)
+- <a id="tools-engine-driver-ts--checkpoint"></a>**checkpoint** · *function, internal* `(a: EngineAdapter, b: Opaque, draws: number): { draws: number; round: number; idx: number; order: string[]; over: boolean; result: string | null; waiting: boolean; blues…`
+  - uses: here [EngineAdapter.view](#tools-engine-driver-ts--engineadapter-view), [roleMapper](#tools-engine-driver-ts--rolemapper)
+  - used by: here [runFight](#tools-engine-driver-ts--runfight)
+- <a id="tools-engine-driver-ts--runfight"></a>**runFight** · *function* `(a: EngineAdapter, spec: FightSpec, maxActions = 60): FightTrace` — Play one fight and record its trace.
+  - uses: here [EngineAdapter.applyBattleResult](#tools-engine-driver-ts--engineadapter-applybattleresult), [EngineAdapter.battleRewards](#tools-engine-driver-ts--engineadapter-battlerewards), [EngineAdapter.buildState](#tools-engine-driver-ts--engineadapter-buildstate), [EngineAdapter.createBattle](#tools-engine-driver-ts--engineadapter-createbattle), [EngineAdapter.draws](#tools-engine-driver-ts--engineadapter-draws), [EngineAdapter.events](#tools-engine-driver-ts--engineadapter-events), [EngineAdapter.gainXp](#tools-engine-driver-ts--engineadapter-gainxp), [EngineAdapter.makeEnemy](#tools-engine-driver-ts--engineadapter-makeenemy), [EngineAdapter.normalizeEvent](#tools-engine-driver-ts--engineadapter-normalizeevent), [EngineAdapter.playerAction](#tools-engine-driver-ts--engineadapter-playeraction), [EngineAdapter.projectState](#tools-engine-driver-ts--engineadapter-projectstate), [EngineAdapter.runUntilPlayer](#tools-engine-driver-ts--engineadapter-rununtilplayer), [EngineAdapter.seed](#tools-engine-driver-ts--engineadapter-seed), [EngineAdapter.view](#tools-engine-driver-ts--engineadapter-view), [TIMINGS](#tools-engine-driver-ts--timings), [checkpoint](#tools-engine-driver-ts--checkpoint) · … +6 more
+  - used by: **[tools/parity/coverage](#tools-parity-coverage-ts)** [(top level)](#tools-parity-coverage-ts--top-level) · tests: [properties.test](tests.md#tools-engine-properties-test-ts), [engine.test](tests.md#tools-parity-engine-test-ts)
+- <a id="tools-engine-driver-ts--runmisc"></a>**runMisc** · *function* `(a: EngineAdapter, f: ContentFacts, seed: number, count: number): unknown[]` — Out-of-battle rules (stats, prices, unlocks) on random states.
+  - uses: here [EngineAdapter.buildState](#tools-engine-driver-ts--engineadapter-buildstate), [EngineAdapter.gainXp](#tools-engine-driver-ts--engineadapter-gainxp), [EngineAdapter.misc](#tools-engine-driver-ts--engineadapter-misc), [EngineAdapter.priceFor](#tools-engine-driver-ts--engineadapter-pricefor), [EngineAdapter.projectState](#tools-engine-driver-ts--engineadapter-projectstate), [randomState](#tools-engine-driver-ts--randomstate) · **[core/rng](core.md#src-core-rng-ts)** [Rng.int](core.md#src-core-rng-ts--rng-int), [Rng.pick](core.md#src-core-rng-ts--rng-pick), [createRng](core.md#src-core-rng-ts--createrng)
+  - used by: **[tools/parity/coverage](#tools-parity-coverage-ts)** [(top level)](#tools-parity-coverage-ts--top-level) · tests: [engine.test](tests.md#tools-parity-engine-test-ts)
+- <a id="tools-engine-driver-ts--firstdifference"></a>**firstDifference** · *function* `(x: unknown, y: unknown, path = ''): string | null` — First path at which two JSON-like values differ, or null when equal.
+  - used by: tests: [properties.test](tests.md#tools-engine-properties-test-ts), [rules.test](tests.md#tools-engine-rules-test-ts), [content.test](tests.md#tools-parity-content-test-ts), [engine.test](tests.md#tools-parity-engine-test-ts), [rules.test](tests.md#tools-parity-rules-test-ts), [transcripts.test](tests.md#tools-parity-transcripts-test-ts)
+
+<a id="tools-engine-facts-ts"></a>
+
+### tools/engine/facts.ts
+
+The content facts the fight-corpus and rules generators need (driver.ts `ContentFacts`), read from the v2 tables. Order matters: the generators pick from these lists by index, so the same seed gives the same fights only while the order is v1's (the parity content test pinned that before cutover).
+
+- Source: [tools/engine/facts.ts](../../../tools/engine/facts.ts)
+- Imports: core: [ids/story](core.md#src-core-ids-story-ts) · content: [data](content.md#src-content-data-ts) · tools: [engine/driver](#tools-engine-driver-ts)
+- Imported by: tools: [engine/rulesBaseline](#tools-engine-rulesbaseline-ts)
+- Tested by: [properties.test](tests.md#tools-engine-properties-test-ts), [rules.test](tests.md#tools-engine-rules-test-ts), [facts.test](tests.md#tools-parity-facts-test-ts), [rules.test](tests.md#tools-parity-rules-test-ts)
+- Types used: **[tools/engine/driver](#tools-engine-driver-ts)** [ContentFacts](#tools-engine-driver-ts--contentfacts)
+
+Declarations:
+
+- <a id="tools-engine-facts-ts--tsfacts"></a>**tsFacts** · *function* `(): ContentFacts` — ContentFacts from the v2 content tables.
+  - uses: **[content/band/bandmates](content.md#src-content-band-bandmates-ts)** [BANDMATES](content.md#src-content-band-bandmates-ts--bandmates) · **[content/bosses/index](content.md#src-content-bosses-index-ts)** [BOSSES](content.md#src-content-bosses-index-ts--bosses) · **[content/classes/index](content.md#src-content-classes-index-ts)** [CLASSES](content.md#src-content-classes-index-ts--classes) · **[content/combat/statuses](content.md#src-content-combat-statuses-ts)** [STATUSES](content.md#src-content-combat-statuses-ts--statuses) · **[content/districts/index](content.md#src-content-districts-index-ts)** [DISTRICTS](content.md#src-content-districts-index-ts--districts) · **[content/enemies/index](content.md#src-content-enemies-index-ts)** [ENEMIES](content.md#src-content-enemies-index-ts--enemies) · **[content/gear/index](content.md#src-content-gear-index-ts)** [GEAR](content.md#src-content-gear-index-ts--gear) · **[content/gear/instruments](content.md#src-content-gear-instruments-ts)** [INSTRUMENT_TIERS](content.md#src-content-gear-instruments-ts--instrument-tiers) · **[content/items](content.md#src-content-items-ts)** [ITEMS](content.md#src-content-items-ts--items) · **[content/roots](content.md#src-content-roots-ts)** [ROOTS](content.md#src-content-roots-ts--roots) · **[content/sheetMusic](content.md#src-content-sheetmusic-ts)** [SHEET_MUSIC](content.md#src-content-sheetmusic-ts--sheet-music) · **[core/ids/story](core.md#src-core-ids-story-ts)** [ACT_ORDER](core.md#src-core-ids-story-ts--act-order), [ACT_STEPS](core.md#src-core-ids-story-ts--act-steps)
+  - used by: **[tools/engine/rulesBaseline](#tools-engine-rulesbaseline-ts)** [(top level)](#tools-engine-rulesbaseline-ts--top-level) · tests: [properties.test](tests.md#tools-engine-properties-test-ts), [rules.test](tests.md#tools-engine-rules-test-ts), [facts.test](tests.md#tools-parity-facts-test-ts), [rules.test](tests.md#tools-parity-rules-test-ts)
+
+<a id="tools-engine-micro-ts"></a>
+
+### tools/engine/micro.ts
+
+Hand-written fight setups for engine branches the random corpus rarely reaches. Each one is a FightSpec with fixed seeds; add one whenever coverage shows a gap.
+
+- Source: [tools/engine/micro.ts](../../../tools/engine/micro.ts)
+- Imports: tools: [engine/driver](#tools-engine-driver-ts)
+- Imported by: tools: [parity/coverage](#tools-parity-coverage-ts)
+- Tested by: [engine.test](tests.md#tools-parity-engine-test-ts)
+- Types used: **[tools/engine/driver](#tools-engine-driver-ts)** [ContentFacts](#tools-engine-driver-ts--contentfacts), [FightSpec](#tools-engine-driver-ts--fightspec), [StateSpec](#tools-engine-driver-ts--statespec)
+
+Declarations:
+
+- <a id="tools-engine-micro-ts--basestate"></a>**baseState** · *function, internal* `(cls: string, level: number): StateSpec`
+  - used by: here [micro](#tools-engine-micro-ts--micro)
+- <a id="tools-engine-micro-ts--micro"></a>**micro** · *function* `(_f: ContentFacts): FightSpec[]`
+  - uses: here [baseState](#tools-engine-micro-ts--basestate)
+  - used by: **[tools/parity/coverage](#tools-parity-coverage-ts)** [(top level)](#tools-parity-coverage-ts--top-level) · tests: [engine.test](tests.md#tools-parity-engine-test-ts)
+
+<a id="tools-engine-rules-ts"></a>
+
+### tools/engine/rules.ts
+
+Rules that lived in v1's UI layer (building enemy groups, field items, shops, victory bookkeeping), now engine functions: seeded random cases and what the v2 engine does with them.
+
+- Source: [tools/engine/rules.ts](../../../tools/engine/rules.ts)
+- Imports: core: [ids/enemies](core.md#src-core-ids-enemies-ts), [ids/items](core.md#src-core-ids-items-ts), [ids/world](core.md#src-core-ids-world-ts), [rng](core.md#src-core-rng-ts), [types/index](core.md#src-core-types-index-ts) · content: [data](content.md#src-content-data-ts) · engine: [index](engine.md#src-engine-index-ts) · tools: [engine/driver](#tools-engine-driver-ts), [engine/tsAdapter](#tools-engine-tsadapter-ts)
+- Imported by: tools: [engine/rulesBaseline](#tools-engine-rulesbaseline-ts)
+- Tested by: [rules.test](tests.md#tools-engine-rules-test-ts), [rules.test](tests.md#tools-parity-rules-test-ts)
+- Types used: **[core/ids/enemies](core.md#src-core-ids-enemies-ts)** [EnemyId](core.md#src-core-ids-enemies-ts--enemyid) · **[core/ids/items](core.md#src-core-ids-items-ts)** [ItemId](core.md#src-core-ids-items-ts--itemid) · **[core/ids/world](core.md#src-core-ids-world-ts)** [DistrictId](core.md#src-core-ids-world-ts--districtid) · **[core/rng](core.md#src-core-rng-ts)** [Rng](core.md#src-core-rng-ts--rng) · **[core/types/battle](core.md#src-core-types-battle-ts)** [Actor](core.md#src-core-types-battle-ts--actor) · **[core/types/state](core.md#src-core-types-state-ts)** [GameState](core.md#src-core-types-state-ts--gamestate) · **[tools/engine/driver](#tools-engine-driver-ts)** [ContentFacts](#tools-engine-driver-ts--contentfacts), [StateSpec](#tools-engine-driver-ts--statespec)
+
+Declarations:
+
+- <a id="tools-engine-rules-ts--enemycase"></a>**EnemyCase** · *interface* — A street or explicit enemy group.
+  - used by: here [RuleCases](#tools-engine-rules-ts--rulecases), [ruleCases](#tools-engine-rules-ts--rulecases)
+- <a id="tools-engine-rules-ts--fielditemcase"></a>**FieldItemCase** · *interface* — One field item used on a save.
+  - used by: here [RuleCases](#tools-engine-rules-ts--rulecases), [ruleCases](#tools-engine-rules-ts--rulecases)
+- <a id="tools-engine-rules-ts--shopcase"></a>**ShopCase** · *interface* — A shop with eight rows: buy every row, then sell everything once.
+  - used by: here [RuleCases](#tools-engine-rules-ts--rulecases), [ruleCases](#tools-engine-rules-ts--rulecases)
+- <a id="tools-engine-rules-ts--victorycase"></a>**VictoryCase** · *interface* — A won fight's bookkeeping.
+  - used by: here [RuleCases](#tools-engine-rules-ts--rulecases), [ruleCases](#tools-engine-rules-ts--rulecases)
+- <a id="tools-engine-rules-ts--rulecases"></a>**RuleCases** · *interface* — Every rule case, in the order they're drawn.
+  - used by: here [ruleCases](#tools-engine-rules-ts--rulecases), [runRules](#tools-engine-rules-ts--runrules)
+- <a id="tools-engine-rules-ts--rulecases"></a>**ruleCases** · *function* `(facts: ContentFacts): RuleCases` — Draw every case from the spec stream (seed 4242), in the order v1's rule oracle did.
+  - uses: **[content/districts/index](content.md#src-content-districts-index-ts)** [DISTRICTS](content.md#src-content-districts-index-ts--districts) · **[content/gear/index](content.md#src-content-gear-index-ts)** [GEAR](content.md#src-content-gear-index-ts--gear) · **[content/items](content.md#src-content-items-ts)** [ITEMS](content.md#src-content-items-ts--items) · **[content/sheetMusic](content.md#src-content-sheetmusic-ts)** [SHEET_MUSIC](content.md#src-content-sheetmusic-ts--sheet-music) · **[core/ids/items](core.md#src-core-ids-items-ts)** [ITEM_IDS](core.md#src-core-ids-items-ts--item-ids) · **[core/rng](core.md#src-core-rng-ts)** [Rng.chance](core.md#src-core-rng-ts--rng-chance), [Rng.int](core.md#src-core-rng-ts--rng-int), [Rng.pick](core.md#src-core-rng-ts--rng-pick), [createRng](core.md#src-core-rng-ts--createrng) · **[tools/engine/driver](#tools-engine-driver-ts)** [randomState](#tools-engine-driver-ts--randomstate)
+  - used by: **[tools/engine/rulesBaseline](#tools-engine-rulesbaseline-ts)** [(top level)](#tools-engine-rulesbaseline-ts--top-level) · tests: [rules.test](tests.md#tools-engine-rules-test-ts), [rules.test](tests.md#tools-parity-rules-test-ts)
+- <a id="tools-engine-rules-ts--actorview"></a>**actorView** · *function* `(a: any): { defId: any; name: any; level: any; hp: any; stats: any; skills: any; boss: any; elite: any; }` — The parts of an enemy actor the rules decide.
+  - used by: here [RuleResults](#tools-engine-rules-ts--ruleresults), [runRules](#tools-engine-rules-ts--runrules) · tests: [rules.test](tests.md#tools-parity-rules-test-ts)
+- <a id="tools-engine-rules-ts--fielditemview"></a>**fieldItemView** · *function* `(s: any): { hp: any; fp: any; bag: any; perm: any; nextFight: any; }` — The save, as a field item leaves it.
+  - used by: here [RuleResults](#tools-engine-rules-ts--ruleresults), [runRules](#tools-engine-rules-ts--runrules) · tests: [rules.test](tests.md#tools-parity-rules-test-ts)
+- <a id="tools-engine-rules-ts--shopview"></a>**shopView** · *function* `(s: any): { doubloons: any; bag: any; gear: any; gearBag: any; sheet: any; hp: any; fp: any; }` — The save, as shopping leaves it.
+  - used by: here [RuleResults](#tools-engine-rules-ts--ruleresults), [runRules](#tools-engine-rules-ts--runrules) · tests: [rules.test](tests.md#tools-parity-rules-test-ts)
+- <a id="tools-engine-rules-ts--victoryview"></a>**victoryView** · *function* `(s: any, story: unknown): { doubloons: any; bag: any; counters: any; story: unknown; bounty: any; bountiesDone: any; level: any; xp: any; hp: any; fp: any; }` — The save, as a victory leaves it (with the story as a named step).
+  - used by: here [RuleResults](#tools-engine-rules-ts--ruleresults), [runRules](#tools-engine-rules-ts--runrules) · tests: [rules.test](tests.md#tools-parity-rules-test-ts)
+- <a id="tools-engine-rules-ts--ruleresults"></a>**RuleResults** · *interface* — What the v2 engine does with every case.
+  - used by: here [runRules](#tools-engine-rules-ts--runrules) · tests: [rules.test](tests.md#tools-engine-rules-test-ts)
+- <a id="tools-engine-rules-ts--state"></a>**state** · *function, internal* `(spec: StateSpec, district?: DistrictId): GameState` — A v2 save for a case, in its district.
+  - uses: **[tools/engine/driver](#tools-engine-driver-ts)** [EngineAdapter.buildState](#tools-engine-driver-ts--engineadapter-buildstate) · **[tools/engine/tsAdapter](#tools-engine-tsadapter-ts)** [tsAdapter](#tools-engine-tsadapter-ts--tsadapter)
+  - used by: here [runRules](#tools-engine-rules-ts--runrules)
+- <a id="tools-engine-rules-ts--runrules"></a>**runRules** · *function* `(cases: RuleCases): RuleResults` — Run every case through the v2 engine.
+  - uses: here [actorView](#tools-engine-rules-ts--actorview), [fieldItemView](#tools-engine-rules-ts--fielditemview), [shopView](#tools-engine-rules-ts--shopview), [state](#tools-engine-rules-ts--state), [victoryView](#tools-engine-rules-ts--victoryview) · **[core/rng](core.md#src-core-rng-ts)** [createRng](core.md#src-core-rng-ts--createrng) · **[engine/aftermath](engine.md#src-engine-aftermath-ts)** [resolveVictory](engine.md#src-engine-aftermath-ts--resolvevictory) · **[engine/combat/actors](engine.md#src-engine-combat-actors-ts)** [makeEnemy](engine.md#src-engine-combat-actors-ts--makeenemy) · **[engine/combat/battle](engine.md#src-engine-combat-battle-ts)** [createBattle](engine.md#src-engine-combat-battle-ts--createbattle) · **[engine/encounters](engine.md#src-engine-encounters-ts)** [buildEnemies](engine.md#src-engine-encounters-ts--buildenemies) · **[engine/items](engine.md#src-engine-items-ts)** [buy](engine.md#src-engine-items-ts--buy), [sell](engine.md#src-engine-items-ts--sell), [sellables](engine.md#src-engine-items-ts--sellables), [shopRow](engine.md#src-engine-items-ts--shoprow), [useFieldItem](engine.md#src-engine-items-ts--usefielditem) · **[engine/progression](engine.md#src-engine-progression-ts)** [gainXp](engine.md#src-engine-progression-ts--gainxp)
+  - used by: **[tools/engine/rulesBaseline](#tools-engine-rulesbaseline-ts)** [(top level)](#tools-engine-rulesbaseline-ts--top-level) · tests: [rules.test](tests.md#tools-engine-rules-test-ts), [rules.test](tests.md#tools-parity-rules-test-ts)
+
+<a id="tools-engine-rulesbaseline-ts"></a>
+
+### tools/engine/rulesBaseline.ts
+
+Write tests/fixtures/rules.json: what the engine does with every rule case (tools/engine/rules.ts). It was first written while v1's rule oracle passed, so it holds v1's behavior.
+
+- Source: [tools/engine/rulesBaseline.ts](../../../tools/engine/rulesBaseline.ts)
+- Imports: tools: [engine/facts](#tools-engine-facts-ts), [engine/rules](#tools-engine-rules-ts)
+- Packages: `node:fs`, `node:path`, `node:url`
+- Tested by: [rules.test](tests.md#tools-engine-rules-test-ts)
+
+Declarations:
+
+- <a id="tools-engine-rulesbaseline-ts--rules-baseline"></a>**RULES_BASELINE** · *const* — The fixture's path.
+  - used by: here [(top level)](#tools-engine-rulesbaseline-ts--top-level) · tests: [rules.test](tests.md#tools-engine-rules-test-ts)
+- <a id="tools-engine-rulesbaseline-ts--top-level"></a>**(top level)** · *module* — Statements that run when the module loads.
+  - uses: here [RULES_BASELINE](#tools-engine-rulesbaseline-ts--rules-baseline) · **[tools/engine/facts](#tools-engine-facts-ts)** [tsFacts](#tools-engine-facts-ts--tsfacts) · **[tools/engine/rules](#tools-engine-rules-ts)** [ruleCases](#tools-engine-rules-ts--rulecases), [runRules](#tools-engine-rules-ts--runrules)
+
+<a id="tools-engine-tsadapter-ts"></a>
+
+### tools/engine/tsAdapter.ts
+
+EngineAdapter over the TypeScript engine, mirroring legacyAdapter.ts field for field so the shared driver can compare traces. Deleted at cutover.
+
+- Source: [tools/engine/tsAdapter.ts](../../../tools/engine/tsAdapter.ts)
+- Imports: core: [ids/band](core.md#src-core-ids-band-ts), [ids/characters](core.md#src-core-ids-characters-ts), [ids/enemies](core.md#src-core-ids-enemies-ts), [ids/flags](core.md#src-core-ids-flags-ts), [ids/items](core.md#src-core-ids-items-ts), [ids/story](core.md#src-core-ids-story-ts), [ids/world](core.md#src-core-ids-world-ts), [rng](core.md#src-core-rng-ts), [types/index](core.md#src-core-types-index-ts) · content: [data](content.md#src-content-data-ts) · engine: [index](engine.md#src-engine-index-ts) · tools: [engine/driver](#tools-engine-driver-ts)
+- Imported by: tools: [engine/rules](#tools-engine-rules-ts)
+- Tested by: [properties.test](tests.md#tools-engine-properties-test-ts), [engine.test](tests.md#tools-parity-engine-test-ts)
+- Types used: **[content/combat/skills](content.md#src-content-combat-skills-ts)** [SKILLS](content.md#src-content-combat-skills-ts--skills) · **[core/ids/band](core.md#src-core-ids-band-ts)** [BandmateId](core.md#src-core-ids-band-ts--bandmateid) · **[core/ids/characters](core.md#src-core-ids-characters-ts)** [ClassId](core.md#src-core-ids-characters-ts--classid), [RootsId](core.md#src-core-ids-characters-ts--rootsid) · **[core/ids/enemies](core.md#src-core-ids-enemies-ts)** [OpponentId](core.md#src-core-ids-enemies-ts--opponentid) · **[core/ids/flags](core.md#src-core-ids-flags-ts)** [StoryChoices](core.md#src-core-ids-flags-ts--storychoices) · **[core/ids/items](core.md#src-core-ids-items-ts)** [ItemId](core.md#src-core-ids-items-ts--itemid), [SheetMusicId](core.md#src-core-ids-items-ts--sheetmusicid) · **[core/ids/story](core.md#src-core-ids-story-ts)** [ActId](core.md#src-core-ids-story-ts--actid) · **[core/ids/world](core.md#src-core-ids-world-ts)** [DistrictId](core.md#src-core-ids-world-ts--districtid), [QuestId](core.md#src-core-ids-world-ts--questid) · **[core/rng](core.md#src-core-rng-ts)** [Rng](core.md#src-core-rng-ts--rng) · **[core/types/battle](core.md#src-core-types-battle-ts)** [Battle](core.md#src-core-types-battle-ts--battle), [BattleEvent](core.md#src-core-types-battle-ts--battleevent), [PlayerIntent](core.md#src-core-types-battle-ts--playerintent) · **[core/types/state](core.md#src-core-types-state-ts)** [GameState](core.md#src-core-types-state-ts--gamestate) · **[tools/engine/driver](#tools-engine-driver-ts)** [BattleView](#tools-engine-driver-ts--battleview), [EngineAdapter](#tools-engine-driver-ts--engineadapter), [StateSpec](#tools-engine-driver-ts--statespec)
+
+Declarations:
+
+- <a id="tools-engine-tsadapter-ts--legacyshape"></a>**legacyShape** · *function* `(e: BattleEvent, role: (id: string) => string): Record<string, unknown> | null` — Rename a TS event back to the legacy event shape (and drop TS-only fields).
+  - used by: here [tsAdapter](#tools-engine-tsadapter-ts--tsadapter)
+- <a id="tools-engine-tsadapter-ts--tsadapter"></a>**tsAdapter** · *function* `(): EngineAdapter`
+  - uses: here [legacyShape](#tools-engine-tsadapter-ts--legacyshape) · **[content/band/secondLine](content.md#src-content-band-secondline-ts)** [SECOND_LINE](content.md#src-content-band-secondline-ts--second-line) · **[content/combat/skills](content.md#src-content-combat-skills-ts)** [SKILLS](content.md#src-content-combat-skills-ts--skills) · **[content/combat/timing](content.md#src-content-combat-timing-ts)** [TIMING](content.md#src-content-combat-timing-ts--timing) · **[core/rng](core.md#src-core-rng-ts)** [createRng](core.md#src-core-rng-ts--createrng) · **[core/types/content](core.md#src-core-types-content-ts)** [SecondLineMemberDef.when](core.md#src-core-types-content-ts--secondlinememberdef-when) · **[engine/balance](engine.md#src-engine-balance-ts)** [xpToNext](engine.md#src-engine-balance-ts--xptonext) · **[engine/combat/actors](engine.md#src-engine-combat-actors-ts)** [makeEnemy](engine.md#src-engine-combat-actors-ts--makeenemy) · **[engine/combat/battle](engine.md#src-engine-combat-battle-ts)** [createBattle](engine.md#src-engine-combat-battle-ts--createbattle) · **[engine/combat/player](engine.md#src-engine-combat-player-ts)** [playerAction](engine.md#src-engine-combat-player-ts--playeraction) · **[engine/combat/rewards](engine.md#src-engine-combat-rewards-ts)** [applyBattleResult](engine.md#src-engine-combat-rewards-ts--applybattleresult), [battleRewards](engine.md#src-engine-combat-rewards-ts--battlerewards) · **[engine/combat/turns](engine.md#src-engine-combat-turns-ts)** [runUntilPlayer](engine.md#src-engine-combat-turns-ts--rununtilplayer) · **[engine/economy](engine.md#src-engine-economy-ts)** [priceFor](engine.md#src-engine-economy-ts--pricefor) · **[engine/inventory](engine.md#src-engine-inventory-ts)** [addItem](engine.md#src-engine-inventory-ts--additem), [removeItem](engine.md#src-engine-inventory-ts--removeitem) · … +8 more
+  - used by: **[tools/engine/rules](#tools-engine-rules-ts)** [state](#tools-engine-rules-ts--state) · tests: [properties.test](tests.md#tools-engine-properties-test-ts), [engine.test](tests.md#tools-parity-engine-test-ts)
+
 <a id="tools-migrate-codegen-content-ts"></a>
 
 ### tools/migrate/codegen-content.ts
@@ -481,25 +757,6 @@ Declarations:
 - <a id="tools-migrate-serialize-ts--idlist"></a>**idList** · *function* `(ids: string[]): string` — `[ 'a', 'b' ] as const` source for an id list.
   - used by: **[tools/migrate/codegen-ids](#tools-migrate-codegen-ids-ts)** [(top level)](#tools-migrate-codegen-ids-ts--top-level)
 
-<a id="tools-parity-corpus-ts"></a>
-
-### tools/parity/corpus.ts
-
-- Source: [tools/parity/corpus.ts](../../../tools/parity/corpus.ts)
-- Imported by: tools: [parity/coverage](#tools-parity-coverage-ts)
-- Tested by: [engine.test](tests.md#tools-parity-engine-test-ts), [properties.test](tests.md#tools-parity-properties-test-ts)
-
-Declarations:
-
-- <a id="tools-parity-corpus-ts--corpus-seed"></a>**CORPUS_SEED** · *const* — Corpus sizes and seeds shared by the coverage run and the parity tests.
-  - used by: **[tools/parity/coverage](#tools-parity-coverage-ts)** [(top level)](#tools-parity-coverage-ts--top-level) · tests: [engine.test](tests.md#tools-parity-engine-test-ts), [properties.test](tests.md#tools-parity-properties-test-ts)
-- <a id="tools-parity-corpus-ts--corpus-size"></a>**CORPUS_SIZE** · *const*
-  - used by: **[tools/parity/coverage](#tools-parity-coverage-ts)** [(top level)](#tools-parity-coverage-ts--top-level) · tests: [engine.test](tests.md#tools-parity-engine-test-ts)
-- <a id="tools-parity-corpus-ts--misc-seed"></a>**MISC_SEED** · *const*
-  - used by: **[tools/parity/coverage](#tools-parity-coverage-ts)** [(top level)](#tools-parity-coverage-ts--top-level) · tests: [engine.test](tests.md#tools-parity-engine-test-ts)
-- <a id="tools-parity-corpus-ts--misc-size"></a>**MISC_SIZE** · *const*
-  - used by: **[tools/parity/coverage](#tools-parity-coverage-ts)** [(top level)](#tools-parity-coverage-ts--top-level) · tests: [engine.test](tests.md#tools-parity-engine-test-ts)
-
 <a id="tools-parity-coverage-ts"></a>
 
 ### tools/parity/coverage.ts
@@ -507,7 +764,7 @@ Declarations:
 Runs the parity corpus against the legacy engine only. Run under c8 to measure how much of the legacy engine (05) and the content functions (01–03) the corpus exercises:
 
 - Source: [tools/parity/coverage.ts](../../../tools/parity/coverage.ts)
-- Imports: tools: [parity/corpus](#tools-parity-corpus-ts), [parity/driver](#tools-parity-driver-ts), [parity/legacyAdapter](#tools-parity-legacyadapter-ts), [parity/micro](#tools-parity-micro-ts)
+- Imports: tools: [engine/corpus](#tools-engine-corpus-ts), [engine/driver](#tools-engine-driver-ts), [engine/micro](#tools-engine-micro-ts), [parity/legacyAdapter](#tools-parity-legacyadapter-ts)
 
 Declarations:
 
@@ -520,127 +777,7 @@ Declarations:
 - <a id="tools-parity-coverage-ts--events"></a>**events** · *let, internal*
   - used by: here [(top level)](#tools-parity-coverage-ts--top-level)
 - <a id="tools-parity-coverage-ts--top-level"></a>**(top level)** · *module* — Statements that run when the module loads.
-  - uses: here [a](#tools-parity-coverage-ts--a), [events](#tools-parity-coverage-ts--events), [facts](#tools-parity-coverage-ts--facts) · **[tools/parity/corpus](#tools-parity-corpus-ts)** [CORPUS_SEED](#tools-parity-corpus-ts--corpus-seed), [CORPUS_SIZE](#tools-parity-corpus-ts--corpus-size), [MISC_SEED](#tools-parity-corpus-ts--misc-seed), [MISC_SIZE](#tools-parity-corpus-ts--misc-size) · **[tools/parity/driver](#tools-parity-driver-ts)** [generateCorpus](#tools-parity-driver-ts--generatecorpus), [runFight](#tools-parity-driver-ts--runfight), [runMisc](#tools-parity-driver-ts--runmisc) · **[tools/parity/micro](#tools-parity-micro-ts)** [micro](#tools-parity-micro-ts--micro)
-
-<a id="tools-parity-driver-ts"></a>
-
-### tools/parity/driver.ts
-
-The shared parity driver. It generates a seeded corpus of fights and plays each one against an EngineAdapter (legacy vm or TypeScript), recording a trace that the parity test compares exactly.
-
-- Source: [tools/parity/driver.ts](../../../tools/parity/driver.ts)
-- Imports: core: [rng](core.md#src-core-rng-ts)
-- Imported by: tools: [parity/coverage](#tools-parity-coverage-ts), [parity/legacyAdapter](#tools-parity-legacyadapter-ts), [parity/micro](#tools-parity-micro-ts), [parity/tsAdapter](#tools-parity-tsadapter-ts)
-- Tested by: [content.test](tests.md#tools-parity-content-test-ts), [engine.test](tests.md#tools-parity-engine-test-ts), [properties.test](tests.md#tools-parity-properties-test-ts), [rules.test](tests.md#tools-parity-rules-test-ts), [transcripts.test](tests.md#tools-parity-transcripts-test-ts)
-- Types used: **[core/rng](core.md#src-core-rng-ts)** [Rng](core.md#src-core-rng-ts--rng)
-
-Declarations:
-
-- <a id="tools-parity-driver-ts--timingid"></a>**TimingId** · *type* `= 'one' | 'pocket' | 'loose' | 'clams'`
-  - used by: here [EngineAdapter](#tools-parity-driver-ts--engineadapter), [TIMINGS](#tools-parity-driver-ts--timings)
-- <a id="tools-parity-driver-ts--statespec"></a>**StateSpec** · *interface*
-  - used by: here [EngineAdapter](#tools-parity-driver-ts--engineadapter), [FightSpec](#tools-parity-driver-ts--fightspec), [randomState](#tools-parity-driver-ts--randomstate) · **[tools/parity/legacyAdapter](#tools-parity-legacyadapter-ts)** [legacyAdapter](#tools-parity-legacyadapter-ts--legacyadapter) · **[tools/parity/micro](#tools-parity-micro-ts)** [baseState](#tools-parity-micro-ts--basestate) · **[tools/parity/tsAdapter](#tools-parity-tsadapter-ts)** [tsAdapter](#tools-parity-tsadapter-ts--tsadapter) · tests: [rules.test](tests.md#tools-parity-rules-test-ts)
-- <a id="tools-parity-driver-ts--enemyspec"></a>**EnemySpec** · *interface*
-  - used by: here [EngineAdapter](#tools-parity-driver-ts--engineadapter), [FightSpec](#tools-parity-driver-ts--fightspec), [generateCorpus](#tools-parity-driver-ts--generatecorpus)
-- <a id="tools-parity-driver-ts--fightspec"></a>**FightSpec** · *interface*
-  - used by: here [EngineAdapter](#tools-parity-driver-ts--engineadapter), [generateCorpus](#tools-parity-driver-ts--generatecorpus), [runFight](#tools-parity-driver-ts--runfight) · **[tools/parity/micro](#tools-parity-micro-ts)** [micro](#tools-parity-micro-ts--micro)
-- <a id="tools-parity-driver-ts--contentfacts"></a>**ContentFacts** · *interface* — Content facts the corpus generator needs.
-  - used by: here [generateCorpus](#tools-parity-driver-ts--generatecorpus), [randomState](#tools-parity-driver-ts--randomstate), [runMisc](#tools-parity-driver-ts--runmisc) · **[tools/parity/legacyAdapter](#tools-parity-legacyadapter-ts)** [legacyFacts](#tools-parity-legacyadapter-ts--legacyfacts) · **[tools/parity/micro](#tools-parity-micro-ts)** [micro](#tools-parity-micro-ts--micro)
-- <a id="tools-parity-driver-ts--intent"></a>**Intent** · *interface* — A player intent in the legacy action shape (both engines accept it).
-  - used by: here [EngineAdapter](#tools-parity-driver-ts--engineadapter), [chooseIntent](#tools-parity-driver-ts--chooseintent), [needsTiming](#tools-parity-driver-ts--needstiming)
-- <a id="tools-parity-driver-ts--opaque"></a>**Opaque** · *type, internal* `= any` — Battle objects are engine-specific; the driver reads them only through the adapter.
-  - used by: here [EngineAdapter](#tools-parity-driver-ts--engineadapter), [checkpoint](#tools-parity-driver-ts--checkpoint)
-- <a id="tools-parity-driver-ts--engineadapter"></a>**EngineAdapter** · *interface, capability*
-  - used by: here [checkpoint](#tools-parity-driver-ts--checkpoint), [chooseIntent](#tools-parity-driver-ts--chooseintent), [needsTiming](#tools-parity-driver-ts--needstiming), [runFight](#tools-parity-driver-ts--runfight), [runMisc](#tools-parity-driver-ts--runmisc) · **[tools/parity/legacyAdapter](#tools-parity-legacyadapter-ts)** [legacyAdapter](#tools-parity-legacyadapter-ts--legacyadapter) · **[tools/parity/tsAdapter](#tools-parity-tsadapter-ts)** [tsAdapter](#tools-parity-tsadapter-ts--tsadapter)
-  - <a id="tools-parity-driver-ts--engineadapter-seed"></a>**seed** · *interface member* `(n: number): void`
-    - implemented by: **[tools/parity/legacyAdapter](#tools-parity-legacyadapter-ts)** [legacyAdapter](#tools-parity-legacyadapter-ts--legacyadapter) · **[tools/parity/tsAdapter](#tools-parity-tsadapter-ts)** [tsAdapter](#tools-parity-tsadapter-ts--tsadapter)
-    - called from: here [runFight](#tools-parity-driver-ts--runfight)
-  - <a id="tools-parity-driver-ts--engineadapter-draws"></a>**draws** · *interface member* `(): number`
-    - implemented by: **[tools/parity/legacyAdapter](#tools-parity-legacyadapter-ts)** [legacyAdapter](#tools-parity-legacyadapter-ts--legacyadapter) · **[tools/parity/tsAdapter](#tools-parity-tsadapter-ts)** [tsAdapter](#tools-parity-tsadapter-ts--tsadapter)
-    - called from: here [runFight](#tools-parity-driver-ts--runfight)
-  - <a id="tools-parity-driver-ts--engineadapter-buildstate"></a>**buildState** · *interface member* `(spec: StateSpec): Opaque`
-    - implemented by: **[tools/parity/legacyAdapter](#tools-parity-legacyadapter-ts)** [legacyAdapter](#tools-parity-legacyadapter-ts--legacyadapter) · **[tools/parity/tsAdapter](#tools-parity-tsadapter-ts)** [tsAdapter](#tools-parity-tsadapter-ts--tsadapter)
-    - called from: here [runFight](#tools-parity-driver-ts--runfight), [runMisc](#tools-parity-driver-ts--runmisc) · tests: [rules.test](tests.md#tools-parity-rules-test-ts)
-  - <a id="tools-parity-driver-ts--engineadapter-makeenemy"></a>**makeEnemy** · *interface member* `(state: Opaque, e: EnemySpec): Opaque`
-    - implemented by: **[tools/parity/legacyAdapter](#tools-parity-legacyadapter-ts)** [legacyAdapter](#tools-parity-legacyadapter-ts--legacyadapter) · **[tools/parity/tsAdapter](#tools-parity-tsadapter-ts)** [tsAdapter](#tools-parity-tsadapter-ts--tsadapter)
-    - called from: here [runFight](#tools-parity-driver-ts--runfight)
-  - <a id="tools-parity-driver-ts--engineadapter-createbattle"></a>**createBattle** · *interface member* `(state: Opaque, enemies: Opaque[], opts: FightSpec['battle']): Opaque`
-    - implemented by: **[tools/parity/legacyAdapter](#tools-parity-legacyadapter-ts)** [legacyAdapter](#tools-parity-legacyadapter-ts--legacyadapter) · **[tools/parity/properties.test](tests.md#tools-parity-properties-test-ts)** · **[tools/parity/tsAdapter](#tools-parity-tsadapter-ts)** [tsAdapter](#tools-parity-tsadapter-ts--tsadapter)
-    - called from: here [runFight](#tools-parity-driver-ts--runfight) · tests: [properties.test](tests.md#tools-parity-properties-test-ts)
-  - <a id="tools-parity-driver-ts--engineadapter-rununtilplayer"></a>**runUntilPlayer** · *interface member* `(b: Opaque): boolean`
-    - implemented by: **[tools/parity/legacyAdapter](#tools-parity-legacyadapter-ts)** [legacyAdapter](#tools-parity-legacyadapter-ts--legacyadapter) · **[tools/parity/properties.test](tests.md#tools-parity-properties-test-ts)** · **[tools/parity/tsAdapter](#tools-parity-tsadapter-ts)** [tsAdapter](#tools-parity-tsadapter-ts--tsadapter)
-    - called from: here [runFight](#tools-parity-driver-ts--runfight) · tests: [properties.test](tests.md#tools-parity-properties-test-ts)
-  - <a id="tools-parity-driver-ts--engineadapter-playeraction"></a>**playerAction** · *interface member* `(b: Opaque, intent: Intent, timing: TimingId | null): void`
-    - implemented by: **[tools/parity/legacyAdapter](#tools-parity-legacyadapter-ts)** [legacyAdapter](#tools-parity-legacyadapter-ts--legacyadapter) · **[tools/parity/properties.test](tests.md#tools-parity-properties-test-ts)** · **[tools/parity/tsAdapter](#tools-parity-tsadapter-ts)** [tsAdapter](#tools-parity-tsadapter-ts--tsadapter)
-    - called from: here [runFight](#tools-parity-driver-ts--runfight) · tests: [properties.test](tests.md#tools-parity-properties-test-ts)
-  - <a id="tools-parity-driver-ts--engineadapter-battlerewards"></a>**battleRewards** · *interface member* `(b: Opaque): unknown`
-    - implemented by: **[tools/parity/legacyAdapter](#tools-parity-legacyadapter-ts)** [legacyAdapter](#tools-parity-legacyadapter-ts--legacyadapter) · **[tools/parity/tsAdapter](#tools-parity-tsadapter-ts)** [tsAdapter](#tools-parity-tsadapter-ts--tsadapter)
-    - called from: here [runFight](#tools-parity-driver-ts--runfight)
-  - <a id="tools-parity-driver-ts--engineadapter-applybattleresult"></a>**applyBattleResult** · *interface member* `(b: Opaque): void`
-    - implemented by: **[tools/parity/legacyAdapter](#tools-parity-legacyadapter-ts)** [legacyAdapter](#tools-parity-legacyadapter-ts--legacyadapter) · **[tools/parity/tsAdapter](#tools-parity-tsadapter-ts)** [tsAdapter](#tools-parity-tsadapter-ts--tsadapter)
-    - called from: here [runFight](#tools-parity-driver-ts--runfight)
-  - <a id="tools-parity-driver-ts--engineadapter-gainxp"></a>**gainXp** · *interface member* `(state: Opaque, n: number): unknown`
-    - implemented by: **[tools/parity/legacyAdapter](#tools-parity-legacyadapter-ts)** [legacyAdapter](#tools-parity-legacyadapter-ts--legacyadapter) · **[tools/parity/tsAdapter](#tools-parity-tsadapter-ts)** [tsAdapter](#tools-parity-tsadapter-ts--tsadapter)
-    - called from: here [runFight](#tools-parity-driver-ts--runfight), [runMisc](#tools-parity-driver-ts--runmisc)
-  - <a id="tools-parity-driver-ts--engineadapter-events"></a>**events** · *interface member* `(b: Opaque): unknown[]` — The live events array.
-    - implemented by: **[tools/parity/legacyAdapter](#tools-parity-legacyadapter-ts)** [legacyAdapter](#tools-parity-legacyadapter-ts--legacyadapter) · **[tools/parity/tsAdapter](#tools-parity-tsadapter-ts)** [tsAdapter](#tools-parity-tsadapter-ts--tsadapter)
-    - called from: here [runFight](#tools-parity-driver-ts--runfight)
-  - <a id="tools-parity-driver-ts--engineadapter-normalizeevent"></a>**normalizeEvent** · *interface member* `(e: Opaque, role: (id: string) => string): Record<string, unknown> | null` — Event → comparable record (null skips engine-specific events).
-    - implemented by: **[tools/parity/legacyAdapter](#tools-parity-legacyadapter-ts)** [legacyAdapter](#tools-parity-legacyadapter-ts--legacyadapter) · **[tools/parity/tsAdapter](#tools-parity-tsadapter-ts)** [tsAdapter](#tools-parity-tsadapter-ts--tsadapter)
-    - called from: here [runFight](#tools-parity-driver-ts--runfight)
-  - <a id="tools-parity-driver-ts--engineadapter-view"></a>**view** · *interface member* `(b: Opaque): BattleView`
-    - implemented by: **[tools/parity/legacyAdapter](#tools-parity-legacyadapter-ts)** [legacyAdapter](#tools-parity-legacyadapter-ts--legacyadapter) · **[tools/parity/tsAdapter](#tools-parity-tsadapter-ts)** [tsAdapter](#tools-parity-tsadapter-ts--tsadapter)
-    - called from: here [checkpoint](#tools-parity-driver-ts--checkpoint), [runFight](#tools-parity-driver-ts--runfight)
-  - <a id="tools-parity-driver-ts--engineadapter-projectstate"></a>**projectState** · *interface member* `(state: Opaque): Record<string, unknown>`
-    - implemented by: **[tools/parity/legacyAdapter](#tools-parity-legacyadapter-ts)** [legacyAdapter](#tools-parity-legacyadapter-ts--legacyadapter) · **[tools/parity/tsAdapter](#tools-parity-tsadapter-ts)** [tsAdapter](#tools-parity-tsadapter-ts--tsadapter)
-    - called from: here [runFight](#tools-parity-driver-ts--runfight), [runMisc](#tools-parity-driver-ts--runmisc)
-  - <a id="tools-parity-driver-ts--engineadapter-skill"></a>**skill** · *interface member* `(id: string): { fp: number; once: boolean; damaging: boolean }`
-    - implemented by: **[tools/parity/legacyAdapter](#tools-parity-legacyadapter-ts)** [legacyAdapter](#tools-parity-legacyadapter-ts--legacyadapter) · **[tools/parity/tsAdapter](#tools-parity-tsadapter-ts)** [tsAdapter](#tools-parity-tsadapter-ts--tsadapter)
-    - called from: here [chooseIntent](#tools-parity-driver-ts--chooseintent), [needsTiming](#tools-parity-driver-ts--needstiming)
-  - <a id="tools-parity-driver-ts--engineadapter-misc"></a>**misc** · *interface member* `(state: Opaque): Record<string, unknown>` — Out-of-battle rules sampled by the misc section.
-    - implemented by: **[tools/parity/legacyAdapter](#tools-parity-legacyadapter-ts)** [legacyAdapter](#tools-parity-legacyadapter-ts--legacyadapter) · **[tools/parity/tsAdapter](#tools-parity-tsadapter-ts)** [tsAdapter](#tools-parity-tsadapter-ts--tsadapter)
-    - called from: here [runMisc](#tools-parity-driver-ts--runmisc)
-  - <a id="tools-parity-driver-ts--engineadapter-pricefor"></a>**priceFor** · *interface member* `(state: Opaque, base: number, district: string): number`
-    - implemented by: **[tools/parity/legacyAdapter](#tools-parity-legacyadapter-ts)** [legacyAdapter](#tools-parity-legacyadapter-ts--legacyadapter) · **[tools/parity/tsAdapter](#tools-parity-tsadapter-ts)** [tsAdapter](#tools-parity-tsadapter-ts--tsadapter)
-    - called from: here [runMisc](#tools-parity-driver-ts--runmisc)
-- <a id="tools-parity-driver-ts--battleview"></a>**BattleView** · *interface* — The observable parts of a battle (field names follow the legacy battle object).
-  - used by: here [EngineAdapter](#tools-parity-driver-ts--engineadapter), [chooseIntent](#tools-parity-driver-ts--chooseintent), [roleMapper](#tools-parity-driver-ts--rolemapper) · **[tools/parity/tsAdapter](#tools-parity-tsadapter-ts)** [tsAdapter](#tools-parity-tsadapter-ts--tsadapter)
-- <a id="tools-parity-driver-ts--actorview"></a>**ActorView** · *interface*
-  - used by: here [BattleView](#tools-parity-driver-ts--battleview), [checkpoint](#tools-parity-driver-ts--checkpoint)
-- <a id="tools-parity-driver-ts--difficulties"></a>**DIFFICULTIES** · *const, internal* `= [ … ] as const (5 entries)`
-  - used by: here [randomState](#tools-parity-driver-ts--randomstate)
-- <a id="tools-parity-driver-ts--subset"></a>**subset** · *function, internal* `<T>(rng: Rng, items: readonly T[], p: number): T[]`
-  - uses: **[core/rng](core.md#src-core-rng-ts)** [Rng.next](core.md#src-core-rng-ts--rng-next)
-  - used by: here [randomState](#tools-parity-driver-ts--randomstate)
-- <a id="tools-parity-driver-ts--randomstate"></a>**randomState** · *function* `(rng: Rng, f: ContentFacts, cls: string, level: number): StateSpec`
-  - uses: here [DIFFICULTIES](#tools-parity-driver-ts--difficulties), [subset](#tools-parity-driver-ts--subset) · **[core/rng](core.md#src-core-rng-ts)** [Rng.chance](core.md#src-core-rng-ts--rng-chance), [Rng.int](core.md#src-core-rng-ts--rng-int), [Rng.next](core.md#src-core-rng-ts--rng-next), [Rng.pick](core.md#src-core-rng-ts--rng-pick)
-  - used by: here [generateCorpus](#tools-parity-driver-ts--generatecorpus), [runMisc](#tools-parity-driver-ts--runmisc) · tests: [rules.test](tests.md#tools-parity-rules-test-ts)
-- <a id="tools-parity-driver-ts--generatecorpus"></a>**generateCorpus** · *function* `(f: ContentFacts, seed: number, count: number): FightSpec[]` — Build `count` fight specs from a seed.
-  - uses: here [randomState](#tools-parity-driver-ts--randomstate) · **[core/rng](core.md#src-core-rng-ts)** [Rng.chance](core.md#src-core-rng-ts--rng-chance), [Rng.int](core.md#src-core-rng-ts--rng-int), [Rng.next](core.md#src-core-rng-ts--rng-next), [Rng.pick](core.md#src-core-rng-ts--rng-pick), [createRng](core.md#src-core-rng-ts--createrng)
-  - used by: **[tools/parity/coverage](#tools-parity-coverage-ts)** [(top level)](#tools-parity-coverage-ts--top-level) · tests: [engine.test](tests.md#tools-parity-engine-test-ts), [properties.test](tests.md#tools-parity-properties-test-ts)
-- <a id="tools-parity-driver-ts--timings"></a>**TIMINGS** · *const, internal* `: TimingId[]`
-  - used by: here [runFight](#tools-parity-driver-ts--runfight)
-- <a id="tools-parity-driver-ts--chooseintent"></a>**chooseIntent** · *function, internal* `(rng: Rng, a: EngineAdapter, v: BattleView, bag: Record<string, number>): Intent` — A seeded, mostly-random player that also sends illegal intents to exercise every rejection branch.
-  - uses: here [EngineAdapter.skill](#tools-parity-driver-ts--engineadapter-skill) · **[core/rng](core.md#src-core-rng-ts)** [Rng.chance](core.md#src-core-rng-ts--rng-chance), [Rng.next](core.md#src-core-rng-ts--rng-next), [Rng.pick](core.md#src-core-rng-ts--rng-pick)
-  - used by: here [runFight](#tools-parity-driver-ts--runfight)
-- <a id="tools-parity-driver-ts--needstiming"></a>**needsTiming** · *function, internal* `(a: EngineAdapter, intent: Intent): boolean`
-  - uses: here [EngineAdapter.skill](#tools-parity-driver-ts--engineadapter-skill)
-  - used by: here [runFight](#tools-parity-driver-ts--runfight)
-- <a id="tools-parity-driver-ts--fighttrace"></a>**FightTrace** · *interface*
-  - used by: here [runFight](#tools-parity-driver-ts--runfight) · tests: [engine.test](tests.md#tools-parity-engine-test-ts)
-- <a id="tools-parity-driver-ts--rolemapper"></a>**roleMapper** · *function, internal* `(v: BattleView): (id: string) => string`
-  - used by: here [checkpoint](#tools-parity-driver-ts--checkpoint), [runFight](#tools-parity-driver-ts--runfight)
-- <a id="tools-parity-driver-ts--checkpoint"></a>**checkpoint** · *function, internal* `(a: EngineAdapter, b: Opaque, draws: number): { draws: number; round: number; idx: number; order: string[]; over: boolean; result: string | null; waiting: boolean; blues…`
-  - uses: here [EngineAdapter.view](#tools-parity-driver-ts--engineadapter-view), [roleMapper](#tools-parity-driver-ts--rolemapper)
-  - used by: here [runFight](#tools-parity-driver-ts--runfight)
-- <a id="tools-parity-driver-ts--runfight"></a>**runFight** · *function* `(a: EngineAdapter, spec: FightSpec, maxActions = 60): FightTrace` — Play one fight and record its trace.
-  - uses: here [EngineAdapter.applyBattleResult](#tools-parity-driver-ts--engineadapter-applybattleresult), [EngineAdapter.battleRewards](#tools-parity-driver-ts--engineadapter-battlerewards), [EngineAdapter.buildState](#tools-parity-driver-ts--engineadapter-buildstate), [EngineAdapter.createBattle](#tools-parity-driver-ts--engineadapter-createbattle), [EngineAdapter.draws](#tools-parity-driver-ts--engineadapter-draws), [EngineAdapter.events](#tools-parity-driver-ts--engineadapter-events), [EngineAdapter.gainXp](#tools-parity-driver-ts--engineadapter-gainxp), [EngineAdapter.makeEnemy](#tools-parity-driver-ts--engineadapter-makeenemy), [EngineAdapter.normalizeEvent](#tools-parity-driver-ts--engineadapter-normalizeevent), [EngineAdapter.playerAction](#tools-parity-driver-ts--engineadapter-playeraction), [EngineAdapter.projectState](#tools-parity-driver-ts--engineadapter-projectstate), [EngineAdapter.runUntilPlayer](#tools-parity-driver-ts--engineadapter-rununtilplayer), [EngineAdapter.seed](#tools-parity-driver-ts--engineadapter-seed), [EngineAdapter.view](#tools-parity-driver-ts--engineadapter-view), [TIMINGS](#tools-parity-driver-ts--timings), [checkpoint](#tools-parity-driver-ts--checkpoint) · … +6 more
-  - used by: **[tools/parity/coverage](#tools-parity-coverage-ts)** [(top level)](#tools-parity-coverage-ts--top-level) · tests: [engine.test](tests.md#tools-parity-engine-test-ts), [properties.test](tests.md#tools-parity-properties-test-ts)
-- <a id="tools-parity-driver-ts--runmisc"></a>**runMisc** · *function* `(a: EngineAdapter, f: ContentFacts, seed: number, count: number): unknown[]` — Out-of-battle rules (stats, prices, unlocks) on random states.
-  - uses: here [EngineAdapter.buildState](#tools-parity-driver-ts--engineadapter-buildstate), [EngineAdapter.gainXp](#tools-parity-driver-ts--engineadapter-gainxp), [EngineAdapter.misc](#tools-parity-driver-ts--engineadapter-misc), [EngineAdapter.priceFor](#tools-parity-driver-ts--engineadapter-pricefor), [EngineAdapter.projectState](#tools-parity-driver-ts--engineadapter-projectstate), [randomState](#tools-parity-driver-ts--randomstate) · **[core/rng](core.md#src-core-rng-ts)** [Rng.int](core.md#src-core-rng-ts--rng-int), [Rng.pick](core.md#src-core-rng-ts--rng-pick), [createRng](core.md#src-core-rng-ts--createrng)
-  - used by: **[tools/parity/coverage](#tools-parity-coverage-ts)** [(top level)](#tools-parity-coverage-ts--top-level) · tests: [engine.test](tests.md#tools-parity-engine-test-ts)
-- <a id="tools-parity-driver-ts--firstdifference"></a>**firstDifference** · *function* `(x: unknown, y: unknown, path = ''): string | null` — First path at which two JSON-like values differ, or null when equal.
-  - used by: tests: [content.test](tests.md#tools-parity-content-test-ts), [engine.test](tests.md#tools-parity-engine-test-ts), [properties.test](tests.md#tools-parity-properties-test-ts), [rules.test](tests.md#tools-parity-rules-test-ts), [transcripts.test](tests.md#tools-parity-transcripts-test-ts)
+  - uses: here [a](#tools-parity-coverage-ts--a), [events](#tools-parity-coverage-ts--events), [facts](#tools-parity-coverage-ts--facts) · **[tools/engine/corpus](#tools-engine-corpus-ts)** [CORPUS_SEED](#tools-engine-corpus-ts--corpus-seed), [CORPUS_SIZE](#tools-engine-corpus-ts--corpus-size), [MISC_SEED](#tools-engine-corpus-ts--misc-seed), [MISC_SIZE](#tools-engine-corpus-ts--misc-size) · **[tools/engine/driver](#tools-engine-driver-ts)** [generateCorpus](#tools-engine-driver-ts--generatecorpus), [runFight](#tools-engine-driver-ts--runfight), [runMisc](#tools-engine-driver-ts--runmisc) · **[tools/engine/micro](#tools-engine-micro-ts)** [micro](#tools-engine-micro-ts--micro)
 
 <a id="tools-parity-legacy-ts"></a>
 
@@ -687,18 +824,18 @@ Declarations:
 EngineAdapter over the legacy vm engine, plus the ContentFacts the corpus generator needs. Deleted at cutover together with legacy/.
 
 - Source: [tools/parity/legacyAdapter.ts](../../../tools/parity/legacyAdapter.ts)
-- Imports: tools: [parity/driver](#tools-parity-driver-ts), [parity/legacy](#tools-parity-legacy-ts)
+- Imports: tools: [engine/driver](#tools-engine-driver-ts), [parity/legacy](#tools-parity-legacy-ts)
 - Imported by: tools: [parity/coverage](#tools-parity-coverage-ts)
-- Tested by: [engine.test](tests.md#tools-parity-engine-test-ts), [properties.test](tests.md#tools-parity-properties-test-ts), [rules.test](tests.md#tools-parity-rules-test-ts)
-- Types used: **[tools/parity/driver](#tools-parity-driver-ts)** [ContentFacts](#tools-parity-driver-ts--contentfacts), [EngineAdapter](#tools-parity-driver-ts--engineadapter), [StateSpec](#tools-parity-driver-ts--statespec) · **[tools/parity/legacy](#tools-parity-legacy-ts)** [LegacyEngine](#tools-parity-legacy-ts--legacyengine)
+- Tested by: [engine.test](tests.md#tools-parity-engine-test-ts), [facts.test](tests.md#tools-parity-facts-test-ts)
+- Types used: **[tools/engine/driver](#tools-engine-driver-ts)** [ContentFacts](#tools-engine-driver-ts--contentfacts), [EngineAdapter](#tools-engine-driver-ts--engineadapter), [StateSpec](#tools-engine-driver-ts--statespec) · **[tools/parity/legacy](#tools-parity-legacy-ts)** [LegacyEngine](#tools-parity-legacy-ts--legacyengine)
 
 Declarations:
 
 - <a id="tools-parity-legacyadapter-ts--legacyfacts"></a>**legacyFacts** · *function* `(E: LegacyEngine): ContentFacts`
-  - used by: **[tools/parity/coverage](#tools-parity-coverage-ts)** [facts](#tools-parity-coverage-ts--facts) · tests: [engine.test](tests.md#tools-parity-engine-test-ts), [properties.test](tests.md#tools-parity-properties-test-ts), [rules.test](tests.md#tools-parity-rules-test-ts)
+  - used by: **[tools/parity/coverage](#tools-parity-coverage-ts)** [facts](#tools-parity-coverage-ts--facts) · tests: [engine.test](tests.md#tools-parity-engine-test-ts), [facts.test](tests.md#tools-parity-facts-test-ts)
 - <a id="tools-parity-legacyadapter-ts--legacyadapter"></a>**legacyAdapter** · *function* `(): EngineAdapter & { E: LegacyEngine }`
   - uses: **[tools/parity/legacy](#tools-parity-legacy-ts)** [LegacyRuntime.draws](#tools-parity-legacy-ts--legacyruntime-draws), [LegacyRuntime.seed](#tools-parity-legacy-ts--legacyruntime-seed), [loadLegacy](#tools-parity-legacy-ts--loadlegacy)
-  - used by: **[tools/parity/coverage](#tools-parity-coverage-ts)** [a](#tools-parity-coverage-ts--a) · tests: [engine.test](tests.md#tools-parity-engine-test-ts), [properties.test](tests.md#tools-parity-properties-test-ts), [rules.test](tests.md#tools-parity-rules-test-ts)
+  - used by: **[tools/parity/coverage](#tools-parity-coverage-ts)** [a](#tools-parity-coverage-ts--a) · tests: [engine.test](tests.md#tools-parity-engine-test-ts), [facts.test](tests.md#tools-parity-facts-test-ts)
 
 <a id="tools-parity-legacydom-ts"></a>
 
@@ -802,45 +939,6 @@ Declarations:
   - uses: here [SIM](#tools-parity-legacysim-ts--sim), [require](#tools-parity-legacysim-ts--require) · **[core/rng](core.md#src-core-rng-ts)** [Rng.next](core.md#src-core-rng-ts--rng-next), [createRng](core.md#src-core-rng-ts--createrng)
   - used by: tests: [sim.test](tests.md#tools-parity-sim-test-ts)
 
-<a id="tools-parity-micro-ts"></a>
-
-### tools/parity/micro.ts
-
-Hand-written fight setups for engine branches the random corpus rarely reaches. Each one is a FightSpec with fixed seeds; add one whenever coverage shows a gap.
-
-- Source: [tools/parity/micro.ts](../../../tools/parity/micro.ts)
-- Imports: tools: [parity/driver](#tools-parity-driver-ts)
-- Imported by: tools: [parity/coverage](#tools-parity-coverage-ts)
-- Tested by: [engine.test](tests.md#tools-parity-engine-test-ts)
-- Types used: **[tools/parity/driver](#tools-parity-driver-ts)** [ContentFacts](#tools-parity-driver-ts--contentfacts), [FightSpec](#tools-parity-driver-ts--fightspec), [StateSpec](#tools-parity-driver-ts--statespec)
-
-Declarations:
-
-- <a id="tools-parity-micro-ts--basestate"></a>**baseState** · *function, internal* `(cls: string, level: number): StateSpec`
-  - used by: here [micro](#tools-parity-micro-ts--micro)
-- <a id="tools-parity-micro-ts--micro"></a>**micro** · *function* `(_f: ContentFacts): FightSpec[]`
-  - uses: here [baseState](#tools-parity-micro-ts--basestate)
-  - used by: **[tools/parity/coverage](#tools-parity-coverage-ts)** [(top level)](#tools-parity-coverage-ts--top-level) · tests: [engine.test](tests.md#tools-parity-engine-test-ts)
-
-<a id="tools-parity-tsadapter-ts"></a>
-
-### tools/parity/tsAdapter.ts
-
-EngineAdapter over the TypeScript engine, mirroring legacyAdapter.ts field for field so the shared driver can compare traces. Deleted at cutover.
-
-- Source: [tools/parity/tsAdapter.ts](../../../tools/parity/tsAdapter.ts)
-- Imports: core: [ids/band](core.md#src-core-ids-band-ts), [ids/characters](core.md#src-core-ids-characters-ts), [ids/enemies](core.md#src-core-ids-enemies-ts), [ids/flags](core.md#src-core-ids-flags-ts), [ids/items](core.md#src-core-ids-items-ts), [ids/story](core.md#src-core-ids-story-ts), [ids/world](core.md#src-core-ids-world-ts), [rng](core.md#src-core-rng-ts), [types/index](core.md#src-core-types-index-ts) · content: [data](content.md#src-content-data-ts) · engine: [index](engine.md#src-engine-index-ts) · tools: [parity/driver](#tools-parity-driver-ts)
-- Tested by: [engine.test](tests.md#tools-parity-engine-test-ts), [properties.test](tests.md#tools-parity-properties-test-ts), [rules.test](tests.md#tools-parity-rules-test-ts)
-- Types used: **[content/combat/skills](content.md#src-content-combat-skills-ts)** [SKILLS](content.md#src-content-combat-skills-ts--skills) · **[core/ids/band](core.md#src-core-ids-band-ts)** [BandmateId](core.md#src-core-ids-band-ts--bandmateid) · **[core/ids/characters](core.md#src-core-ids-characters-ts)** [ClassId](core.md#src-core-ids-characters-ts--classid), [RootsId](core.md#src-core-ids-characters-ts--rootsid) · **[core/ids/enemies](core.md#src-core-ids-enemies-ts)** [OpponentId](core.md#src-core-ids-enemies-ts--opponentid) · **[core/ids/flags](core.md#src-core-ids-flags-ts)** [StoryChoices](core.md#src-core-ids-flags-ts--storychoices) · **[core/ids/items](core.md#src-core-ids-items-ts)** [ItemId](core.md#src-core-ids-items-ts--itemid), [SheetMusicId](core.md#src-core-ids-items-ts--sheetmusicid) · **[core/ids/story](core.md#src-core-ids-story-ts)** [ActId](core.md#src-core-ids-story-ts--actid) · **[core/ids/world](core.md#src-core-ids-world-ts)** [DistrictId](core.md#src-core-ids-world-ts--districtid), [QuestId](core.md#src-core-ids-world-ts--questid) · **[core/rng](core.md#src-core-rng-ts)** [Rng](core.md#src-core-rng-ts--rng) · **[core/types/battle](core.md#src-core-types-battle-ts)** [Battle](core.md#src-core-types-battle-ts--battle), [BattleEvent](core.md#src-core-types-battle-ts--battleevent), [PlayerIntent](core.md#src-core-types-battle-ts--playerintent) · **[core/types/state](core.md#src-core-types-state-ts)** [GameState](core.md#src-core-types-state-ts--gamestate) · **[tools/parity/driver](#tools-parity-driver-ts)** [BattleView](#tools-parity-driver-ts--battleview), [EngineAdapter](#tools-parity-driver-ts--engineadapter), [StateSpec](#tools-parity-driver-ts--statespec)
-
-Declarations:
-
-- <a id="tools-parity-tsadapter-ts--legacyshape"></a>**legacyShape** · *function* `(e: BattleEvent, role: (id: string) => string): Record<string, unknown> | null` — Rename a TS event back to the legacy event shape (and drop TS-only fields).
-  - used by: here [tsAdapter](#tools-parity-tsadapter-ts--tsadapter)
-- <a id="tools-parity-tsadapter-ts--tsadapter"></a>**tsAdapter** · *function* `(): EngineAdapter`
-  - uses: here [legacyShape](#tools-parity-tsadapter-ts--legacyshape) · **[content/band/secondLine](content.md#src-content-band-secondline-ts)** [SECOND_LINE](content.md#src-content-band-secondline-ts--second-line) · **[content/combat/skills](content.md#src-content-combat-skills-ts)** [SKILLS](content.md#src-content-combat-skills-ts--skills) · **[content/combat/timing](content.md#src-content-combat-timing-ts)** [TIMING](content.md#src-content-combat-timing-ts--timing) · **[core/rng](core.md#src-core-rng-ts)** [createRng](core.md#src-core-rng-ts--createrng) · **[core/types/content](core.md#src-core-types-content-ts)** [SecondLineMemberDef.when](core.md#src-core-types-content-ts--secondlinememberdef-when) · **[engine/balance](engine.md#src-engine-balance-ts)** [xpToNext](engine.md#src-engine-balance-ts--xptonext) · **[engine/combat/actors](engine.md#src-engine-combat-actors-ts)** [makeEnemy](engine.md#src-engine-combat-actors-ts--makeenemy) · **[engine/combat/battle](engine.md#src-engine-combat-battle-ts)** [createBattle](engine.md#src-engine-combat-battle-ts--createbattle) · **[engine/combat/player](engine.md#src-engine-combat-player-ts)** [playerAction](engine.md#src-engine-combat-player-ts--playeraction) · **[engine/combat/rewards](engine.md#src-engine-combat-rewards-ts)** [applyBattleResult](engine.md#src-engine-combat-rewards-ts--applybattleresult), [battleRewards](engine.md#src-engine-combat-rewards-ts--battlerewards) · **[engine/combat/turns](engine.md#src-engine-combat-turns-ts)** [runUntilPlayer](engine.md#src-engine-combat-turns-ts--rununtilplayer) · **[engine/economy](engine.md#src-engine-economy-ts)** [priceFor](engine.md#src-engine-economy-ts--pricefor) · **[engine/inventory](engine.md#src-engine-inventory-ts)** [addItem](engine.md#src-engine-inventory-ts--additem), [removeItem](engine.md#src-engine-inventory-ts--removeitem) · … +8 more
-  - used by: tests: [engine.test](tests.md#tools-parity-engine-test-ts), [properties.test](tests.md#tools-parity-properties-test-ts), [rules.test](tests.md#tools-parity-rules-test-ts)
-
 <a id="tools-shots-ts"></a>
 
 ### tools/shots.ts
@@ -907,8 +1005,8 @@ Headless balance sim: every class against every district's streets and every bos
 - Source: [tools/sim.ts](../../../tools/sim.ts)
 - Imports: core: [helpers](core.md#src-core-helpers-ts), [ids/characters](core.md#src-core-ids-characters-ts), [ids/enemies](core.md#src-core-ids-enemies-ts), [rng](core.md#src-core-rng-ts), [types/index](core.md#src-core-types-index-ts) · content: [data](content.md#src-content-data-ts) · engine: [index](engine.md#src-engine-index-ts)
 - Packages: `node:url`
-- Imported by: tools: [trace](#tools-trace-ts)
-- Tested by: [sim.test](tests.md#tools-parity-sim-test-ts)
+- Imported by: tools: [simBaseline](#tools-simbaseline-ts), [trace](#tools-trace-ts)
+- Tested by: [sim.test](tests.md#tools-parity-sim-test-ts), [sim.test](tests.md#tools-sim-test-ts)
 - Types used: **[content/bosses/index](content.md#src-content-bosses-index-ts)** [BOSSES](content.md#src-content-bosses-index-ts--bosses) · **[core/ids/characters](core.md#src-core-ids-characters-ts)** [ClassId](core.md#src-core-ids-characters-ts--classid) · **[core/ids/enemies](core.md#src-core-ids-enemies-ts)** [EnemyId](core.md#src-core-ids-enemies-ts--enemyid), [OpponentId](core.md#src-core-ids-enemies-ts--opponentid) · **[core/rng](core.md#src-core-rng-ts)** [Rng](core.md#src-core-rng-ts--rng) · **[core/types/battle](core.md#src-core-types-battle-ts)** [Battle](core.md#src-core-types-battle-ts--battle), [PlayerIntent](core.md#src-core-types-battle-ts--playerintent), [TimingResult](core.md#src-core-types-battle-ts--timingresult) · **[core/types/content](core.md#src-core-types-content-ts)** [SkillDef](core.md#src-core-types-content-ts--skilldef) · **[core/types/state](core.md#src-core-types-state-ts)** [GameState](core.md#src-core-types-state-ts--gamestate)
 
 Declarations:
@@ -941,15 +1039,35 @@ Declarations:
   - used by: here [runSim](#tools-sim-ts--runsim)
 - <a id="tools-sim-ts--avg"></a>**avg** · *function, internal* `(a: number[]): number`
   - used by: here [runSim](#tools-sim-ts--runsim)
-- <a id="tools-sim-ts--simrow"></a>**SimRow** · *interface* — One row of results, for --json and tools/compare.ts.
+- <a id="tools-sim-ts--simrow"></a>**SimRow** · *interface* — One row of results, for --json.
   - used by: here [runSim](#tools-sim-ts--runsim)
 - <a id="tools-sim-ts--runsim"></a>**runSim** · *function* `(seed: number): { text: string; rows: SimRow[] }` — Run the full sim grid.
   - uses: here [avg](#tools-sim-ts--avg), [loadout](#tools-sim-ts--loadout), [pct](#tools-sim-ts--pct), [runClick](#tools-sim-ts--runclick), [runFight](#tools-sim-ts--runfight) · **[content/bosses/index](content.md#src-content-bosses-index-ts)** [BOSSES](content.md#src-content-bosses-index-ts--bosses) · **[content/districts/index](content.md#src-content-districts-index-ts)** [DISTRICTS](content.md#src-content-districts-index-ts--districts) · **[content/enemies/index](content.md#src-content-enemies-index-ts)** [ENEMIES](content.md#src-content-enemies-index-ts--enemies) · **[core/ids/characters](core.md#src-core-ids-characters-ts)** [CLASS_IDS](core.md#src-core-ids-characters-ts--class-ids) · **[core/rng](core.md#src-core-rng-ts)** [Rng.pick](core.md#src-core-rng-ts--rng-pick), [createRng](core.md#src-core-rng-ts--createrng) · **[engine/inventory](engine.md#src-engine-inventory-ts)** [addItem](engine.md#src-engine-inventory-ts--additem) · **[engine/state](engine.md#src-engine-state-ts)** [newGame](engine.md#src-engine-state-ts--newgame)
-  - used by: here [(top level)](#tools-sim-ts--top-level) · tests: [sim.test](tests.md#tools-parity-sim-test-ts)
+  - used by: here [(top level)](#tools-sim-ts--top-level) · **[tools/simBaseline](#tools-simbaseline-ts)** [(top level)](#tools-simbaseline-ts--top-level) · tests: [sim.test](tests.md#tools-parity-sim-test-ts), [sim.test](tests.md#tools-sim-test-ts)
 - <a id="tools-sim-ts--ismain"></a>**isMain** · *const, internal*
   - used by: here [(top level)](#tools-sim-ts--top-level)
 - <a id="tools-sim-ts--top-level"></a>**(top level)** · *module* — Statements that run when the module loads.
   - uses: here [isMain](#tools-sim-ts--ismain), [runSim](#tools-sim-ts--runsim)
+
+<a id="tools-simbaseline-ts"></a>
+
+### tools/simBaseline.ts
+
+The sim baseline: the sim's text output for a few fixed seeds, checked in under tests/fixtures/sim/. tools/sim.test.ts fails when the output changes, so every balance change shows up as a reviewable diff of these files.
+
+- Source: [tools/simBaseline.ts](../../../tools/simBaseline.ts)
+- Imports: tools: [sim](#tools-sim-ts)
+- Packages: `node:fs`, `node:path`, `node:url`
+- Tested by: [sim.test](tests.md#tools-sim-test-ts)
+
+Declarations:
+
+- <a id="tools-simbaseline-ts--baseline-seeds"></a>**BASELINE_SEEDS** · *const* `= [ … ] as const (3 entries)` — The seeds the baseline covers (the ones the v1 parity test used).
+  - used by: here [(top level)](#tools-simbaseline-ts--top-level) · tests: [sim.test](tests.md#tools-sim-test-ts)
+- <a id="tools-simbaseline-ts--baselinepath"></a>**baselinePath** · *function* `(seed: number): string` — Where a seed's baseline lives.
+  - used by: here [(top level)](#tools-simbaseline-ts--top-level) · tests: [sim.test](tests.md#tools-sim-test-ts)
+- <a id="tools-simbaseline-ts--top-level"></a>**(top level)** · *module* — Statements that run when the module loads.
+  - uses: here [BASELINE_SEEDS](#tools-simbaseline-ts--baseline-seeds), [baselinePath](#tools-simbaseline-ts--baselinepath) · **[tools/sim](#tools-sim-ts)** [runSim](#tools-sim-ts--runsim)
 
 <a id="tools-sprites-ts"></a>
 

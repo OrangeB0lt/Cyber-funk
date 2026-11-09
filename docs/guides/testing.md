@@ -109,6 +109,19 @@ The local suite builds with `VITE_CLOUD=off` (`.env.test`), so it never needs a 
 
 `server/testing/db.ts` connects to `DATABASE_URL_TEST`, or by default the dev stack's `cyberfunk_test` database on `localhost:5432`, runs the migrations, and truncates every table before each test. Tests drive the real Fastify app in-process with `app.inject`, so no port is opened. `server/sync.test.ts` plugs `app.inject` into the browser's `CloudApi` as its `fetch`, which runs the client's sync engine against the real server and database.
 
+## Baselines
+
+Fixed expectations, checked in, that outlive v1. Each was written while the matching v1 oracle passed, so each holds v1's behavior. A change that's *meant* to move one rewrites it in the same commit, and the diff is the review.
+
+| Baseline | Test | Rewrite with | Holds |
+|---|---|---|---|
+| `tests/fixtures/sim/seed-{1,2,1984}.txt` | `tools/sim.test.ts` | `npm run sim:baseline` | the balance sim's output for three seeds |
+| `tests/fixtures/rules.json` | `tools/engine/rules.test.ts` | `npm run rules:baseline` | enemy groups, field items, shops and victory bookkeeping for 940 seeded cases (`tools/engine/rules.ts`), one per line |
+| `tests/fixtures/transcripts.jsonl` | `tests/integration/transcripts.test.ts` | `npm run transcripts:baseline` | what every transcript case shows and saves (`tests/integration/support/transcriptCases.ts`), at random values 0, 0.5 and 0.99, one run per line |
+| `docs/reference/v1-shots/` | none (for review) | `npx tsx tools/parity/legacyShots.ts`, before cutover | v1's screens, paired with v2's by `tools/shots.ts` |
+
+The engine's own properties (determinism, Heart events folding back to real Heart) are tested from `tools/engine/` with v2's content facts (`tsFacts`), which the parity tests prove equal to v1's, order included.
+
 ## Parity oracles (until cutover)
 
 v1 in `legacy/` is the reference. Each oracle runs v1 and v2 on the same inputs and compares:
