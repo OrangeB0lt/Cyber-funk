@@ -48,6 +48,7 @@ Generated reference. Start with the [guide](../../architecture/code-map.md) for 
 | [tools/completeness.test.ts](#tools-completeness-test-ts) | The game is whole: every place, boss, story hint and lexicon link is wired up, enforced in CI. |
 | [tools/engine/properties.test.ts](#tools-engine-properties-test-ts) | Properties of the engine, checked over a seeded corpus of 400 fights: - determinism: the same seed replays the same fight, with no hidden global state; - prese… |
 | [tools/engine/rules.test.ts](#tools-engine-rules-test-ts) | The engine's rules (enemy groups, field items, shops, victory bookkeeping) give the results in tests/fixtures/rules.json for every seeded case: v1's results, f… |
+| [tools/reference.test.ts](#tools-reference-test-ts) | The content tables (docs/reference/tables/) must match the content. |
 | [tools/sim.test.ts](#tools-sim-test-ts) | The sim's output for the baseline seeds is unchanged (tests/fixtures/sim; npm run sim:baseline). |
 | [tools/sprites.test.ts](#tools-sprites-test-ts) | The sprite gallery (docs/reference/sprites/) must match the art. |
 | [tools/validate-content.test.ts](#tools-validate-content-test-ts) | Content validation and engine/content separation, enforced in CI. |
@@ -627,6 +628,17 @@ The engine's rules (enemy groups, field items, shops, victory bookkeeping) give 
 - Imports: tools: [engine/driver](tools.md#tools-engine-driver-ts), [engine/facts](tools.md#tools-engine-facts-ts), [engine/rules](tools.md#tools-engine-rules-ts), [engine/rulesBaseline](tools.md#tools-engine-rulesbaseline-ts)
 - Packages: `node:fs`, `vitest`
 - Suites: “rules baseline”
+
+<a id="tools-reference-test-ts"></a>
+
+### tools/reference.test.ts
+
+The content tables (docs/reference/tables/) must match the content. When this fails, run `npm run docs:tables` and commit the pages with your change.
+
+- Source: [tools/reference.test.ts](../../../tools/reference.test.ts)
+- Imports: tools: [reference](tools.md#tools-reference-ts)
+- Packages: `vitest`
+- Suites: “content tables”
 
 <a id="tools-sim-test-ts"></a>
 

@@ -34,6 +34,7 @@
     "prepare": "git config core.hooksPath .githooks 2>/dev/null || true",
     "validate": "tsx tools/validate-content.ts",
     "docs:codemap": "tsx tools/codemap.ts",
+    "docs:tables": "tsx tools/reference.ts",
     "sprites:export": "tsx tools/sprites.ts",
     "db:generate": "drizzle-kit generate",
     "db:migrate": "tsx server/db/migrate-cli.ts",

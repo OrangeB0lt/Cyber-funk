@@ -19,6 +19,7 @@ flowchart LR
   n_engine_rulesBaseline["engine/rulesBaseline"]
   n_engine_tsAdapter["engine/tsAdapter"]
   n_icons["icons"]
+  n_reference["reference"]
   n_shots["shots"]
   n_sim["sim"]
   n_simBaseline["simBaseline"]
@@ -40,6 +41,7 @@ flowchart LR
   n_engine_tsAdapter --> n_ext_content
   n_engine_tsAdapter --> n_ext_engine
   n_icons --> n_ext_content
+  n_reference --> n_ext_content
   n_sim --> n_ext_content
   n_sim --> n_ext_engine
   n_simBaseline --> n_sim
@@ -66,6 +68,7 @@ flowchart LR
 | [tools/engine/rulesBaseline.ts](#tools-engine-rulesbaseline-ts) | Write tests/fixtures/rules.json: what the engine does with every rule case (tools/engine/rules.ts). |
 | [tools/engine/tsAdapter.ts](#tools-engine-tsadapter-ts) | The EngineAdapter over the engine: builds saves from StateSpecs and plays the driver's fights. |
 | [tools/icons.ts](#tools-icons-ts) | The app icons (the PWA manifest's and Apple's touch icon), drawn from the game's own pixel art: Gus Thibodeaux, Grand Marshal, on the night-purple background. |
+| [tools/reference.ts](#tools-reference-ts) | The content reference tables in docs/reference/tables/: enemies, bosses, skills, statuses, items, gear, places and quests, generated from the typed tables in s… |
 | [tools/shots.ts](#tools-shots-ts) | Screenshots of the v2 game at 360×740, and side-by-side pairs with v1's reference shots, for reviewing a screen against the original. |
 | [tools/sim.ts](#tools-sim-ts) | Headless balance sim: every class against every district's streets and every boss, played by a simple scripted player. |
 | [tools/simBaseline.ts](#tools-simbaseline-ts) | The sim baseline: the sim's text output for a few fixed seeds, checked in under tests/fixtures/sim/. |
@@ -523,6 +526,76 @@ Declarations:
   - used by: here [(top level)](#tools-icons-ts--top-level)
 - <a id="tools-icons-ts--top-level"></a>**(top level)** · *module* — Statements that run when the module loads.
   - uses: here [main](#tools-icons-ts--main)
+
+<a id="tools-reference-ts"></a>
+
+### tools/reference.ts
+
+The content reference tables in docs/reference/tables/: enemies, bosses, skills, statuses, items, gear, places and quests, generated from the typed tables in src/content so they can't drift.
+
+- Source: [tools/reference.ts](../../../tools/reference.ts)
+- Imports: core: [ids/characters](core.md#src-core-ids-characters-ts), [ids/combat](core.md#src-core-ids-combat-ts), [ids/enemies](core.md#src-core-ids-enemies-ts), [ids/items](core.md#src-core-ids-items-ts), [ids/world](core.md#src-core-ids-world-ts), [types/index](core.md#src-core-types-index-ts) · content: [data](content.md#src-content-data-ts), [rules](content.md#src-content-rules-ts), [stats](content.md#src-content-stats-ts)
+- Packages: `node:fs`, `node:path`, `node:url`
+- Tested by: [reference.test](tests.md#tools-reference-test-ts)
+- Types used: **[content/stats](content.md#src-content-stats-ts)** [STAT_NAMES](content.md#src-content-stats-ts--stat-names) · **[core/ids/combat](core.md#src-core-ids-combat-ts)** [SkillId](core.md#src-core-ids-combat-ts--skillid) · **[core/ids/world](core.md#src-core-ids-world-ts)** [DistrictId](core.md#src-core-ids-world-ts--districtid) · **[core/types/content](core.md#src-core-types-content-ts)** [GearDef](core.md#src-core-types-content-ts--geardef), [StatBlock](core.md#src-core-types-content-ts--statblock)
+
+Declarations:
+
+- <a id="tools-reference-ts--tables-dir"></a>**TABLES_DIR** · *const* — Where the pages go.
+  - used by: here [(top level)](#tools-reference-ts--top-level), [staleTables](#tools-reference-ts--staletables)
+- <a id="tools-reference-ts--esc"></a>**esc** · *function, internal* `(s: string): string` — Cell text: lexicon links as their display text, no pipes or line breaks.
+  - used by: here [gear](#tools-reference-ts--gear), [items](#tools-reference-ts--items), [named](#tools-reference-ts--named), [places](#tools-reference-ts--places), [quests](#tools-reference-ts--quests), [skills](#tools-reference-ts--skills), [statuses](#tools-reference-ts--statuses)
+- <a id="tools-reference-ts--code"></a>**code** · *function, internal* `(s: string): string`
+  - used by: here [enemies](#tools-reference-ts--enemies), [named](#tools-reference-ts--named), [skills](#tools-reference-ts--skills)
+- <a id="tools-reference-ts--named"></a>**named** · *function, internal* `(name: string, id: string): string`
+  - uses: here [code](#tools-reference-ts--code), [esc](#tools-reference-ts--esc)
+  - used by: here [bosses](#tools-reference-ts--bosses), [enemies](#tools-reference-ts--enemies), [gear](#tools-reference-ts--gear), [items](#tools-reference-ts--items), [places](#tools-reference-ts--places), [quests](#tools-reference-ts--quests), [skills](#tools-reference-ts--skills), [statuses](#tools-reference-ts--statuses)
+- <a id="tools-reference-ts--pct"></a>**pct** · *function, internal* `(n: number): string`
+  - used by: here [enemies](#tools-reference-ts--enemies), [gear](#tools-reference-ts--gear), [items](#tools-reference-ts--items), [statuses](#tools-reference-ts--statuses)
+- <a id="tools-reference-ts--dash"></a>**dash** · *function, internal* `(s: string | null | undefined): string`
+  - used by: here [bosses](#tools-reference-ts--bosses), [enemies](#tools-reference-ts--enemies), [gear](#tools-reference-ts--gear), [items](#tools-reference-ts--items), [skills](#tools-reference-ts--skills), [statuses](#tools-reference-ts--statuses)
+- <a id="tools-reference-ts--table"></a>**table** · *function, internal* `(headers: string[], rows: string[][]): string`
+  - used by: here [bosses](#tools-reference-ts--bosses), [enemies](#tools-reference-ts--enemies), [gear](#tools-reference-ts--gear), [items](#tools-reference-ts--items), [places](#tools-reference-ts--places), [quests](#tools-reference-ts--quests), [skills](#tools-reference-ts--skills), [statuses](#tools-reference-ts--statuses)
+- <a id="tools-reference-ts--page"></a>**page** · *function, internal* `(title: string, intro: string, sections: [string | null, string][]): string`
+  - used by: here [bosses](#tools-reference-ts--bosses), [enemies](#tools-reference-ts--enemies), [gear](#tools-reference-ts--gear), [generateTables](#tools-reference-ts--generatetables), [items](#tools-reference-ts--items), [places](#tools-reference-ts--places), [quests](#tools-reference-ts--quests), [skills](#tools-reference-ts--skills), [statuses](#tools-reference-ts--statuses)
+- <a id="tools-reference-ts--stats"></a>**stats** · *function, internal* `(b: StatBlock): string`
+  - uses: **[content/stats](content.md#src-content-stats-ts)** [STAT_NAMES](content.md#src-content-stats-ts--stat-names)
+  - used by: here [gear](#tools-reference-ts--gear)
+- <a id="tools-reference-ts--districtname"></a>**districtName** · *function, internal* `(d: DistrictId): string`
+  - uses: **[content/districts/index](content.md#src-content-districts-index-ts)** [DISTRICTS](content.md#src-content-districts-index-ts--districts)
+  - used by: here [bosses](#tools-reference-ts--bosses), [places](#tools-reference-ts--places), [quests](#tools-reference-ts--quests)
+- <a id="tools-reference-ts--enemies"></a>**enemies** · *function, internal* `(): string`
+  - uses: here [code](#tools-reference-ts--code), [dash](#tools-reference-ts--dash), [named](#tools-reference-ts--named), [page](#tools-reference-ts--page), [pct](#tools-reference-ts--pct), [table](#tools-reference-ts--table) · **[content/classes/index](content.md#src-content-classes-index-ts)** [CLASSES](content.md#src-content-classes-index-ts--classes) · **[content/districts/index](content.md#src-content-districts-index-ts)** [DISTRICTS](content.md#src-content-districts-index-ts--districts) · **[content/enemies/index](content.md#src-content-enemies-index-ts)** [ENEMIES](content.md#src-content-enemies-index-ts--enemies) · **[core/ids/enemies](core.md#src-core-ids-enemies-ts)** [ENEMY_IDS](core.md#src-core-ids-enemies-ts--enemy-ids) · **[core/ids/world](core.md#src-core-ids-world-ts)** [DISTRICT_IDS](core.md#src-core-ids-world-ts--district-ids)
+  - used by: here [generateTables](#tools-reference-ts--generatetables)
+- <a id="tools-reference-ts--bosses"></a>**bosses** · *function, internal* `(): string`
+  - uses: here [dash](#tools-reference-ts--dash), [districtName](#tools-reference-ts--districtname), [named](#tools-reference-ts--named), [page](#tools-reference-ts--page), [table](#tools-reference-ts--table) · **[content/bosses/index](content.md#src-content-bosses-index-ts)** [BOSSES](content.md#src-content-bosses-index-ts--bosses) · **[content/notes](content.md#src-content-notes-ts)** [NOTES](content.md#src-content-notes-ts--notes) · **[content/places](content.md#src-content-places-ts)** [PLACES](content.md#src-content-places-ts--places) · **[core/ids/enemies](core.md#src-core-ids-enemies-ts)** [BOSS_IDS](core.md#src-core-ids-enemies-ts--boss-ids) · **[core/ids/world](core.md#src-core-ids-world-ts)** [PLACE_IDS](core.md#src-core-ids-world-ts--place-ids)
+  - used by: here [generateTables](#tools-reference-ts--generatetables)
+- <a id="tools-reference-ts--skills"></a>**skills** · *function, internal* `(): string`
+  - uses: here [code](#tools-reference-ts--code), [dash](#tools-reference-ts--dash), [esc](#tools-reference-ts--esc), [named](#tools-reference-ts--named), [page](#tools-reference-ts--page), [table](#tools-reference-ts--table) · **[content/band/bandmates](content.md#src-content-band-bandmates-ts)** [BANDMATES](content.md#src-content-band-bandmates-ts--bandmates) · **[content/classes/index](content.md#src-content-classes-index-ts)** [CLASSES](content.md#src-content-classes-index-ts--classes) · **[content/combat/skills](content.md#src-content-combat-skills-ts)** [SKILLS](content.md#src-content-combat-skills-ts--skills) · **[content/enemies/index](content.md#src-content-enemies-index-ts)** [ENEMIES](content.md#src-content-enemies-index-ts--enemies) · **[content/rules](content.md#src-content-rules-ts)** [SKILL_LEVELS](content.md#src-content-rules-ts--skill-levels) · **[core/ids/characters](core.md#src-core-ids-characters-ts)** [CLASS_IDS](core.md#src-core-ids-characters-ts--class-ids) · **[core/ids/combat](core.md#src-core-ids-combat-ts)** [ASSIST_SKILL_IDS](core.md#src-core-ids-combat-ts--assist-skill-ids), [BOSS_SKILL_IDS](core.md#src-core-ids-combat-ts--boss-skill-ids), [ENEMY_SKILL_IDS](core.md#src-core-ids-combat-ts--enemy-skill-ids) · **[core/ids/enemies](core.md#src-core-ids-enemies-ts)** [ENEMY_IDS](core.md#src-core-ids-enemies-ts--enemy-ids)
+  - used by: here [generateTables](#tools-reference-ts--generatetables)
+- <a id="tools-reference-ts--statuses"></a>**statuses** · *function, internal* `(): string`
+  - uses: here [dash](#tools-reference-ts--dash), [esc](#tools-reference-ts--esc), [named](#tools-reference-ts--named), [page](#tools-reference-ts--page), [pct](#tools-reference-ts--pct), [table](#tools-reference-ts--table) · **[content/combat/statuses](content.md#src-content-combat-statuses-ts)** [STATUSES](content.md#src-content-combat-statuses-ts--statuses) · **[content/stats](content.md#src-content-stats-ts)** [STAT_NAMES](content.md#src-content-stats-ts--stat-names)
+  - used by: here [generateTables](#tools-reference-ts--generatetables)
+- <a id="tools-reference-ts--items"></a>**items** · *function, internal* `(): string`
+  - uses: here [dash](#tools-reference-ts--dash), [esc](#tools-reference-ts--esc), [named](#tools-reference-ts--named), [page](#tools-reference-ts--page), [pct](#tools-reference-ts--pct), [table](#tools-reference-ts--table) · **[content/combat/statuses](content.md#src-content-combat-statuses-ts)** [STATUSES](content.md#src-content-combat-statuses-ts--statuses) · **[content/items](content.md#src-content-items-ts)** [ITEMS](content.md#src-content-items-ts--items) · **[core/ids/items](core.md#src-core-ids-items-ts)** [ITEM_IDS](core.md#src-core-ids-items-ts--item-ids)
+  - used by: here [generateTables](#tools-reference-ts--generatetables)
+- <a id="tools-reference-ts--gear"></a>**gear** · *function, internal* `(): string`
+  - uses: here [dash](#tools-reference-ts--dash), [esc](#tools-reference-ts--esc), [named](#tools-reference-ts--named), [page](#tools-reference-ts--page), [pct](#tools-reference-ts--pct), [stats](#tools-reference-ts--stats), [table](#tools-reference-ts--table) · **[content/classes/index](content.md#src-content-classes-index-ts)** [CLASSES](content.md#src-content-classes-index-ts--classes) · **[content/gear/index](content.md#src-content-gear-index-ts)** [GEAR](content.md#src-content-gear-index-ts--gear) · **[content/sheetMusic](content.md#src-content-sheetmusic-ts)** [SHEET_MUSIC](content.md#src-content-sheetmusic-ts--sheet-music) · **[core/ids/characters](core.md#src-core-ids-characters-ts)** [CLASS_IDS](core.md#src-core-ids-characters-ts--class-ids) · **[core/ids/items](core.md#src-core-ids-items-ts)** [INSTRUMENT_TIER_IDS](core.md#src-core-ids-items-ts--instrument-tier-ids)
+  - used by: here [generateTables](#tools-reference-ts--generatetables)
+- <a id="tools-reference-ts--places"></a>**places** · *function, internal* `(): string`
+  - uses: here [districtName](#tools-reference-ts--districtname), [esc](#tools-reference-ts--esc), [named](#tools-reference-ts--named), [page](#tools-reference-ts--page), [table](#tools-reference-ts--table) · **[content/bosses/index](content.md#src-content-bosses-index-ts)** [BOSSES](content.md#src-content-bosses-index-ts--bosses) · **[content/places](content.md#src-content-places-ts)** [PLACES](content.md#src-content-places-ts--places) · **[core/ids/world](core.md#src-core-ids-world-ts)** [DISTRICT_IDS](core.md#src-core-ids-world-ts--district-ids), [PLACE_IDS](core.md#src-core-ids-world-ts--place-ids)
+  - used by: here [generateTables](#tools-reference-ts--generatetables)
+- <a id="tools-reference-ts--quests"></a>**quests** · *function, internal* `(): string`
+  - uses: here [districtName](#tools-reference-ts--districtname), [esc](#tools-reference-ts--esc), [named](#tools-reference-ts--named), [page](#tools-reference-ts--page), [table](#tools-reference-ts--table) · **[content/quests](content.md#src-content-quests-ts)** [QUESTS](content.md#src-content-quests-ts--quests) · **[core/ids/world](core.md#src-core-ids-world-ts)** [QUEST_IDS](core.md#src-core-ids-world-ts--quest-ids)
+  - used by: here [generateTables](#tools-reference-ts--generatetables)
+- <a id="tools-reference-ts--generatetables"></a>**generateTables** · *function* `(): Record<string, string>` — Every page, by file name.
+  - uses: here [bosses](#tools-reference-ts--bosses), [enemies](#tools-reference-ts--enemies), [gear](#tools-reference-ts--gear), [items](#tools-reference-ts--items), [page](#tools-reference-ts--page), [places](#tools-reference-ts--places), [quests](#tools-reference-ts--quests), [skills](#tools-reference-ts--skills), [statuses](#tools-reference-ts--statuses) · **[content/combat/skills](content.md#src-content-combat-skills-ts)** [SKILLS](content.md#src-content-combat-skills-ts--skills) · **[content/combat/statuses](content.md#src-content-combat-statuses-ts)** [STATUSES](content.md#src-content-combat-statuses-ts--statuses) · **[content/gear/index](content.md#src-content-gear-index-ts)** [GEAR](content.md#src-content-gear-index-ts--gear) · **[content/sheetMusic](content.md#src-content-sheetmusic-ts)** [SHEET_MUSIC](content.md#src-content-sheetmusic-ts--sheet-music) · **[core/ids/enemies](core.md#src-core-ids-enemies-ts)** [BOSS_IDS](core.md#src-core-ids-enemies-ts--boss-ids), [ENEMY_IDS](core.md#src-core-ids-enemies-ts--enemy-ids) · **[core/ids/items](core.md#src-core-ids-items-ts)** [ITEM_IDS](core.md#src-core-ids-items-ts--item-ids) · … +2 more
+  - used by: here [(top level)](#tools-reference-ts--top-level) · tests: [reference.test](tests.md#tools-reference-test-ts)
+- <a id="tools-reference-ts--staletables"></a>**staleTables** · *function* `(pages: Record<string, string>): string[]` — Pages that differ from what's on disk, are missing, or shouldn't be there.
+  - uses: here [TABLES_DIR](#tools-reference-ts--tables-dir)
+  - used by: tests: [reference.test](tests.md#tools-reference-test-ts)
+- <a id="tools-reference-ts--top-level"></a>**(top level)** · *module* — Statements that run when the module loads.
+  - uses: here [TABLES_DIR](#tools-reference-ts--tables-dir), [generateTables](#tools-reference-ts--generatetables)
 
 <a id="tools-shots-ts"></a>
 
