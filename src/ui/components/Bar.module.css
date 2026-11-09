@@ -12,9 +12,16 @@
   background: var(--gold);
   transition: width 0.35s ease;
 }
+/* The numbers sit on a dark plate so they stay readable over the bright end of a gradient. */
 .label {
   position: absolute;
-  inset: 0;
+  top: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  padding: 0 6px;
+  border-radius: 6px;
+  background: rgba(11, 2, 24, 0.55);
+  white-space: nowrap;
   font-size: 0.74em;
   line-height: 16px;
   text-align: center;

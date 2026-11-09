@@ -183,7 +183,7 @@ The Sprite component: crisp, decorative SVG at whole-number scales; hits replay 
 
 ### tests/e2e/a11y.spec.ts
 
-Every screen and layer of the game, checked with axe (WCAG 2.2 A and AA) at 360×740. Each test also checks for horizontal overflow and a clean console. Known violations live in A11Y_ALLOW (tests/e2e/a11y.ts) and may only shrink.
+Every screen and layer of the game, checked with axe (WCAG 2.2 A and AA) at 360×740. Each test also checks for horizontal overflow and a clean console. Any axe violation fails (tests/e2e/a11y.ts).
 
 - Source: [tests/e2e/a11y.spec.ts](../../../tests/e2e/a11y.spec.ts)
 - Imports: tests: [e2e/a11y](#tests-e2e-a11y-ts), [e2e/helpers](#tests-e2e-helpers-ts)
@@ -193,7 +193,7 @@ Every screen and layer of the game, checked with axe (WCAG 2.2 A and AA) at 360�
 
 ### tests/e2e/a11y.ts
 
-Accessibility checks for the e2e suite: axe-core (WCAG 2.2 A and AA) on whatever the page shows.
+Accessibility checks for the e2e suite: axe-core (WCAG 2.2 A and AA) on whatever the page shows. Any violation fails. There's no allowlist: the P3 accessibility pass emptied it, and a new violation gets fixed, not listed.
 
 - Source: [tests/e2e/a11y.ts](../../../tests/e2e/a11y.ts)
 - Packages: `@axe-core/playwright`, `@playwright/test`, `node:fs`
@@ -203,10 +203,8 @@ Declarations:
 
 - <a id="tests-e2e-a11y-ts--tags"></a>**TAGS** · *const, internal* `= [ … ] (5 entries)`
   - used by: here [expectAccessible](#tests-e2e-a11y-ts--expectaccessible)
-- <a id="tests-e2e-a11y-ts--a11y-allow"></a>**A11Y_ALLOW** · *const* `: Record<string, { reason: string; on: readonly string[] }>` — Known violations: rule id → why it's still there and the screens (labels) it fires on.
-  - used by: here [expectAccessible](#tests-e2e-a11y-ts--expectaccessible)
-- <a id="tests-e2e-a11y-ts--expectaccessible"></a>**expectAccessible** · *function* `(page: Page, label: string, opts: { settle?: boolean } = {}): Promise<void>` — Run axe on the page and fail on anything not in A11Y_ALLOW for this screen.
-  - uses: here [A11Y_ALLOW](#tests-e2e-a11y-ts--a11y-allow), [TAGS](#tests-e2e-a11y-ts--tags)
+- <a id="tests-e2e-a11y-ts--expectaccessible"></a>**expectAccessible** · *function* `(page: Page, label: string, opts: { settle?: boolean } = {}): Promise<void>` — Run axe on the page and fail on any violation.
+  - uses: here [TAGS](#tests-e2e-a11y-ts--tags)
   - used by: tests: [a11y.spec](#tests-e2e-a11y-spec-ts)
 
 <a id="tests-e2e-helpers-ts"></a>

@@ -7,7 +7,8 @@
   --bg3: #1e0a3a;
   --fg: #f3ecff;
   --dim: #a893c7;
-  --line: #3a1c63;
+  --line: #3a1c63; /* dividers and card outlines: decoration only */
+  --edge: #7d5cb0; /* the outline that marks a control (a ghost button, a pad): 3.5:1 or more on every surface */
   --narr: #e9dfff;
   --ambient: #dcd1f3;
 

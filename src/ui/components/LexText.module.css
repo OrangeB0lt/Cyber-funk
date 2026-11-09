@@ -2,7 +2,9 @@
   font: inherit;
   background: none;
   border: 0;
-  padding: 0;
+  /* A taller tap target without moving the text: the padding is taken back by the margin. */
+  padding: 4px 0;
+  margin: -4px 0;
   border-bottom: 1px dotted var(--cyan);
   color: var(--lex);
   cursor: pointer;

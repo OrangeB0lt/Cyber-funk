@@ -1,7 +1,6 @@
 /**
  * Every screen and layer of the game, checked with axe (WCAG 2.2 A and AA) at 360×740. Each test
- * also checks for horizontal overflow and a clean console. Known violations live in A11Y_ALLOW
- * (tests/e2e/a11y.ts) and may only shrink.
+ * also checks for horizontal overflow and a clean console. Any axe violation fails (tests/e2e/a11y.ts).
  *
  * Not covered: the dev menu and the sprite gallery (developer tools, not part of the game).
  */
@@ -298,4 +297,13 @@ test('keyboard: a text-only sheet scrolls from the keyboard', async ({ page }) =
   const body = tid(page, 'sheet').locator('[tabindex="0"]');
   await expect(body).toBeFocused();
   expect(errors).toEqual([]);
+});
+
+test('reduced motion: the OS setting stops transitions as well as animations', async ({ page }) => {
+  await page.emulateMedia({ reducedMotion: 'reduce' });
+  await quickStart(page);
+  // The Heart bar's fill in the Topbar slides on change; under reduced motion it jumps.
+  const fill = tid(page, 'status').locator('i').first();
+  const seconds = await fill.evaluate(el => parseFloat(getComputedStyle(el).transitionDuration));
+  expect(seconds).toBeLessThan(0.001);
 });

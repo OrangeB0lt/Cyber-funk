@@ -4,7 +4,7 @@
   min-height: var(--tap);
   padding: 10px 14px;
   border-radius: var(--radius);
-  border: 1px solid var(--line);
+  border: 1px solid var(--edge);
   background: var(--bg2);
   color: var(--fg);
   text-align: left;
@@ -49,6 +49,7 @@
 }
 .small {
   min-height: 48px;
+  min-width: 44px;
   padding: 8px 12px;
   width: auto;
   display: inline-block;
@@ -61,6 +62,13 @@
 .center {
   text-align: center;
 }
+/* Unavailable but readable (a price you can't pay yet): dim text and a dashed outline, not opacity,
+   so the label keeps its contrast. Overrides the variant's colors. */
 .inactive {
-  opacity: 0.45;
+  background: var(--bg2);
+  border-color: var(--edge);
+  border-style: dashed;
+  color: var(--dim);
+  box-shadow: none;
+  font-weight: normal;
 }

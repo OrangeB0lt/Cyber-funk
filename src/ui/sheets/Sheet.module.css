@@ -68,8 +68,9 @@
   padding: 8px 0;
   border-bottom: 1px solid var(--line);
 }
+/* Not learned yet: dim text, not opacity (the tone badge keeps its contrast). */
 .locked {
-  opacity: 0.5;
+  color: var(--dim);
 }
 .skillHead {
   display: flex;

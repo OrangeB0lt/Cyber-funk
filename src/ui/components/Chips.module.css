@@ -1,14 +1,14 @@
 .chips {
   display: flex;
   flex-wrap: wrap;
-  gap: 4px;
+  gap: 8px;
   min-height: 4px;
 }
 .chip {
   font: inherit;
   font-size: 0.78em;
   padding: 3px 8px;
-  min-height: 26px;
+  min-height: 32px;
   display: inline-flex;
   align-items: center;
   border-radius: 999px;

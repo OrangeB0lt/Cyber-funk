@@ -1,12 +1,10 @@
 /**
  * Accessibility checks for the e2e suite: axe-core (WCAG 2.2 A and AA) on whatever the page shows.
- *
- * `A11Y_ALLOW` lists the violations the game still has, per rule, with the screens they fire on. A
- * violation that isn't listed fails, and so does a listed one that no longer fires on a screen it's
- * listed for, so the list can only shrink. The accessibility pass empties it.
+ * Any violation fails. There's no allowlist: the P3 accessibility pass emptied it, and a new
+ * violation gets fixed, not listed.
  *
  * Set A11Y_REPORT=1 to collect every violation into test-results/a11y-report.jsonl instead of
- * failing (for (re)building the list).
+ * failing (handy when a change trips several at once).
  */
 import { appendFileSync, mkdirSync } from 'node:fs';
 import AxeBuilder from '@axe-core/playwright';
@@ -14,17 +12,9 @@ import { expect, type Page } from '@playwright/test';
 
 const TAGS = ['wcag2a', 'wcag2aa', 'wcag21a', 'wcag21aa', 'wcag22aa'];
 
-/** Known violations: rule id → why it's still there and the screens (labels) it fires on. */
-export const A11Y_ALLOW: Record<string, { reason: string; on: readonly string[] }> = {
-  'color-contrast': {
-    reason: 'locked skills are drawn at 50% opacity (tone badge and level text)',
-    on: ['sheet:status'],
-  },
-};
-
 /**
- * Run axe on the page and fail on anything not in A11Y_ALLOW for this screen. `settle: false` skips
- * waiting for animations (the timing bar resolves itself within about a second).
+ * Run axe on the page and fail on any violation. `settle: false` skips waiting for animations (the
+ * timing bar resolves itself within about a second).
  */
 export async function expectAccessible(
   page: Page,
@@ -57,10 +47,5 @@ export async function expectAccessible(
     appendFileSync('test-results/a11y-report.jsonl', JSON.stringify({ label, found }) + '\n');
     return;
   }
-  const unexpected = found.filter(f => !A11Y_ALLOW[f.rule]?.on.includes(label));
-  const fired = new Set(found.map(f => f.rule));
-  const stale = Object.entries(A11Y_ALLOW)
-    .filter(([rule, a]) => a.on.includes(label) && !fired.has(rule))
-    .map(([rule]) => `${rule} no longer fires on ${label}: remove it from A11Y_ALLOW`);
-  expect([...unexpected, ...stale], `accessibility on ${label}`).toEqual([]);
+  expect(found, `accessibility on ${label}`).toEqual([]);
 }

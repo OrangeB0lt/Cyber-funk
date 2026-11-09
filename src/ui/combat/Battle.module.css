@@ -27,7 +27,15 @@
 .boss {
   border-color: rgba(255, 43, 214, 0.5);
 }
+/* Down: the sprite fades, the text dims (opacity on the whole card made its text unreadable). */
 .dead {
+  border-style: dashed;
+  color: var(--dim);
+}
+.dead b {
+  color: var(--dim);
+}
+.dead .portrait {
   opacity: 0.35;
   filter: grayscale(1);
 }

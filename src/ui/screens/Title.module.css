@@ -79,6 +79,8 @@
   color: var(--dim);
   font-size: 0.75em;
   padding: 10px;
+  min-width: 44px;
+  min-height: 44px;
   background: none;
   border: 0;
   cursor: pointer;
