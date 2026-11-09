@@ -340,7 +340,6 @@ function quests(): string {
     return [
       named(q.name, id),
       districtName(q.district),
-      esc(q.giver),
       q.goal ? String(q.goal) : '—',
       esc(q.reward),
       String(q.xp),
@@ -349,7 +348,7 @@ function quests(): string {
     ];
   });
   return page('Quests', 'Side quests. The logic lives in the scenes; this is what the journal shows.', [
-    [null, table(['Quest', 'District', 'Giver', 'Goal', 'Reward', 'XP', 'Doubloons', 'Description'], rows)],
+    [null, table(['Quest', 'District', 'Goal', 'Reward', 'XP', 'Doubloons', 'Description'], rows)],
   ]);
 }
 

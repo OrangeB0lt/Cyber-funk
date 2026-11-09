@@ -2,11 +2,9 @@
 
 These six rules settle most "how should I do this?" questions. If a change breaks one, the PR description should say why.
 
-## 1. Parity first, improvements second
+## 1. Behavior changes are deliberate
 
-The 2.0 rebuild ports v1 faithfully and proves it with automated parity oracles (ADR-0003). Bug fixes, balance changes and new ideas land afterwards as small, separate commits, each with a test. A reviewer should never have to ask whether a behavior change was intended.
-
-After cutover, the same rule applies at a smaller scale: refactors don't change behavior, and behavior changes aren't hidden inside refactors.
+The 2.0 rebuild ported v1 faithfully and proved it with automated parity oracles; their results are now baselines in `tests/fixtures/` (ADR-0003). Refactors don't change behavior, and behavior changes aren't hidden inside refactors: a bug fix, balance change or new idea lands as its own small commit, with a test that fails first and a re-baseline whose diff shows exactly what moved. A reviewer should never have to ask whether a behavior change was intended.
 
 ## 2. The engine is deterministic
 
@@ -30,7 +28,7 @@ When you find yourself writing "remember to also update X", make X derived or va
 - Conditions are one shape: `when`.
 - Choices are keyed by name, never by index.
 - Engine capabilities reach content one way: `EffectOps`.
-- State changes from the UI go one way: `app/commands`.
+- State changes from the UI go one way: the command methods on `GameApp` (`src/app/game.ts`).
 
 Before adding a second way, change the first.
 

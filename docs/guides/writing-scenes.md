@@ -46,7 +46,7 @@ const pick = await s.choose({
 if (pick === 'pay') { … }                // `pick` is typed 'pay' | 'haggle' | 'walk' | 'bribe'
 ```
 
-- **Keys** are stable identifiers. They become test ids (`choice:haggle`) and the transcript oracle compares them. Rename a key only when the meaning changes.
+- **Keys** are stable identifiers. They become test ids (`choice:haggle`) and the transcript baseline records them. Rename a key only when the meaning changes.
 - **`when: false`** hides the option. **`hint`** highlights it. **`silent`** skips echoing the label as the player's line.
 - **The optional second argument** is a prompt line shown above the buttons.
 - **Yes/no as a dialog:** `if (await s.confirm('Leave the city?', 'You won\'t be back.', 'Go', 'Stay')) …`
@@ -188,4 +188,4 @@ Register it in `PLACE_SCENES` (`content/index.ts`). Option keys become test ids 
 - [ ] New choices and options have meaningful, stable keys.
 - [ ] Every new id (flag, step, item, NPC) is in its `core/ids` list with a doc comment.
 - [ ] The scene plays in the browser (`npm run dev`, and use the dev menu to jump there) at 360px.
-- [ ] While porting v1 content: the transcript oracle still passes (`npm test`).
+- [ ] If the scene's text or state is meant to change, add or update its transcript case and run `npm run transcripts:baseline`; check the fixture diff shows only what you meant.

@@ -52,7 +52,7 @@ Import the engine through `@engine/index`. Inside the engine, modules import eac
 
 - A battle carries its stream as `b.rng`. Everything inside a fight draws from it.
 - Functions used outside a battle that need randomness take `rng` as their **first** parameter: `makeEnemy(rng, …)`, `buildEnemies(rng, …)`, `useFieldItem(rng, …)`.
-- In this version, `rng.fork()` returns the same stream, so a whole session is one sequence. That's what keeps parity with v1 exact.
+- In this version, `rng.fork()` returns the same stream, so a whole session is one sequence, as in v1. The baselines depend on it: splitting streams later would be a deliberate re-baseline.
 
 ### How content talks to the engine
 
@@ -92,5 +92,6 @@ Things that were hard-coded in v1 and are now data:
 ## Testing the engine
 
 - **Unit tests** sit next to the code (`*.test.ts`) and describe one mechanic each. They are good reading if you want to learn the rules.
-- **Parity oracles** (`tools/parity/`, until cutover) prove the engine still matches v1 draw for draw.
-- **Properties** (`tools/parity/properties.test.ts`) check two things on every corpus fight: replaying is deterministic, and Heart events fold to the true Heart.
+- **Baselines** (`tests/fixtures/`, [testing.md](../guides/testing.md#baselines)): the sim's output for three seeds and 940 seeded rule cases pin the exact numbers v1 gave. Until cutover, parity oracles proved the engine matched v1 draw for draw; the baselines were frozen from them.
+- **Combat coverage** (`src/engine/combat/coverage.test.ts`) runs every skill, boss move, assist, status, item, gear piece, enemy and boss through the engine.
+- **Properties** (`tools/engine/properties.test.ts`) check two things on 400 seeded fights: replaying is deterministic, and Heart events fold to the true Heart.

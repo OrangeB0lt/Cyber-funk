@@ -81,15 +81,15 @@ flowchart TD
 
 | Folder | Files | One line | Start reading at |
 |---|---|---|---|
-| [src/core/](../../src/core/) | 16 | Every id list (`as const`), the shared types (`GameState`, `Battle`, `Actor`, content defs, effects), the seeded `Rng`, pure helpers | [types/state.ts](../../src/core/types/state.ts), [types/battle.ts](../../src/core/types/battle.ts), [rng.ts](../../src/core/rng.ts) |
+| [src/core/](../../src/core/) | 18 | Every id list (`as const`), the shared types (`GameState`, `Battle`, `Actor`, content defs, effects), the seeded `Rng`, pure helpers | [types/state.ts](../../src/core/types/state.ts), [types/battle.ts](../../src/core/types/battle.ts), [rng.ts](../../src/core/rng.ts) |
 | [src/narrative/](../../src/narrative/) | 3 | The scene API (`Scene`, `SceneContext`, `Presenter`), the `Director`, `definePlace`/`defineEvent` | [types.ts](../../src/narrative/types.ts), [director.ts](../../src/narrative/director.ts) |
-| [src/content/](../../src/content/) | 71 | Typed data (classes, skills, enemies, bosses with their AI, items, gear, districts, acts) and story scripts (`*.scene.ts`) | [data.ts](../../src/content/data.ts), [index.ts](../../src/content/index.ts) |
+| [src/content/](../../src/content/) | 105 | Typed data (classes, skills, enemies, bosses with their AI, items, gear, districts, acts) and story scripts (`*.scene.ts`) | [data.ts](../../src/content/data.ts), [index.ts](../../src/content/index.ts) |
 | [src/engine/](../../src/engine/) | 22 | Rules as functions: stats, progression, inventory, shops, encounters, aftermath, and the combat loop in `combat/` | [index.ts](../../src/engine/index.ts), [combat/turns.ts](../../src/engine/combat/turns.ts) |
-| [src/app/](../../src/app/) | 16 | Runs the game without React: `GameApp`, `Session`, the `SceneContext` implementation, the battle controller, presenters, the view store, saves and sync | [game.ts](../../src/app/game.ts), [session.ts](../../src/app/session.ts) |
-| [src/ui/](../../src/ui/) | 35 (with main.tsx) | React components: screens, layers (action bar, sheets, popups, toast), the battle view | [App.tsx](../../src/ui/App.tsx), [GameContext.tsx](../../src/ui/GameContext.tsx) |
+| [src/app/](../../src/app/) | 19 | Runs the game without React: `GameApp`, `Session`, the `SceneContext` implementation, the battle controller, presenters, the view store, saves and sync | [game.ts](../../src/app/game.ts), [session.ts](../../src/app/session.ts) |
+| [src/ui/](../../src/ui/) | 40 (with main.tsx) | React components: screens, layers (action bar, sheets, popups, toast), the battle view | [App.tsx](../../src/ui/App.tsx), [GameContext.tsx](../../src/ui/GameContext.tsx) |
 | [server/](../../server/) | 15 | The cloud-save API: Fastify app, routes, repository, Drizzle schema, migrations, auth | [index.ts](../../server/index.ts), [app.ts](../../server/app.ts) |
-| [tools/](../../tools/) | 19 | Parity oracles against v1, balance sim and fight trace, content validator, layer check, this code map | [parity/driver.ts](../../tools/parity/driver.ts), [sim.ts](../../tools/sim.ts) |
-| [tests/](../../tests/) | 5 | Headless playthrough (`integration/`), Playwright at 360px (`e2e/`), Playwright against Docker (`e2e/stack/`) | [integration/slice.test.ts](../../tests/integration/slice.test.ts) |
+| [tools/](../../tools/) | 16 | Balance sim and fight trace, the engine baselines and fight driver (`engine/`), content validator, layer check, the code map, sprite, icon and table generators, screenshots | [sim.ts](../../tools/sim.ts), [engine/rules.ts](../../tools/engine/rules.ts) |
+| [tests/](../../tests/) | 5 | Headless playthroughs, the crawler and the transcript cases (`integration/`), Playwright at 360px (`e2e/`), Playwright against Docker (`e2e/stack/`), the baselines (`fixtures/`) | [integration/playthrough.test.ts](../../tests/integration/playthrough.test.ts) |
 
 Unit tests sit next to the code they test (`*.test.ts`). The [tests page of the reference](../reference/code-map/tests.md) lists every test file and what it covers.
 
@@ -489,7 +489,7 @@ flowchart TD
 
 ## 11. Inside the combat engine
 
-All of combat is in [src/engine/combat/](../../src/engine/combat/). It's a transliteration of v1, so statement order and every random draw match the legacy engine exactly ([ADR-0003](../adr/0003-determinism-and-parity.md)); `// PARITY:` comments mark oddities that must stay until after cutover.
+All of combat is in [src/engine/combat/](../../src/engine/combat/). It's a transliteration of v1, so statement order and every random draw match v1's engine exactly ([ADR-0003](../adr/0003-determinism-and-parity.md)); `// PARITY:` comments mark v1 oddities kept on purpose, which P6 fixes one at a time with a re-baseline.
 
 | File | What's in it | Main functions |
 |---|---|---|
@@ -775,7 +775,7 @@ flowchart LR
 | **cosmetic** `session.cosmetic` | `Session.cosmetic` | no | presentation only: the default nickname, where the timing bar's sweet spot sits |
 | `Math.random` | — | — | allowed only in `ui/` and `app/audio/` (noise buffers). ESLint forbids it everywhere else |
 
-All game randomness goes through [core/rng.ts](../../src/core/rng.ts) (mulberry32, with v1's exact helper formulas). Functions that consume randomness take the `Rng` as an argument. That's what makes a fight replayable from a seed, the sim's output exact, and the parity oracles possible.
+All game randomness goes through [core/rng.ts](../../src/core/rng.ts) (mulberry32, with v1's exact helper formulas). Functions that consume randomness take the `Rng` as an argument. That's what makes a fight replayable from a seed, the sim's output exact, and the baselines in `tests/fixtures/` meaningful.
 
 ## 18. Test seams: the same code, headless
 
@@ -786,18 +786,19 @@ Every outside dependency is injected, so the real game logic runs in Node withou
 | [`Presenter`](../reference/code-map/narrative.md#src-narrative-types-ts--presenter) | `ReactPresenter` | [`ScriptedPresenter`](../../src/app/testing/scriptedPresenter.ts): answers every prompt by a policy and records a transcript |
 | [`SaveStorage`](../reference/code-map/app.md#src-app-save-storage-ts--savestorage), [`KeyValue`](../reference/code-map/app.md#src-app-save-storage-ts--keyvalue) | `SaveSlots` over `browserKv` (localStorage) | `memorySaveStorage()`, `memoryKv()` |
 | [`SessionDeps`](../reference/code-map/app.md#src-app-session-ts--sessiondeps) `.seed` | crypto randomness | a fixed seed |
-| `SessionDeps.battle` | real `runBattle` | a stub that wins every fight (the transcript oracle) |
+| `SessionDeps.battle` | real `runBattle` | a stub that scripts each fight's outcome (the crawler, the transcript cases) |
 | [`CloudClient`](../reference/code-map/app.md#src-app-save-cloud-ts--cloudclient) | `CloudApi` (fetch) | a fake in [sync.test.ts](../../src/app/save/sync.test.ts); the real server in [server/sync.test.ts](../../server/sync.test.ts) |
 | `buildApp({ db })` | the real database | a test database, driven with `app.inject` |
-| [`EngineAdapter`](../reference/code-map/tools.md#tools-parity-driver-ts--engineadapter) | — | `tsAdapter` (v2) and `legacyAdapter` (v1 in a Node vm) in [tools/parity/](../../tools/parity/) |
+| [`EngineAdapter`](../reference/code-map/tools.md#tools-engine-driver-ts--engineadapter) | — | `tsAdapter` in [tools/engine/](../../tools/engine/): builds saves from seeded specs for the rules baseline and plays the fight corpus for the engine's property tests |
 | `window.CF` + `turbo` | dev and test builds only | Playwright and the Playwright MCP drive and speed up the game |
 
 | Suite | Where | Runs |
 |---|---|---|
 | Unit | `src/**/*.test.ts` | `npm test` |
-| Headless playthrough | [tests/integration/slice.test.ts](../../tests/integration/slice.test.ts): new game → prologue → Tremé → three wins → Captain Hush, with a real `Session` and `ScriptedPresenter` | `npm test` |
-| Parity oracles | [tools/parity/](../../tools/parity/): engine traces, sim output, rules, content and scene transcripts compared with v1 | `npm test`, `npm run parity:coverage` |
-| Code map freshness | [tools/codemap.test.ts](../../tools/codemap.test.ts) | `npm test` |
+| Headless playthroughs | [tests/integration/playthrough.test.ts](../../tests/integration/playthrough.test.ts): new game → every district → the ending in all 8 choice combinations → New Game+, with a real `Session` and `ScriptedPresenter`; [slice.test.ts](../../tests/integration/slice.test.ts) | `npm test` |
+| The crawler | [tests/integration/explore.test.ts](../../tests/integration/explore.test.ts): every option of every place down every choice | `npm test` |
+| Baselines | the sim, the engine rules and every scene transcript against `tests/fixtures/` | `npm test` |
+| Generated docs freshness | the code map, the sprite gallery, the content tables | `npm test` |
 | Server | `server/**/*.test.ts` against Postgres | `npm run test:server` |
 | e2e | [tests/e2e/](../../tests/e2e/) at 360×740, fails on horizontal overflow | `npm run e2e` |
 | Stack e2e | [tests/e2e/stack/](../../tests/e2e/stack/) against the Docker stack | `E2E_STACK_URL=… npx playwright test` |

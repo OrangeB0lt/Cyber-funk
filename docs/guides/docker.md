@@ -117,4 +117,4 @@ To work on the UI without any server, run `VITE_CLOUD=off npm run dev`: the game
 | `build` | the runtime target | `npm ci`, `npm run build` (the game → `dist/`), `npm run build:server` (esbuild → `dist-server/index.mjs`) |
 | `runtime` | `compose.yaml` | Node 24 on Alpine, non-root, healthcheck on `/api/health`; holds `dist/`, `dist-server/` and the migrations |
 
-The build context is trimmed by `.dockerignore`: no `legacy/`, docs, tests or tools.
+The build context is trimmed by `.dockerignore`: no docs, tests or tools.

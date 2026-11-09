@@ -16,10 +16,6 @@ body:
     id: version
     attributes:
       label: Game version (title screen)
-  - type: input
-    id: seed
-    attributes:
-      label: Seed (Dev menu shows it), if known
   - type: textarea
     id: save
     attributes:

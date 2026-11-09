@@ -48,7 +48,7 @@ Randomness: content functions use the `rng` they're given, never `Math.random` (
 - Story steps for it: `ACT_STEPS` (`core/ids/story.ts`) and their journal rows in
   `content/story/acts.ts` (`hintPlace` gives the place its "!").
 - `CF.dev.boss(id)` finds the fight's story step through that `hintPlace` (`bossStep()` in
-  `src/app/devStates.ts`), so the boss's place must be some step's `hintPlace`.
+  `src/app/devStates.ts`); without one it falls back to the act's last step.
 - If it has a story choice in `post`, add its keys to `CHOICE_BOSSES` in
   `tests/integration/playthrough.test.ts` so the playthrough forks there.
 - The sim (`tools/sim.ts`) fights every boss in `BOSSES`; one that needs special setup (like
@@ -68,8 +68,9 @@ Randomness: content functions use the `rng` they're given, never `Math.random` (
   get.
 - Gear: `THREADS_IDS`/`CHARM_IDS`/`MOD_IDS` and rows in `content/gear/`. Instruments are generated
   from `INSTRUMENT_TIER_IDS` × classes; don't hand-write `inst_*` rows.
-- Sheet music: `SHEET_MUSIC_IDS` and `content/sheetMusic.ts`; its effect is implemented in the
-  engine (grep an existing id such as `sm_swing`).
+- Sheet music: `SHEET_MUSIC_IDS` and `content/sheetMusic.ts`. Its effect is data (`passive:
+  PassiveMods`), applied by the engine's passive and stat code; a new kind of passive needs a field
+  in `PassiveMods` and engine handling.
 
 **District / place / NPC / quest** (`core/ids/world.ts`)
 - Place: `PLACE_IDS`, a row in `content/places.ts`, its id in the district's `places`, and its scenes
@@ -129,10 +130,13 @@ Follow `docs/architecture/state-and-saves.md` ("Changing the save format"):
 2. A **baseline** failing means behavior moved: `tools/sim.test.ts` (balance), `tools/engine/rules.test.ts`
    (enemy groups, field items, shops, victories), `tests/integration/transcripts.test.ts` (scenes).
    If that was the point, re-baseline in the same commit (`npm run sim:baseline`, `rules:baseline`,
-   `transcripts:baseline`) and review the fixture diff; otherwise it's a bug. Adding content usually
-   moves nothing unless it changes a pool, a table's order, or an existing scene.
+   `transcripts:baseline`) and review the fixture diff; otherwise it's a bug. Expect content to move
+   some: a new item, gear piece or sheet of music changes what the seeded rule cases pick (so
+   `rules.json` moves), a new boss adds sim rows, a pool change moves street fights, and a new
+   street event adds transcript cases. Check that the diff moves only for those reasons.
 3. If combat numbers could have moved, use the `balance-check` skill.
-4. `npm run docs:codemap` after code changes (a test fails when the code map is stale).
+4. Generated docs: `npm run docs:tables` after content changes, `npm run docs:codemap` after code
+   changes, `npm run sprites:export` after art changes (`npm test` fails when one is stale).
 5. See it in the phone with the `playtest` skill: `CF.dev.act(...)` or `CF.dev.boss(...)` to jump
    there, then check it at 360px with no console errors. `npm run e2e` runs the phone suite, with axe
    on every screen.

@@ -2007,7 +2007,7 @@ Declarations:
 
 ### src/content/story/acts.ts
 
-The main quest, step by step: what the journal says, which place gets the "!" hint, and how a step completes on its own after battles. Step names and their order live in core/ids/story.ts. Steps without `progress` are advanced by scenes (`s.story.advance(...)`).
+The main quest, step by step: what the journal says, which place gets the "!" hint, and how a step completes on its own after battles. Step names and their order live in core/ids/story.ts. Steps without `progress` are advanced by scenes (`s.story.set(...)`).
 
 - Source: [src/content/story/acts.ts](../../../src/content/story/acts.ts)
 - Imports: core: [ids/story](core.md#src-core-ids-story-ts), [types/index](core.md#src-core-types-index-ts)

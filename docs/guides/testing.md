@@ -8,13 +8,15 @@
 |---|---|---|---|
 | **Unit** | `src/**/*.test.ts`, next to the code | Vitest (Node) | One module's rules: an effect kind, a status, stats, XP, timing grades, the save format, the Director |
 | **Content validation** | `tools/validate-content.test.ts` | Vitest | Cross-references types can't check: every enemy spawns somewhere, every skill has an owner (a class, an enemy, a bandmate), sprite rules, no content-only id literals in the engine |
-| **Completeness** | `tools/completeness.test.ts` | Vitest | The game is wired up for every ported district: every place has scenes, every boss its pre/post scenes, every story hint points at a place with scenes, every `[[lexicon]]` link resolves |
+| **Completeness** | `tools/completeness.test.ts` | Vitest | The game is wired up: every place has scenes, every boss its pre/post scenes, every story hint points at a place with scenes, every `[[lexicon]]` link resolves |
 | **The crawler** | `tests/integration/explore.test.ts` | Vitest, `ScriptedPresenter`, fights stubbed | Every place offers something in every state; every option runs down every branch of its choices without errors or broken text; every quest can be finished, every story step reached, every choice taken, every item obtained, every shop has a keeper |
 | **Combat coverage** | `src/engine/combat/coverage.test.ts` | Vitest | Every skill, boss move, assist, status, item, gear piece, sheet of music, enemy and boss runs through the engine with finite numbers, clean log text and fights that end |
-| **Parity oracles** | `tools/parity/*.test.ts` | Vitest | v2 behaves exactly like v1 (see below). Deleted at cutover. |
+| **Baselines** | `tools/sim.test.ts`, `tools/engine/rules.test.ts`, `tests/integration/transcripts.test.ts` | Vitest | Behavior hasn't moved: the balance sim, the engine's rules and every scene transcript still give the results in `tests/fixtures/` ([Baselines](#baselines)) |
+| **Engine properties** | `tools/engine/properties.test.ts` | Vitest | Over 400 seeded fights: the same seed replays identically, and folding Heart events reproduces every actor's real Heart |
+| **Generated docs** | `tools/codemap.test.ts`, `tools/sprites.test.ts`, `tools/reference.test.ts` | Vitest | The code map, the sprite gallery and the content tables match the code |
 | **Server** | `server/**/*.test.ts` | Vitest project `server`, real PostgreSQL | The API's rules (revisions, conflicts, tombstones, history, auth, rate limits, static files), and the browser's sync engine against the real server |
-| **Headless playthroughs** | `tests/integration/slice.test.ts`, `playthrough.test.ts` | Vitest, with `ScriptedPresenter` | Story flows end to end, no browser, real battles: new game → every ported district → its boss, down every branch of the big boss choices (`playthrough`); the slice's specific checks (`slice`) |
-| **End to end** | `tests/e2e/*.spec.ts` | Playwright, 360×740 touch Chromium | The real UI: tapping through screens, every sheet, the shop, battles with the timing bar, save slots, every place and option of every ported district (`world.spec.ts`), no horizontal overflow, a clean console |
+| **Headless playthroughs** | `tests/integration/slice.test.ts`, `playthrough.test.ts` | Vitest, with `ScriptedPresenter` | Story flows end to end, no browser, real battles: new game → every district → every boss → the ending, down every branch of the big boss choices, then New Game+ (`playthrough`); the slice's specific checks (`slice`) |
+| **End to end** | `tests/e2e/*.spec.ts` | Playwright, 360×740 touch Chromium | The real UI: tapping through screens, every sheet, the shop, battles with the timing bar, save slots, every place and option of every district (`world.spec.ts`), no horizontal overflow, a clean console |
 | **Full game** | `tests/e2e/finale.spec.ts` | Playwright, 360×740 | A new character through the UI to the credits and into New Game+, with dev shortcuts between districts and short fights: every screen fits, the finale's screens pass axe, the console stays clean |
 | **Accessibility** | `tests/e2e/a11y.spec.ts` | Playwright with axe-core | WCAG 2.2 A and AA on every screen and layer, with no allowlist; keyboard focus into and out of sheets and dialogs, Escape closing only the top layer; story lines announced once; reduced motion stopping transitions |
 | **PWA** | `tests/e2e/pwa.spec.ts` (the `pwa` project, service workers allowed) | Playwright | Offline play once the worker is installed; Chromium's installability check (CDP) passes; `/api` is never cached or served from the cache; a waiting update shows only at a hub |
@@ -31,7 +33,8 @@ npm run check                         # typecheck + lint + layer rules + tests: 
 npm run e2e                           # Playwright: builds in test mode, serves on :4173, runs tests/e2e
 npx playwright test -g "Captain Hush" # one e2e test
 npx playwright show-report            # the HTML report after a failure (traces are kept on failure)
-npm run parity:coverage               # engine oracle under c8: fails below 95% branch coverage of v1's engine
+npm run sim:baseline                  # rewrite a baseline (also rules:baseline, transcripts:baseline): on purpose only
+npm run docs:codemap                  # regenerate generated docs (also docs:tables, sprites:export)
 npm run docker:check                  # check + server tests inside the dev container (no Node on the host)
 npm run docker:e2e                    # the local e2e suite inside the Playwright container
 
@@ -112,30 +115,22 @@ The local suite builds with `VITE_CLOUD=off` (`.env.test`), so it never needs a 
 
 ## Baselines
 
-Fixed expectations, checked in, that outlive v1. Each was written while the matching v1 oracle passed, so each holds v1's behavior. A change that's *meant* to move one rewrites it in the same commit, and the diff is the review.
+Fixed expectations, checked in. Each was written while the matching v1 parity oracle passed (until cutover, [ADR-0003](../adr/0003-determinism-and-parity.md#amendment-cutover-2026-11-09)), so each holds v1's behavior. A refactor changes none of them. A change that's *meant* to move one rewrites it in the same commit, and the diff is the review: name the re-baseline in the commit message.
 
 | Baseline | Test | Rewrite with | Holds |
 |---|---|---|---|
 | `tests/fixtures/sim/seed-{1,2,1984}.txt` | `tools/sim.test.ts` | `npm run sim:baseline` | the balance sim's output for three seeds |
 | `tests/fixtures/rules.json` | `tools/engine/rules.test.ts` | `npm run rules:baseline` | enemy groups, field items, shops and victory bookkeeping for 940 seeded cases (`tools/engine/rules.ts`), one per line |
 | `tests/fixtures/transcripts.jsonl` | `tests/integration/transcripts.test.ts` | `npm run transcripts:baseline` | what every transcript case shows and saves (`tests/integration/support/transcriptCases.ts`), at random values 0, 0.5 and 0.99, one run per line |
-| `docs/reference/v1-shots/` | none (for review) | `npx tsx tools/parity/legacyShots.ts`, before cutover | v1's screens, paired with v2's by `tools/shots.ts` |
+| `docs/reference/v1-shots/` | none (for review) | frozen at cutover | v1's screens, paired with v2's by `tools/shots.ts` |
 
-The engine's own properties (determinism, Heart events folding back to real Heart) are tested from `tools/engine/` with v2's content facts (`tsFacts`), which the parity tests prove equal to v1's, order included.
+**Transcript cases** set up a save, run one scene or place option, and record every title, line, choice, toast, sheet, confirm, fight and card block, plus the save afterwards. A case can script each fight's outcome (`fights: ['retry', 'win']`, or `'cut'` for a street loss), a sequence of picks for menus that come back (`picks`), and the confirm answer. Add a case when you add or change a scene whose exact text or state matters, then run `npm run transcripts:baseline` and check the new lines in the diff.
 
-## Parity oracles (until cutover)
+**When a baseline fails:** read the first difference in the failure. If the change wasn't meant to move behavior, it's a bug. If it was, re-baseline and check that the fixture diff moves only what you meant (a balance change that also shifts an unrelated district's numbers usually means an extra RNG draw).
 
-v1 in `legacy/` is the reference. Each oracle runs v1 and v2 on the same inputs and compares:
+The seeded generators behind the rules baseline pick from the content tables by index, so reordering a table (`ENEMIES`, `SKILLS`, `GEAR`) moves `rules.json` too.
 
-- **Engine:** 3,000+ seeded fights (the sim grid, random legal play, scripted edge cases). It compares every event, stamped with the RNG draw index, plus checkpoints and final state. Exact match required.
-- **Sim:** `tools/sim.ts` output is byte-identical to v1's sim for fixed seeds.
-- **Rules:** pricing, selling, field items, enemy building and victory bookkeeping against v1's UI-layer functions (jsdom).
-- **Content:** the typed tables deep-equal v1's tables after the documented renames.
-- **Transcripts:** scenes run in v1 (jsdom, constant RNG, stubbed fights) and v2 (`ScriptedPresenter`), and the lines, choices, toasts, card blocks and resulting saves are compared. A case can script each fight's outcome (`fights: ['retry', 'win']`, or `'cut'` for a street loss), a sequence of picks for menus that come back (`picks`), and the confirm answer.
-
-**Screens side by side:** `npx tsx tools/parity/legacyShots.ts` (v1, or `… finale` for just the finale's screens) and `npx tsx tools/shots.ts` (v2) write screenshots of the same screens, and the latter pairs them in `shots/side-by-side/` (gitignored) for review.
-
-If an oracle fails, either the port is wrong (fix it), or the difference is an intended fix. An intended fix goes after parity, in its own commit, with an entry in [known-issues.md](../known-issues.md) and an allowlist entry.
+**Screens side by side:** `npx tsx tools/shots.ts` writes v2's screens to `shots/v2/` and pairs each with the v1 shot of the same name in `shots/side-by-side/` (gitignored), for a visual review.
 
 ## Automation
 
@@ -143,7 +138,7 @@ If an oracle fails, either the port is wrong (fix it), or the difference is an i
 |---|---|---|---|
 | `git commit` | `npm run check`; only `format:check` when no code is staged | [.githooks/pre-commit](../../.githooks/pre-commit) | `git commit --no-verify` |
 | `git push` | `npm run e2e`, when the push changes the game | [.githooks/pre-push](../../.githooks/pre-push) | `SKIP_E2E=1 git push` or `--no-verify` |
-| Every push, every branch | typecheck, lint, format, layer rules, `npm test`, parity coverage, builds, server tests, e2e, Docker stack | [.github/workflows/ci.yml](../../.github/workflows/ci.yml) | |
+| Every push, every branch | typecheck, lint, format, layer rules, `npm test`, builds, server tests, e2e, Docker stack | [.github/workflows/ci.yml](../../.github/workflows/ci.yml) | |
 | Claude Code finishes a turn that changed code | `npm run check`; a failure sends Claude back to fix it | [.claude/hooks/check.js](../../.claude/hooks/check.js) | delete `.claude/hooks/.check-state.json` to force a run |
 
 `npm install` installs the git hooks (the `prepare` script sets `core.hooksPath`). The hooks check the working tree, not just what's staged.
@@ -155,3 +150,4 @@ If an oracle fails, either the port is wrong (fix it), or the difference is an i
 - **One behavior per test**, named as a sentence: `'a street defeat leaves 80% of doubloons and wakes you at the club'`.
 - **New screen or sheet?** Add it to an e2e test with `expectNoOverflow`.
 - **New content?** The crawler, the completeness tests and combat coverage read every id list and registry, so new places, options, items, skills and opponents are covered when they're added. A rule they can't express goes in `tools/validate-content.ts` or `tools/completeness.ts`.
+- **A behavior change?** Write the test that fails first, then let the baselines show everything else that moved.

@@ -1,6 +1,6 @@
 # Roadmap
 
-*Where the 2.0 rebuild stands and what's left. Each phase ends with a commit at a gate and a short report. The rules every phase follows are in [ADR-0003](adr/0003-determinism-and-parity.md): port v1 exactly first, prove it with the oracles, fix bugs afterwards in separate commits.*
+*Where the 2.0 rebuild stands and what's left. Each phase ends with a commit at a gate and a short report. The rules are in [ADR-0003](adr/0003-determinism-and-parity.md): v1 was ported exactly first and proven with oracles; since cutover, baselines pin that behavior, and each fix is its own commit that re-baselines on purpose.*
 
 | Phase | What | Status |
 |---|---|---|
@@ -10,8 +10,8 @@
 | P2.5 | Docker, Docker Compose, cloud saves in PostgreSQL (three slots, history, player codes) | done ([ADR-0006](adr/0006-server-and-cloud-saves.md)) |
 | P3 | The remaining districts, the accessibility pass | done |
 | P4 | Finale and persistence | done (the owner played the finale, 2026-11-09) |
-| P5 | PWA, cutover, docs | |
-| P6 | Post-parity fixes | |
+| P5 | PWA, HTTPS, cutover, docs | done (2026-11-09) |
+| P6 | Post-parity fixes | next |
 
 ## P2 close-out (done)
 
@@ -56,26 +56,15 @@
   - the crawler and completeness cover the Tower
 - **Owner's playtest (done, 2026-11-09):** the Garden District through the credits into New Game+. Merged to `main`.
 
-## P5: PWA, cutover, docs
+## P5: PWA, HTTPS, cutover, docs (done)
 
-- **PWA:**
-  - manifest, icons, precache
-  - the update prompt only at hubs, never mid-battle
-  - `navigator.storage.persist()`
-  - the service worker must never cache `/api/*`
-- **TLS for the Docker stack** (Caddy in front of `app`), which installing the app on a phone needs.
-- **Tests:** an every-screen e2e with axe; the sim baseline as a regression check.
-- **Cutover:**
-  - delete `legacy/`, `tools/parity` and `tools/migrate`
-  - rewrite the Claude Code skills, hooks and Playwright MCP setup for v2
-- **Docs:**
-  - design pillars, world bible, tone and voice
-  - the architecture overview
-  - onboarding, adding content, debugging
-  - `team/` (workstreams, extension points)
-  - generated reference tables, CONTRIBUTING
+- **Baselines first (done):** while the oracles still proved v2 = v1, their results were frozen in `tests/fixtures/`: the sim for three seeds, 940 rule cases, and every scene transcript at three random values. v1's screens went to `docs/reference/v1-shots/`. See [ADR-0003's amendment](adr/0003-determinism-and-parity.md#amendment-cutover-2026-11-09).
+- **PWA (done):** manifest, icons rendered from Gus's sprite, the build precached for offline play; the service worker never caches `/api/*`; a new version is offered only at a hub screen and applied after a save; `navigator.storage.persist()` after the first save. `tests/e2e/pwa.spec.ts` checks offline play and Chromium's installability.
+- **HTTPS (done):** Caddy in front of the game in `compose.yaml`, with the site address from `SITE_ADDRESS` (an internal CA for localhost and LAN addresses, ACME for a real domain). The stack e2e runs over HTTPS.
+- **Cutover (done):** `legacy/`, `tools/parity/` and `tools/migrate/` deleted, with the scripts, devDependencies, hook and config entries that served them. The Claude Code skills, CLAUDE.md and the Playwright MCP (now the test-mode build) describe 2.0.
+- **Docs (done):** [pillars](vision/pillars.md), [world bible](vision/world-bible.md), [tone and voice](vision/tone-and-voice.md), the [architecture overview](architecture/overview.md), [onboarding](guides/onboarding.md), [adding content](guides/adding-content.md), [debugging](guides/debugging.md), `team/` ([workstreams](team/workstreams.md), [extension points](team/extension-points.md)), generated [content tables](reference/tables/README.md), and CONTRIBUTING.
 
 ## P6: post-parity fixes
 
-- Work through [known-issues.md](known-issues.md), one commit and one test per fix.
-- Design calls go to the project owner first.
+- Work through [known-issues.md](known-issues.md), one commit per fix, each with a test that fails first and a deliberate re-baseline of whatever it moves.
+- Design calls go to the project owner first, batched into one checkpoint with a prototype and sim diff for each.

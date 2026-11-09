@@ -103,7 +103,7 @@ Battle playback (`battle.play`) applies each `BattleEvent` to the battle view on
 
 ### ScriptedPresenter (`app/testing/scriptedPresenter.ts`)
 
-It answers everything from a **policy** (`choose`, `intent`, `timing`, `confirm`, `sheet`, `defeat`…) and records a transcript (lines, choices, toasts, sheets, fights). It lets the prologue, Tremé, Captain Hush and the Vox choice play headlessly in Vitest in milliseconds (`tests/integration/slice.test.ts`), and it powers the transcript parity oracle against v1.
+It answers everything from a **policy** (`choose`, `intent`, `timing`, `confirm`, `sheet`, `defeat`…) and records a transcript (lines, choices, toasts, sheets, fights). It lets the whole game play headlessly in Vitest in well under a second (`tests/integration/playthrough.test.ts`), and it records the scene transcripts the baseline checks (`tests/integration/transcripts.test.ts`).
 
 ## Battles
 

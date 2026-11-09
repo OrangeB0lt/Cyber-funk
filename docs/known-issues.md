@@ -1,10 +1,10 @@
 # Known issues
 
-Behavior found in v1 during the 2.0 port. Per the parity-first rule (ADR-0003), each one is **ported as-is** and fixed afterwards in its own commit with a test. Items marked *design call* need the project owner's decision because the "bug" may be intended.
+Behavior found in v1 during the 2.0 port. Per the parity-first rule (ADR-0003), each one was **ported as-is**; P6 fixes each in its own commit, with a test that fails first and a deliberate re-baseline of what it moves. Items marked *design call* need the project owner's decision because the "bug" may be intended. **Where** points into v1's source, which is in git history: `git show 555a9fd:legacy/src/05_engine.js`.
 
 ## Fixed by the new architecture
 
-These go away by construction. Where the visible sequence changes, the change is listed in the transcript-oracle allowlist.
+These go away by construction. Where the visible sequence changed, the transcript oracle allowlisted it until cutover; the baselines hold the new sequence.
 
 | v1 behavior | Fixed by |
 |---|---|
@@ -20,9 +20,9 @@ These go away by construction. Where the visible sequence changes, the change is
 | `[[Hush\|the Hush]]` links nothing (the glossary key is `the hush`) | `tools/completeness.ts` checks every `[[link]]`; this one is allowlisted there (`ALLOWED_UNLINKED`) until its P6 fix |
 | Street events' `G.xp` doesn't wait for the level-up popup; other XP grants do | One `s.xp()`, always awaited (allowlisted deviation) |
 
-## To fix after parity
+## To fix (P6)
 
-| Issue | Where (legacy) | Kind |
+| Issue | Where (v1) | Kind |
 |---|---|---|
 | **An assist helper's death ends the battle as a loss.** A bandmate assist is a 1-HP `side:'player'` actor; if its hit gets countered (for example by a Countermelody the Archive Drone recorded from you), `checkDeath` runs the *player* death path. Reproduced: 170 of 200 trials in that setup. | `05_engine.js:424`, `319-326` | bug |
 | Second Line Smoke escapes boss fights; its description says "non-boss". | `03_data_items.js:22`, `05_engine.js:514` | bug |

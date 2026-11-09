@@ -2,7 +2,7 @@
 
 Thanks for joining the band. Read [docs/README.md](docs/README.md) first; it has the reading order. This page covers how work moves from your machine into `main`.
 
-> **2.0 migration in progress.** Until cutover, behavior changes to the game are frozen: the TypeScript port must match v1 exactly (see [ADR-0003](docs/adr/0003-determinism-and-parity.md)). Fixes queue in [docs/known-issues.md](docs/known-issues.md).
+> **Behavior is pinned by baselines.** Refactors don't change behavior: the sim, the engine's rules and every scene transcript must still match `tests/fixtures/`. A change that's meant to alter behavior (a fix from [docs/known-issues.md](docs/known-issues.md), a balance change, new content in a pool) re-baselines in the same commit (`npm run sim:baseline`, `rules:baseline`, `transcripts:baseline`), names it in the commit message, and the fixture diff is the review. See [ADR-0003](docs/adr/0003-determinism-and-parity.md#amendment-cutover-2026-11-09) and [testing](docs/guides/testing.md#baselines).
 
 ## Setup
 
@@ -36,8 +36,9 @@ CI runs everything again on every push, on every branch.
   - engine rule → unit test
   - scene → headless scene test
   - an important flow → Playwright
-- [ ] Balance changes include the `npm run sim` diff in the PR.
-- [ ] UI changes are checked at 360px wide, are keyboard-reachable, and don't overflow horizontally.
+- [ ] A baseline that moved was re-baselined on purpose, named in the commit message, and its fixture diff shows only what the change meant to move. Balance changes also include the balance diff (`node .claude/skills/balance-check/compare.js`, or `npm run sim` before and after) in the PR.
+- [ ] Generated docs are fresh: `npm run docs:codemap` after code changes, `npm run docs:tables` after content changes, `npm run sprites:export` after art changes (`npm test` fails when one is stale).
+- [ ] UI changes are checked at 360px wide, are keyboard-reachable, pass axe (`npm run e2e`), and don't overflow horizontally.
 - [ ] Docs are updated if you changed a system, an API or a content workflow.
 
 ## Commit messages

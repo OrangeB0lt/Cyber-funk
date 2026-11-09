@@ -27,6 +27,7 @@ npm run build:test       # test-mode build -> dist-e2e/ (what e2e and the Playwr
 npm run sim              # balance sim (-- --seed N, -- --json); npm run trace -- <class> <opponent> <level>
 npm run sim:baseline / rules:baseline / transcripts:baseline   # rewrite a baseline in tests/fixtures (on purpose only)
 npm run docs:codemap     # regenerate docs/reference/code-map after code changes (npm test fails when stale)
+npm run docs:tables      # regenerate docs/reference/tables after content changes (npm test fails when stale)
 npm run sprites:export   # regenerate docs/reference/sprites after art changes (npm test fails when stale)
 ```
 
@@ -47,8 +48,8 @@ Node 24 (`.nvmrc`). `npm run depcruise` calls dependency-cruiser's API (`tools/d
 - P0–P2.5 groundwork, engine at parity, vertical slice, Docker and cloud saves (done)
 - P3 all five districts and the accessibility pass (done; axe on every screen, no allowlist)
 - P4 finale and persistence (done; the owner played it): the second line, the Tower, the ending, credits, New Game+; save format v3
-- P5 PWA, HTTPS via Caddy, cutover (v1 and the parity oracles deleted), docs (in progress)
-- P6 post-parity fixes (`docs/known-issues.md`)
+- P5 PWA, HTTPS via Caddy, cutover (v1 and the parity oracles deleted), docs (done)
+- P6 post-parity fixes (`docs/known-issues.md`) (next)
 
 Details per phase: `docs/roadmap.md`.
 

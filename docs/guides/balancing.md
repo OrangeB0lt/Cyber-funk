@@ -37,7 +37,7 @@ BOSS captain_hush  L3: win 95% rounds 8.1 items 0.6 beads 0.0 hpLeft 41%
 4. **Explain outliers** with `npm run trace` on the matchup.
 5. Put the before/after rows in the PR.
 
-> **The baseline:** `tests/fixtures/sim/seed-{1,2,1984}.txt` hold the sim's output for three seeds, and `tools/sim.test.ts` fails when it changes. A change meant to move balance rewrites them with `npm run sim:baseline` in the same commit, so the diff is the review. Until cutover, the parity tests also require the engine to match v1 exactly.
+> **The baseline:** `tests/fixtures/sim/seed-{1,2,1984}.txt` hold the sim's output for three seeds, and `tools/sim.test.ts` fails when it changes. A change meant to move balance rewrites them with `npm run sim:baseline` in the same commit, so the diff is the review. The `balance-check` skill's `compare.js` diffs the sim between a git ref and your working tree, averaged over several seeds.
 
 ## Knobs at a glance
 

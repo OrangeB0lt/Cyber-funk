@@ -68,7 +68,7 @@ Needs a save (do Start first). `browser_evaluate` with one of:
 
 The same menu is in the UI: tap the version on the title screen five times.
 
-To reproduce a bug from a player's save (Settings → Saves → Export gives a `CF2:` code):
+To reproduce a bug from a player's save (Settings → Save data → Export Save gives a `CF2:` code, which carries the random state too):
 `async () => (await CF.importSave('CF2:...')) ? 'loaded' : 'not a save this version can load'`.
 From the title it asks which slot; in a game it replaces the current one and resumes.
 
