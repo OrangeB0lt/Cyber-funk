@@ -104,7 +104,12 @@ export type ResumePoint =
   | {
       kind: 'battle';
       context: 'quest' | 'boss' | 'bounty' | 'cutting' | 'spar' | 'street' | 'tower' | 'tutorial';
-    };
+    }
+  /**
+   * A boss is beaten and its post-fight scene (the big choice, the Blue Note) hasn't finished: a
+   * reload replays that scene instead of losing the win (v1 refought the boss).
+   */
+  | { kind: 'afterBoss'; boss: BossId };
 
 /** Everything that persists. */
 export interface GameState {
@@ -188,6 +193,13 @@ export interface GameState {
   secondLine: SecondLineEntry[] | null;
   /** Inside Metronome Tower (the second line's stat bonus applies). */
   inTower: boolean;
+  /**
+   * The Tower floor the climb is on (0 = the Lobby … 4 = the Crown). Travel resets it, as v1's
+   * goDistrict does; a reload keeps it (v1 lost it).
+   */
+  towerFloor: number;
+  /** The fight within the floor the climb is on. Nothing resets it but the climb (a v1 quirk). */
+  towerFight: number;
   /** A moment to resume after a reload, if any. */
   resume: ResumePoint | null;
 }

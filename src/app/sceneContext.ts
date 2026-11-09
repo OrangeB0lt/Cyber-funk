@@ -4,6 +4,7 @@
  * equivalent (`G` and the UI helpers in legacy/src/06_ui_core.js and 08_world.js).
  */
 import type { BossId } from '@core/ids/enemies';
+import type { DistrictId } from '@core/ids/world';
 import { clamp } from '@core/helpers';
 import type { StatKey } from '@core/ids/combat';
 import { ACT_STEPS, type StoryPosition } from '@core/ids/story';
@@ -44,6 +45,35 @@ import type { SessionPort } from './sessionPort';
 /** Strip [[lexicon]] markup from button labels (v1 did the same). */
 const plainLabel = (s: string) =>
   s.replace(/\[\[([^\]|]+)(?:\|([^\]]+))?\]\]/g, (_m, a: string, b?: string) => b || a);
+
+/**
+ * Go to a district (v1: goDistrict): autosave, then the first-visit narration and arrival, then the
+ * district screen. `keepClimb` keeps the Tower floor, which v1 always reset: `Session.resume` uses
+ * it so a reload mid-climb resumes at the floor (the Tower tutorial promises that).
+ */
+export async function gotoDistrict(
+  session: SessionPort,
+  ctx: SceneContext,
+  id: DistrictId,
+  opts: { keepClimb?: boolean } = {},
+): Promise<void> {
+  const P = session.deps.presenter;
+  const game = session.game;
+  game.district = id;
+  if (!game.unlocked.includes(id)) game.unlocked.push(id);
+  game.inTower = false;
+  // PARITY: v1 resets the floor but not the fight (known-issues).
+  if (!opts.keepClimb) game.towerFloor = 0;
+  session.save();
+  session.route = { kind: 'district' };
+  if (!game.districtIntros.includes(id)) {
+    game.districtIntros.push(id);
+    P.story(DISTRICTS[id].name);
+    await ctx.narrate(DISTRICTS[id].intro);
+    // Tremé has no arrival scene: the prologue is its first visit.
+    if (id !== 'treme') await ARRIVALS[id](ctx);
+  }
+}
 
 /** Build the scene API for one Director run. */
 export function createSceneContext(session: SessionPort, signal: AbortSignal): SceneContext {
@@ -95,21 +125,7 @@ export function createSceneContext(session: SessionPort, signal: AbortSignal): S
     },
     board: text => P.board(text),
 
-    async goto(id) {
-      const game = g();
-      game.district = id;
-      if (!game.unlocked.includes(id)) game.unlocked.push(id);
-      game.inTower = false;
-      session.save();
-      session.route = { kind: 'district' };
-      if (!game.districtIntros.includes(id)) {
-        game.districtIntros.push(id);
-        P.story(DISTRICTS[id].name);
-        await ctx.narrate(DISTRICTS[id].intro);
-        // Tremé has no arrival scene: the prologue is its first visit.
-        if (id !== 'treme') await ARRIVALS[id](ctx);
-      }
-    },
+    goto: id => gotoDistrict(session, ctx, id),
     returnTo: route => {
       session.route = route;
     },

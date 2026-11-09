@@ -14,7 +14,8 @@ These go away by construction. Where the visible sequence changes, the change is
 | A scene that forgets to redraw its place leaves a dead Continue button | Places are routes; the Director returns to the route when a scene settles |
 | `say()` with an unknown NPC id renders the raw id | `NpcId` union type: compile error |
 | The title screen's settings object is the same object as the new save's settings | Settings copied, not aliased |
-| `towerFight` is missing from `newState`, so old saves never back-fill it | One typed `ResumePoint` |
+| `towerFight` is missing from `newState`, so old saves never back-fill it | `towerFloor` and `towerFight` are typed save fields; the v3 migration fills them |
+| Reloading mid-Tower restarts the climb (resume goes through `goDistrict`, which zeroes `towerFloor`), though the Tower tutorial says a reload resumes at your floor | `Session.resume` keeps the climb (`gotoDistrict(…, { keepClimb: true })`); travel still resets it, as in v1 |
 | The title-screen mute setting is ignored before a game exists | Audio reads the settings store, not the save |
 | `[[Hush\|the Hush]]` links nothing (the glossary key is `the hush`) | `tools/completeness.ts` checks every `[[link]]`; this one is allowlisted there (`ALLOWED_UNLINKED`) until its P6 fix |
 | Street events' `G.xp` doesn't wait for the level-up popup; other XP grants do | One `s.xp()`, always awaited (allowlisted deviation) |
@@ -33,9 +34,14 @@ These go away by construction. Where the visible sequence changes, the change is
 | Boss telegraphs are logged on the same turn as the move (only `charge` moves give a real warning). | `05_engine.js:457` | design call |
 | Play the Blues is always timed, even with auto rhythm (auto rhythm covers only the On the One bar), so players who can't tap in time can't land the Click's shield break well. Found in the P3 accessibility pass. | `07_ui_combat.js` (v2: `battleController.ts`) | design call |
 | Spar promises "half the Doubloons" but pays normally. | `08_world.js:203` | bug |
-| NG+ re-grants story gear (`thr_regalia`, `ch_fang`), creating duplicates. | `09_story.js` | bug |
+| NG+ re-grants story gear (`thr_regalia`, `ch_fang`), creating duplicates, and resets `legendBuilt`, so Ti-Jacques builds a second legendary instrument. | `09_story.js` | bug |
 | `flags.endingCount` resets every NG+, so it is always 1. | `09_story.js:309` | bug |
 | The broadcaster's "smash" path advances the story step even if you flee, and records no flag. | `09_story.js:172` | bug |
 | Fixed prices (Ð30, Ð80, Ð150…) bypass the district/roots price modifier. | `08_world.js` | design call |
+| `towerFight` survives travel and waking at the club, so after a defeat on a floor's second fight the next climb starts the Lobby at its second fight. | `09_story.js:229`, `08_world.js:35` | bug |
+| Climbing again after beating the Conductor (walk away from the Click, leave, come back) sets the story back to `face_conductor`, refights him (floor 3 never reads `boss_conductor`) and repeats the +50% rally (`towerRested2` is never read). Should leaving the Tower restart the climb at all? | `09_story.js:251-260`, `08_world.js:35` | design call |
+| Leaving the Tower (a boss walk-away, the Click win, travel) never re-clamps Heart and Funk, so they can stay up to 25% over the maximum. | `09_story.js:255,266,268`, `08_world.js:35` | bug |
+| The second line is fixed when it forms: anyone recruited, or any quest finished, afterwards never joins. | `09_story.js:204` | design call |
+| The credits' New Game+ button always says "enemies +30%" (the confirm shows the real number), and the confirm doesn't say half your Doubloons go. | `09_story.js:302,304` | text |
 | Quest description drift: *Lost Eye* says "on the streets" but it's a scripted fight at the square. | `04_data_world.js` | text |
 | Dead fields and flags: `BOSSES.drop`, `PLACES.kind`, `QUESTS.giver`, `BANDMATES.passiveId`, `BLUE_NOTES.degree`, `pralineLady`, `lastRest`, `playTime`, `flags.boudinGiven`, `flags.towerRested2`, item `pralinelady_king`. | various | cleanup |

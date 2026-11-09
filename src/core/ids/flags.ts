@@ -36,6 +36,24 @@ export const FLAG_IDS = [
   'metClothilde',
   /** Met Mambo Rosalie at her temple (first talk). Opens the Restless Haints quest. */
   'metRosalie',
+  /** The second line walked into the Tower plaza (the climb's first entry: its two narration lines). */
+  'towerEntered',
+  /** Each Tower floor's intro has played (towerFlow; boss floors replay theirs regardless). */
+  'towerintro_0',
+  /** See towerintro_0: the Server Floors. */
+  'towerintro_1',
+  /** See towerintro_0: the Studio Floor. */
+  'towerintro_2',
+  /** See towerintro_0: the Booth. */
+  'towerintro_3',
+  /** See towerintro_0: the Crown. */
+  'towerintro_4',
+  /** Rested at the Studio Floor vending machine (once per playthrough; hides the option). */
+  'towerRested',
+  /** Set after the Conductor's +50% rally. Nothing reads it (v1 dead flag, kept for parity; P6 removes it). */
+  'towerRested2',
+  /** The Click is broken (the ending). The lobby shows Look up; the club offers New Game+. */
+  'ending',
 ] as const;
 
 /** A one-time story beat. */

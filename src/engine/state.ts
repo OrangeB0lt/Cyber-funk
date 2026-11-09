@@ -69,6 +69,8 @@ export function newGame(
     ngPlus: ngPlus || 0,
     secondLine: null,
     inTower: false,
+    towerFloor: 0,
+    towerFight: 0,
     resume: null,
   };
   (r.gear || []).forEach(g => {

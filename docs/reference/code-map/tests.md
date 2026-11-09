@@ -16,6 +16,7 @@ Generated reference. Start with the [guide](../../architecture/code-map.md) for 
 | [src/app/save/format.test.ts](#src-app-save-format-test-ts) | — |
 | [src/app/save/slots.test.ts](#src-app-save-slots-test-ts) | — |
 | [src/app/save/sync.test.ts](#src-app-save-sync-test-ts) | — |
+| [src/app/session.test.ts](#src-app-session-test-ts) | — |
 | [src/content/sprites/compile.test.ts](#src-content-sprites-compile-test-ts) | Sprite compilation: grids and variants resolve to the right pixels, and runs draw them back exactly. |
 | [src/core/rng.test.ts](#src-core-rng-test-ts) | — |
 | [src/engine/combat/combat.test.ts](#src-engine-combat-combat-test-ts) | Combat mechanics, one behavior per test. |
@@ -86,7 +87,7 @@ The React presenter's story view: what the screen holds as a scene runs.
 - Source: [src/app/save/format.test.ts](../../../src/app/save/format.test.ts)
 - Imports: core: [rng](core.md#src-core-rng-ts) · engine: [index](engine.md#src-engine-index-ts) · app: [save/format](app.md#src-app-save-format-ts)
 - Packages: `vitest`
-- Suites: “save format v2”
+- Suites: “save format”
 
 <a id="src-app-save-slots-test-ts"></a>
 
@@ -105,6 +106,15 @@ The React presenter's story view: what the screen holds as a scene runs.
 - Imports: core: [ids/saves](core.md#src-core-ids-saves-ts), [rng](core.md#src-core-rng-ts) · engine: [index](engine.md#src-engine-index-ts) · app: [save/cloud](app.md#src-app-save-cloud-ts), [save/format](app.md#src-app-save-format-ts), [save/protocol](app.md#src-app-save-protocol-ts), [save/slots](app.md#src-app-save-slots-ts), [save/storage](app.md#src-app-save-storage-ts), [save/sync](app.md#src-app-save-sync-ts)
 - Packages: `vitest`
 - Suites: “cloud sync”
+
+<a id="src-app-session-test-ts"></a>
+
+### src/app/session.test.ts
+
+- Source: [src/app/session.test.ts](../../../src/app/session.test.ts)
+- Imports: engine: [index](engine.md#src-engine-index-ts) · app: [save/storage](app.md#src-app-save-storage-ts), [session](app.md#src-app-session-ts), [testing/scriptedPresenter](app.md#src-app-testing-scriptedpresenter-ts)
+- Packages: `vitest`
+- Suites: “the Tower climb across a reload”
 
 <a id="src-content-sprites-compile-test-ts"></a>
 

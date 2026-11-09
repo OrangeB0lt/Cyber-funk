@@ -18,7 +18,7 @@ const rng = () => {
   return r.save();
 };
 
-describe('save format v2', () => {
+describe('save format', () => {
   it('round-trips a game and its random stream', () => {
     const g = game();
     g.story = { act: 'treme', step: 'congo_square' };
@@ -39,6 +39,23 @@ describe('save format v2', () => {
     expect(
       decodeSave(JSON.stringify({ ...env, game: { ...env.game, story: { act: 'treme', step: 'nope' } } })),
     ).toBe('invalid');
+  });
+
+  it('loads a v2 save as v3, with the Tower climb at the start', () => {
+    const env = JSON.parse(encodeSave(game(), rng()));
+    delete env.game.towerFloor;
+    delete env.game.towerFight;
+    const r = decodeSave(JSON.stringify({ ...env, version: 2 }));
+    expect(r).toMatchObject({ game: { towerFloor: 0, towerFight: 0 } });
+  });
+
+  it('round-trips the after-boss checkpoint and the climb', () => {
+    const g = game();
+    Object.assign(g, { towerFloor: 3, towerFight: 1, resume: { kind: 'afterBoss', boss: 'rougarou' } });
+    expect(decodeSave(encodeSave(g, rng()))).toMatchObject({ game: g });
+    const bad = JSON.parse(encodeSave(g, rng()));
+    bad.game.resume.boss = 'nobody';
+    expect(decodeSave(JSON.stringify(bad))).toBe('invalid');
   });
 
   it('refuses an older version that has no migration', () => {

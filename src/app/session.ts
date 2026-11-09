@@ -29,7 +29,7 @@ import type { BossId } from '@core/ids/enemies';
 import type { BattleOutcome, SessionPort } from './sessionPort';
 import { decodeSave, encodeSave, type LoadError } from './save/format';
 import type { SaveStorage } from './save/storage';
-import { createSceneContext } from './sceneContext';
+import { createSceneContext, gotoDistrict } from './sceneContext';
 
 /** What a session needs from its environment. */
 export interface SessionDeps {
@@ -161,8 +161,10 @@ export class Session implements SessionPort {
     if (!DISTRICTS[g.district] || !g.unlocked.includes(g.district)) g.district = 'treme';
     const district = g.district;
     return this.run(async s => {
-      await s.goto(district);
-      if (pending && pending.context !== 'street') s.toast(TEXT.fightRestarts);
+      // DEVIATION: v1's resume went through goDistrict, which reset the Tower floor; a reload keeps
+      // the climb (known-issues, "fixed by the new architecture").
+      await gotoDistrict(this, s, district, { keepClimb: true });
+      if (pending?.kind === 'battle' && pending.context !== 'street') s.toast(TEXT.fightRestarts);
     }, 'resume');
   }
 

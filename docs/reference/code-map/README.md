@@ -6,7 +6,7 @@ Every source file in `src/`, `server/`, `tools/` and `tests/`, with its declarat
 
 For how the pieces work together (boot, a story line, a battle, a save reaching Postgres), read the hand-written [guide](../../architecture/code-map.md) first.
 
-**238** source files · **32** test files · **1050** top-level declarations · **407** members · **2911** "uses" edges
+**238** source files · **33** test files · **1051** top-level declarations · **407** members · **2917** "uses" edges
 
 ## Pages
 
@@ -20,7 +20,7 @@ For how the pieces work together (boot, a story line, a battle, a save reaching 
 | [src/ui and src/main.tsx](ui.md) | 39 | React components that render the two stores (game and view) and call GameApp commands, plus the browser entry point src/main.tsx. |
 | [server](server.md) | 15 | The cloud-save API: the Fastify app, its routes, the PostgreSQL repository and Drizzle schema, migrations and player-code auth. |
 | [tools](tools.md) | 21 | Node scripts: the parity oracles against v1, the balance sim and fight trace, the content validator, the layer check, the one-time migration codegen, and this generator. |
-| [tests (and every test file)](tests.md) | 35 | The integration and e2e suites in tests/, plus every co-located *.test.ts and *.spec.ts file in the repo, each listed with what it covers. |
+| [tests (and every test file)](tests.md) | 36 | The integration and e2e suites in tests/, plus every co-located *.test.ts and *.spec.ts file in the repo, each listed with what it covers. |
 
 ## Layers
 
@@ -38,7 +38,7 @@ flowchart TD
   tools["tools"]
   tests["tests (and every test file)"]
   app -->|7| content
-  app -->|59| core
+  app -->|60| core
   app -->|8| engine
   app -->|9| narrative
   content -->|145| core
@@ -48,10 +48,10 @@ flowchart TD
   narrative -->|13| core
   server -->|8| app
   server -->|1| core
-  tests -->|38| app
+  tests -->|41| app
   tests -->|16| content
   tests -->|67| core
-  tests -->|20| engine
+  tests -->|21| engine
   tests -->|4| narrative
   tests -->|6| server
   tests -->|24| tools
@@ -98,7 +98,7 @@ Interfaces with methods are where one part of the code calls into another withou
 | [KeyValue](app.md#src-app-save-storage-ts--keyvalue) (app/save/storage) | 3 | [app/save/storage](app.md#src-app-save-storage-ts) | [app/save/slots](app.md#src-app-save-slots-ts), [app/save/sync](app.md#src-app-save-sync-ts) |
 | [SaveStorage](app.md#src-app-save-storage-ts--savestorage) (app/save/storage) | 3 | [app/save/slots](app.md#src-app-save-slots-ts), [app/save/storage](app.md#src-app-save-storage-ts) | [app/game](app.md#src-app-game-ts), [app/save/slots](app.md#src-app-save-slots-ts), [app/save/sync](app.md#src-app-save-sync-ts), [app/session](app.md#src-app-session-ts) |
 | [SyncDeps](app.md#src-app-save-sync-ts--syncdeps) (app/save/sync) | 3 | [server/sync.test](tests.md#server-sync-test-ts), [app/game](app.md#src-app-game-ts), [app/save/sync.test](tests.md#src-app-save-sync-test-ts) | [app/save/sync](app.md#src-app-save-sync-ts) |
-| [SessionDeps](app.md#src-app-session-ts--sessiondeps) (app/session) | 4 | [app/game](app.md#src-app-game-ts), [tests/integration/playthrough.test](tests.md#tests-integration-playthrough-test-ts), [tests/integration/slice.test](tests.md#tests-integration-slice-test-ts), [tests/integration/support/crawl](tests.md#tests-integration-support-crawl-ts), [tools/parity/transcripts.test](tests.md#tools-parity-transcripts-test-ts) | [app/session](app.md#src-app-session-ts) |
+| [SessionDeps](app.md#src-app-session-ts--sessiondeps) (app/session) | 4 | [app/game](app.md#src-app-game-ts), [app/session.test](tests.md#src-app-session-test-ts), [tests/integration/playthrough.test](tests.md#tests-integration-playthrough-test-ts), [tests/integration/slice.test](tests.md#tests-integration-slice-test-ts), [tests/integration/support/crawl](tests.md#tests-integration-support-crawl-ts), [tools/parity/transcripts.test](tests.md#tools-parity-transcripts-test-ts) | [app/session](app.md#src-app-session-ts) |
 | [SessionPort](app.md#src-app-sessionport-ts--sessionport) (app/sessionPort) | 1 | [app/session](app.md#src-app-session-ts) | [app/battleController](app.md#src-app-battlecontroller-ts), [app/sceneContext](app.md#src-app-scenecontext-ts) |
 | [ScriptPolicy](app.md#src-app-testing-scriptedpresenter-ts--scriptpolicy) (app/testing/scriptedPresenter) | 6 | [tests/integration/playthrough.test](tests.md#tests-integration-playthrough-test-ts), [tests/integration/slice.test](tests.md#tests-integration-slice-test-ts), [tests/integration/support/crawl](tests.md#tests-integration-support-crawl-ts) | [app/testing/scriptedPresenter](app.md#src-app-testing-scriptedpresenter-ts) |
 | [Rng](core.md#src-core-rng-ts--rng) (core/rng) | 7 | [app/testing/rng](app.md#src-app-testing-rng-ts), [core/rng](core.md#src-core-rng-ts) | [app/battleController](app.md#src-app-battlecontroller-ts), [app/game](app.md#src-app-game-ts), [app/sceneContext](app.md#src-app-scenecontext-ts), [app/session](app.md#src-app-session-ts), [content/bosses/captain_hush](content.md#src-content-bosses-captain-hush-ts), [content/bosses/rougarou](content.md#src-content-bosses-rougarou-ts) … +23 |

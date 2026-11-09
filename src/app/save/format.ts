@@ -33,7 +33,7 @@ import type { DistrictId } from '@core/ids/world';
 import type { GameState } from '@core/types';
 
 /** The current save format. */
-export const SAVE_VERSION = 2;
+export const SAVE_VERSION = 3;
 /** Prefix of exported save codes. */
 export const CODE_PREFIX = 'CF2:';
 
@@ -76,6 +76,7 @@ const resume = z.union([
     kind: z.literal('battle'),
     context: z.enum(['quest', 'boss', 'bounty', 'cutting', 'spar', 'street', 'tower', 'tutorial']),
   }),
+  z.object({ kind: z.literal('afterBoss'), boss: z.enum(BOSS_IDS) }),
 ]);
 
 /** The save schema. */
@@ -140,6 +141,8 @@ export const gameStateSchema = z.object({
   ngPlus: count,
   secondLine: z.array(z.object({ id: z.enum(SECOND_LINE_IDS).or(z.string()), name: z.string() })).nullable(),
   inTower: z.boolean(),
+  towerFloor: count,
+  towerFight: count,
   resume: resume.nullable(),
 });
 
@@ -165,8 +168,11 @@ export interface LoadedSave {
   savedAt: string;
 }
 
-/** Migrations from older v2+ formats, keyed by the version they upgrade *from*. */
-const MIGRATIONS: Record<number, (game: Record<string, unknown>) => Record<string, unknown>> = {};
+/** Migrations from older v2+ formats, keyed by the version they upgrade *from*. Never edit one. */
+const MIGRATIONS: Record<number, (game: Record<string, unknown>) => Record<string, unknown>> = {
+  /** v3 (P4): Tower progress. */
+  2: game => ({ ...game, towerFloor: 0, towerFight: 0 }),
+};
 
 /** Why a save couldn't be read. */
 export type LoadError = 'empty' | 'corrupt' | 'too-new' | 'invalid';
