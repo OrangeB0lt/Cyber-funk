@@ -9,7 +9,7 @@ Side quests. The logic lives in the scenes; this is what the journal shows.
 | Red Beans Monday (`redbeans`) | Tremé | — | Her sit-down meals get stronger. | 40 | Ð30 | Mama Roux needs a bag of red beans from the French Market. |
 | The Confiscated Horn (`horn`) | French Quarter & Frenchmen | 3 | Busker's Mouthpiece (charm). | 80 | Ð60 | Beat 3 Hush Patrolmen to get a busker's trumpet back. |
 | Cutting Contest (`cutting`) | French Quarter & Frenchmen | — | Sugar Desmarais joins your band. | 150 | Ð120 | Beat three rivals in a row: "Hot Rod" Broussard, Big Mae Boudreaux, and Henri "Two-Tone" LeBlanc. |
-| The Lost Eye (`lost_eye`) | French Quarter & Frenchmen | — | Zinnia's Spare Eye (charm). Zinnia joins the second line. | 90 | Ð70 | A Neon Mime stole Madame Zinnia's cybernetic eye. Shake it loose on the streets of the Quarter. |
+| The Lost Eye (`lost_eye`) | French Quarter & Frenchmen | — | Zinnia's Spare Eye (charm). Zinnia joins the second line. | 90 | Ð70 | A Neon Mime stole Madame Zinnia's cybernetic eye. Ask around Jackson Square and shake it loose. |
 | Static's Contract (`static_contract`) | Storyville | — | Static joins your band. | 160 | Ð120 | Escort Static past a Repo Drone squad: two fights in a row. |
 | The Professor's Missing Rolls (`rolls`) | Storyville | 3 | Free Sheet Music. Theo joins the second line. | 120 | Ð80 | Find 3 player-piano rolls in street events around Storyville. |
 | Defend the Fais Do-Do (`faisdodo`) | Manchac Swamp | — | Remy Guidry joins your band. | 200 | Ð150 | Fight off two waves of Chrome Gators at the dancehall. |

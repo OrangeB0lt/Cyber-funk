@@ -18,14 +18,6 @@ import { DISTRICT_IDS, PLACE_IDS, type PlaceId } from '@core/ids/world';
 import type { StepDef } from '@core/types';
 import { ACTS, BOSSES, DISTRICTS, GLOSSARY, PLACES, BOSS_SCENES, PLACE_SCENES } from '@content/index';
 
-/**
- * [[links]] that knowingly name no glossary entry. Each is a v1 bug kept for parity (ADR-0003) and
- * fixed after the port.
- */
-export const ALLOWED_UNLINKED: Record<string, string> = {
-  hush: 'PARITY: v1 writes [[Hush|the Hush]] but the glossary key is "the hush" (docs/known-issues.md, fixed in P6).',
-};
-
 /** Every problem found, as a sentence a writer can act on. Empty when the game is whole. */
 export function checkCompleteness(): string[] {
   const problems: string[] = [];
@@ -86,7 +78,7 @@ function checkLexiconLinks(fail: (msg: string) => void): void {
     const text = stripComments(fs.readFileSync(path.join(root, rel), 'utf8'));
     for (const m of text.matchAll(LINK)) {
       const key = m[1]!.replace(/\\'/g, "'").trim().toLowerCase();
-      if (key in GLOSSARY || ALLOWED_UNLINKED[key]) continue;
+      if (key in GLOSSARY) continue;
       const line = text.slice(0, m.index).split('\n').length;
       fail(
         `src/content/${rel}:${line}: [[${m[1]}]] names no glossary entry (keys are lowercase, e.g. "the hush").`,

@@ -28,7 +28,7 @@ export type TranscriptEntry =
   /** A block of cards (the roster, the epilogue, the credits). */
   | { t: 'cards'; style: CardStyle; items: StoryCard[] }
   | { t: 'choose'; options: string[]; picked: string; label: string }
-  | { t: 'confirm'; title: string; answer: boolean }
+  | { t: 'confirm'; title: string; body: string; answer: boolean }
   | { t: 'sheet'; req: SheetRequest }
   | { t: 'toast'; text: string }
   | { t: 'levelup'; level: number }
@@ -104,10 +104,10 @@ export class ScriptedPresenter implements Presenter {
     this.transcript.push({ t: 'choose', options: options.map(o => o.label), picked, label });
     return picked;
   }
-  async confirm(title: string, _b: string, _y: string, _n: string, signal: AbortSignal): Promise<boolean> {
+  async confirm(title: string, body: string, _y: string, _n: string, signal: AbortSignal): Promise<boolean> {
     abortable(signal);
     const answer = this.policy.confirm?.(title) ?? true;
-    this.transcript.push({ t: 'confirm', title, answer });
+    this.transcript.push({ t: 'confirm', title, body, answer });
     return answer;
   }
   async sheet(req: SheetRequest, signal: AbortSignal): Promise<void> {

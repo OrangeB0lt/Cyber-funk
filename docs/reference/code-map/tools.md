@@ -236,21 +236,18 @@ Is the game whole? Checks that every place has something to do, every boss has i
 - Source: [tools/completeness.ts](../../../tools/completeness.ts)
 - Imports: core: [ids/enemies](core.md#src-core-ids-enemies-ts), [ids/story](core.md#src-core-ids-story-ts), [ids/world](core.md#src-core-ids-world-ts), [types/index](core.md#src-core-types-index-ts) · content: [index](content.md#src-content-index-ts)
 - Packages: `node:fs`, `node:path`, `node:url`
-- Imported by: tests: [integration/support/crawl](tests.md#tests-integration-support-crawl-ts)
 - Tested by: [completeness.test](tests.md#tools-completeness-test-ts)
 - Types used: **[core/ids/world](core.md#src-core-ids-world-ts)** [PlaceId](core.md#src-core-ids-world-ts--placeid) · **[core/types/content](core.md#src-core-types-content-ts)** [StepDef](core.md#src-core-types-content-ts--stepdef)
 
 Declarations:
 
-- <a id="tools-completeness-ts--allowed-unlinked"></a>**ALLOWED_UNLINKED** · *const* `: Record<string, string>` — [[links]] that knowingly name no glossary entry.
-  - used by: here [checkLexiconLinks](#tools-completeness-ts--checklexiconlinks) · **[tests/integration/support/crawl](tests.md#tests-integration-support-crawl-ts)** [textProblem](tests.md#tests-integration-support-crawl-ts--textproblem)
 - <a id="tools-completeness-ts--checkcompleteness"></a>**checkCompleteness** · *function* `(): string[]` — Every problem found, as a sentence a writer can act on.
   - uses: here [checkLexiconLinks](#tools-completeness-ts--checklexiconlinks) · **[content/bosses/index](content.md#src-content-bosses-index-ts)** [BOSSES](content.md#src-content-bosses-index-ts--bosses) · **[content/districts/index](content.md#src-content-districts-index-ts)** [DISTRICTS](content.md#src-content-districts-index-ts--districts) · **[content/index](content.md#src-content-index-ts)** [BOSS_SCENES](content.md#src-content-index-ts--boss-scenes), [PLACE_SCENES](content.md#src-content-index-ts--place-scenes) · **[content/places](content.md#src-content-places-ts)** [PLACES](content.md#src-content-places-ts--places) · **[content/story/acts](content.md#src-content-story-acts-ts)** [ACTS](content.md#src-content-story-acts-ts--acts) · **[core/ids/enemies](core.md#src-core-ids-enemies-ts)** [BOSS_IDS](core.md#src-core-ids-enemies-ts--boss-ids) · **[core/ids/story](core.md#src-core-ids-story-ts)** [ACT_ORDER](core.md#src-core-ids-story-ts--act-order), [ACT_STEPS](core.md#src-core-ids-story-ts--act-steps) · **[core/ids/world](core.md#src-core-ids-world-ts)** [DISTRICT_IDS](core.md#src-core-ids-world-ts--district-ids), [PLACE_IDS](core.md#src-core-ids-world-ts--place-ids)
   - used by: here [(top level)](#tools-completeness-ts--top-level) · tests: [completeness.test](tests.md#tools-completeness-test-ts)
 - <a id="tools-completeness-ts--link"></a>**LINK** · *const, internal* — The [[key]] / [[key|display]] markup the lexicon links (src/app/lexicon.ts).
   - used by: here [checkLexiconLinks](#tools-completeness-ts--checklexiconlinks)
 - <a id="tools-completeness-ts--checklexiconlinks"></a>**checkLexiconLinks** · *function, internal* `(fail: (msg: string) => void): void` — Every explicit [[link]] in content source resolves to a glossary entry (else it renders as plain text).
-  - uses: here [ALLOWED_UNLINKED](#tools-completeness-ts--allowed-unlinked), [LINK](#tools-completeness-ts--link), [stripComments](#tools-completeness-ts--stripcomments) · **[content/glossary](content.md#src-content-glossary-ts)** [GLOSSARY](content.md#src-content-glossary-ts--glossary)
+  - uses: here [LINK](#tools-completeness-ts--link), [stripComments](#tools-completeness-ts--stripcomments) · **[content/glossary](content.md#src-content-glossary-ts)** [GLOSSARY](content.md#src-content-glossary-ts--glossary)
   - used by: here [checkCompleteness](#tools-completeness-ts--checkcompleteness)
 - <a id="tools-completeness-ts--stripcomments"></a>**stripComments** · *function, internal* `(src: string): string` — Source with comments blanked out (kept line-for-line so line numbers stay right).
   - used by: here [checkLexiconLinks](#tools-completeness-ts--checklexiconlinks)

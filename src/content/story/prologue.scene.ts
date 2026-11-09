@@ -29,10 +29,8 @@ export const prologue: Scene = async s => {
   await s.narrate(
     'The dirge goes down Claiborne under the overpass. The whole neighborhood falls in behind. Umbrellas up. Handkerchiefs out. Nobody dancing yet. Not yet.',
   );
-  // PARITY: v1's [[Hush|the Hush]] names no glossary entry (the key is "the hush"), so it renders as
-  // plain text. Kept until P6 (docs/known-issues.md).
   await s.narrate(
-    'Then the [[MoodSync]] speaker on the corner cuts out, and a white chrome van pulls across the road, and the [[Hush|the Hush]] get out.',
+    'Then the [[MoodSync]] speaker on the corner cuts out, and a white chrome van pulls across the road, and [[the Hush]] get out.',
   );
   await s.say('hush', '"Unlicensed assembly. Unlicensed syncopation detected. Cease all swing. Disperse."');
   await s.narrate('The band stops. Mama Roux does not. She looks at you. Everybody looks at you.');

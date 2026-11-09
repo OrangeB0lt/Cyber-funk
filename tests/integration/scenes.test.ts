@@ -3,6 +3,7 @@
  * these name the behavior a case exists to show, so a re-baseline can't quietly undo it.
  */
 import { describe, expect, it } from 'vitest';
+import { QUESTS } from '@content/data';
 import { cases, runTs } from './support/transcriptCases';
 
 const run = (name: string) => {
@@ -30,5 +31,33 @@ describe('scene rules', () => {
     expect(options && options.t === 'options' && options.labels.some(l => l.includes('legendary'))).toBe(
       false,
     );
+  });
+
+  it("the credits' New Game+ button names the strength of the next cycle", async () => {
+    const { entries } = await run('credits at New Game+2');
+    const choice = entries.find(e => e.t === 'choose');
+    expect(choice && choice.t === 'choose' && choice.options[0]).toContain('+90%');
+  });
+
+  it('the New Game+ confirm says half your Doubloons go', async () => {
+    const c = cases.find(x => x.name === 'credits, New Game+')!;
+    const { ScriptedPresenter } = await import('@app/testing/scriptedPresenter');
+    const seen: string[] = [];
+    const original = ScriptedPresenter.prototype.confirm;
+    ScriptedPresenter.prototype.confirm = async function (title, body, yes, no, signal) {
+      seen.push(body);
+      return original.call(this, title, body, yes, no, signal);
+    };
+    try {
+      await runTs(c, 0.5);
+    } finally {
+      ScriptedPresenter.prototype.confirm = original;
+    }
+    expect(seen.join(' ')).toContain('half your Doubloons');
+  });
+
+  it("the Lost Eye's journal points at Jackson Square, where its fight is", () => {
+    expect(QUESTS.lost_eye.desc).toContain('Jackson Square');
+    expect(QUESTS.lost_eye.desc).not.toContain('streets');
   });
 });

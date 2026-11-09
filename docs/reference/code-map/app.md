@@ -1270,7 +1270,7 @@ A Presenter for tests and headless runs: answers every prompt instantly accordin
 - Source: [src/app/testing/scriptedPresenter.ts](../../../src/app/testing/scriptedPresenter.ts)
 - Imports: core: [helpers](core.md#src-core-helpers-ts), [ids/world](core.md#src-core-ids-world-ts), [types/index](core.md#src-core-types-index-ts) · narrative: [types](narrative.md#src-narrative-types-ts) · engine: [index](engine.md#src-engine-index-ts)
 - Imported by: tests: [integration/support/crawl](tests.md#tests-integration-support-crawl-ts), [integration/support/transcriptCases](tests.md#tests-integration-support-transcriptcases-ts)
-- Tested by: [session.test](tests.md#src-app-session-test-ts), [playthrough.test](tests.md#tests-integration-playthrough-test-ts), [slice.test](tests.md#tests-integration-slice-test-ts)
+- Tested by: [session.test](tests.md#src-app-session-test-ts), [playthrough.test](tests.md#tests-integration-playthrough-test-ts), [scenes.test](tests.md#tests-integration-scenes-test-ts), [slice.test](tests.md#tests-integration-slice-test-ts)
 - Types used: **[core/ids/world](core.md#src-core-ids-world-ts)** [NpcId](core.md#src-core-ids-world-ts--npcid) · **[core/types/battle](core.md#src-core-types-battle-ts)** [Battle](core.md#src-core-types-battle-ts--battle), [LevelUp](core.md#src-core-types-battle-ts--levelup), [PlayerIntent](core.md#src-core-types-battle-ts--playerintent), [TimingSpec](core.md#src-core-types-battle-ts--timingspec), [VictorySummary](core.md#src-core-types-battle-ts--victorysummary) · **[core/types/content](core.md#src-core-types-content-ts)** [TimingGradeDef](core.md#src-core-types-content-ts--timinggradedef) · **[narrative/types](narrative.md#src-narrative-types-ts)** [CardStyle](narrative.md#src-narrative-types-ts--cardstyle), [ChoiceView](narrative.md#src-narrative-types-ts--choiceview), [Presenter](narrative.md#src-narrative-types-ts--presenter), [Route](narrative.md#src-narrative-types-ts--route), [SheetRequest](narrative.md#src-narrative-types-ts--sheetrequest), [SoundCue](narrative.md#src-narrative-types-ts--soundcue), [StoryCard](narrative.md#src-narrative-types-ts--storycard), [StoryLineSpec](narrative.md#src-narrative-types-ts--storylinespec)
 
 Declarations:
@@ -1322,9 +1322,9 @@ Declarations:
   - <a id="src-app-testing-scriptedpresenter-ts--scriptedpresenter-choose"></a>**choose** · *method* `(options: readonly ChoiceView[], signal: AbortSignal): Promise<string>` — Wait for a choice; resolves with its key.
     - uses: here [ScriptPolicy.choose](#src-app-testing-scriptedpresenter-ts--scriptpolicy-choose), [abortable](#src-app-testing-scriptedpresenter-ts--abortable)
     - *no references found*
-  - <a id="src-app-testing-scriptedpresenter-ts--scriptedpresenter-confirm"></a>**confirm** · *method* `(title: string, _b: string, _y: string, _n: string, signal: AbortSignal): Promise<boolean>` — A yes/no dialog.
+  - <a id="src-app-testing-scriptedpresenter-ts--scriptedpresenter-confirm"></a>**confirm** · *method* `(title: string, body: string, _y: string, _n: string, signal: AbortSignal): Promise<boolean>` — A yes/no dialog.
     - uses: here [ScriptPolicy.confirm](#src-app-testing-scriptedpresenter-ts--scriptpolicy-confirm), [abortable](#src-app-testing-scriptedpresenter-ts--abortable)
-    - *no references found*
+    - used by: tests: [scenes.test](tests.md#tests-integration-scenes-test-ts)
   - <a id="src-app-testing-scriptedpresenter-ts--scriptedpresenter-sheet"></a>**sheet** · *method* `(req: SheetRequest, signal: AbortSignal): Promise<void>` — Open a sheet and wait until it's closed.
     - uses: here [ScriptPolicy.sheet](#src-app-testing-scriptedpresenter-ts--scriptpolicy-sheet), [abortable](#src-app-testing-scriptedpresenter-ts--abortable)
     - *no references found*

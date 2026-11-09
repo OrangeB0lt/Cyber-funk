@@ -17,7 +17,7 @@ These go away by construction. Where the visible sequence changed, the transcrip
 | `towerFight` is missing from `newState`, so old saves never back-fill it | `towerFloor` and `towerFight` are typed save fields; the v3 migration fills them |
 | Reloading mid-Tower restarts the climb (resume goes through `goDistrict`, which zeroes `towerFloor`), though the Tower tutorial says a reload resumes at your floor | `Session.resume` keeps the climb (`gotoDistrict(…, { keepClimb: true })`); travel still resets it, as in v1 |
 | The title-screen mute setting is ignored before a game exists | Audio reads the settings store, not the save |
-| `[[Hush\|the Hush]]` links nothing (the glossary key is `the hush`) | `tools/completeness.ts` checks every `[[link]]`; this one is allowlisted there (`ALLOWED_UNLINKED`) until its P6 fix |
+| `[[Hush\|the Hush]]` links nothing (the glossary key is `the hush`) | `tools/completeness.ts` and the crawler check every `[[link]]`; the prologue's link was fixed in P6 and the allowlist deleted |
 | Street events' `G.xp` doesn't wait for the level-up popup; other XP grants do | One `s.xp()`, always awaited (allowlisted deviation) |
 | The `cleanse` effect always removes bad statuses; its documented `kind` field is ignored | `CleanseEffect` has no such field (it would clash with the effect's own `kind`); its type documents what it does: remove bad statuses, or `only` one. Removing good statuses is the `strip` effect. Nothing in the content asked for more (checked in P6) |
 
@@ -32,8 +32,6 @@ These go away by construction. Where the visible sequence changed, the transcrip
 | Fixed prices (Ð30, Ð80, Ð150…) bypass the district/roots price modifier. | `08_world.js` | design call |
 | Climbing again after beating the Conductor (walk away from the Click, leave, come back) sets the story back to `face_conductor`, refights him (floor 3 never reads `boss_conductor`) and repeats the +50% rally (`towerRested2` is never read). Should leaving the Tower restart the climb at all? | `09_story.js:251-260`, `08_world.js:35` | design call |
 | The second line is fixed when it forms: anyone recruited, or any quest finished, afterwards never joins. | `09_story.js:204` | design call |
-| The credits' New Game+ button always says "enemies +30%" (the confirm shows the real number), and the confirm doesn't say half your Doubloons go. | `09_story.js:302,304` | text |
-| Quest description drift: *Lost Eye* says "on the streets" but it's a scripted fight at the square. | `04_data_world.js` | text |
 | Dead fields and flags: `BOSSES.drop`, `PLACES.kind`, `QUESTS.giver`, `BANDMATES.passiveId`, `BLUE_NOTES.degree`, `pralineLady`, `lastRest`, `playTime`, `flags.boudinGiven`, `flags.towerRested2`, item `pralinelady_king`. | various | cleanup |
 
 ## Fixed in P6
@@ -51,3 +49,5 @@ Each fix landed in its own commit with a test that failed first; the commit name
 | NG+ re-grants story gear (`thr_regalia`, `ch_fang`), creating duplicates, and resets `legendBuilt`, so Ti-Jacques builds a second legendary instrument. | `s.gainGear` skips gear already owned (still equips); Ti-Jacques also checks the bag for the legendary | `tests/integration/scenes.test.ts`: "New Game+ doesn't hand out story gear you already own", "…doesn't offer a second legendary instrument" |
 | `flags.endingCount` resets every NG+, so it is always 1. | `newGamePlus` carries `counters.endingCount`; every other counter starts over | `src/engine/state.test.ts`: "keeps the count of endings reached, and resets the other counters" |
 | `towerFight` survives travel and waking at the club, so after a defeat on a floor's second fight the next climb starts the Lobby at its second fight. | Travel and a cut reset the floor and the fight together | `src/app/session.test.ts`: "travel restarts the climb: the floor and the fight both reset", "getting cut in the Tower ends the climb" |
+| The credits' New Game+ button always says "enemies +30%" (the confirm shows the real number), and the confirm doesn't say half your Doubloons go. | The button shows the next cycle's real percentage; the confirm says half your Doubloons go | `tests/integration/scenes.test.ts`: "the credits' New Game+ button names the strength of the next cycle", "the New Game+ confirm says half your Doubloons go" |
+| Quest description drift: *Lost Eye* says "on the streets" but it's a scripted fight at the square. | The journal says to ask around Jackson Square | `tests/integration/scenes.test.ts`: "the Lost Eye's journal points at Jackson Square, where its fight is" |

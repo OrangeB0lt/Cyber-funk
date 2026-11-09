@@ -31,7 +31,6 @@ import {
   storyReached,
 } from '@engine/index';
 import { SceneInterrupt, type RunResult, type Scene, type SheetRequest } from '@narrative/types';
-import { ALLOWED_UNLINKED } from '../../../tools/completeness';
 
 /* ------------------------------------------------------------------ */
 /* States                                                               */
@@ -373,7 +372,7 @@ export function textProblem(text: string | null | undefined): string | null {
   if (m) return `broken text (${m[0]}): ${text}`;
   for (const l of text.matchAll(LINK)) {
     const key = l[1]!.trim().toLowerCase();
-    if (!(key in GLOSSARY) && !ALLOWED_UNLINKED[key]) return `[[${l[1]}]] names no glossary entry: ${text}`;
+    if (!(key in GLOSSARY)) return `[[${l[1]}]] names no glossary entry: ${text}`;
   }
   return null;
 }

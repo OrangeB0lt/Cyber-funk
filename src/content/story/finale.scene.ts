@@ -89,14 +89,13 @@ export const creditsAndNewGamePlus: Scene = async s => {
     { text: 'Mimes, tourists, and Metronome Corporation were harmed in the making of this game.', dim: true },
   ]);
   const pick = await s.choose({
-    // PARITY: the label always says +30%; the confirm shows the real number (known-issues).
-    ngplus: 'New Game+ (keep level & gear; enemies +30%)',
+    ngplus: `New Game+ (keep level & gear; enemies +${30 * (g.ngPlus + 1)}%)`,
     stay: 'Keep playing this city',
   });
   if (pick === 'ngplus') {
     const ok = await s.confirm(
       'Start New Game+?',
-      `You keep your level, gear, sheet music, blessings, and bag. The story, notes, and quests reset. Enemies are +${30 * (g.ngPlus + 1)}% stronger.`,
+      `You keep your level, gear, sheet music, blessings, bag, and half your Doubloons. The story, notes, and quests reset. Enemies are +${30 * (g.ngPlus + 1)}% stronger.`,
       'March again',
       'Not yet',
     );
@@ -108,10 +107,7 @@ export const creditsAndNewGamePlus: Scene = async s => {
   await s.goto('treme');
 };
 
-/**
- * New Game+: the city resets, the character doesn't, and the prologue starts over. PARITY: story
- * gear and the legendary can be granted twice, and the ending count starts over (known-issues).
- */
+/** New Game+: the city resets, the character doesn't, and the prologue starts over. */
 const startNewGamePlus: Scene = async s => {
   s.newGamePlus();
   s.title('New Game+');

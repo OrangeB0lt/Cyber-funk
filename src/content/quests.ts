@@ -40,7 +40,7 @@ export const QUESTS: Table<QuestId, QuestDef> = {
     name: 'The Lost Eye',
     district: 'quarter',
     giver: 'Madame Zinnia, Jackson Square',
-    desc: "A Neon Mime stole Madame Zinnia's cybernetic eye. Shake it loose on the streets of the Quarter.",
+    desc: "A Neon Mime stole Madame Zinnia's cybernetic eye. Ask around Jackson Square and shake it loose.",
     reward: "Zinnia's Spare Eye (charm). Zinnia joins the second line.",
     xp: 90,
     gold: 70,
