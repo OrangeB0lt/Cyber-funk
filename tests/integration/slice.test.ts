@@ -92,7 +92,9 @@ describe('vertical slice: prologue → Tremé → Captain Hush', () => {
       const session = new Session({ presenter, storage: memorySaveStorage(), seed: () => 3 });
       session.newGame('Dawlin', 'yat', 'saxophone', { ...defaultSettings(), rhythm: 'auto' });
       const g = session.game;
-      g.level = 8;
+      // Level 12: the scripted player wins on every seed tried (at 8 it loses about one in five),
+      // so this tests the choice, not the dice.
+      g.level = 12;
       g.story = { act: 'quarter', step: 'main_stage' };
       g.unlocked.push('quarter');
       g.district = 'quarter';

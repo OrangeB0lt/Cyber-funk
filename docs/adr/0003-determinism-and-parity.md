@@ -39,7 +39,7 @@ The first pass is a **transliteration**: same statement order, same expression o
 
 - `chance(0)` still draws
 - a `'rand'`-target hit picks its target twice (`05:368-369`)
-- the turn-order sort uses a random comparator, so the exact `Array.prototype.sort` call must stay
+- the turn-order sort uses a random comparator, so the exact `Array.prototype.sort` call must stay (fixed in P6)
 - no `?? 0` "fixes" that would change NaN or undefined behavior
 
 Readability refactors happen only after the oracle is green, one at a time, with the oracle still running. (After cutover: with the baselines still passing.)
@@ -49,7 +49,7 @@ Readability refactors happen only after the oracle is green, one at a time, with
 - A seed reproduces a fight, which is useful for bug reports, balance work and tests.
 - Balance changes show up as exact sim diffs that a reviewer reads, not as noise.
 - Known v1 bugs are ported faithfully and fixed afterwards in separate commits (`docs/known-issues.md`), so every behavior change is deliberate and reviewable.
-- **Known limit:** the turn-order sort's random comparator means results can differ between JavaScript engines (V8 versus Safari's JavaScriptCore). This is logged as a known issue; the fix is per-actor jitter, followed by a re-baseline.
+- **Known limit (fixed in P6):** the turn-order sort's random comparator meant results could differ between JavaScript engines (V8 versus Safari's JavaScriptCore). Each actor now draws its jitter once before the sort, and a property test runs the fight corpus under a different sort algorithm.
 
 ## Amendment: cutover (2026-11-09)
 

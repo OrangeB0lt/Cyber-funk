@@ -78,7 +78,7 @@ What counts as an input:
 Things to know:
 - The stream's state is saved only at checkpoints. Anything after the last save is replayed from there.
 - A second stream, `session.cosmetic`, is never saved. It only picks things like the default nickname and where the timing bar's sweet spot sits.
-- **Engines differ.** The turn-order sort uses a random comparator, and V8 and Safari's JavaScriptCore sort differently, so a fight saved on an iPhone can play out differently in Node or Chromium. It's a known issue ([known-issues.md](../known-issues.md)).
+- **Every JavaScript engine plays the same fight.** Turn order draws each actor's jitter before sorting, so V8 and Safari's JavaScriptCore agree; `tools/engine/properties.test.ts` checks it under a different sort algorithm.
 
 In tests, pass a fixed seed to a `Session` (`seed: () => 42`) or `createRng(42)` to an engine function. To force every draw a particular way, [`src/app/testing/rng.ts`](../../src/app/testing/rng.ts) has `constantRng(c)` and `scriptedRng([...])`; the transcript baseline runs each case at 0, 0.5 and 0.99 this way.
 

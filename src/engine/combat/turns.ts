@@ -20,9 +20,10 @@ import { effStat, removeStatus } from './statuses';
 export function startRound(b: Battle): void {
   b.round++;
   const actors = [b.player, ...livingEnemies(b)];
-  // PARITY: the jitter is inside the comparator, so the number of draws depends on the sort
-  // algorithm. This exact call must stay until the cross-engine fix (docs/known-issues.md).
-  actors.sort((x, y) => effStat(y, 'tempo') - effStat(x, 'tempo') + (b.rng.next() - 0.5) * 0.01);
+  // Each actor draws its jitter once, in a fixed order, before sorting, so the comparator is pure
+  // and every JavaScript engine's sort gives the same order and the same number of draws.
+  const speed = new Map(actors.map(a => [a, effStat(a, 'tempo') + (b.rng.next() - 0.5) * 0.01]));
+  actors.sort((x, y) => speed.get(y)! - speed.get(x)!);
   if (b.ambush && b.round === 1) {
     const i = actors.indexOf(b.player);
     actors.splice(i, 1);
