@@ -50,6 +50,7 @@ export {
 } from './world/streets.scene';
 export { ARRIVALS } from './world/arrivals.scene';
 export { prologue, prologueEnd, resumeTutorial } from './story/prologue.scene';
+export { ending, creditsAndNewGamePlus } from './story/finale.scene';
 export { cuttingContest } from './districts/quarter/cutting.scene';
 export { mamaRouxTalk } from './districts/treme/places.scene';
 

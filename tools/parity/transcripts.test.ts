@@ -12,14 +12,25 @@ import { ScriptedPresenter, type TranscriptEntry } from '@app/testing/scriptedPr
 import { SceneInterrupt } from '@narrative/types';
 import { constantRng } from '@app/testing/rng';
 import type { ClassId, RootsId } from '@core/ids/characters';
-import type { BossId, NoteId } from '@core/ids/enemies';
+import type { BossId, NoteId, OpponentId } from '@core/ids/enemies';
+import type { SecondLineId } from '@core/ids/band';
 import type { FlagId, StoryChoices } from '@core/ids/flags';
 import type { BandmateId } from '@core/ids/band';
 import type { ItemId, SheetMusicId } from '@core/ids/items';
 import { ACT_ORDER, type ActId } from '@core/ids/story';
-import type { DistrictId, PlaceId, QuestId } from '@core/ids/world';
+import type { DistrictId, GlossaryId, PlaceId, QuestId } from '@core/ids/world';
 import type { GameState } from '@core/types';
-import { BOSSES, DISTRICTS, cuttingContest, runEvent, STREET_EVENTS, wakeUpAtClub } from '@content/index';
+import {
+  BOSSES,
+  DISTRICTS,
+  SECOND_LINE,
+  creditsAndNewGamePlus,
+  cuttingContest,
+  ending,
+  runEvent,
+  STREET_EVENTS,
+  wakeUpAtClub,
+} from '@content/index';
 import { defaultSettings, storyFromIndex } from '@engine/index';
 import { firstDifference } from './driver';
 import { loadLegacyDom } from './legacyDom';
@@ -186,6 +197,13 @@ interface CaseState {
   recruited?: BandmateId[];
   keyItems?: ItemId[];
   sheet?: SheetMusicId[];
+  /** The formed second line, by member id (null/absent: not formed). */
+  secondLine?: SecondLineId[];
+  ngPlus?: number;
+  tower?: { floor: number; fight: number };
+  inTower?: boolean;
+  lexicon?: GlossaryId[];
+  book?: Partial<Record<OpponentId, { seen: boolean; weak: boolean }>>;
 }
 
 interface Case {
@@ -294,6 +312,97 @@ function secondLineCases(): Case[] {
       'cassette',
       atSecondLine({ flags: ['metRoux', 'gusFreed', 'hasCassette'] }),
     ),
+  ];
+}
+
+const THREE: SecondLineId[] = ['mamaroux', 'tijacques', 'odette'];
+const ALL_MARCHERS = SECOND_LINE.map(m => m.id as SecondLineId);
+
+/** Just after the Click falls: the Tower act's last step, the second line formed. */
+function afterClick(more: Partial<CaseState> = {}): CaseState {
+  return inAct('tower', 3, { secondLine: ALL_MARCHERS, ...more });
+}
+
+/** The game finished: the done act, the ending flag set, back in the city. */
+function finished(more: Partial<CaseState> = {}): CaseState {
+  return {
+    ...inAct('tower', 0),
+    story: { act: 'done', step: 0 },
+    district: 'treme',
+    flags: ['metRoux', 'gusFreed', 'ending'],
+    secondLine: ALL_MARCHERS,
+    // Things New Game+ carries over, with values a fresh save wouldn't have.
+    doubloons: 1001,
+    day: 37,
+    blessings: 2,
+    sheet: ['sm_swing'],
+    bag: { gumbo: 3, cayenne: 1 },
+    lexicon: ['krewe', 'second line'],
+    book: { hush_patrol: { seen: false, weak: true }, nutria: { seen: true, weak: false } },
+    ...more,
+  };
+}
+
+function finaleCases(): Case[] {
+  const combos = (['reprogrammed', 'shutdown'] as const).flatMap(vox =>
+    (['burned', 'kept'] as const).flatMap(contracts =>
+      (['spared', 'finished'] as const).map(lucien => ({ vox, contracts, lucien })),
+    ),
+  );
+  return [
+    // pick 1 at the credits: keep playing this city.
+    ...combos.map((choices): Case => ({
+      name: `ending (${choices.vox}, ${choices.contracts}, ${choices.lucien})`,
+      pick: 1,
+      state: afterClick({ choices }),
+      legacy: () => w.ending(),
+      ts: s => s.run(ending, 'ending'),
+    })),
+    {
+      name: 'ending with no choices on record, three marchers',
+      pick: 1,
+      state: afterClick({ secondLine: THREE }),
+      legacy: () => w.ending(),
+      ts: s => s.run(ending, 'ending'),
+    },
+    {
+      name: 'credits, keep playing',
+      pick: 1,
+      state: finished(),
+      legacy: () => w.creditsAndNewGamePlus(),
+      ts: s => s.run(creditsAndNewGamePlus, 'credits'),
+    },
+    {
+      name: 'credits at New Game+2',
+      pick: 1,
+      state: finished({ ngPlus: 2 }),
+      legacy: () => w.creditsAndNewGamePlus(),
+      ts: s => s.run(creditsAndNewGamePlus, 'credits'),
+    },
+    {
+      name: 'credits, New Game+, not yet',
+      pick: 0,
+      confirm: false,
+      state: finished(),
+      legacy: () => w.creditsAndNewGamePlus(),
+      ts: s => s.run(creditsAndNewGamePlus, 'credits'),
+    },
+    {
+      // The whole New Game+ save is compared, and the prologue plays at ngPlus 1.
+      name: 'credits, New Game+',
+      pick: 0,
+      state: finished(),
+      legacy: () => w.creditsAndNewGamePlus(),
+      ts: s => s.run(creditsAndNewGamePlus, 'credits'),
+    },
+    {
+      name: 'credits, New Game+ from New Game+1',
+      pick: 0,
+      state: finished({ ngPlus: 1 }),
+      legacy: () => w.creditsAndNewGamePlus(),
+      ts: s => s.run(creditsAndNewGamePlus, 'credits'),
+    },
+    placeCase('club: march again', 'club', 'ngplus', finished(), 1),
   ];
 }
 
@@ -923,6 +1032,9 @@ const cases: Case[] = [
   ),
   /* ---------------- The Tower act: the second line (v1 09:200, 08:171) ---------------- */
   ...secondLineCases(),
+
+  /* ---------------- The ending, the credits, New Game+ (v1 09:271-319) ---------------- */
+  ...finaleCases(),
 ];
 
 /* ------------------------------------------------------------------ */
@@ -961,6 +1073,18 @@ function setupLegacy(st: CaseState) {
   S.band.recruited = [...(st.recruited ?? [])];
   S.keyItems = [...(st.keyItems ?? [])];
   S.sheet = [...(st.sheet ?? [])];
+  if (st.secondLine) {
+    const all = dom.evaluate<any[]>('SECOND_LINE');
+    S.secondLine = st.secondLine.map(id => {
+      const m = all.find(x => x.id === id);
+      return { id: m.id, name: m.name, line: m.line };
+    });
+  }
+  if (st.ngPlus) S.ngPlus = st.ngPlus;
+  if (st.tower) Object.assign(S, { towerFloor: st.tower.floor, towerFight: st.tower.fight });
+  if (st.inTower) S.inTower = true;
+  if (st.lexicon) S.lexicon = [...st.lexicon];
+  if (st.book) S.book = JSON.parse(JSON.stringify(st.book));
   w.CF.S = S;
   return S;
 }
@@ -988,6 +1112,16 @@ function setupTs(session: Session, st: CaseState): GameState {
   g.band.recruited = [...(st.recruited ?? [])];
   g.keyItems = [...(st.keyItems ?? [])];
   g.sheet = [...(st.sheet ?? [])];
+  if (st.secondLine)
+    g.secondLine = st.secondLine.map(id => {
+      const m = SECOND_LINE.find(x => x.id === id)!;
+      return { id: m.id, name: m.name };
+    });
+  if (st.ngPlus) g.ngPlus = st.ngPlus;
+  if (st.tower) Object.assign(g, { towerFloor: st.tower.floor, towerFight: st.tower.fight });
+  if (st.inTower) g.inTower = true;
+  if (st.lexicon) g.lexicon = [...st.lexicon];
+  if (st.book) g.book = JSON.parse(JSON.stringify(st.book));
   return g;
 }
 

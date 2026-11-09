@@ -8,6 +8,7 @@ import { CLASSES } from '../../classes';
 import { ENEMIES } from '../../enemies';
 import { PLACES } from '../../places';
 import { QUESTS } from '../../quests';
+import { creditsAndNewGamePlus } from '../../story/finale.scene';
 import { secondLineScene } from '../../story/secondLine.scene';
 import { instrumentStock } from '../../world/shared.scene';
 import { fmtD } from '../../world/streets.scene';
@@ -42,7 +43,9 @@ export const club = definePlace('club', {
     ...(h.is({ act: 'tower', step: 'form_second_line' })
       ? [{ key: 'secondline', label: 'Form the Second Line', hint: true, run: secondLineScene }]
       : []),
-    // "March again (New Game+)" comes with the ending.
+    ...(g.flags.ending
+      ? [{ key: 'ngplus', label: 'March again (New Game+)', hint: true, run: creditsAndNewGamePlus }]
+      : []),
     ...(g.flags.hasCassette
       ? [
           {
