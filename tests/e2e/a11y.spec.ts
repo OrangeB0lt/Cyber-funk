@@ -202,6 +202,20 @@ test('battle: actions, skills, bag, targets, the timing bar, auto rhythm, victor
   await cf(page, app => {
     app.store.game.settings.rhythm = 'auto';
     app.turbo = true;
+    // Hold the next auto-timing result on screen until the test has checked it: in turbo it shows
+    // for 25 ms, too short to catch on a loaded CI runner. The battle waits meanwhile, so the
+    // floating damage numbers finish fading before axe looks.
+    const battle = app.presenter.battle;
+    const autoTiming = battle.autoTiming;
+    battle.autoTiming = (grade: unknown) =>
+      new Promise<void>(resolve => {
+        app.presenter.view.timing = { id: -1, kind: 'auto', grade };
+        (window as unknown as { releaseAutoTiming: () => void }).releaseAutoTiming = () => {
+          battle.autoTiming = autoTiming;
+          app.presenter.view.timing = null;
+          resolve();
+        };
+      });
   });
   await untilIntent(page);
   await tid(page, 'act:riff').click();
@@ -209,7 +223,8 @@ test('battle: actions, skills, bag, targets, the timing bar, auto rhythm, victor
   await expect(target.or(tid(page, 'timing')).first()).toBeVisible();
   if (await target.count()) await target.first().click();
   await expect(tid(page, 'timing')).toBeVisible();
-  await expectAccessible(page, 'battle:auto', { settle: false });
+  await expectAccessible(page, 'battle:auto');
+  await page.evaluate(() => (window as unknown as { releaseAutoTiming: () => void }).releaseAutoTiming());
 
   await playUntil(page, async () => (await page.locator('[data-testid^="out:"]').count()) > 0, {
     maxSteps: 1500,

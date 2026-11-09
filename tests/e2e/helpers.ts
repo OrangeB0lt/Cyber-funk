@@ -66,6 +66,14 @@ export async function playUntil(
 ): Promise<void> {
   const seen = new Set<string>();
   const has = async (id: string) => (await page.getByTestId(id).count()) > 0;
+  // The page moves on while a pass looks around, so `done` is checked again right before every tap.
+  // Otherwise a pass that started before the victory screen could tap its Continue: the screen it
+  // was waiting for would be gone, and the loop would idle until the test timed out.
+  const tap = async (click: () => Promise<unknown>): Promise<boolean> => {
+    if (await done()) return true;
+    await click();
+    return false;
+  };
   for (let i = 0; i < (opts.maxSteps ?? 600); i++) {
     if (await done()) return;
     const sc = (await screenOf(page)) ?? '';
@@ -75,40 +83,51 @@ export async function playUntil(
     }
     if (opts.closeSheets && (await has('sheet')) && !(await has('popup'))) {
       await opts.onSheet?.();
-      await tid(page, 'sheet-close').click();
+      if (await tap(() => tid(page, 'sheet-close').click())) return;
     } else if (await has('popup')) {
       for (const id of ['ok', 'yes', 'popup-close']) {
         if (await has(id)) {
-          await tid(page, id).first().click();
+          if (await tap(() => tid(page, id).first().click())) return;
           break;
         }
       }
     } else if (await has('timing')) {
       await page.waitForTimeout(350);
-      await tid(page, 'timing')
-        .click({ force: true, timeout: 1000 })
-        .catch(() => {});
+      if (
+        await tap(() =>
+          tid(page, 'timing')
+            .click({ force: true, timeout: 1000 })
+            .catch(() => {}),
+        )
+      )
+        return;
     } else if (await has('blues')) {
       // Play the Blues: tap the pads as they light (any tap shatters the Silence; timing is damage).
-      await tid(page, 'blues')
-        .click({ force: true, timeout: 1000 })
-        .catch(() => {});
+      if (
+        await tap(() =>
+          tid(page, 'blues')
+            .click({ force: true, timeout: 1000 })
+            .catch(() => {}),
+        )
+      )
+        return;
       await page.waitForTimeout(500);
     } else if (await has('act:blues')) {
       // Only offered against the Click, and nothing else can touch it while it's shielded.
-      await tid(page, 'act:blues').click();
+      if (await tap(() => tid(page, 'act:blues').click())) return;
     } else if (await has('act:riff')) {
-      await tid(page, 'act:riff').click();
+      if (await tap(() => tid(page, 'act:riff').click())) return;
       const target = page.locator('[data-testid^="target:"]:not([disabled])');
       if (await target.count()) await target.first().click();
     } else if ((await page.locator('[data-testid^="out:"]').count()) > 0) {
-      await page.locator('[data-testid^="out:"]').first().click();
+      if (await tap(() => page.locator('[data-testid^="out:"]').first().click())) return;
     } else if (await has('continue')) {
-      await tid(page, 'continue').click();
+      if (await tap(() => tid(page, 'continue').click())) return;
     } else if ((await page.locator('[data-testid^="choice:"]').count()) > 0) {
       const preferred = opts.choose ? page.getByTestId(`choice:${opts.choose}`) : null;
-      if (preferred && (await preferred.count())) await preferred.click();
-      else await page.locator('[data-testid^="choice:"]').first().click();
+      const pick =
+        preferred && (await preferred.count()) ? preferred : page.locator('[data-testid^="choice:"]').first();
+      if (await tap(() => pick.click())) return;
     } else {
       await page.waitForTimeout(50);
     }
