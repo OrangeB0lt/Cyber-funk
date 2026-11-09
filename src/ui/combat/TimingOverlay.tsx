@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from 'react';
 import { NOTE_IDS } from '@core/ids/enemies';
 import { NOTES } from '@content/index';
 import { BLUES_LEAD_MS, BLUES_STEP_MS, TIMING_LEAD_MS, bluesLabel, scoreBlues } from '@engine/index';
+import { useFocusReturn } from '../components/useFocusReturn';
 import { useApp, useView } from '../GameContext';
 import s from './Timing.module.css';
 
@@ -11,6 +12,7 @@ function TimingBar() {
   const v = useView();
   const t = v.timing as Extract<typeof v.timing, { kind: 'bar' }>;
   const marker = useRef<HTMLDivElement>(null);
+  const button = useRef<HTMLButtonElement>(null);
   const phase = useRef(0);
   const done = useRef(false);
   const tap = () => {
@@ -21,6 +23,7 @@ function TimingBar() {
 
   useEffect(() => {
     done.current = false;
+    button.current?.focus({ preventScroll: true });
     const { durationMs } = t.spec;
     const start = performance.now() + TIMING_LEAD_MS;
     let raf = 0;
@@ -66,6 +69,7 @@ function TimingBar() {
   );
   return (
     <button
+      ref={button}
       type="button"
       className={s.timing}
       onPointerDown={e => (e.preventDefault(), tap())}
@@ -80,7 +84,7 @@ function TimingBar() {
         {zone(s.one!, one)}
         <div ref={marker} className={s.marker} />
       </div>
-      <div className={s.result} style={{ color: t.result?.color }} role="status">
+      <div className={s.result} style={{ color: t.result?.color }}>
         {t.result?.label}
       </div>
       <div className={s.hint}>tap anywhere</div>
@@ -96,6 +100,7 @@ function BluesPads() {
   const [lit, setLit] = useState(-1);
   const [scores, setScores] = useState<number[]>([]);
   const taps = useRef<number[]>([]);
+  const button = useRef<HTMLButtonElement>(null);
   const start = useRef(0);
   const finished = useRef(false);
   const tap = () => {
@@ -109,6 +114,7 @@ function BluesPads() {
 
   useEffect(() => {
     start.current = performance.now() + BLUES_LEAD_MS;
+    button.current?.focus({ preventScroll: true });
     finished.current = false;
     let raf = 0;
     const end = () => {
@@ -142,6 +148,7 @@ function BluesPads() {
 
   return (
     <button
+      ref={button}
       type="button"
       className={s.timing}
       onPointerDown={e => (e.preventDefault(), tap())}
@@ -166,17 +173,20 @@ function BluesPads() {
           </div>
         ))}
       </div>
-      <div className={s.result} role="status">
-        {t.result}
-      </div>
+      <div className={s.result}>{t.result}</div>
     </button>
   );
 }
 
-/** The timing layer over the battle: the bar, an auto-rhythm result, or the Blues pads. */
+/**
+ * The timing layer over the battle: the bar, an auto-rhythm result, or the Blues pads. The bar and
+ * the pads take focus (Space or Enter taps) and give it back when they close; results are read out
+ * by the Announcer.
+ */
 export function TimingOverlay() {
   const v = useView();
   const t = v.timing;
+  useFocusReturn(!!t && t.kind !== 'auto');
   if (!t) return null;
   return (
     <div className={s.overlay}>
@@ -184,7 +194,7 @@ export function TimingOverlay() {
       {t.kind === 'blues' && <BluesPads key={t.id} />}
       {t.kind === 'auto' && (
         <div className={s.timing} data-testid="timing">
-          <div className={s.result} style={{ color: t.grade.color }} role="status">
+          <div className={s.result} style={{ color: t.grade.color }}>
             {t.grade.label}
           </div>
           <div className="small dim" style={{ textAlign: 'center' }}>

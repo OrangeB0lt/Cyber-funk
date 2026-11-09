@@ -19,7 +19,10 @@ export function useFocusReturn(open: boolean): void {
     if (open) return;
     const el = opener.current;
     opener.current = null;
-    if (el?.isConnected && !el.closest('[inert]')) el.focus({ preventScroll: true });
-    else if (el) document.querySelector<HTMLElement>('main')?.focus({ preventScroll: true });
+    if (!el) return;
+    if (el.isConnected && !el.closest('[inert]')) el.focus({ preventScroll: true });
+    // Gone, inert, or disabled meanwhile (a target card after the pick): land on <main>.
+    if (document.activeElement !== el)
+      document.querySelector<HTMLElement>('main')?.focus({ preventScroll: true });
   }, [open]);
 }

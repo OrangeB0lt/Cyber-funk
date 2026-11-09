@@ -34,7 +34,8 @@ export function StoryScreen() {
     // Tapping the story continues, like the Continue button (v1 behavior). Keyboard users use the button.
     <div className={s.story} onClick={() => app.advance()} data-testid="story">
       {v.title && <h1 className={s.title}>{v.title}</h1>}
-      <div aria-live="polite" className={s.story}>
+      {/* Not a live region: the Announcer reads each line once (layers/Announcer.tsx). */}
+      <div className={s.story}>
         {v.lines.map((l, i) => {
           const sprite = portraitOf(l, cls);
           // One portrait per run: a speaker's follow-up lines don't repeat it.

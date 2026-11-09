@@ -73,6 +73,11 @@ test('district, place, story with choices', async ({ page }) => {
     maxSteps: 40,
   });
   await check(page, 'story:choices');
+  // Each line is announced once, by the announcer; the visible transcript isn't a live region.
+  const said = await tid(page, 'announcer').locator('p').allTextContents();
+  expect(said.filter(t => t === 'Mama Roux sets down a bowl.')).toHaveLength(1);
+  expect(said).toContain('She waits.');
+  await expect(tid(page, 'story').locator('[aria-live]')).toHaveCount(0);
   expect(errors).toEqual([]);
 });
 
@@ -189,8 +194,10 @@ test('battle: actions, skills, bag, targets, the timing bar, auto rhythm, victor
   await tid(page, 'act:riff').click();
   await check(page, 'battle:target');
   await page.locator('[data-testid^="target:"]:not([disabled])').first().click();
-  // The bar resolves itself after about a second and a half, so check it straight away.
-  await expect(tid(page, 'timing')).toBeVisible();
+  // The bar resolves itself after about a second and a half, so check it straight away. It takes
+  // focus, so Space or Enter taps it.
+  await expect(tid(page, 'timing')).toBeFocused();
+  await expect(tid(page, 'battle-log')).toHaveAttribute('role', 'log');
   await expectAccessible(page, 'battle:timing', { settle: false });
 
   await cf(page, app => {

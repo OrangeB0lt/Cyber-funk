@@ -7,6 +7,7 @@ import { BattleScreen } from './combat/BattleScreen';
 import { TimingOverlay } from './combat/TimingOverlay';
 import { GameContext, useApp, useGame, useView } from './GameContext';
 import { ActionBar } from './layers/ActionBar';
+import { Announcer } from './layers/Announcer';
 import { PopupLayer } from './layers/PopupLayer';
 import { SheetLayer } from './layers/SheetLayer';
 import { Toast } from './layers/Toast';
@@ -73,6 +74,7 @@ function Shell() {
       </div>
       <PopupLayer />
       <Toast />
+      <Announcer />
     </div>
   );
 }

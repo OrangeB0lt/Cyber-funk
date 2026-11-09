@@ -14,7 +14,7 @@ flowchart LR
   n_GameContext["GameContext"]
   n_combat_["combat/ (4)"]
   n_components_["components/ (12)"]
-  n_layers_["layers/ (5)"]
+  n_layers_["layers/ (6)"]
   n_main["main"]
   n_screens_["screens/ (5)"]
   n_sheets_["sheets/ (9)"]
@@ -39,6 +39,7 @@ flowchart LR
   n_layers_ --> n_GameContext
   n_layers_ --> n_combat_
   n_layers_ --> n_components_
+  n_layers_ --> n_ext_app
   n_layers_ --> n_ext_content
   n_layers_ --> n_ext_engine
   n_layers_ --> n_screens_
@@ -84,6 +85,7 @@ flowchart LR
 | [src/ui/components/Typewriter.tsx](#src-ui-components-typewriter-tsx) | — |
 | [src/ui/components/useFocusReturn.ts](#src-ui-components-usefocusreturn-ts) | — |
 | [src/ui/layers/ActionBar.tsx](#src-ui-layers-actionbar-tsx) | — |
+| [src/ui/layers/Announcer.tsx](#src-ui-layers-announcer-tsx) | — |
 | [src/ui/layers/PopupLayer.tsx](#src-ui-layers-popuplayer-tsx) | — |
 | [src/ui/layers/SheetLayer.tsx](#src-ui-layers-sheetlayer-tsx) | — |
 | [src/ui/layers/Toast.tsx](#src-ui-layers-toast-tsx) | — |
@@ -131,7 +133,7 @@ Declarations:
 The app shell: topbar, the current screen, the action bar, and the overlay layers (timing, sheet, popup, toast). Display settings (text size, reduce motion) are classes on the root.
 
 - Source: [src/ui/App.tsx](../../../src/ui/App.tsx)
-- Imports: app: [game](app.md#src-app-game-ts) · ui: [GameContext](#src-ui-gamecontext-tsx), [combat/BattleScreen](#src-ui-combat-battlescreen-tsx), [combat/TimingOverlay](#src-ui-combat-timingoverlay-tsx), [layers/ActionBar](#src-ui-layers-actionbar-tsx), [layers/PopupLayer](#src-ui-layers-popuplayer-tsx), [layers/SheetLayer](#src-ui-layers-sheetlayer-tsx), [layers/Toast](#src-ui-layers-toast-tsx), [layers/Topbar](#src-ui-layers-topbar-tsx), [screens/Create](#src-ui-screens-create-tsx), [screens/District](#src-ui-screens-district-tsx), [screens/Place](#src-ui-screens-place-tsx), [screens/Story](#src-ui-screens-story-tsx), [screens/Title](#src-ui-screens-title-tsx)
+- Imports: app: [game](app.md#src-app-game-ts) · ui: [GameContext](#src-ui-gamecontext-tsx), [combat/BattleScreen](#src-ui-combat-battlescreen-tsx), [combat/TimingOverlay](#src-ui-combat-timingoverlay-tsx), [layers/ActionBar](#src-ui-layers-actionbar-tsx), [layers/Announcer](#src-ui-layers-announcer-tsx), [layers/PopupLayer](#src-ui-layers-popuplayer-tsx), [layers/SheetLayer](#src-ui-layers-sheetlayer-tsx), [layers/Toast](#src-ui-layers-toast-tsx), [layers/Topbar](#src-ui-layers-topbar-tsx), [screens/Create](#src-ui-screens-create-tsx), [screens/District](#src-ui-screens-district-tsx), [screens/Place](#src-ui-screens-place-tsx), [screens/Story](#src-ui-screens-story-tsx), [screens/Title](#src-ui-screens-title-tsx)
 - Styles: `App.module.css`
 - Imported by: ui: [src/main](#src-main-tsx)
 - Types used: **[app/game](app.md#src-app-game-ts)** [GameApp](app.md#src-app-game-ts--gameapp)
@@ -142,7 +144,7 @@ Declarations:
   - uses: **[ui/GameContext](#src-ui-gamecontext-tsx)** [useView](#src-ui-gamecontext-tsx--useview) · **[ui/combat/BattleScreen](#src-ui-combat-battlescreen-tsx)** [BattleScreen](#src-ui-combat-battlescreen-tsx--battlescreen) · **[ui/screens/Create](#src-ui-screens-create-tsx)** [CreateScreen](#src-ui-screens-create-tsx--createscreen) · **[ui/screens/District](#src-ui-screens-district-tsx)** [DistrictScreen](#src-ui-screens-district-tsx--districtscreen) · **[ui/screens/Place](#src-ui-screens-place-tsx)** [PlaceScreen](#src-ui-screens-place-tsx--placescreen) · **[ui/screens/Story](#src-ui-screens-story-tsx)** [StoryScreen](#src-ui-screens-story-tsx--storyscreen) · **[ui/screens/Title](#src-ui-screens-title-tsx)** [TitleScreen](#src-ui-screens-title-tsx--titlescreen)
   - used by: here [Shell](#src-ui-app-tsx--shell)
 - <a id="src-ui-app-tsx--shell"></a>**Shell** · *component, internal* `(): React.JSX.Element`
-  - uses: here [Screen](#src-ui-app-tsx--screen) · **[app/audio/sfx](app.md#src-app-audio-sfx-ts)** [Sfx.unlock](app.md#src-app-audio-sfx-ts--sfx-unlock) · **[app/game](app.md#src-app-game-ts)** [GameApp.sfx](app.md#src-app-game-ts--gameapp-sfx) · **[ui/GameContext](#src-ui-gamecontext-tsx)** [useApp](#src-ui-gamecontext-tsx--useapp), [useGame](#src-ui-gamecontext-tsx--usegame), [useView](#src-ui-gamecontext-tsx--useview) · **[ui/combat/TimingOverlay](#src-ui-combat-timingoverlay-tsx)** [TimingOverlay](#src-ui-combat-timingoverlay-tsx--timingoverlay) · **[ui/layers/ActionBar](#src-ui-layers-actionbar-tsx)** [ActionBar](#src-ui-layers-actionbar-tsx--actionbar) · **[ui/layers/PopupLayer](#src-ui-layers-popuplayer-tsx)** [PopupLayer](#src-ui-layers-popuplayer-tsx--popuplayer) · **[ui/layers/SheetLayer](#src-ui-layers-sheetlayer-tsx)** [SheetLayer](#src-ui-layers-sheetlayer-tsx--sheetlayer) · **[ui/layers/Toast](#src-ui-layers-toast-tsx)** [Toast](#src-ui-layers-toast-tsx--toast) · **[ui/layers/Topbar](#src-ui-layers-topbar-tsx)** [Topbar](#src-ui-layers-topbar-tsx--topbar)
+  - uses: here [Screen](#src-ui-app-tsx--screen) · **[app/audio/sfx](app.md#src-app-audio-sfx-ts)** [Sfx.unlock](app.md#src-app-audio-sfx-ts--sfx-unlock) · **[app/game](app.md#src-app-game-ts)** [GameApp.sfx](app.md#src-app-game-ts--gameapp-sfx) · **[ui/GameContext](#src-ui-gamecontext-tsx)** [useApp](#src-ui-gamecontext-tsx--useapp), [useGame](#src-ui-gamecontext-tsx--usegame), [useView](#src-ui-gamecontext-tsx--useview) · **[ui/combat/TimingOverlay](#src-ui-combat-timingoverlay-tsx)** [TimingOverlay](#src-ui-combat-timingoverlay-tsx--timingoverlay) · **[ui/layers/ActionBar](#src-ui-layers-actionbar-tsx)** [ActionBar](#src-ui-layers-actionbar-tsx--actionbar) · **[ui/layers/Announcer](#src-ui-layers-announcer-tsx)** [Announcer](#src-ui-layers-announcer-tsx--announcer) · **[ui/layers/PopupLayer](#src-ui-layers-popuplayer-tsx)** [PopupLayer](#src-ui-layers-popuplayer-tsx--popuplayer) · **[ui/layers/SheetLayer](#src-ui-layers-sheetlayer-tsx)** [SheetLayer](#src-ui-layers-sheetlayer-tsx--sheetlayer) · **[ui/layers/Toast](#src-ui-layers-toast-tsx)** [Toast](#src-ui-layers-toast-tsx--toast) · **[ui/layers/Topbar](#src-ui-layers-topbar-tsx)** [Topbar](#src-ui-layers-topbar-tsx--topbar)
   - used by: here [App](#src-ui-app-tsx--app)
 - <a id="src-ui-app-tsx--app"></a>**App** · *component* `({ app }: { app: GameApp }): React.JSX.Element` — The root component.
   - uses: here [Shell](#src-ui-app-tsx--shell) · **[ui/GameContext](#src-ui-gamecontext-tsx)** [GameContext](#src-ui-gamecontext-tsx--gamecontext)
@@ -157,7 +159,7 @@ React access to the game. Components read snapshots (frozen; writing to them thr
 - Source: [src/ui/GameContext.tsx](../../../src/ui/GameContext.tsx)
 - Imports: core: [types/index](core.md#src-core-types-index-ts) · app: [game](app.md#src-app-game-ts)
 - Packages: `react`, `valtio`
-- Imported by: ui: [App](#src-ui-app-tsx), [combat/BattleActions](#src-ui-combat-battleactions-tsx), [combat/BattleScreen](#src-ui-combat-battlescreen-tsx), [combat/TimingOverlay](#src-ui-combat-timingoverlay-tsx), [combat/targeting](#src-ui-combat-targeting-ts), [components/Chips](#src-ui-components-chips-tsx), [components/LexText](#src-ui-components-lextext-tsx), [components/Typewriter](#src-ui-components-typewriter-tsx), [layers/ActionBar](#src-ui-layers-actionbar-tsx), [layers/PopupLayer](#src-ui-layers-popuplayer-tsx), [layers/SheetLayer](#src-ui-layers-sheetlayer-tsx), [layers/Toast](#src-ui-layers-toast-tsx), [layers/Topbar](#src-ui-layers-topbar-tsx), [screens/Create](#src-ui-screens-create-tsx), [screens/District](#src-ui-screens-district-tsx), [screens/Place](#src-ui-screens-place-tsx), [screens/Story](#src-ui-screens-story-tsx), [screens/Title](#src-ui-screens-title-tsx), [sheets/HistorySheet](#src-ui-sheets-historysheet-tsx), [sheets/MenuSheets](#src-ui-sheets-menusheets-tsx), [sheets/SavesSheet](#src-ui-sheets-savessheet-tsx), [sheets/SettingsSheet](#src-ui-sheets-settingssheet-tsx), [sheets/Sheet](#src-ui-sheets-sheet-tsx), [sheets/ShopSheet](#src-ui-sheets-shopsheet-tsx), [sheets/WorldSheets](#src-ui-sheets-worldsheets-tsx)
+- Imported by: ui: [App](#src-ui-app-tsx), [combat/BattleActions](#src-ui-combat-battleactions-tsx), [combat/BattleScreen](#src-ui-combat-battlescreen-tsx), [combat/TimingOverlay](#src-ui-combat-timingoverlay-tsx), [combat/targeting](#src-ui-combat-targeting-ts), [components/Chips](#src-ui-components-chips-tsx), [components/LexText](#src-ui-components-lextext-tsx), [components/Typewriter](#src-ui-components-typewriter-tsx), [layers/ActionBar](#src-ui-layers-actionbar-tsx), [layers/Announcer](#src-ui-layers-announcer-tsx), [layers/PopupLayer](#src-ui-layers-popuplayer-tsx), [layers/SheetLayer](#src-ui-layers-sheetlayer-tsx), [layers/Toast](#src-ui-layers-toast-tsx), [layers/Topbar](#src-ui-layers-topbar-tsx), [screens/Create](#src-ui-screens-create-tsx), [screens/District](#src-ui-screens-district-tsx), [screens/Place](#src-ui-screens-place-tsx), [screens/Story](#src-ui-screens-story-tsx), [screens/Title](#src-ui-screens-title-tsx), [sheets/HistorySheet](#src-ui-sheets-historysheet-tsx), [sheets/MenuSheets](#src-ui-sheets-menusheets-tsx), [sheets/SavesSheet](#src-ui-sheets-savessheet-tsx), [sheets/SettingsSheet](#src-ui-sheets-settingssheet-tsx), [sheets/Sheet](#src-ui-sheets-sheet-tsx), [sheets/ShopSheet](#src-ui-sheets-shopsheet-tsx), [sheets/WorldSheets](#src-ui-sheets-worldsheets-tsx)
 - Types used: **[app/game](app.md#src-app-game-ts)** [GameApp](app.md#src-app-game-ts--gameapp) · **[core/types/state](core.md#src-core-types-state-ts)** [GameState](core.md#src-core-types-state-ts--gamestate)
 
 Declarations:
@@ -169,7 +171,7 @@ Declarations:
   - used by: here [useGame](#src-ui-gamecontext-tsx--usegame), [useView](#src-ui-gamecontext-tsx--useview) · **[ui/App](#src-ui-app-tsx)** [Shell](#src-ui-app-tsx--shell) · **[ui/combat/BattleActions](#src-ui-combat-battleactions-tsx)** [BattleActions](#src-ui-combat-battleactions-tsx--battleactions) · **[ui/combat/TimingOverlay](#src-ui-combat-timingoverlay-tsx)** [BluesPads](#src-ui-combat-timingoverlay-tsx--bluespads), [TimingBar](#src-ui-combat-timingoverlay-tsx--timingbar) · **[ui/combat/targeting](#src-ui-combat-targeting-ts)** [useTargeting](#src-ui-combat-targeting-ts--usetargeting) · **[ui/components/Chips](#src-ui-components-chips-tsx)** [StatusChips](#src-ui-components-chips-tsx--statuschips) · **[ui/components/LexText](#src-ui-components-lextext-tsx)** [LexText](#src-ui-components-lextext-tsx--lextext) · **[ui/components/Typewriter](#src-ui-components-typewriter-tsx)** [Typewriter](#src-ui-components-typewriter-tsx--typewriter) · **[ui/layers/PopupLayer](#src-ui-layers-popuplayer-tsx)** [PopupLayer](#src-ui-layers-popuplayer-tsx--popuplayer) · **[ui/layers/Topbar](#src-ui-layers-topbar-tsx)** [Topbar](#src-ui-layers-topbar-tsx--topbar) · **[ui/screens/Create](#src-ui-screens-create-tsx)** [CreateActions](#src-ui-screens-create-tsx--createactions), [CreateScreen](#src-ui-screens-create-tsx--createscreen) · **[ui/screens/District](#src-ui-screens-district-tsx)** [DistrictActions](#src-ui-screens-district-tsx--districtactions), [DistrictScreen](#src-ui-screens-district-tsx--districtscreen) · … +23 more
 - <a id="src-ui-gamecontext-tsx--useview"></a>**useView** · *function* `(): { readonly screen: Screen; readonly title: string | null; readonly lines: readonly { readonly id: number; readonly kind: "narr" | "spoken" | "you" | "prompt" | "boar…` — A snapshot of the presentation state.
   - uses: here [useApp](#src-ui-gamecontext-tsx--useapp) · **[app/game](app.md#src-app-game-ts)** [GameApp.view](app.md#src-app-game-ts--gameapp-view)
-  - used by: **[ui/App](#src-ui-app-tsx)** [Screen](#src-ui-app-tsx--screen), [Shell](#src-ui-app-tsx--shell) · **[ui/combat/BattleActions](#src-ui-combat-battleactions-tsx)** [BattleActions](#src-ui-combat-battleactions-tsx--battleactions) · **[ui/combat/BattleScreen](#src-ui-combat-battlescreen-tsx)** [BattleScreen](#src-ui-combat-battlescreen-tsx--battlescreen), [EnemyCard](#src-ui-combat-battlescreen-tsx--enemycard), [Floats](#src-ui-combat-battlescreen-tsx--floats), [useLastHit](#src-ui-combat-battlescreen-tsx--uselasthit) · **[ui/combat/TimingOverlay](#src-ui-combat-timingoverlay-tsx)** [BluesPads](#src-ui-combat-timingoverlay-tsx--bluespads), [TimingBar](#src-ui-combat-timingoverlay-tsx--timingbar), [TimingOverlay](#src-ui-combat-timingoverlay-tsx--timingoverlay) · **[ui/layers/ActionBar](#src-ui-layers-actionbar-tsx)** [ActionBar](#src-ui-layers-actionbar-tsx--actionbar) · **[ui/layers/PopupLayer](#src-ui-layers-popuplayer-tsx)** [PopupLayer](#src-ui-layers-popuplayer-tsx--popuplayer) · **[ui/layers/SheetLayer](#src-ui-layers-sheetlayer-tsx)** [SheetLayer](#src-ui-layers-sheetlayer-tsx--sheetlayer) · **[ui/layers/Toast](#src-ui-layers-toast-tsx)** [Toast](#src-ui-layers-toast-tsx--toast) · **[ui/screens/Create](#src-ui-screens-create-tsx)** [CreateActions](#src-ui-screens-create-tsx--createactions), [CreateScreen](#src-ui-screens-create-tsx--createscreen) · … +11 more
+  - used by: **[ui/App](#src-ui-app-tsx)** [Screen](#src-ui-app-tsx--screen), [Shell](#src-ui-app-tsx--shell) · **[ui/combat/BattleActions](#src-ui-combat-battleactions-tsx)** [BattleActions](#src-ui-combat-battleactions-tsx--battleactions) · **[ui/combat/BattleScreen](#src-ui-combat-battlescreen-tsx)** [BattleScreen](#src-ui-combat-battlescreen-tsx--battlescreen), [EnemyCard](#src-ui-combat-battlescreen-tsx--enemycard), [Floats](#src-ui-combat-battlescreen-tsx--floats), [useLastHit](#src-ui-combat-battlescreen-tsx--uselasthit) · **[ui/combat/TimingOverlay](#src-ui-combat-timingoverlay-tsx)** [BluesPads](#src-ui-combat-timingoverlay-tsx--bluespads), [TimingBar](#src-ui-combat-timingoverlay-tsx--timingbar), [TimingOverlay](#src-ui-combat-timingoverlay-tsx--timingoverlay) · **[ui/layers/ActionBar](#src-ui-layers-actionbar-tsx)** [ActionBar](#src-ui-layers-actionbar-tsx--actionbar) · **[ui/layers/Announcer](#src-ui-layers-announcer-tsx)** [Announcer](#src-ui-layers-announcer-tsx--announcer) · **[ui/layers/PopupLayer](#src-ui-layers-popuplayer-tsx)** [PopupLayer](#src-ui-layers-popuplayer-tsx--popuplayer) · **[ui/layers/SheetLayer](#src-ui-layers-sheetlayer-tsx)** [SheetLayer](#src-ui-layers-sheetlayer-tsx--sheetlayer) · **[ui/layers/Toast](#src-ui-layers-toast-tsx)** [Toast](#src-ui-layers-toast-tsx--toast) · **[ui/screens/Create](#src-ui-screens-create-tsx)** [CreateActions](#src-ui-screens-create-tsx--createactions) · … +12 more
 - <a id="src-ui-gamecontext-tsx--usegame"></a>**useGame** · *function* `(): GameState | null` — A snapshot of the save (null on the title screen), typed as GameState so read-only engine queries (derivedStats, legalActions…) accept it.
   - uses: here [useApp](#src-ui-gamecontext-tsx--useapp) · **[app/game](app.md#src-app-game-ts)** [GameApp.store](app.md#src-app-game-ts--gameapp-store)
   - used by: **[ui/App](#src-ui-app-tsx)** [Shell](#src-ui-app-tsx--shell) · **[ui/combat/BattleScreen](#src-ui-combat-battlescreen-tsx)** [BattleScreen](#src-ui-combat-battlescreen-tsx--battlescreen), [EnemyCard](#src-ui-combat-battlescreen-tsx--enemycard), [PlayerPanel](#src-ui-combat-battlescreen-tsx--playerpanel) · **[ui/layers/SheetLayer](#src-ui-layers-sheetlayer-tsx)** [SheetLayer](#src-ui-layers-sheetlayer-tsx--sheetlayer) · **[ui/layers/Topbar](#src-ui-layers-topbar-tsx)** [Topbar](#src-ui-layers-topbar-tsx--topbar) · **[ui/screens/District](#src-ui-screens-district-tsx)** [DistrictActions](#src-ui-screens-district-tsx--districtactions), [DistrictScreen](#src-ui-screens-district-tsx--districtscreen) · **[ui/screens/Place](#src-ui-screens-place-tsx)** [PlaceScreen](#src-ui-screens-place-tsx--placescreen) · **[ui/screens/Story](#src-ui-screens-story-tsx)** [StoryScreen](#src-ui-screens-story-tsx--storyscreen) · **[ui/sheets/MenuSheets](#src-ui-sheets-menusheets-tsx)** [BagSheet](#src-ui-sheets-menusheets-tsx--bagsheet), [BandSheet](#src-ui-sheets-menusheets-tsx--bandsheet), [BookSheet](#src-ui-sheets-menusheets-tsx--booksheet), [GearSheet](#src-ui-sheets-menusheets-tsx--gearsheet), [JournalSheet](#src-ui-sheets-menusheets-tsx--journalsheet), [LexiconSheet](#src-ui-sheets-menusheets-tsx--lexiconsheet) · … +9 more
@@ -233,7 +235,7 @@ Declarations:
 ### src/ui/combat/TimingOverlay.tsx
 
 - Source: [src/ui/combat/TimingOverlay.tsx](../../../src/ui/combat/TimingOverlay.tsx)
-- Imports: core: [ids/enemies](core.md#src-core-ids-enemies-ts) · content: [index](content.md#src-content-index-ts) · engine: [index](engine.md#src-engine-index-ts) · ui: [GameContext](#src-ui-gamecontext-tsx)
+- Imports: core: [ids/enemies](core.md#src-core-ids-enemies-ts) · content: [index](content.md#src-content-index-ts) · engine: [index](engine.md#src-engine-index-ts) · ui: [GameContext](#src-ui-gamecontext-tsx), [components/useFocusReturn](#src-ui-components-usefocusreturn-ts)
 - Packages: `react`
 - Styles: `Timing.module.css`
 - Imported by: ui: [App](#src-ui-app-tsx)
@@ -247,7 +249,7 @@ Declarations:
   - uses: **[app/audio/sfx](app.md#src-app-audio-sfx-ts)** [Sfx.note](app.md#src-app-audio-sfx-ts--sfx-note) · **[app/game](app.md#src-app-game-ts)** [GameApp.bluesDone](app.md#src-app-game-ts--gameapp-bluesdone), [GameApp.sfx](app.md#src-app-game-ts--gameapp-sfx) · **[content/notes](content.md#src-content-notes-ts)** [NOTES](content.md#src-content-notes-ts--notes) · **[core/ids/enemies](core.md#src-core-ids-enemies-ts)** [NOTE_IDS](core.md#src-core-ids-enemies-ts--note-ids) · **[engine/combat/timing](engine.md#src-engine-combat-timing-ts)** [BLUES_LEAD_MS](engine.md#src-engine-combat-timing-ts--blues-lead-ms), [BLUES_STEP_MS](engine.md#src-engine-combat-timing-ts--blues-step-ms), [bluesLabel](engine.md#src-engine-combat-timing-ts--blueslabel), [scoreBlues](engine.md#src-engine-combat-timing-ts--scoreblues) · **[ui/GameContext](#src-ui-gamecontext-tsx)** [useApp](#src-ui-gamecontext-tsx--useapp), [useView](#src-ui-gamecontext-tsx--useview)
   - used by: here [TimingOverlay](#src-ui-combat-timingoverlay-tsx--timingoverlay)
 - <a id="src-ui-combat-timingoverlay-tsx--timingoverlay"></a>**TimingOverlay** · *component* `(): React.JSX.Element | null` — The timing layer over the battle: the bar, an auto-rhythm result, or the Blues pads.
-  - uses: here [BluesPads](#src-ui-combat-timingoverlay-tsx--bluespads), [TimingBar](#src-ui-combat-timingoverlay-tsx--timingbar) · **[ui/GameContext](#src-ui-gamecontext-tsx)** [useView](#src-ui-gamecontext-tsx--useview)
+  - uses: here [BluesPads](#src-ui-combat-timingoverlay-tsx--bluespads), [TimingBar](#src-ui-combat-timingoverlay-tsx--timingbar) · **[ui/GameContext](#src-ui-gamecontext-tsx)** [useView](#src-ui-gamecontext-tsx--useview) · **[ui/components/useFocusReturn](#src-ui-components-usefocusreturn-ts)** [useFocusReturn](#src-ui-components-usefocusreturn-ts--usefocusreturn)
   - used by: **[ui/App](#src-ui-app-tsx)** [Shell](#src-ui-app-tsx--shell)
 
 <a id="src-ui-combat-targeting-ts"></a>
@@ -466,12 +468,12 @@ Declarations:
 
 - Source: [src/ui/components/useFocusReturn.ts](../../../src/ui/components/useFocusReturn.ts)
 - Packages: `react`
-- Imported by: ui: [layers/PopupLayer](#src-ui-layers-popuplayer-tsx), [layers/SheetLayer](#src-ui-layers-sheetlayer-tsx)
+- Imported by: ui: [combat/TimingOverlay](#src-ui-combat-timingoverlay-tsx), [layers/PopupLayer](#src-ui-layers-popuplayer-tsx), [layers/SheetLayer](#src-ui-layers-sheetlayer-tsx)
 
 Declarations:
 
 - <a id="src-ui-components-usefocusreturn-ts--usefocusreturn"></a>**useFocusReturn** · *function* `(open: boolean): void` — Give focus back to whatever opened a layer (a sheet, a dialog, an overlay) once it closes.
-  - used by: **[ui/layers/PopupLayer](#src-ui-layers-popuplayer-tsx)** [PopupLayer](#src-ui-layers-popuplayer-tsx--popuplayer) · **[ui/layers/SheetLayer](#src-ui-layers-sheetlayer-tsx)** [SheetLayer](#src-ui-layers-sheetlayer-tsx--sheetlayer)
+  - used by: **[ui/combat/TimingOverlay](#src-ui-combat-timingoverlay-tsx)** [TimingOverlay](#src-ui-combat-timingoverlay-tsx--timingoverlay) · **[ui/layers/PopupLayer](#src-ui-layers-popuplayer-tsx)** [PopupLayer](#src-ui-layers-popuplayer-tsx--popuplayer) · **[ui/layers/SheetLayer](#src-ui-layers-sheetlayer-tsx)** [SheetLayer](#src-ui-layers-sheetlayer-tsx--sheetlayer)
 
 <a id="src-ui-layers-actionbar-tsx"></a>
 
@@ -485,6 +487,23 @@ Declarations:
 
 - <a id="src-ui-layers-actionbar-tsx--actionbar"></a>**ActionBar** · *component* `(): React.JSX.Element | null` — The thumb-reach action area at the bottom: whatever the current screen offers.
   - uses: **[ui/GameContext](#src-ui-gamecontext-tsx)** [useView](#src-ui-gamecontext-tsx--useview) · **[ui/combat/BattleActions](#src-ui-combat-battleactions-tsx)** [BattleActions](#src-ui-combat-battleactions-tsx--battleactions) · **[ui/screens/Create](#src-ui-screens-create-tsx)** [CreateActions](#src-ui-screens-create-tsx--createactions) · **[ui/screens/District](#src-ui-screens-district-tsx)** [DistrictActions](#src-ui-screens-district-tsx--districtactions) · **[ui/screens/Place](#src-ui-screens-place-tsx)** [PlaceActions](#src-ui-screens-place-tsx--placeactions) · **[ui/screens/Story](#src-ui-screens-story-tsx)** [StoryActions](#src-ui-screens-story-tsx--storyactions) · **[ui/screens/Title](#src-ui-screens-title-tsx)** [TitleActions](#src-ui-screens-title-tsx--titleactions)
+  - used by: **[ui/App](#src-ui-app-tsx)** [Shell](#src-ui-app-tsx--shell)
+
+<a id="src-ui-layers-announcer-tsx"></a>
+
+### src/ui/layers/Announcer.tsx
+
+- Source: [src/ui/layers/Announcer.tsx](../../../src/ui/layers/Announcer.tsx)
+- Imports: app: [lexicon](app.md#src-app-lexicon-ts) · ui: [GameContext](#src-ui-gamecontext-tsx)
+- Packages: `react`
+- Imported by: ui: [App](#src-ui-app-tsx)
+
+Declarations:
+
+- <a id="src-ui-layers-announcer-tsx--keep"></a>**KEEP** · *const, internal* — How many announcements stay in the region (older ones are dropped; they were already read).
+  - used by: here [Announcer](#src-ui-layers-announcer-tsx--announcer)
+- <a id="src-ui-layers-announcer-tsx--announcer"></a>**Announcer** · *component* `(): React.JSX.Element` — What a screen reader hears as the story goes: each new story line once, as it starts (with the speaker's name), a new screen's title, the battle outcome, and timing results.
+  - uses: here [KEEP](#src-ui-layers-announcer-tsx--keep) · **[app/lexicon](app.md#src-app-lexicon-ts)** [plainText](app.md#src-app-lexicon-ts--plaintext) · **[ui/GameContext](#src-ui-gamecontext-tsx)** [useView](#src-ui-gamecontext-tsx--useview)
   - used by: **[ui/App](#src-ui-app-tsx)** [Shell](#src-ui-app-tsx--shell)
 
 <a id="src-ui-layers-popuplayer-tsx"></a>

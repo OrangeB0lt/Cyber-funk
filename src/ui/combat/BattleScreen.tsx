@@ -224,7 +224,7 @@ export function BattleScreen() {
           <EnemyCard key={e.id} e={e} />
         ))}
       </div>
-      <div className={s.log} aria-live="polite" data-testid="battle-log">
+      <div className={s.log} role="log" aria-label="Battle log" data-testid="battle-log">
         {b.log.slice(-6).map(l => (
           <div key={l.id} className={s[l.cls === 'boss' ? 'boss-line' : l.cls] ?? ''}>
             {l.text}

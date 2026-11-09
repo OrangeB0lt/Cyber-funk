@@ -421,7 +421,7 @@ Lexicon linking: turns narration into text and term segments. Explicit [[key]] /
 
 - Source: [src/app/lexicon.ts](../../../src/app/lexicon.ts)
 - Imports: core: [ids/world](core.md#src-core-ids-world-ts) · content: [index](content.md#src-content-index-ts)
-- Imported by: ui: [components/LexText](ui.md#src-ui-components-lextext-tsx), [components/Typewriter](ui.md#src-ui-components-typewriter-tsx), [screens/Story](ui.md#src-ui-screens-story-tsx)
+- Imported by: ui: [components/LexText](ui.md#src-ui-components-lextext-tsx), [components/Typewriter](ui.md#src-ui-components-typewriter-tsx), [layers/Announcer](ui.md#src-ui-layers-announcer-tsx), [screens/Story](ui.md#src-ui-screens-story-tsx)
 - Types used: **[core/ids/world](core.md#src-core-ids-world-ts)** [GlossaryId](core.md#src-core-ids-world-ts--glossaryid)
 
 Declarations:
@@ -440,7 +440,7 @@ Declarations:
   - uses: here [auto](#src-app-lexicon-ts--auto) · **[content/glossary](content.md#src-content-glossary-ts)** [GLOSSARY](content.md#src-content-glossary-ts--glossary)
   - used by: **[ui/components/LexText](ui.md#src-ui-components-lextext-tsx)** [LexText](ui.md#src-ui-components-lextext-tsx--lextext) · **[ui/components/Typewriter](ui.md#src-ui-components-typewriter-tsx)** [Typewriter](ui.md#src-ui-components-typewriter-tsx--typewriter)
 - <a id="src-app-lexicon-ts--plaintext"></a>**plainText** · *function* `(text: string): string` — Text with markup removed (button labels).
-  - used by: **[ui/components/Typewriter](ui.md#src-ui-components-typewriter-tsx)** [Typewriter](ui.md#src-ui-components-typewriter-tsx--typewriter) · **[ui/screens/Story](ui.md#src-ui-screens-story-tsx)** [StoryActions](ui.md#src-ui-screens-story-tsx--storyactions)
+  - used by: **[ui/components/Typewriter](ui.md#src-ui-components-typewriter-tsx)** [Typewriter](ui.md#src-ui-components-typewriter-tsx--typewriter) · **[ui/layers/Announcer](ui.md#src-ui-layers-announcer-tsx)** [Announcer](ui.md#src-ui-layers-announcer-tsx--announcer) · **[ui/screens/Story](ui.md#src-ui-screens-story-tsx)** [StoryActions](ui.md#src-ui-screens-story-tsx--storyactions)
 
 <a id="src-app-reactpresenter-ts"></a>
 

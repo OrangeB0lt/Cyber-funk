@@ -31,6 +31,7 @@ These go away by construction. Where the visible sequence changes, the change is
 | The `cleanse` effect always removes bad statuses; its documented `kind` field is ignored. | `05_engine.js:391` | cleanup |
 | *Cayenne*-style next-tone boosts and Dirge's +50% apply only to the first hit of multi-hit or all-target skills. | `05_engine.js:272-274` | design call |
 | Boss telegraphs are logged on the same turn as the move (only `charge` moves give a real warning). | `05_engine.js:457` | design call |
+| Play the Blues is always timed, even with auto rhythm (auto rhythm covers only the On the One bar), so players who can't tap in time can't land the Click's shield break well. Found in the P3 accessibility pass. | `07_ui_combat.js` (v2: `battleController.ts`) | design call |
 | Spar promises "half the Doubloons" but pays normally. | `08_world.js:203` | bug |
 | NG+ re-grants story gear (`thr_regalia`, `ch_fang`), creating duplicates. | `09_story.js` | bug |
 | `flags.endingCount` resets every NG+, so it is always 1. | `09_story.js:309` | bug |
