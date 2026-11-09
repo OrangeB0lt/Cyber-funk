@@ -27,6 +27,7 @@ flowchart LR
   n_parity_legacySim["parity/legacySim"]
   n_parity_micro["parity/micro"]
   n_parity_tsAdapter["parity/tsAdapter"]
+  n_shots["shots"]
   n_sim["sim"]
   n_sprites["sprites"]
   n_trace["trace"]
@@ -86,6 +87,7 @@ flowchart LR
 | [tools/parity/legacySim.ts](#tools-parity-legacysim-ts) | Runs legacy/sim/sim.js with a seeded Math.random and returns its stdout. |
 | [tools/parity/micro.ts](#tools-parity-micro-ts) | Hand-written fight setups for engine branches the random corpus rarely reaches. |
 | [tools/parity/tsAdapter.ts](#tools-parity-tsadapter-ts) | EngineAdapter over the TypeScript engine, mirroring legacyAdapter.ts field for field so the shared driver can compare traces. |
+| [tools/shots.ts](#tools-shots-ts) | Screenshots of the v2 game at 360×740, and side-by-side pairs with v1's reference shots, for reviewing a screen against the original. |
 | [tools/sim.ts](#tools-sim-ts) | Headless balance sim: every class against every district's streets and every boss, played by a simple scripted player. |
 | [tools/sprites.ts](#tools-sprites-ts) | The sprite gallery. |
 | [tools/trace.ts](#tools-trace-ts) | Print one fight, turn by turn, as the sim's scripted player plays it. |
@@ -751,26 +753,29 @@ Declarations:
   - uses: here [ROOT](#tools-parity-legacyshots-ts--root)
   - used by: here [main](#tools-parity-legacyshots-ts--main)
 - <a id="tools-parity-legacyshots-ts--sleep"></a>**sleep** · *function, internal* `(ms: number): Promise<unknown>`
-  - used by: here [autoplayUntil](#tools-parity-legacyshots-ts--autoplayuntil), [main](#tools-parity-legacyshots-ts--main), [waitContinue](#tools-parity-legacyshots-ts--waitcontinue)
+  - used by: here [autoplayUntil](#tools-parity-legacyshots-ts--autoplayuntil), [finaleShots](#tools-parity-legacyshots-ts--finaleshots), [main](#tools-parity-legacyshots-ts--main), [waitContinue](#tools-parity-legacyshots-ts--waitcontinue)
 - <a id="tools-parity-legacyshots-ts--errors"></a>**errors** · *const, internal* `: string[]`
   - used by: here [main](#tools-parity-legacyshots-ts--main)
 - <a id="tools-parity-legacyshots-ts--overflows"></a>**overflows** · *let, internal*
   - used by: here [main](#tools-parity-legacyshots-ts--main), [shot](#tools-parity-legacyshots-ts--shot)
 - <a id="tools-parity-legacyshots-ts--shot"></a>**shot** · *function, internal* `(page: Page, name: string): Promise<void>`
   - uses: here [OUT](#tools-parity-legacyshots-ts--out), [overflows](#tools-parity-legacyshots-ts--overflows)
-  - used by: here [main](#tools-parity-legacyshots-ts--main)
+  - used by: here [finaleShots](#tools-parity-legacyshots-ts--finaleshots), [main](#tools-parity-legacyshots-ts--main)
 - <a id="tools-parity-legacyshots-ts--act"></a>**act** · *function, internal* `(page: Page, a: string): Promise<void>`
-  - used by: here [autoplayUntil](#tools-parity-legacyshots-ts--autoplayuntil), [main](#tools-parity-legacyshots-ts--main), [waitContinue](#tools-parity-legacyshots-ts--waitcontinue)
+  - used by: here [autoplayUntil](#tools-parity-legacyshots-ts--autoplayuntil), [finaleShots](#tools-parity-legacyshots-ts--finaleshots), [main](#tools-parity-legacyshots-ts--main), [waitContinue](#tools-parity-legacyshots-ts--waitcontinue)
 - <a id="tools-parity-legacyshots-ts--has"></a>**has** · *function, internal* `(page: Page, sel: string): Promise<boolean>`
-  - used by: here [autoplayUntil](#tools-parity-legacyshots-ts--autoplayuntil), [main](#tools-parity-legacyshots-ts--main), [waitContinue](#tools-parity-legacyshots-ts--waitcontinue)
+  - used by: here [autoplayUntil](#tools-parity-legacyshots-ts--autoplayuntil), [finaleShots](#tools-parity-legacyshots-ts--finaleshots), [main](#tools-parity-legacyshots-ts--main), [waitContinue](#tools-parity-legacyshots-ts--waitcontinue)
 - <a id="tools-parity-legacyshots-ts--waitcontinue"></a>**waitContinue** · *function, internal* `(page: Page): Promise<void>`
   - uses: here [act](#tools-parity-legacyshots-ts--act), [has](#tools-parity-legacyshots-ts--has), [sleep](#tools-parity-legacyshots-ts--sleep)
-  - used by: here [main](#tools-parity-legacyshots-ts--main)
+  - used by: here [finaleShots](#tools-parity-legacyshots-ts--finaleshots), [main](#tools-parity-legacyshots-ts--main)
 - <a id="tools-parity-legacyshots-ts--autoplayuntil"></a>**autoplayUntil** · *function, internal* `(page: Page, done: string, max: number): Promise<void>`
   - uses: here [act](#tools-parity-legacyshots-ts--act), [has](#tools-parity-legacyshots-ts--has), [sleep](#tools-parity-legacyshots-ts--sleep)
   - used by: here [main](#tools-parity-legacyshots-ts--main)
+- <a id="tools-parity-legacyshots-ts--finaleshots"></a>**finaleShots** · *function, internal* `(page: Page): Promise<void>` — The finale's screens (P4), each reached by starting the v1 flow from a prepared state.
+  - uses: here [act](#tools-parity-legacyshots-ts--act), [has](#tools-parity-legacyshots-ts--has), [shot](#tools-parity-legacyshots-ts--shot), [sleep](#tools-parity-legacyshots-ts--sleep), [waitContinue](#tools-parity-legacyshots-ts--waitcontinue)
+  - used by: here [main](#tools-parity-legacyshots-ts--main)
 - <a id="tools-parity-legacyshots-ts--main"></a>**main** · *function, internal* `(): Promise<void>`
-  - uses: here [OUT](#tools-parity-legacyshots-ts--out), [URL](#tools-parity-legacyshots-ts--url), [act](#tools-parity-legacyshots-ts--act), [autoplayUntil](#tools-parity-legacyshots-ts--autoplayuntil), [errors](#tools-parity-legacyshots-ts--errors), [has](#tools-parity-legacyshots-ts--has), [overflows](#tools-parity-legacyshots-ts--overflows), [shot](#tools-parity-legacyshots-ts--shot), [sleep](#tools-parity-legacyshots-ts--sleep), [waitContinue](#tools-parity-legacyshots-ts--waitcontinue)
+  - uses: here [OUT](#tools-parity-legacyshots-ts--out), [URL](#tools-parity-legacyshots-ts--url), [act](#tools-parity-legacyshots-ts--act), [autoplayUntil](#tools-parity-legacyshots-ts--autoplayuntil), [errors](#tools-parity-legacyshots-ts--errors), [finaleShots](#tools-parity-legacyshots-ts--finaleshots), [has](#tools-parity-legacyshots-ts--has), [overflows](#tools-parity-legacyshots-ts--overflows), [shot](#tools-parity-legacyshots-ts--shot), [sleep](#tools-parity-legacyshots-ts--sleep), [waitContinue](#tools-parity-legacyshots-ts--waitcontinue)
   - used by: here [(top level)](#tools-parity-legacyshots-ts--top-level)
 - <a id="tools-parity-legacyshots-ts--top-level"></a>**(top level)** · *module* — Statements that run when the module loads.
   - uses: here [main](#tools-parity-legacyshots-ts--main)
@@ -835,6 +840,63 @@ Declarations:
 - <a id="tools-parity-tsadapter-ts--tsadapter"></a>**tsAdapter** · *function* `(): EngineAdapter`
   - uses: here [legacyShape](#tools-parity-tsadapter-ts--legacyshape) · **[content/band/secondLine](content.md#src-content-band-secondline-ts)** [SECOND_LINE](content.md#src-content-band-secondline-ts--second-line) · **[content/combat/skills](content.md#src-content-combat-skills-ts)** [SKILLS](content.md#src-content-combat-skills-ts--skills) · **[content/combat/timing](content.md#src-content-combat-timing-ts)** [TIMING](content.md#src-content-combat-timing-ts--timing) · **[core/rng](core.md#src-core-rng-ts)** [createRng](core.md#src-core-rng-ts--createrng) · **[core/types/content](core.md#src-core-types-content-ts)** [SecondLineMemberDef.when](core.md#src-core-types-content-ts--secondlinememberdef-when) · **[engine/balance](engine.md#src-engine-balance-ts)** [xpToNext](engine.md#src-engine-balance-ts--xptonext) · **[engine/combat/actors](engine.md#src-engine-combat-actors-ts)** [makeEnemy](engine.md#src-engine-combat-actors-ts--makeenemy) · **[engine/combat/battle](engine.md#src-engine-combat-battle-ts)** [createBattle](engine.md#src-engine-combat-battle-ts--createbattle) · **[engine/combat/player](engine.md#src-engine-combat-player-ts)** [playerAction](engine.md#src-engine-combat-player-ts--playeraction) · **[engine/combat/rewards](engine.md#src-engine-combat-rewards-ts)** [applyBattleResult](engine.md#src-engine-combat-rewards-ts--applybattleresult), [battleRewards](engine.md#src-engine-combat-rewards-ts--battlerewards) · **[engine/combat/turns](engine.md#src-engine-combat-turns-ts)** [runUntilPlayer](engine.md#src-engine-combat-turns-ts--rununtilplayer) · **[engine/economy](engine.md#src-engine-economy-ts)** [priceFor](engine.md#src-engine-economy-ts--pricefor) · **[engine/inventory](engine.md#src-engine-inventory-ts)** [addItem](engine.md#src-engine-inventory-ts--additem), [removeItem](engine.md#src-engine-inventory-ts--removeitem) · … +8 more
   - used by: tests: [engine.test](tests.md#tools-parity-engine-test-ts), [properties.test](tests.md#tools-parity-properties-test-ts), [rules.test](tests.md#tools-parity-rules-test-ts)
+
+<a id="tools-shots-ts"></a>
+
+### tools/shots.ts
+
+Screenshots of the v2 game at 360×740, and side-by-side pairs with v1's reference shots, for reviewing a screen against the original.
+
+- Source: [tools/shots.ts](../../../tools/shots.ts)
+- Packages: `@playwright/test`, `node:child_process`, `node:fs`, `node:path`
+
+Declarations:
+
+- <a id="tools-shots-ts--root"></a>**ROOT** · *const, internal*
+  - used by: here [OUT](#tools-shots-ts--out), [PAIRS](#tools-shots-ts--pairs), [V1](#tools-shots-ts--v1), [main](#tools-shots-ts--main), [pairs](#tools-shots-ts--pairs)
+- <a id="tools-shots-ts--out"></a>**OUT** · *const, internal*
+  - uses: here [ROOT](#tools-shots-ts--root)
+  - used by: here [main](#tools-shots-ts--main), [pairs](#tools-shots-ts--pairs), [shot](#tools-shots-ts--shot)
+- <a id="tools-shots-ts--pairs"></a>**PAIRS** · *const, internal*
+  - uses: here [ROOT](#tools-shots-ts--root)
+  - used by: here [pairs](#tools-shots-ts--pairs)
+- <a id="tools-shots-ts--v1"></a>**V1** · *const, internal*
+  - uses: here [ROOT](#tools-shots-ts--root)
+  - used by: here [pairs](#tools-shots-ts--pairs)
+- <a id="tools-shots-ts--port"></a>**PORT** · *const, internal*
+  - used by: here [capture](#tools-shots-ts--capture), [main](#tools-shots-ts--main)
+- <a id="tools-shots-ts--sleep"></a>**sleep** · *function, internal* `(ms: number): Promise<unknown>`
+  - used by: here [main](#tools-shots-ts--main), [march](#tools-shots-ts--march), [shot](#tools-shots-ts--shot), [until](#tools-shots-ts--until)
+- <a id="tools-shots-ts--tid"></a>**tid** · *function, internal* `(id: string): string`
+  - used by: here [capture](#tools-shots-ts--capture), [until](#tools-shots-ts--until)
+- <a id="tools-shots-ts--has"></a>**has** · *function, internal* `(page: Page, sel: string): Promise<boolean>`
+  - used by: here [until](#tools-shots-ts--until)
+- <a id="tools-shots-ts--cf"></a>**cf** · *function, internal* `(page: Page, fn: string): Promise<unknown>` — Run code against the GameApp in the page (`app` is window.CF).
+  - used by: here [capture](#tools-shots-ts--capture), [march](#tools-shots-ts--march)
+- <a id="tools-shots-ts--shot"></a>**shot** · *function, internal* `(page: Page, name: string): Promise<void>`
+  - uses: here [OUT](#tools-shots-ts--out), [sleep](#tools-shots-ts--sleep)
+  - used by: here [capture](#tools-shots-ts--capture)
+- <a id="tools-shots-ts--until"></a>**until** · *function, internal* `(page: Page, sel: string, max = 400): Promise<void>` — Tap Continue, Play the Blues, RIFF at the first target, outcome buttons, until `sel` shows.
+  - uses: here [has](#tools-shots-ts--has), [sleep](#tools-shots-ts--sleep), [tid](#tools-shots-ts--tid)
+  - used by: here [capture](#tools-shots-ts--capture)
+- <a id="tools-shots-ts--prepare"></a>**prepare** · *function, internal* `(page: Page, setup: string): Promise<void>` — A level-15 game with instant text, standing at `setup`'s state.
+  - used by: here [capture](#tools-shots-ts--capture)
+- <a id="tools-shots-ts--tower"></a>**TOWER** · *const, internal*
+  - used by: here [capture](#tools-shots-ts--capture)
+- <a id="tools-shots-ts--march"></a>**march** · *function, internal* `(page: Page): Promise<void>`
+  - uses: here [cf](#tools-shots-ts--cf), [sleep](#tools-shots-ts--sleep)
+  - used by: here [capture](#tools-shots-ts--capture)
+- <a id="tools-shots-ts--capture"></a>**capture** · *function, internal* `(page: Page): Promise<void>`
+  - uses: here [PORT](#tools-shots-ts--port), [TOWER](#tools-shots-ts--tower), [cf](#tools-shots-ts--cf), [march](#tools-shots-ts--march), [prepare](#tools-shots-ts--prepare), [shot](#tools-shots-ts--shot), [tid](#tools-shots-ts--tid), [until](#tools-shots-ts--until)
+  - used by: here [main](#tools-shots-ts--main)
+- <a id="tools-shots-ts--pairs"></a>**pairs** · *function, internal* `(page: Page): Promise<void>` — One image per screen: v1 on the left, v2 on the right.
+  - uses: here [OUT](#tools-shots-ts--out), [PAIRS](#tools-shots-ts--pairs), [ROOT](#tools-shots-ts--root), [V1](#tools-shots-ts--v1)
+  - used by: here [main](#tools-shots-ts--main)
+- <a id="tools-shots-ts--main"></a>**main** · *function, internal* `(): Promise<void>`
+  - uses: here [OUT](#tools-shots-ts--out), [PORT](#tools-shots-ts--port), [ROOT](#tools-shots-ts--root), [capture](#tools-shots-ts--capture), [pairs](#tools-shots-ts--pairs), [sleep](#tools-shots-ts--sleep)
+  - used by: here [(top level)](#tools-shots-ts--top-level)
+- <a id="tools-shots-ts--top-level"></a>**(top level)** · *module* — Statements that run when the module loads.
+  - uses: here [main](#tools-shots-ts--main)
 
 <a id="tools-sim-ts"></a>
 

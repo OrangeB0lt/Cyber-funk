@@ -3,7 +3,8 @@
  * legacy/test/shots.py), for side-by-side review while the React UI is rebuilt. Also reports
  * horizontal overflow per screen and any page errors.
  *
- *   npx tsx tools/parity/legacyShots.ts      → legacy/shots/*.png (gitignored)
+ *   npx tsx tools/parity/legacyShots.ts          → legacy/shots/*.png (gitignored)
+ *   npx tsx tools/parity/legacyShots.ts finale   → just the finale's screens (24–31)
  *
  * Deleted at cutover.
  */
@@ -56,6 +57,63 @@ async function autoplayUntil(page: Page, done: string, max: number) {
   }
 }
 
+/**
+ * The finale's screens (P4), each reached by starting the v1 flow from a prepared state. The flow
+ * before it is abandoned mid-await (resetFlows), which is fine for screenshots.
+ */
+async function finaleShots(page: Page) {
+  const start = async (setup: string, flow: string) => {
+    // `void`: evaluate would otherwise wait for the flow, which waits for the player.
+    await page.evaluate(`closeSheet(); closePopup(); resetFlows(); ${setup}; void ${flow};`);
+    await sleep(400);
+  };
+  const tower =
+    "S.main = { act: 'tower', step: 1 }; S.district = 'tower'; S.flags.gusFreed = true; " +
+    'S.secondLine = SECOND_LINE.filter(m => m.cond(S)).map(m => ({ id: m.id, name: m.name, line: m.line })); ' +
+    "if (!S.unlocked.includes('tower')) S.unlocked.push('tower');";
+  const until = async (sel: string, max = 30) => {
+    for (let i = 0; i < max && !(await has(page, sel)); i++) {
+      if (await has(page, '[data-act="continue"]')) await act(page, 'continue');
+      await sleep(150);
+    }
+  };
+
+  await start(
+    "S.main = { act: 'tower', step: 0 }; S.flags.gusFreed = true; S.band.recruited = Object.keys(BANDMATES)",
+    'secondLineScene()',
+  );
+  await until('.roster');
+  await shot(page, '24_second_line');
+  await start(`${tower}; S.towerFloor = 0; S.towerFight = 0; delete S.flags.towerEntered`, 'towerFlow()');
+  await shot(page, '25_tower_entry');
+  await start(
+    `${tower}; S.towerFloor = 2; S.flags.towerEntered = true; delete S.flags.towerRested`,
+    'towerFlow()',
+  );
+  await until('[data-act^="choice:"]', 12);
+  await shot(page, '26_vending');
+  await start(
+    `${tower}; S.towerFloor = 3; S.flags.towerEntered = true; delete S.flags.conductorPre`,
+    'towerFlow()',
+  );
+  await waitContinue(page).catch(() => {});
+  await shot(page, '27_conductor');
+  await start(
+    `${tower}; S.towerFloor = 4; S.flags.towerEntered = true; S.flags.boss_conductor = true; delete S.flags.clickPre`,
+    'towerFlow()',
+  );
+  await waitContinue(page).catch(() => {});
+  await shot(page, '28_click_tutorial');
+  await start(`${tower}; S.main = { act: 'tower', step: 3 }`, 'ending()');
+  await until('.epilogue', 20);
+  await shot(page, '29_epilogue');
+  await start("S.flags.ending = true; S.main = { act: 'done', step: 0 }", 'creditsAndNewGamePlus()');
+  await shot(page, '30_credits');
+  await act(page, 'choice:0').catch(() => {});
+  await sleep(400);
+  await shot(page, '31_ngplus_confirm');
+}
+
 async function main() {
   fs.mkdirSync(OUT, { recursive: true });
   const browser = await chromium.launch();
@@ -70,6 +128,17 @@ async function main() {
   page.on('pageerror', e => errors.push(String(e)));
   await page.goto(URL);
   await sleep(600);
+  if (process.argv.includes('finale')) {
+    // A level-15 trumpet with instant text, straight into the finale's screens.
+    await page.evaluate(
+      "S = newState('Dawlin', 'creole', 'trumpet', Object.assign(defaultSettings(), { textSpeed: 'instant', rhythm: 'auto' }), 0); " +
+        'S.level = 15; fullRest(S); UI.titleSettings.textSpeed = "instant"; renderTopbar();',
+    );
+    await finaleShots(page);
+    await browser.close();
+    console.log(`overflowing screens: ${overflows}; page errors: ${JSON.stringify(errors)}`);
+    return;
+  }
   await shot(page, '01_title');
   await page.evaluate(() => {
     (
@@ -169,6 +238,7 @@ async function main() {
   await page.evaluate("CF.S.lexicon.push('cher', 'lagniappe'); openLexiconSheet();");
   await sleep(200);
   await shot(page, '23_lexicon');
+  await finaleShots(page);
   await browser.close();
   console.log(`overflowing screens: ${overflows}; page errors: ${JSON.stringify(errors)}`);
 }

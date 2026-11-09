@@ -78,7 +78,12 @@ export function StoryScreen() {
   return (
     // Tapping the story continues, like the Continue button (v1 behavior). Keyboard users use the button.
     <div className={s.story} onClick={() => app.advance()} data-testid="story">
-      {v.title && <h1 className={s.title}>{v.title}</h1>}
+      {/* The credits fill the screen with their own logo; v1 drew over the title, so it's for screen readers only. */}
+      {v.title && (
+        <h1 className={v.lines.some(l => l.kind === 'cards' && l.style === 'credits') ? 'sr-only' : s.title}>
+          {v.title}
+        </h1>
+      )}
       {/* Not a live region: the Announcer reads each line once (layers/Announcer.tsx). */}
       <div className={s.story}>
         {v.lines.map((l, i) => {

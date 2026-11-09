@@ -27,6 +27,7 @@ Generated reference. Start with the [guide](../../architecture/code-map.md) for 
 | [src/ui/components/Sprite.test.tsx](#src-ui-components-sprite-test-tsx) | The Sprite component: crisp, decorative SVG at whole-number scales; hits replay the flash. |
 | [tests/e2e/a11y.spec.ts](#tests-e2e-a11y-spec-ts) | Every screen and layer of the game, checked with axe (WCAG 2.2 A and AA) at 360×740. |
 | [tests/e2e/a11y.ts](#tests-e2e-a11y-ts) | Accessibility checks for the e2e suite: axe-core (WCAG 2.2 A and AA) on whatever the page shows. |
+| [tests/e2e/finale.spec.ts](#tests-e2e-finale-spec-ts) | The whole game in a 360×740 phone: a new character through the UI, the prologue, every district's boss (dev shortcuts between districts), the second line at th… |
 | [tests/e2e/helpers.ts](#tests-e2e-helpers-ts) | Shared e2e helpers. |
 | [tests/e2e/saves.spec.ts](#tests-e2e-saves-spec-ts) | Save slots on one device: autosave into the slot you picked, continue from the slot picker, start a second character in another slot, import a code into a slot… |
 | [tests/e2e/slice.spec.ts](#tests-e2e-slice-spec-ts) | The P2 vertical slice in a 360×740 touch phone: the prologue through the UI, every menu sheet, the pawn shop, a street fight, and Captain Hush. |
@@ -217,7 +218,7 @@ Accessibility checks for the e2e suite: axe-core (WCAG 2.2 A and AA) on whatever
 
 - Source: [tests/e2e/a11y.ts](../../../tests/e2e/a11y.ts)
 - Packages: `@axe-core/playwright`, `@playwright/test`, `node:fs`
-- Tested by: [a11y.spec](#tests-e2e-a11y-spec-ts)
+- Tested by: [a11y.spec](#tests-e2e-a11y-spec-ts), [finale.spec](#tests-e2e-finale-spec-ts)
 
 Declarations:
 
@@ -225,7 +226,17 @@ Declarations:
   - used by: here [expectAccessible](#tests-e2e-a11y-ts--expectaccessible)
 - <a id="tests-e2e-a11y-ts--expectaccessible"></a>**expectAccessible** · *function* `(page: Page, label: string, opts: { settle?: boolean } = {}): Promise<void>` — Run axe on the page and fail on any violation.
   - uses: here [TAGS](#tests-e2e-a11y-ts--tags)
-  - used by: tests: [a11y.spec](#tests-e2e-a11y-spec-ts)
+  - used by: tests: [a11y.spec](#tests-e2e-a11y-spec-ts), [finale.spec](#tests-e2e-finale-spec-ts)
+
+<a id="tests-e2e-finale-spec-ts"></a>
+
+### tests/e2e/finale.spec.ts
+
+The whole game in a 360×740 phone: a new character through the UI, the prologue, every district's boss (dev shortcuts between districts), the second line at the club, the Tower floor by floor (the Studio Floor's rest, then up), the Conductor, the Click with Play the Blues, the ending, the credits, and New Game+ into the prologue again. Every screen is checked for overflow and, where the finale adds a screen, with axe. The console must stay clean.
+
+- Source: [tests/e2e/finale.spec.ts](../../../tests/e2e/finale.spec.ts)
+- Imports: tests: [e2e/a11y](#tests-e2e-a11y-ts), [e2e/helpers](#tests-e2e-helpers-ts)
+- Packages: `@playwright/test`
 
 <a id="tests-e2e-helpers-ts"></a>
 
@@ -235,23 +246,23 @@ Shared e2e helpers. Tests reach states through the UI where that's what's being 
 
 - Source: [tests/e2e/helpers.ts](../../../tests/e2e/helpers.ts)
 - Packages: `@playwright/test`
-- Tested by: [a11y.spec](#tests-e2e-a11y-spec-ts), [saves.spec](#tests-e2e-saves-spec-ts), [slice.spec](#tests-e2e-slice-spec-ts), [sprites.spec](#tests-e2e-sprites-spec-ts), [cloud.spec](#tests-e2e-stack-cloud-spec-ts), [world.spec](#tests-e2e-world-spec-ts)
+- Tested by: [a11y.spec](#tests-e2e-a11y-spec-ts), [finale.spec](#tests-e2e-finale-spec-ts), [saves.spec](#tests-e2e-saves-spec-ts), [slice.spec](#tests-e2e-slice-spec-ts), [sprites.spec](#tests-e2e-sprites-spec-ts), [cloud.spec](#tests-e2e-stack-cloud-spec-ts), [world.spec](#tests-e2e-world-spec-ts)
 
 Declarations:
 
 - <a id="tests-e2e-helpers-ts--tid"></a>**tid** · *function* `(page: Page, id: string): Locator` — Click by data-testid.
-  - used by: here [playUntil](#tests-e2e-helpers-ts--playuntil) · tests: [a11y.spec](#tests-e2e-a11y-spec-ts), [saves.spec](#tests-e2e-saves-spec-ts), [slice.spec](#tests-e2e-slice-spec-ts), [sprites.spec](#tests-e2e-sprites-spec-ts), [cloud.spec](#tests-e2e-stack-cloud-spec-ts), [world.spec](#tests-e2e-world-spec-ts)
+  - used by: here [playUntil](#tests-e2e-helpers-ts--playuntil) · tests: [a11y.spec](#tests-e2e-a11y-spec-ts), [finale.spec](#tests-e2e-finale-spec-ts), [saves.spec](#tests-e2e-saves-spec-ts), [slice.spec](#tests-e2e-slice-spec-ts), [sprites.spec](#tests-e2e-sprites-spec-ts), [cloud.spec](#tests-e2e-stack-cloud-spec-ts), [world.spec](#tests-e2e-world-spec-ts)
 - <a id="tests-e2e-helpers-ts--watcherrors"></a>**watchErrors** · *function* `(page: Page): string[]` — Collect console errors and uncaught exceptions; assert none at the end of a test.
-  - used by: tests: [a11y.spec](#tests-e2e-a11y-spec-ts), [saves.spec](#tests-e2e-saves-spec-ts), [slice.spec](#tests-e2e-slice-spec-ts), [sprites.spec](#tests-e2e-sprites-spec-ts), [world.spec](#tests-e2e-world-spec-ts)
+  - used by: tests: [a11y.spec](#tests-e2e-a11y-spec-ts), [finale.spec](#tests-e2e-finale-spec-ts), [saves.spec](#tests-e2e-saves-spec-ts), [slice.spec](#tests-e2e-slice-spec-ts), [sprites.spec](#tests-e2e-sprites-spec-ts), [world.spec](#tests-e2e-world-spec-ts)
 - <a id="tests-e2e-helpers-ts--expectnooverflow"></a>**expectNoOverflow** · *function* `(page: Page, label: string): Promise<void>` — Fail if anything sticks out past the 360px viewport.
-  - used by: tests: [a11y.spec](#tests-e2e-a11y-spec-ts), [saves.spec](#tests-e2e-saves-spec-ts), [slice.spec](#tests-e2e-slice-spec-ts), [sprites.spec](#tests-e2e-sprites-spec-ts), [cloud.spec](#tests-e2e-stack-cloud-spec-ts), [world.spec](#tests-e2e-world-spec-ts)
+  - used by: tests: [a11y.spec](#tests-e2e-a11y-spec-ts), [finale.spec](#tests-e2e-finale-spec-ts), [saves.spec](#tests-e2e-saves-spec-ts), [slice.spec](#tests-e2e-slice-spec-ts), [sprites.spec](#tests-e2e-sprites-spec-ts), [cloud.spec](#tests-e2e-stack-cloud-spec-ts), [world.spec](#tests-e2e-world-spec-ts)
 - <a id="tests-e2e-helpers-ts--cf"></a>**cf** · *function* `<T, A = undefined>(page: Page, fn: (app: any, arg: A) => T, arg?: A): Promise<T>` — Run app code in the page: `fn(app, arg)` where app is the GameApp (window.CF).
-  - used by: here [quickStart](#tests-e2e-helpers-ts--quickstart) · tests: [a11y.spec](#tests-e2e-a11y-spec-ts), [saves.spec](#tests-e2e-saves-spec-ts), [slice.spec](#tests-e2e-slice-spec-ts), [sprites.spec](#tests-e2e-sprites-spec-ts), [world.spec](#tests-e2e-world-spec-ts)
+  - used by: here [quickStart](#tests-e2e-helpers-ts--quickstart) · tests: [a11y.spec](#tests-e2e-a11y-spec-ts), [finale.spec](#tests-e2e-finale-spec-ts), [saves.spec](#tests-e2e-saves-spec-ts), [slice.spec](#tests-e2e-slice-spec-ts), [sprites.spec](#tests-e2e-sprites-spec-ts), [world.spec](#tests-e2e-world-spec-ts)
 - <a id="tests-e2e-helpers-ts--screenof"></a>**screenOf** · *function* `(page: Page): Promise<string | null>` — The current screen (data-screen on the app root).
-  - used by: here [playUntil](#tests-e2e-helpers-ts--playuntil), [quickStart](#tests-e2e-helpers-ts--quickstart) · tests: [a11y.spec](#tests-e2e-a11y-spec-ts), [saves.spec](#tests-e2e-saves-spec-ts), [slice.spec](#tests-e2e-slice-spec-ts), [cloud.spec](#tests-e2e-stack-cloud-spec-ts)
-- <a id="tests-e2e-helpers-ts--playuntil"></a>**playUntil** · *function* `(page: Page, done: () => Promise<boolean>, opts: { onScreen?: (screen: string) => Promise<void>; choose?: string; maxSteps?: number; closeSheets?: boolean; onSheet?: ()…` — Tap through whatever the game asks (Continue, first choice, dialogs, timing bar, RIFF at the first target, outcome buttons) until `done` holds.
+  - used by: here [playUntil](#tests-e2e-helpers-ts--playuntil), [quickStart](#tests-e2e-helpers-ts--quickstart) · tests: [a11y.spec](#tests-e2e-a11y-spec-ts), [finale.spec](#tests-e2e-finale-spec-ts), [saves.spec](#tests-e2e-saves-spec-ts), [slice.spec](#tests-e2e-slice-spec-ts), [cloud.spec](#tests-e2e-stack-cloud-spec-ts)
+- <a id="tests-e2e-helpers-ts--playuntil"></a>**playUntil** · *function* `(page: Page, done: () => Promise<boolean>, opts: { onScreen?: (screen: string) => Promise<void>; choose?: string; maxSteps?: number; closeSheets?: boolean; onSheet?: ()…` — Tap through whatever the game asks (Continue, first choice, dialogs, timing bar, Play the Blues when it's offered, RIFF at the first target, outcome buttons) until `done` holds.
   - uses: here [screenOf](#tests-e2e-helpers-ts--screenof), [tid](#tests-e2e-helpers-ts--tid)
-  - used by: here [quickStart](#tests-e2e-helpers-ts--quickstart) · tests: [a11y.spec](#tests-e2e-a11y-spec-ts), [saves.spec](#tests-e2e-saves-spec-ts), [slice.spec](#tests-e2e-slice-spec-ts), [sprites.spec](#tests-e2e-sprites-spec-ts), [cloud.spec](#tests-e2e-stack-cloud-spec-ts), [world.spec](#tests-e2e-world-spec-ts)
+  - used by: here [quickStart](#tests-e2e-helpers-ts--quickstart) · tests: [a11y.spec](#tests-e2e-a11y-spec-ts), [finale.spec](#tests-e2e-finale-spec-ts), [saves.spec](#tests-e2e-saves-spec-ts), [slice.spec](#tests-e2e-slice-spec-ts), [sprites.spec](#tests-e2e-sprites-spec-ts), [cloud.spec](#tests-e2e-stack-cloud-spec-ts), [world.spec](#tests-e2e-world-spec-ts)
 - <a id="tests-e2e-helpers-ts--quickstart"></a>**quickStart** · *function* `(page: Page, cls = 'trumpet'): Promise<void>` — A new game in Tremé after the prologue, fast: text instant, playback in turbo.
   - uses: here [cf](#tests-e2e-helpers-ts--cf), [playUntil](#tests-e2e-helpers-ts--playuntil), [screenOf](#tests-e2e-helpers-ts--screenof)
   - used by: tests: [a11y.spec](#tests-e2e-a11y-spec-ts), [saves.spec](#tests-e2e-saves-spec-ts), [slice.spec](#tests-e2e-slice-spec-ts), [sprites.spec](#tests-e2e-sprites-spec-ts), [world.spec](#tests-e2e-world-spec-ts)

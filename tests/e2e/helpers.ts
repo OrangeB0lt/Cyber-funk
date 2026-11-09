@@ -49,8 +49,8 @@ export function cf<T, A = undefined>(page: Page, fn: (app: any, arg: A) => T, ar
 export const screenOf = (page: Page) => page.locator('[data-screen]').getAttribute('data-screen');
 
 /**
- * Tap through whatever the game asks (Continue, first choice, dialogs, timing bar, RIFF at the first
- * target, outcome buttons) until `done` holds. Optional hooks see each screen once. With
+ * Tap through whatever the game asks (Continue, first choice, dialogs, timing bar, Play the Blues when
+ * it's offered, RIFF at the first target, outcome buttons) until `done` holds. Optional hooks see each screen once. With
  * `closeSheets`, a sheet a scene opens (a shop, the journal) is shown to `onSheet`, then closed.
  */
 export async function playUntil(
@@ -88,6 +88,15 @@ export async function playUntil(
       await tid(page, 'timing')
         .click({ force: true, timeout: 1000 })
         .catch(() => {});
+    } else if (await has('blues')) {
+      // Play the Blues: tap the pads as they light (any tap shatters the Silence; timing is damage).
+      await tid(page, 'blues')
+        .click({ force: true, timeout: 1000 })
+        .catch(() => {});
+      await page.waitForTimeout(500);
+    } else if (await has('act:blues')) {
+      // Only offered against the Click, and nothing else can touch it while it's shielded.
+      await tid(page, 'act:blues').click();
     } else if (await has('act:riff')) {
       await tid(page, 'act:riff').click();
       const target = page.locator('[data-testid^="target:"]:not([disabled])');

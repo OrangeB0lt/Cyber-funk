@@ -106,8 +106,8 @@
 .epilogue {
   display: flex;
   flex-direction: column;
-  gap: 6px;
-  margin: 8px 0;
+  gap: 16px;
+  margin: 12px 0;
 }
 .card {
   background: var(--bg2);
