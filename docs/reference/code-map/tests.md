@@ -39,6 +39,7 @@ Generated reference. Start with the [guide](../../architecture/code-map.md) for 
 | [tests/e2e/world.spec.ts](#tests-e2e-world-spec-ts) | The world walk: in a 360×740 phone, visit every place of every district and tap every option, playing through whatever it starts (story, choices, shops, fights… |
 | [tests/integration/explore.test.ts](#tests-integration-explore-test-ts) | The crawler: for every district, build saves at every step of its story, in four states of play, and press every option at every place down every branch of its… |
 | [tests/integration/playthrough.test.ts](#tests-integration-playthrough-test-ts) | The whole game, played headlessly with real battles: new game → prologue → every district's story → its boss → the second line → the Tower → the ending, down e… |
+| [tests/integration/scenes.test.ts](#tests-integration-scenes-test-ts) | Scene rules worth stating outright. |
 | [tests/integration/slice.test.ts](#tests-integration-slice-test-ts) | The vertical slice, played headlessly: new game → prologue → Tremé → three street wins → Captain Hush → the Quarter unlocks. |
 | [tests/integration/support/crawl.ts](#tests-integration-support-crawl-ts) | The crawler's toolkit: build saves at every point of a district's story, run any scene in a fresh headless Session with a scripted player, and explore every br… |
 | [tests/integration/support/transcriptCases.ts](#tests-integration-support-transcriptcases-ts) | The scene-transcript cases: a save, a scene, and what the game shows and saves when it runs. |
@@ -372,6 +373,17 @@ The whole game, played headlessly with real battles: new game → prologue → e
 - Packages: `vitest`
 - Suites: “playthrough”
 
+<a id="tests-integration-scenes-test-ts"></a>
+
+### tests/integration/scenes.test.ts
+
+Scene rules worth stating outright. The transcript baseline pins every case's exact text and save; these name the behavior a case exists to show, so a re-baseline can't quietly undo it.
+
+- Source: [tests/integration/scenes.test.ts](../../../tests/integration/scenes.test.ts)
+- Imports: tests: [integration/support/transcriptCases](#tests-integration-support-transcriptcases-ts)
+- Packages: `vitest`
+- Suites: “scene rules”
+
 <a id="tests-integration-slice-test-ts"></a>
 
 ### tests/integration/slice.test.ts
@@ -473,7 +485,7 @@ The scene-transcript cases: a save, a scene, and what the game shows and saves w
 - Source: [tests/integration/support/transcriptCases.ts](../../../tests/integration/support/transcriptCases.ts)
 - Imports: core: [ids/band](core.md#src-core-ids-band-ts), [ids/characters](core.md#src-core-ids-characters-ts), [ids/enemies](core.md#src-core-ids-enemies-ts), [ids/flags](core.md#src-core-ids-flags-ts), [ids/items](core.md#src-core-ids-items-ts), [ids/story](core.md#src-core-ids-story-ts), [ids/world](core.md#src-core-ids-world-ts), [types/index](core.md#src-core-types-index-ts) · narrative: [types](narrative.md#src-narrative-types-ts) · content: [index](content.md#src-content-index-ts) · engine: [index](engine.md#src-engine-index-ts) · app: [save/storage](app.md#src-app-save-storage-ts), [session](app.md#src-app-session-ts), [testing/rng](app.md#src-app-testing-rng-ts), [testing/scriptedPresenter](app.md#src-app-testing-scriptedpresenter-ts)
 - Imported by: tests: [integration/support/transcriptsBaseline](#tests-integration-support-transcriptsbaseline-ts)
-- Tested by: [transcripts.test](#tests-integration-transcripts-test-ts)
+- Tested by: [scenes.test](#tests-integration-scenes-test-ts), [transcripts.test](#tests-integration-transcripts-test-ts)
 - Types used: **[app/session](app.md#src-app-session-ts)** [Session](app.md#src-app-session-ts--session) · **[app/testing/scriptedPresenter](app.md#src-app-testing-scriptedpresenter-ts)** [ScriptedPresenter](app.md#src-app-testing-scriptedpresenter-ts--scriptedpresenter), [TranscriptEntry](app.md#src-app-testing-scriptedpresenter-ts--transcriptentry) · **[core/ids/band](core.md#src-core-ids-band-ts)** [BandmateId](core.md#src-core-ids-band-ts--bandmateid), [SecondLineId](core.md#src-core-ids-band-ts--secondlineid) · **[core/ids/characters](core.md#src-core-ids-characters-ts)** [ClassId](core.md#src-core-ids-characters-ts--classid), [RootsId](core.md#src-core-ids-characters-ts--rootsid) · **[core/ids/enemies](core.md#src-core-ids-enemies-ts)** [BossId](core.md#src-core-ids-enemies-ts--bossid), [NoteId](core.md#src-core-ids-enemies-ts--noteid), [OpponentId](core.md#src-core-ids-enemies-ts--opponentid) · **[core/ids/flags](core.md#src-core-ids-flags-ts)** [FlagId](core.md#src-core-ids-flags-ts--flagid), [StoryChoices](core.md#src-core-ids-flags-ts--storychoices) · **[core/ids/items](core.md#src-core-ids-items-ts)** [ItemId](core.md#src-core-ids-items-ts--itemid), [SheetMusicId](core.md#src-core-ids-items-ts--sheetmusicid) · **[core/ids/story](core.md#src-core-ids-story-ts)** [ActId](core.md#src-core-ids-story-ts--actid), [StoryPosition](core.md#src-core-ids-story-ts--storyposition) · **[core/ids/world](core.md#src-core-ids-world-ts)** [DistrictId](core.md#src-core-ids-world-ts--districtid), [GlossaryId](core.md#src-core-ids-world-ts--glossaryid), [PlaceId](core.md#src-core-ids-world-ts--placeid), [QuestId](core.md#src-core-ids-world-ts--questid) · **[core/types/state](core.md#src-core-types-state-ts)** [GameState](core.md#src-core-types-state-ts--gamestate)
 
 Declarations:
@@ -483,7 +495,7 @@ Declarations:
   - used by: here [setupTs](#tests-integration-support-transcriptcases-ts--setupts)
 - <a id="tests-integration-support-transcriptcases-ts--entry"></a>**Entry** · *type* `= union of 11` — One thing the player saw, as the transcript records it.
   - used by: here [TsRun](#tests-integration-support-transcriptcases-ts--tsrun), [tsExtra](#tests-integration-support-transcriptcases-ts--tsextra), [tsTranscript](#tests-integration-support-transcriptcases-ts--tstranscript)
-- <a id="tests-integration-support-transcriptcases-ts--fight"></a>**Fight** · *type* `= 'win' | 'retry' | 'lose' | 'cut'` — How a scripted fight ends: as asked, or `cut` (a street loss: wake up at the club).
+- <a id="tests-integration-support-transcriptcases-ts--fight"></a>**Fight** · *type* `= 'win' | 'retry' | 'lose' | 'fled' | 'cut'` — How a scripted fight ends: as asked (`fled`: the player got away), or `cut` (a street loss: wake up at the club).
   - used by: here [Case](#tests-integration-support-transcriptcases-ts--case), [runTs](#tests-integration-support-transcriptcases-ts--runts)
 - <a id="tests-integration-support-transcriptcases-ts--casestate"></a>**CaseState** · *interface*
   - used by: here [Case](#tests-integration-support-transcriptcases-ts--case), [EVERYONE](#tests-integration-support-transcriptcases-ts--everyone), [T](#tests-integration-support-transcriptcases-ts--t), [afterClick](#tests-integration-support-transcriptcases-ts--afterclick), [atSecondLine](#tests-integration-support-transcriptcases-ts--atsecondline), [cases](#tests-integration-support-transcriptcases-ts--cases), [finished](#tests-integration-support-transcriptcases-ts--finished), [inAct](#tests-integration-support-transcriptcases-ts--inact), [onFloor](#tests-integration-support-transcriptcases-ts--onfloor), [placeCase](#tests-integration-support-transcriptcases-ts--placecase), [setupTs](#tests-integration-support-transcriptcases-ts--setupts), [towerCases](#tests-integration-support-transcriptcases-ts--towercases)
@@ -534,7 +546,7 @@ Declarations:
   - used by: here [cases](#tests-integration-support-transcriptcases-ts--cases)
 - <a id="tests-integration-support-transcriptcases-ts--cases"></a>**cases** · *const* `: Case[]` — Every transcript case.
   - uses: here [T](#tests-integration-support-transcriptcases-ts--t), [finaleCases](#tests-integration-support-transcriptcases-ts--finalecases), [inAct](#tests-integration-support-transcriptcases-ts--inact), [placeCase](#tests-integration-support-transcriptcases-ts--placecase), [secondLineCases](#tests-integration-support-transcriptcases-ts--secondlinecases), [towerCases](#tests-integration-support-transcriptcases-ts--towercases) · **[app/session](app.md#src-app-session-ts)** [Session.hitTheStreets](app.md#src-app-session-ts--session-hitthestreets), [Session.run](app.md#src-app-session-ts--session-run), [Session.startPrologue](app.md#src-app-session-ts--session-startprologue), [Session.travel](app.md#src-app-session-ts--session-travel) · **[content/districts/quarter/cutting.scene](content.md#src-content-districts-quarter-cutting-scene-ts)** [cuttingContest](content.md#src-content-districts-quarter-cutting-scene-ts--cuttingcontest) · **[content/world/streetEvents.scene](content.md#src-content-world-streetevents-scene-ts)** [STREET_EVENTS](content.md#src-content-world-streetevents-scene-ts--street-events) · **[content/world/streets.scene](content.md#src-content-world-streets-scene-ts)** [runEvent](content.md#src-content-world-streets-scene-ts--runevent), [wakeUpAtClub](content.md#src-content-world-streets-scene-ts--wakeupatclub) · **[narrative/types](narrative.md#src-narrative-types-ts)** [SceneContext.boss](narrative.md#src-narrative-types-ts--scenecontext-boss)
-  - used by: **[tests/integration/support/transcriptsBaseline](#tests-integration-support-transcriptsbaseline-ts)** [(top level)](#tests-integration-support-transcriptsbaseline-ts--top-level) · tests: [transcripts.test](#tests-integration-transcripts-test-ts)
+  - used by: **[tests/integration/support/transcriptsBaseline](#tests-integration-support-transcriptsbaseline-ts)** [(top level)](#tests-integration-support-transcriptsbaseline-ts--top-level) · tests: [scenes.test](#tests-integration-scenes-test-ts), [transcripts.test](#tests-integration-transcripts-test-ts)
 - <a id="tests-integration-support-transcriptcases-ts--settings"></a>**settings** · *const* `= { … } (4 keys)` — The settings every case plays with.
   - uses: **[engine/state](engine.md#src-engine-state-ts)** [defaultSettings](engine.md#src-engine-state-ts--defaultsettings)
   - used by: here [setupTs](#tests-integration-support-transcriptcases-ts--setupts)
@@ -550,7 +562,7 @@ Declarations:
   - used by: here [runTs](#tests-integration-support-transcriptcases-ts--runts)
 - <a id="tests-integration-support-transcriptcases-ts--runts"></a>**runTs** · *function* `(c: Case, rnd: number): Promise<TsRun>` — Run a case at a constant random value.
   - uses: here [Case.ts](#tests-integration-support-transcriptcases-ts--case-ts), [setupTs](#tests-integration-support-transcriptcases-ts--setupts), [tsExtra](#tests-integration-support-transcriptcases-ts--tsextra), [tsTranscript](#tests-integration-support-transcriptcases-ts--tstranscript), [tsView](#tests-integration-support-transcriptcases-ts--tsview) · **[app/save/storage](app.md#src-app-save-storage-ts)** [memorySaveStorage](app.md#src-app-save-storage-ts--memorysavestorage) · **[app/session](app.md#src-app-session-ts)** [Session](app.md#src-app-session-ts--session), [Session.game](app.md#src-app-session-ts--session-game), [Session.rng](app.md#src-app-session-ts--session-rng) · **[app/testing/rng](app.md#src-app-testing-rng-ts)** [constantRng](app.md#src-app-testing-rng-ts--constantrng) · **[app/testing/scriptedPresenter](app.md#src-app-testing-scriptedpresenter-ts)** [ScriptedPresenter](app.md#src-app-testing-scriptedpresenter-ts--scriptedpresenter), [ScriptedPresenter.transcript](app.md#src-app-testing-scriptedpresenter-ts--scriptedpresenter-transcript) · **[narrative/types](narrative.md#src-narrative-types-ts)** [SceneInterrupt](narrative.md#src-narrative-types-ts--sceneinterrupt)
-  - used by: **[tests/integration/support/transcriptsBaseline](#tests-integration-support-transcriptsbaseline-ts)** [(top level)](#tests-integration-support-transcriptsbaseline-ts--top-level) · tests: [transcripts.test](#tests-integration-transcripts-test-ts)
+  - used by: **[tests/integration/support/transcriptsBaseline](#tests-integration-support-transcriptsbaseline-ts)** [(top level)](#tests-integration-support-transcriptsbaseline-ts--top-level) · tests: [scenes.test](#tests-integration-scenes-test-ts), [transcripts.test](#tests-integration-transcripts-test-ts)
 
 <a id="tests-integration-support-transcriptsbaseline-ts"></a>
 

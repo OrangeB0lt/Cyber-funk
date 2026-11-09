@@ -49,8 +49,8 @@ export type Entry =
   | { t: 'board'; text: string }
   | { t: 'cards'; style: string; items: { title?: string; text: string; dim?: boolean }[] };
 
-/** How a scripted fight ends: as asked, or `cut` (a street loss: wake up at the club). */
-export type Fight = 'win' | 'retry' | 'lose' | 'cut';
+/** How a scripted fight ends: as asked (`fled`: the player got away), or `cut` (a street loss: wake up at the club). */
+export type Fight = 'win' | 'retry' | 'lose' | 'fled' | 'cut';
 
 export interface CaseState {
   roots?: RootsId;
@@ -528,6 +528,16 @@ export const cases: Case[] = [
       pick,
     ),
   ),
+  {
+    ...placeCase(
+      'jackson broadcaster, smash, flee the squad',
+      'jackson',
+      'broadcaster',
+      inAct('quarter', 1, { flags: ['metRoux', 'metOdette'] }),
+      1,
+    ),
+    fights: ['win', 'fled'],
+  },
   placeCase('jackson look, before', 'jackson', 'look', inAct('quarter', 0)),
   placeCase(
     'jackson look, after',

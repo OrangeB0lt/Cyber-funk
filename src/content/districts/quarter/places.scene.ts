@@ -389,9 +389,10 @@ export const broadcasterScene: Scene = async s => {
     );
     const r2 = await s.fight({ enemies: ['hush_patrol', 'hush_patrol'], level: 4, context: 'quest' });
     if (r2 !== 'win') {
-      // PARITY: fleeing the squad still kills the signal, without the XP (docs/known-issues.md).
-      s.flags.set('broadcasterDone');
-      s.story.set({ act: 'quarter', step: 'main_stage' });
+      // Got away from the squad: they hold the square, and the signal is back by morning.
+      await s.narrate(
+        'You run. Over your shoulder, the Hush are already bolting a new panel onto the spire, and the hum comes back. It will need doing again.',
+      );
       return;
     }
   } else {
