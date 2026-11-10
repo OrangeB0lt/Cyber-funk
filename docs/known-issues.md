@@ -1,6 +1,6 @@
 # Known issues
 
-Behavior found in v1 during the 2.0 port. Per the parity-first rule (ADR-0003), each one was **ported as-is**; P6 fixes each in its own commit, with a test that fails first and a deliberate re-baseline of what it moves. Items marked *design call* need the project owner's decision because the "bug" may be intended. **Where** points into v1's source, which is in git history: `git show 555a9fd:legacy/src/05_engine.js`.
+Behavior found in v1 during the 2.0 port. Per the parity-first rule (ADR-0003), each one was **ported as-is**; P6 fixes each in its own commit, with a test that fails first and a deliberate re-baseline of what it moves. Items marked *design call* needed the project owner's decision because the "bug" may have been intended; P6 settled every one (fixed below, or kept under **Owner decisions**). **Where** points into v1's source, which is in git history: `git show 555a9fd:legacy/src/05_engine.js`.
 
 ## Fixed by the new architecture
 
@@ -21,13 +21,15 @@ These go away by construction. Where the visible sequence changed, the transcrip
 | Street events' `G.xp` doesn't wait for the level-up popup; other XP grants do | One `s.xp()`, always awaited (allowlisted deviation) |
 | The `cleanse` effect always removes bad statuses; its documented `kind` field is ignored | `CleanseEffect` has no such field (it would clash with the effect's own `kind`); its type documents what it does: remove bad statuses, or `only` one. Removing good statuses is the `strip` effect. Nothing in the content asked for more (checked in P6) |
 
-## To fix (P6)
+## Owner decisions
 
-| Issue | Where (v1) | Kind |
-|---|---|---|
-| Play the Blues is always timed, even with auto rhythm (auto rhythm covers only the On the One bar), so players who can't tap in time can't land the Click's shield break well. Found in the P3 accessibility pass. | `07_ui_combat.js` (v2: `battleController.ts`) | design call |
-| Fixed prices (Ð30, Ð80, Ð150…) bypass the district/roots price modifier. | `08_world.js` | design call |
-| Climbing again after beating the Conductor (walk away from the Click, leave, come back) sets the story back to `face_conductor`, refights him (floor 3 never reads `boss_conductor`) and repeats the +50% rally (`towerRested2` is never read). Should leaving the Tower restart the climb at all? | `09_story.js:251-260`, `08_world.js:35` | design call |
+Design calls the owner decided to keep as they are (2026-11-09). Each is the game's intended behavior now, not a bug; changing one is a new design decision.
+
+| Behavior | Decision |
+|---|---|
+| Fixed prices (Ð30, Ð80, Ð150…) skip the district and home-roots price modifier. | **Keep.** The home discount applies to shop stock only. Fees, bribes and the legendary instrument (Ð350, which a Creole player would otherwise get for Ð333) are fixed. |
+| Play the Blues is always timed, even with auto rhythm (auto rhythm covers only the On the One bar). Found in the P3 accessibility pass. | **Keep.** Play the Blues stays a hands-on moment: the six pads are tapped by the player under either rhythm setting. |
+| Climbing again after beating the Conductor (walk away from the Click, travel, come back) restarts the climb: every floor again, the story back at `face_conductor`, the Conductor refought and his +50% rally repeated. | **Keep.** Leaving the Tower restarts the climb; reloading doesn't (it resumes at your floor). |
 
 ## Fixed in P6
 

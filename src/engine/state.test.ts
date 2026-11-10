@@ -49,7 +49,7 @@ describe('newGamePlus (v1 startNewGamePlus)', () => {
       notes: [],
       band: { recruited: [], active: [] },
       flags: {},
-      counters: {}, // PARITY: endingCount resets (known-issues)
+      counters: {}, // matches any counters; "keeps the count of endings reached" checks them
       keyItems: [],
       secondLine: null,
       unlocked: ['treme'],

@@ -11,7 +11,7 @@
 | P3 | The remaining districts, the accessibility pass | done |
 | P4 | Finale and persistence | done (the owner played the finale, 2026-11-09) |
 | P5 | PWA, HTTPS, cutover, docs | done (2026-11-09) |
-| P6 | Post-parity fixes | next |
+| P6 | Post-parity fixes | done (2026-11-09) |
 
 ## P2 close-out (done)
 
@@ -35,7 +35,7 @@
   - contrast tokens, and reduced motion stopping transitions
   - 44px+ targets
 
-  Play the Blues staying timed under auto rhythm is a P6 design call. The rules are in [ui.md](architecture/ui.md#accessibility-phone-first-but-not-phone-only).
+  Play the Blues stays timed under auto rhythm, an owner decision in P6 ([known-issues](known-issues.md#owner-decisions)). The rules are in [ui.md](architecture/ui.md#accessibility-phone-first-but-not-phone-only).
 - **Gate per district** (all green):
   - transcript parity with v1 for every option in each meaningful state
   - off the pending list (now deleted), so that:
@@ -64,7 +64,9 @@
 - **Cutover (done):** `legacy/`, `tools/parity/` and `tools/migrate/` deleted, with the scripts, devDependencies, hook and config entries that served them. The Claude Code skills, CLAUDE.md and the Playwright MCP (now the test-mode build) describe 2.0.
 - **Docs (done):** [pillars](vision/pillars.md), [world bible](vision/world-bible.md), [tone and voice](vision/tone-and-voice.md), the [architecture overview](architecture/overview.md), [onboarding](guides/onboarding.md), [adding content](guides/adding-content.md), [debugging](guides/debugging.md), `team/` ([workstreams](team/workstreams.md), [extension points](team/extension-points.md)), generated [content tables](reference/tables/README.md), and CONTRIBUTING.
 
-## P6: post-parity fixes
+## P6: post-parity fixes (done)
 
-- Work through [known-issues.md](known-issues.md), one commit per fix, each with a test that fails first and a deliberate re-baseline of whatever it moves.
-- Design calls go to the project owner first, batched into one checkpoint with a prototype and sim diff for each.
+- Every v1 issue in [known-issues.md](known-issues.md) is settled: fixed in its own commit, with a test that failed first and a deliberate re-baseline of whatever it moved, or kept as an owner decision.
+- **Bugs, determinism, text and dead data (fixes 23–34):** turn order no longer depends on the JavaScript engine's sort (this was CI's failing sim baseline); an assist helper's death no longer ends the battle; Second Line Smoke can't escape bosses; a runaway fight is called off, not lost; spars pay half; the broadcaster's flee path; New Game+ no longer duplicates story gear or the legendary, and keeps the ending count; the climb's fight resets with its floor; four text fixes; dead fields, a dead flag and a dead item removed (save format v4).
+- **Design calls (owner decisions, 2026-11-09):** fixed: auto rhythm honors the ONE zone's modifiers, tone boosts and Dirge cover every hit, boss telegraphs come a turn before the move, newcomers join the second line at each climb. Kept: fixed prices, Play the Blues stays hands-on, leaving the Tower restarts the climb.
+- **CI:** green on every job (check, server, e2e, stack), including two e2e races fixed under load.

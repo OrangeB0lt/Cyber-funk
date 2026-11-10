@@ -235,9 +235,6 @@ describe('street events', () => {
 /* Coverage across the whole crawl                                      */
 /* ------------------------------------------------------------------ */
 
-/** Never obtainable, on purpose. */
-const NEVER: Partial<Record<ObtainableKey, string>> = {};
-
 describe('coverage', () => {
   it('every quest can be finished', () => {
     const missing = QUEST_IDS.filter(q => !seen.questsDone.has(q));
@@ -300,7 +297,7 @@ describe('coverage', () => {
         for (const id of [...g.gearBag, ...Object.values(g.gear)]) if (id) got.add(obtainableKey(id));
       }
     for (const id of [...LOOT.common, LOOT.rare, ...QUEST_DROPS.map(r => r.item)]) got.add(id);
-    const missing = all.filter(k => !got.has(k) && !NEVER[k]);
+    const missing = all.filter(k => !got.has(k));
     expect(missing).toEqual([]);
   });
 

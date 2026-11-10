@@ -37,7 +37,7 @@ Node 24 (`.nvmrc`). `npm run depcruise` calls dependency-cruiser's API (`tools/d
 
 - **Behavior is pinned by baselines** (`tests/fixtures/`, `docs/guides/testing.md`): the sim's output for three seeds, the engine's rules (enemy groups, field items, shops, victories), and every scene transcript. A refactor changes none of them. A change that's meant to alter behavior re-baselines in the same commit, and the fixture diff is the review; name it in the commit message.
 - **Determinism.** No `Math.random` in game logic (ESLint allows it only for cosmetics in `ui/` and `app/audio`). Use the seeded `Rng` from `src/core/rng.ts`; functions that consume randomness take it explicitly. The RNG state is saved, so a reload replays the same draws.
-- `// PARITY:` marks a load-bearing v1 oddity kept on purpose during the port (statement order, a quirk the baselines depend on). The bugs among them are in `docs/known-issues.md`; P6 fixes each with a failing test first, or records it there as an owner decision.
+- `// PARITY:` marks a load-bearing v1 oddity kept on purpose during the port (statement order, a quirk the baselines depend on). None of them is a known bug any more: P6 fixed those, and `docs/known-issues.md` records the design calls the owner kept. A new bug gets a failing test first.
 - Every id kind gets an `as const` list in `src/core/ids/`. Tables are `satisfies Record<Id, Def>`. Every field of a `core/types` interface has TSDoc (ESLint enforces it).
 - Content never imports the engine. It gets engine capabilities through `EffectOps` arguments. Only `*.scene.ts` content files may import `narrative/`.
 - Every opponent, class and speaker has a pixel-art sprite in `src/content/sprites/`, and a missing one doesn't compile. Draw to the spec in `docs/vision/character-design.md` (one card per sprite, the 80-colour palette, 24×24 grids, 32×32 bosses), then run `npm run sprites:export`. Only `ui/` and `tools/` may import `content/sprites/` (ADR-0007).
@@ -49,7 +49,7 @@ Node 24 (`.nvmrc`). `npm run depcruise` calls dependency-cruiser's API (`tools/d
 - P3 all five districts and the accessibility pass (done; axe on every screen, no allowlist)
 - P4 finale and persistence (done; the owner played it): the second line, the Tower, the ending, credits, New Game+; save format v3
 - P5 PWA, HTTPS via Caddy, cutover (v1 and the parity oracles deleted), docs (done)
-- P6 post-parity fixes (`docs/known-issues.md`) (next)
+- P6 post-parity fixes (done): every v1 issue fixed with a test, or kept as an owner decision (`docs/known-issues.md`)
 
 Details per phase: `docs/roadmap.md`.
 

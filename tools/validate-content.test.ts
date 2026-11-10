@@ -65,7 +65,7 @@ describe('engine/content separation', () => {
     'assist',
   ]);
   const ALLOWED: Record<string, string> = {
-    'items.ts:kingcake': 'PARITY: v1 special-cased King Cake outside battle (docs/known-issues.md).',
+    'items.ts:kingcake': 'PARITY: v1 special-cased King Cake outside battle by id (src/engine/items.ts).',
   };
 
   it('engine code contains no content-only id literals', () => {

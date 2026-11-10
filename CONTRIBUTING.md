@@ -2,7 +2,7 @@
 
 Thanks for joining the band. Read [docs/README.md](docs/README.md) first; it has the reading order. This page covers how work moves from your machine into `main`.
 
-> **Behavior is pinned by baselines.** Refactors don't change behavior: the sim, the engine's rules and every scene transcript must still match `tests/fixtures/`. A change that's meant to alter behavior (a fix from [docs/known-issues.md](docs/known-issues.md), a balance change, new content in a pool) re-baselines in the same commit (`npm run sim:baseline`, `rules:baseline`, `transcripts:baseline`), names it in the commit message, and the fixture diff is the review. See [ADR-0003](docs/adr/0003-determinism-and-parity.md#amendment-cutover-2026-11-09) and [testing](docs/guides/testing.md#baselines).
+> **Behavior is pinned by baselines.** Refactors don't change behavior: the sim, the engine's rules and every scene transcript must still match `tests/fixtures/`. A change that's meant to alter behavior (a bug fix, a balance change, new content in a pool) re-baselines in the same commit (`npm run sim:baseline`, `rules:baseline`, `transcripts:baseline`), names it in the commit message, and the fixture diff is the review. See [ADR-0003](docs/adr/0003-determinism-and-parity.md#amendment-cutover-2026-11-09) and [testing](docs/guides/testing.md#baselines).
 
 ## Setup
 

@@ -103,7 +103,7 @@ The target is WCAG 2.2 AA. `tests/e2e/a11y.spec.ts` runs axe on every screen and
 - `--edge` (3.5:1 or better) outlines controls. `--line` is for dividers and card outlines only.
 - Settings: text size S/M/L, and reduce motion. Reduce motion follows the OS `prefers-reduced-motion` too, and stops both animations and transitions.
 - The 360px layout must never scroll sideways. The e2e suite fails on any overflow.
-- Play the Blues is always timed, even with auto rhythm. That's a known gap, logged as a P6 design call in known-issues.
+- Play the Blues is always timed, even with auto rhythm: an owner decision ([known-issues](../known-issues.md#owner-decisions)). Auto rhythm covers the On the One bar, and honors everything that widens or narrows its ONE zone.
 
 ## The PWA
 

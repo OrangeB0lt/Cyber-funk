@@ -6,7 +6,7 @@ A text RPG built for a phone. NEON ORLEANS, 2084: pick a New Orleans brass-band 
 
 No images and no audio files: every sound is synthesized with the Web Audio API.
 
-> **Version 2.0.** The whole game, from the prologue through the Tower to the ending and New Game+, rebuilt in TypeScript and React as an installable web app that plays offline, with cloud saves in PostgreSQL. It plays exactly like v1, the original single-file game; fixing v1's known bugs comes next ([roadmap](docs/roadmap.md), [known issues](docs/known-issues.md)).
+> **Version 2.0.** The whole game, from the prologue through the Tower to the ending and New Game+, rebuilt in TypeScript and React as an installable web app that plays offline, with cloud saves in PostgreSQL. It started as an exact port of v1, the original single-file game; v1's known bugs are fixed, and a few design calls were settled by the owner ([roadmap](docs/roadmap.md), [known issues](docs/known-issues.md)).
 
 ## Play it
 

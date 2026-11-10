@@ -90,7 +90,7 @@ Unit tests sit next to the code they test (`*.test.ts`). The [architecture overv
 
 **Save formats are append-only.** A `GameState` change updates the save schema too, and when old saves need a value filled in, it bumps `SAVE_VERSION` and adds a migration ([state and saves](../architecture/state-and-saves.md#changing-the-save-format)). A database change goes through `npm run db:generate`. Never edit a migration of either kind once it has shipped.
 
-You'll also see `// PARITY:` comments. The game was ported from an earlier single-file version at exact parity, and those comments mark quirks kept on purpose; the bugs among them are queued in [known-issues.md](../known-issues.md).
+You'll also see `// PARITY:` comments. The game was ported from an earlier single-file version at exact parity, and those comments mark quirks kept on purpose (mostly the order of random draws, which the baselines depend on). The v1 bugs were all fixed in P6; [known-issues.md](../known-issues.md) lists them and the design calls the owner kept.
 
 ### The hooks
 
@@ -118,4 +118,4 @@ CI runs everything again on every push, plus the builds, the server tests and th
 
 This touches the id lists, a table, a scene, the crawler, a baseline and the generated docs, which covers most of what a real content change does.
 
-**Day 5: pick a real task.** Good first tasks: an entry from [known-issues.md](../known-issues.md) (write the failing test first), a new street event, a lexicon term, or a screen to check at 360px. Read the guide for that kind of work: [adding content](adding-content.md), [balancing](balancing.md), [testing](testing.md) or [debugging](debugging.md). [Workstreams](../team/workstreams.md) explains who usually owns what.
+**Day 5: pick a real task.** Good first tasks: a bug you found while playing (write the failing test first), a new street event, a lexicon term, or a screen to check at 360px. Read the guide for that kind of work: [adding content](adding-content.md), [balancing](balancing.md), [testing](testing.md) or [debugging](debugging.md). [Workstreams](../team/workstreams.md) explains who usually owns what.
