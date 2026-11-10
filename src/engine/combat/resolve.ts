@@ -9,7 +9,7 @@
  * Transliterated from v1 (legacy/src/05_engine.js). Statement and expression order are preserved
  * exactly so seeded fights replay draw-for-draw; see ADR-0003 and the PARITY notes.
  */
-import type { StatusId } from '@core/ids/combat';
+import type { StatusId, ToneId } from '@core/ids/combat';
 import type { BossId } from '@core/ids/enemies';
 import { clamp, hasStatus, livingEnemies } from '@core/helpers';
 import type { Rng } from '@core/rng';
@@ -45,6 +45,13 @@ export interface ResolveCtx {
   item?: boolean;
   /** The actor is a bandmate's assist helper. */
   assist?: boolean;
+  /**
+   * A next-tone boost (Cayenne and the other tone items) this action used up on its first landed
+   * hit: every later hit of the same action keeps the tone and the +20%.
+   */
+  boostTone?: ToneId;
+  /** Dirge's +50%, used up on this skill's first landed hit and kept for all of its hits. */
+  dirge?: boolean;
 }
 
 /** The fields of a damage effect dealHit reads. Counter-hits and Play the Blues build these ad hoc. */
@@ -219,15 +226,19 @@ export function dealHit(
   if (ctx.scale) mult *= ctx.scale;
   let toneMult = 1;
   if (att.side === 'player' && att.nextTone) {
-    tone = att.nextTone;
-    mult *= 1.2;
+    ctx.boostTone = att.nextTone;
     att.nextTone = null;
+  }
+  if (ctx.boostTone) {
+    tone = ctx.boostTone;
+    mult *= 1.2;
   }
   if (att.side === 'player' && att.toneBonus && att.toneBonus[tone]) mult *= 1 + att.toneBonus[tone]!;
   if (att.side === 'player' && att.flags.dirgeNext && ctx.isSkill) {
-    mult *= 1.5;
+    ctx.dirge = true;
     att.flags.dirgeNext = false;
   }
+  if (ctx.dirge) mult *= 1.5;
   if (att.side === 'player' && att.bigFour && (ctx.beat4 || fx.forceBeat4)) mult *= 1.6;
   if (fx.machineBonus && def.machine) mult *= fx.machineBonus;
   let weak = false,

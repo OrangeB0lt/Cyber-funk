@@ -301,3 +301,36 @@ describe('auto rhythm', () => {
     expect(rollAutoTiming(drawing(0.72), 10).id).toBe('loose');
   });
 });
+
+describe('one-shot boosts on multi-hit skills', () => {
+  it('a tone boost covers every hit of the skill that uses it up', () => {
+    const b = setup('trumpet', [{ id: 'nutria', level: 30 }], {}, s => (s.level = 13));
+    const enemy = b.enemies[0]!;
+    b.player.nextTone = 'BLUE';
+    playerAction(b, { type: 'play', skillId: 'tr_s6', targetId: enemy.id }, TIMING.pocket);
+    const hits = ofType(b, 'dmg').filter(e => e.target === enemy.id && e.tone !== undefined);
+    expect(hits.length).toBeGreaterThanOrEqual(2);
+    expect(hits.map(e => e.tone)).toEqual(hits.map(() => 'BLUE'));
+    expect(b.player.nextTone).toBeNull();
+  });
+
+  it("Dirge's +50% covers every enemy an all-target skill hits", () => {
+    const foes = [
+      { id: 'nutria' as const, level: 30 },
+      { id: 'nutria' as const, level: 30 },
+      { id: 'nutria' as const, level: 30 },
+    ];
+    const damage = (dirge: boolean) => {
+      const b = setup('trombone', foes, {}, s => (s.level = 13));
+      if (dirge) b.player.flags.dirgeNext = true;
+      playerAction(b, { type: 'play', skillId: 'tb_s6' }, TIMING.pocket);
+      return b.enemies.map(e => e.maxHp - e.hp);
+    };
+    const plain = damage(false);
+    const boosted = damage(true);
+    // Both runs draw the same numbers, so the same enemies dodge; compare the ones that were hit.
+    const hit = plain.map((d, i) => [d, boosted[i]!] as const).filter(([d]) => d > 0);
+    expect(hit.length).toBeGreaterThanOrEqual(2);
+    hit.forEach(([d, x]) => expect(x / d).toBeGreaterThan(1.4));
+  });
+});

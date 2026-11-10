@@ -97,11 +97,11 @@ One hit, in order:
 1. **Dodge.** 5% + 1% per point of Tempo the defender has over the attacker, clamped 0–25%, plus dodge bonuses, max 50%.
 2. **Tone.**
    - Hits use the effect's tone, else the attacker's.
-   - A tone bead (*Cayenne*, *Indigo*…) turns your next hit into its tone at +20%.
+   - A tone bead (*Cayenne*, *Indigo*…) turns your next attack into its tone at +20%: every hit of it, on every target.
 3. **Multipliers.**
    - The skill multiplier.
    - Gear tone bonuses (e.g. Subwoofer Ribcage, LOW +20%).
-   - **Dirge**: +50% on your next skill.
+   - **Dirge**: +50% on your next damaging skill, every hit of it.
    - **Big Four**: Bass Drum, ×1.6 on beat 4.
    - **machine bonus**: Static's Scratch, ×2 vs machines.
 4. **Weak / resist.** Hitting the target's weakness is ×1.5 and records the weakness in the Blue Book. Hitting its resistance is ×0.5, unless the effect ignores resistance.
