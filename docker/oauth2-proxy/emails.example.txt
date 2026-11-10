@@ -1,0 +1,3 @@
+# The Google accounts allowed to sign in, one per line. Copy to emails.txt (not committed).
+# oauth2-proxy watches the file, so edits apply without a restart.
+you@gmail.com

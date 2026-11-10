@@ -1,0 +1,63 @@
+# Caddyfile with Google sign-in in front of everything (compose.auth.yaml, ADR-0008).
+# Same sites and ports as Caddyfile; every request is first checked with oauth2-proxy.
+#
+# Signed out:
+# - pages and assets redirect to Google sign-in;
+# - /api answers 503, not 401. The game reads a 401 as "the server forgot this player" and would
+#   drop the device's player code; a 503 reads as offline, so sync waits and resumes after sign-in.
+{
+	http_port {$HTTP_PORT:8080}
+	https_port {$HTTPS_PORT:8443}
+}
+
+(signed_in) {
+	forward_auth oauth2-proxy:4180 {
+		uri /oauth2/auth
+		header_up X-Real-IP {remote_host}
+		copy_headers X-Auth-Request-Email
+		{block}
+	}
+}
+
+{$SITE_ADDRESS:localhost} {
+	encode zstd gzip
+
+	# Sign-in, callback and sign-out pages.
+	handle /oauth2/* {
+		reverse_proxy oauth2-proxy:4180 {
+			header_up X-Real-IP {remote_host}
+		}
+	}
+
+	# The PWA manifest and icons stay public: browsers may fetch the manifest without cookies.
+	@public path /manifest.webmanifest /icons/*
+	handle @public {
+		reverse_proxy app:8080
+	}
+
+	handle /api/* {
+		import signed_in {
+			@denied status 401
+			handle_response @denied {
+				header Content-Type application/json
+				header Cache-Control no-store
+				respond `{"error":"signed-out"}` 503
+			}
+		}
+		reverse_proxy app:8080
+	}
+
+	handle {
+		import signed_in {
+			@denied status 401
+			handle_response @denied {
+				redir * /oauth2/start?rd={uri}
+			}
+		}
+		reverse_proxy app:8080
+	}
+}
+
+http://{$SITE_ADDRESS:localhost} {
+	redir https://{host}:{$HTTPS_PORT:8443}{uri} permanent
+}

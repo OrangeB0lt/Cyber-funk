@@ -20,6 +20,7 @@ npm run dev:server       # the API on :8787 (needs DATABASE_URL); `npm run dev` 
 npm run db:generate      # after editing server/db/schema.ts: write the SQL migration (commit it)
 docker compose up --build -d --wait                       # production stack: Caddy (HTTPS :8443) + game + API + Postgres
 E2E_STACK_URL=https://localhost:8443 npx playwright test  # tests/e2e/stack against that stack
+# Google sign-in gate (optional, ADR-0008): COMPOSE_FILE=compose.yaml:compose.auth.yaml in .env (docs/guides/docker.md)
 docker compose -f compose.dev.yaml up --build             # develop in Docker: :5173 (HMR), :8787, Postgres
 npm run docker:check / docker:e2e                         # check + server tests / e2e inside containers
 npm run build            # production build -> dist/ (gitignored)

@@ -1,6 +1,6 @@
 # Running with Docker
 
-*Two Compose files. `compose.yaml` runs the game the way players get it. `compose.dev.yaml` is for development, including tests, with nothing but Docker on your machine. The design is in [server.md](../architecture/server.md).*
+*Two Compose files. `compose.yaml` runs the game the way players get it. `compose.dev.yaml` is for development, including tests, with nothing but Docker on your machine. The design is in [server.md](../architecture/server.md). Putting it on the internet: [hosting.md](hosting.md).*
 
 ## Run it all (production image)
 
@@ -46,7 +46,28 @@ Installing the game as an app needs HTTPS that the phone trusts. Caddy issues ce
 | `HTTPS_PORT` / `HTTP_PORT` | `8443` / `8080` | Ports on your machine (HTTP only redirects). For a real domain, `443` / `80` |
 | `POSTGRES_USER` / `POSTGRES_PASSWORD` / `POSTGRES_DB` | `cyberfunk` | Database credentials. **Change the password anywhere but your own machine.** It goes into a URL, so stick to letters and digits. |
 | `LOG_LEVEL` | `info` | `debug` for more, `warn` for less |
+| `COMPOSE_FILE` | unset | `compose.yaml:compose.auth.yaml` turns on [Google sign-in](#require-google-sign-in) |
+| `OAUTH2_PROXY_CLIENT_ID` / `_CLIENT_SECRET` / `_COOKIE_SECRET` | unset | The Google OAuth client and the session cookie's key, for Google sign-in |
 | `TRUST_PROXY` | `true` | The app runs behind Caddy, so rate limits take the client IP from `X-Forwarded-For`. Set `false` only if you run the image without a proxy |
+
+### Require Google sign-in
+
+To keep strangers and bots off a public server, put Google sign-in in front of the whole site. [compose.auth.yaml](../../compose.auth.yaml) adds an `oauth2-proxy` container, and [Caddyfile.auth](../../docker/caddy/Caddyfile.auth) has Caddy check every request with it. Only the Google accounts you list get in. The game and its server don't change. Why it's built this way: [ADR-0008](../adr/0008-google-sign-in-gateway.md).
+
+1. **Create a Google OAuth client** in [Google Cloud Console](https://console.cloud.google.com/apis/credentials):
+   - Under *Google Auth Platform → Branding/Audience*, make the app *External*. Leaving it in *Testing* and adding the same people as test users gives you a second allowlist.
+   - Under *Clients → Create client*, choose *Web application* and add the authorized redirect URI `https://game.example.com/oauth2/callback` (your `SITE_ADDRESS`; add `:port` if it isn't 443).
+2. **Fill in `.env`.** Uncomment the sign-in block from `.env.example`: `COMPOSE_FILE=compose.yaml:compose.auth.yaml`, the client ID and secret, and a cookie secret (`openssl rand -base64 32 | tr -- '+/' '-_'`).
+3. **List who may sign in.** Run `cp docker/oauth2-proxy/emails.example.txt docker/oauth2-proxy/emails.txt` and put one email per line. The file isn't committed. oauth2-proxy watches it, so edits apply straight away. **Create it before `up`**: if it's missing, Docker mounts an empty directory there and nobody can sign in.
+4. **Start it:** `docker compose up -d`.
+
+What players see:
+- Opening the site sends them to Google. Afterwards they come back signed in for 30 days.
+- A Google account that isn't on the list gets a 403 page.
+- The installed PWA keeps working offline. Once the 30 days run out, cloud sync shows offline: `/api` answers 503, not 401, so the device keeps its player code. Opening `https://<site>/oauth2/start` signs them back in, and sync picks up where it left off.
+- The manifest and icons stay public so the phone can install the app. Everything else, `/api` included, needs sign-in.
+
+Turning it off means removing `COMPOSE_FILE` from `.env` and running `docker compose up -d --remove-orphans`.
 
 ### Back up and restore
 

@@ -36,7 +36,8 @@ export default defineConfig({
       workbox: {
         globPatterns: ['**/*.{js,css,html,png,svg,woff,woff2}'],
         navigateFallback: '/index.html',
-        navigateFallbackDenylist: [/^\/api\//],
+        // /oauth2/ is the optional Google sign-in gateway (compose.auth.yaml): it must reach the network.
+        navigateFallbackDenylist: [/^\/api\//, /^\/oauth2\//],
         runtimeCaching: [],
         cleanupOutdatedCaches: true,
       },

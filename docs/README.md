@@ -48,6 +48,7 @@ Start here if you're new. Suggested reading order:
 | [guides/testing.md](guides/testing.md) | Every kind of test, the baselines, the hooks and CI |
 | [guides/debugging.md](guides/debugging.md) | The dev menu, save codes, seeds, traces, headless sessions, common failures |
 | [guides/docker.md](guides/docker.md) | Running the stack over HTTPS, installing on a phone, developing in Docker, the database |
+| [guides/hosting.md](guides/hosting.md) | Hosting it publicly for $0: Neon Postgres + Cloud Run, and cheap fallbacks |
 | [team/workstreams.md](team/workstreams.md) | How the work splits into lanes, and where they hand off |
 | [team/extension-points.md](team/extension-points.md) | The seams for extending the game, and what changes together |
 | [reference/code-map/](reference/code-map/README.md) | Generated: every file, declaration and call edge in `src/`, `server/`, `tools/`, `tests/` |

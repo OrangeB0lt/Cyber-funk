@@ -120,4 +120,5 @@ Each slot on the device has bookkeeping (`cyberfunk_sync_v2:<slot>`):
 - Uploads are size-capped and validated with the game's own schema before they touch the database.
 - Rate limits: 300 requests per minute per IP, and 10 new players per hour per IP. The stack runs the app behind Caddy with `TRUST_PROXY=true`, so these see the client's IP.
 - TLS: Caddy terminates it in front of the app (compose.yaml, [docker.md](../guides/docker.md#play-and-install-on-your-phone)).
+- **Optional Google sign-in gateway** ([ADR-0008](../adr/0008-google-sign-in-gateway.md), [docker.md](../guides/docker.md#require-google-sign-in)). `compose.auth.yaml` puts oauth2-proxy in front of everything except the manifest and icons, and only allowlisted Google accounts get in. The server doesn't know it's there. A signed-out `/api` request gets **503** `{"error":"signed-out"}` from Caddy, not 401, because a 401 makes `CloudSync` forget the device's player. A 503 reads as offline. The service worker leaves `/oauth2/*` navigations to the network, so an installed app can still sign in again.
 - **Not covered yet:** rotating a leaked code. A future `POST /players/me/rotate`.

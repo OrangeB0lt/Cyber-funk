@@ -114,7 +114,7 @@ Deeper: [UI → The PWA](ui.md#the-pwa).
 - The API contract is a set of Zod schemas in [`src/app/save/protocol.ts`](../../src/app/save/protocol.ts), parsed on both sides.
 - It applies pending SQL migrations at startup. They are generated from [`server/db/schema.ts`](../../server/db/schema.ts) with `npm run db:generate` and committed.
 
-Deeper: [server and cloud saves](server.md), [ADR-0006](../adr/0006-server-and-cloud-saves.md).
+Deeper: [server and cloud saves](server.md), [ADR-0006](../adr/0006-server-and-cloud-saves.md). Optional Google sign-in in front of the whole site: [ADR-0008](../adr/0008-google-sign-in-gateway.md).
 
 ## Running it: Docker and Caddy
 

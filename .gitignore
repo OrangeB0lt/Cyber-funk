@@ -12,3 +12,4 @@ shots/
 .claude/hooks/.check-state.json
 .DS_Store
 *.local
+/docker/oauth2-proxy/emails.txt

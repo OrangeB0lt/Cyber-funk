@@ -1,0 +1,41 @@
+# Google sign-in in front of the whole site (ADR-0008). Layer it on compose.yaml:
+#   COMPOSE_FILE=compose.yaml:compose.auth.yaml     in .env, then `docker compose up -d`
+# Caddy asks oauth2-proxy about every request (docker/caddy/Caddyfile.auth); only the Google
+# accounts listed in docker/oauth2-proxy/emails.txt get in (edits apply without a restart).
+# Setup: docs/guides/docker.md.
+services:
+  oauth2-proxy:
+    image: quay.io/oauth2-proxy/oauth2-proxy:v7.15.5
+    restart: unless-stopped
+    environment:
+      OAUTH2_PROXY_PROVIDER: google
+      OAUTH2_PROXY_CLIENT_ID: ${OAUTH2_PROXY_CLIENT_ID:?set OAUTH2_PROXY_CLIENT_ID in .env}
+      OAUTH2_PROXY_CLIENT_SECRET: ${OAUTH2_PROXY_CLIENT_SECRET:?set OAUTH2_PROXY_CLIENT_SECRET in .env}
+      OAUTH2_PROXY_COOKIE_SECRET: ${OAUTH2_PROXY_COOKIE_SECRET:?set OAUTH2_PROXY_COOKIE_SECRET in .env}
+      # Google sends people back to https://<SITE_ADDRESS>/oauth2/callback (the host comes from
+      # Caddy's X-Forwarded-Host). Register exactly that URL on the OAuth client.
+      OAUTH2_PROXY_HTTP_ADDRESS: 0.0.0.0:4180
+      OAUTH2_PROXY_REVERSE_PROXY: 'true'
+      # Only Caddy (on the Compose network) may set X-Forwarded-* headers.
+      OAUTH2_PROXY_TRUSTED_PROXY_IPS: 10.0.0.0/8,172.16.0.0/12,192.168.0.0/16
+      # Caddy does the proxying; oauth2-proxy only answers yes or no (/oauth2/auth).
+      OAUTH2_PROXY_UPSTREAMS: static://202
+      OAUTH2_PROXY_SET_XAUTHREQUEST: 'true'
+      OAUTH2_PROXY_SKIP_PROVIDER_BUTTON: 'true'
+      # Only the listed emails; no whole domains.
+      OAUTH2_PROXY_AUTHENTICATED_EMAILS_FILE: /etc/oauth2-proxy/emails.txt
+      OAUTH2_PROXY_COOKIE_SECURE: 'true'
+      OAUTH2_PROXY_COOKIE_SAMESITE: lax
+      OAUTH2_PROXY_COOKIE_EXPIRE: 720h
+    volumes:
+      - ./docker/oauth2-proxy/emails.txt:/etc/oauth2-proxy/emails.txt:ro
+    # Reached only through Caddy.
+    expose:
+      - '4180'
+
+  caddy:
+    volumes:
+      - ./docker/caddy/Caddyfile.auth:/etc/caddy/Caddyfile:ro
+    depends_on:
+      oauth2-proxy:
+        condition: service_started
