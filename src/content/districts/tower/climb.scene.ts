@@ -8,6 +8,7 @@ import type { FlagId } from '@core/ids/flags';
 import type { Scene } from '@narrative/types';
 import * as conductor from '../../bosses/conductor.scene';
 import * as theClick from '../../bosses/the_click.scene';
+import { recountSecondLine } from '../../story/secondLine.scene';
 import { TOWER_FLOORS } from '../../world/tower';
 
 /** March into the Tower, or pick the climb back up where it stopped. */
@@ -16,6 +17,7 @@ export const towerFlow: Scene = async s => {
   g.inTower = true;
   s.clampVitals();
   s.title('Metronome Tower');
+  await recountSecondLine(s);
   if (g.towerFloor === 0 && !s.flags.has('towerEntered')) {
     s.flags.set('towerEntered');
     // PARITY: v1 reads the second line's length unguarded (it always exists by now).

@@ -81,7 +81,7 @@ Either one also needs a way to get it, usually a shop. Like items, both move the
 ## Bandmates and the second line
 
 - **A bandmate** is an id in `BANDMATE_IDS` (`src/core/ids/band.ts`) and a row in `src/content/band/bandmates.ts`: its `assist` move (an `as_*` id in `ASSIST_SKILL_IDS` and a row in `src/content/combat/assistSkills.ts`), its `passive` and `passiveDesc`. Bandmates also speak, and the band sheet draws them by their NPC sprite, so the id must be in `NPC_IDS` too ([NPCs](#npcs)). Recruit it in a scene with `s.recruit(id)`.
-- **A second-line marcher** for the Tower is an id in `SECOND_LINE_IDS` and an entry in `SECOND_LINE` (`src/content/band/secondLine.ts`), whose `when` decides whether they've joined. The list's order is the marching order.
+- **A second-line marcher** for the Tower is an id in `SECOND_LINE_IDS` and an entry in `SECOND_LINE` (`src/content/band/secondLine.ts`), whose `when` decides whether they've joined: when the line forms, and again at the start of every climb (`recountSecondLine`). The list's order is the marching order.
 
 ## Places
 

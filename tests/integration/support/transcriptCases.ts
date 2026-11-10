@@ -346,6 +346,23 @@ function towerCases(): Case[] {
       { fights: ['lose'] },
     ),
     climb('tower: a loss in the Lobby wakes you at the club', onFloor(0), { fights: ['cut'] }),
+    // Formed with three; since then Gus was freed and Sugar joined the band: both fall in.
+    climb(
+      'tower: newcomers fall in with the second line',
+      onFloor(3, {
+        flags: BEEN_IN,
+        recruited: ['sugar'],
+        secondLine: THREE,
+        story: { act: 'tower', step: 2 },
+        intros: ['conductor'],
+      }),
+      { fights: ['lose'] },
+    ),
+    climb(
+      'tower: nobody new, so no roll call',
+      onFloor(3, { flags: BEEN_IN, story: { act: 'tower', step: 2 }, intros: ['conductor'] }),
+      { fights: ['lose'] },
+    ),
     placeCase('tower lobby after the ending: look up', 'towerlobby', 'look', finished({ district: 'tower' })),
   ];
 }

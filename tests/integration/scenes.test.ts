@@ -56,6 +56,21 @@ describe('scene rules', () => {
     expect(seen.join(' ')).toContain('half your Doubloons');
   });
 
+  it('anyone who joined since the second line formed falls in at the next climb', async () => {
+    const { view, entries } = await run('tower: newcomers fall in with the second line');
+    expect(view.secondLine?.map(m => m.id)).toEqual(['gus', 'mamaroux', 'tijacques', 'odette', 'sugar']);
+    const roster = entries.find(e => e.t === 'cards');
+    expect(roster && roster.t === 'cards' && roster.items.map(i => i.title)).toEqual([
+      'Gus Thibodeaux (Grand Marshal)',
+      'Sugar Desmarais',
+    ]);
+  });
+
+  it('a climb with nobody new has no roll call', async () => {
+    const { entries } = await run('tower: nobody new, so no roll call');
+    expect(entries.some(e => e.t === 'cards')).toBe(false);
+  });
+
   it("the Lost Eye's journal points at Jackson Square, where its fight is", () => {
     expect(QUESTS.lost_eye.desc).toContain('Jackson Square');
     expect(QUESTS.lost_eye.desc).not.toContain('streets');

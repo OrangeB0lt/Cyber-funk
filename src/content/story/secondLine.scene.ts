@@ -3,7 +3,7 @@
  * legacy/src/09_story.js:200-213). Everyone who'll march is listed, the line forms, and the parade
  * takes Claiborne to Canal to Poydras: the Tower district opens.
  */
-import type { Scene } from '@narrative/types';
+import type { Scene, SceneContext } from '@narrative/types';
 import { SECOND_LINE } from '../band/secondLine';
 
 /** Form the second line and march on the Tower. */
@@ -34,3 +34,28 @@ export const secondLineScene: Scene = async s => {
   s.save();
   await s.goto('tower');
 };
+
+/**
+ * At the start of every climb, anyone who has joined since the line formed (Gus freed, a bandmate
+ * recruited, a quest finished) falls in: a roll call of just the newcomers, then the new count. A P6
+ * owner decision; v1 fixed the line when it formed. Nobody who already marched drops out.
+ */
+export async function recountSecondLine(s: SceneContext): Promise<void> {
+  const g = s.game;
+  if (!g.secondLine) return;
+  const marching = new Set(g.secondLine.map(m => m.id));
+  const joined = SECOND_LINE.filter(m => !marching.has(m.id) && m.when(g));
+  if (!joined.length) return;
+  g.secondLine = SECOND_LINE.filter(m => marching.has(m.id) || joined.includes(m)).map(m => ({
+    id: m.id,
+    name: m.name,
+  }));
+  s.cards(
+    'roster',
+    joined.map(m => ({ title: m.name, text: m.line })),
+  );
+  const n = g.secondLine.length;
+  await s.narrate(
+    `${joined.length === 1 ? 'Somebody new falls' : `${joined.length} new faces fall`} in with the second line on the plaza. It's ${n} strong now (+${Math.min(25, n * 2)}% to all stats in the Tower).`,
+  );
+}

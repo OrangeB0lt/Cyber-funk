@@ -161,7 +161,7 @@ Recruited bandmates turn up elsewhere too. Static can hack a payroll terminal or
 
 ## The second line
 
-When you hold all six notes, you form the second line at the Lagniappe club. Everyone who'll march is listed on cards, each with a line of their own ([secondLine.ts](../../src/content/band/secondLine.ts)).
+When you hold all six notes, you form the second line at the Lagniappe club. Everyone who'll march is listed on cards, each with a line of their own ([secondLine.ts](../../src/content/band/secondLine.ts)). Anyone who joins later falls in at the start of your next climb, with a roll call of their own.
 
 | Marcher | Joins if | Their line |
 |---|---|---|
