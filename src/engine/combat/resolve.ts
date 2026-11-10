@@ -163,10 +163,16 @@ export function bossCtx(b: Battle, self: Actor): BossCtx {
 /* Hit math                                                             */
 /* ------------------------------------------------------------------ */
 
-/** Auto-rhythm timing: 20% ONE, 50% pocket, 25% loose, 5% clams. Used by rivals, clones and Sample. */
-export function rollAutoTiming(rng: Rng): TimingGradeDef {
+/**
+ * Auto-rhythm timing: 20% ONE, 50% pocket, 25% loose, 5% clams. Used by rivals, clones and Sample
+ * (scale 1), and for the player's auto rhythm, where `oneScale` is the player's `oneZoneFactor`:
+ * the ONE chance scales with it (taken from or given back to the pocket, at most 70%), so gear,
+ * In the Pocket and Quantized matter as they do on the manual bar. One draw either way.
+ */
+export function rollAutoTiming(rng: Rng, oneScale = 1): TimingGradeDef {
   const r = rng.next();
-  return r < 0.2 ? TIMING.one : r < 0.7 ? TIMING.pocket : r < 0.95 ? TIMING.loose : TIMING.clams;
+  const one = Math.min(0.7, 0.2 * oneScale);
+  return r < one ? TIMING.one : r < 0.7 ? TIMING.pocket : r < 0.95 ? TIMING.loose : TIMING.clams;
 }
 
 /** Crit chance: 5% + 0.4% per Mojo (max 35%), plus gear and skill bonuses, +25% In the Pocket. */

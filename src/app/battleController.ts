@@ -22,6 +22,7 @@ import {
   logLine,
   makeEnemy,
   needsTiming,
+  oneZoneFactor,
   playerAction,
   resolveVictory,
   restoreSnapshot,
@@ -80,7 +81,7 @@ export async function runBattle(
       intent.accuracy = scoreBlues(await P.battle.blues(signal)).accuracy;
     } else if (needsTiming(intent)) {
       if (g.settings.rhythm === 'auto') {
-        timing = rollAutoTiming(rng);
+        timing = rollAutoTiming(rng, oneZoneFactor(b.player));
         await P.battle.autoTiming(timing, signal);
       } else {
         const t = timingSpec(b, 0.5 + session.cosmetic.next() * 0.3);

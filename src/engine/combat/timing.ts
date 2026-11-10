@@ -38,10 +38,20 @@ export function timingSpec(b: Battle, center: number): TimingSpec {
  */
 export function playerTimingSpec(p: Actor, maxLvl: number, center: number): TimingSpec {
   const durationMs = Math.max(880, 1200 - 20 * (maxLvl - 1));
-  let one = 0.06 * (p.oneZone || 1);
-  if (hasStatus(p, 'pocket')) one *= 1.3;
-  if (hasStatus(p, 'quantized')) one *= 0.6;
+  const one = 0.06 * oneZoneFactor(p);
   return { durationMs, center, one, pocket: one * 2.3, loose: one * 4.2 };
+}
+
+/**
+ * How much wider (or narrower) than normal this actor's ONE zone is: gear and sheet music
+ * (`oneZone`), ×1.3 In the Pocket, ×0.6 Quantized. The manual bar scales its zones by it, and
+ * player auto rhythm scales its ON THE ONE chance by it (`rollAutoTiming`).
+ */
+export function oneZoneFactor(p: Actor): number {
+  let f = p.oneZone || 1;
+  if (hasStatus(p, 'pocket')) f *= 1.3;
+  if (hasStatus(p, 'quantized')) f *= 0.6;
+  return f;
 }
 
 /** Grade a tap at `phase` (0–1 along the track). No tap (null) is CLAMS. */

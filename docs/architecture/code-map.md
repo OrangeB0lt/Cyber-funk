@@ -422,7 +422,7 @@ Step by step, in [battleController.ts](../../src/app/battleController.ts) [`runB
    - `P.battle.play(drain(b), b, signal)` takes the queued events and animates them one by one ([event table below](#battle-events-and-how-they-animate)).
    - `P.battle.intent(b, signal)` computes [`legalActions(b)`](../reference/code-map/engine.md#src-engine-combat-legal-ts--legalactions) into `view.battle.legal` and waits. [BattleActions.tsx](../../src/ui/combat/BattleActions.tsx) shows only legal actions; [targeting.ts](../../src/ui/combat/targeting.ts) `withTarget` acts at once if one enemy stands, otherwise waits for a tap on an enemy card. Both end in `app.chooseIntent(intent)`.
    - **Timing.** If [`needsTiming(intent)`](../reference/code-map/engine.md#src-engine-combat-timing-ts--needstiming) (riffs, damaging skills, solos):
-     - auto rhythm (a setting): `rollAutoTiming(rng)`, then `P.battle.autoTiming` shows the grade;
+     - auto rhythm (a setting): `rollAutoTiming(rng, oneZoneFactor(player))`, then `P.battle.autoTiming` shows the grade;
      - manual: `timingSpec(b, center)` with a center from `session.cosmetic`, then `P.battle.timing(spec)` shows the bar ([TimingOverlay.tsx](../../src/ui/combat/TimingOverlay.tsx)), the tap comes back through `app.tap(phase)`, and `gradeTiming(spec, phase)` grades it;
      - either way, `announceTiming(b, grade)` logs it.
    - **Play the Blues** (the finale): `P.battle.blues` runs the six pads, `app.bluesDone(taps, label)` returns the tap times, and `scoreBlues(taps).accuracy` goes into the intent.

@@ -7,7 +7,7 @@ import { describe, expect, it } from 'vitest';
 import { hasStatus } from '@core/helpers';
 import type { ClassId } from '@core/ids/characters';
 import type { OpponentId } from '@core/ids/enemies';
-import { createRng, restoreRng } from '@core/rng';
+import { createRng, restoreRng, type Rng } from '@core/rng';
 import type { Battle, BattleEvent, BattleOptions, GameState } from '@core/types';
 import { TIMING } from '@content/data';
 import {
@@ -17,7 +17,10 @@ import {
   fullRest,
   makeEnemy,
   newGame,
+  oneZoneFactor,
   playerAction,
+  playerTimingSpec,
+  rollAutoTiming,
   runUntilPlayer,
 } from '../index';
 import { applyStatusRaw } from './statuses';
@@ -274,5 +277,27 @@ describe('rewards', () => {
     const spar = battleRewards(b);
     expect(spar.xp).toBe(street.xp);
     expect(spar.gold).toBe(Math.round(street.gold * 0.5));
+  });
+});
+
+describe('auto rhythm', () => {
+  const drawing = (r: number) => ({ next: () => r }) as unknown as Rng;
+
+  it('scales the ON THE ONE chance by the same zone factor as the manual bar', () => {
+    const b = setup('trumpet', [{ id: 'nutria', level: 10 }]);
+    expect(oneZoneFactor(b.player)).toBe(1);
+    expect(rollAutoTiming(drawing(0.25), oneZoneFactor(b.player)).id).toBe('pocket');
+    applyStatusRaw(b, b.player, 'pocket', 3);
+    expect(oneZoneFactor(b.player)).toBeCloseTo(1.3);
+    expect(playerTimingSpec(b.player, 1, 0.5).one).toBeCloseTo(0.06 * 1.3);
+    expect(rollAutoTiming(drawing(0.25), oneZoneFactor(b.player)).id).toBe('one');
+  });
+
+  it('Quantized narrows it, and the chance never eats past the pocket', () => {
+    const b = setup('trumpet', [{ id: 'nutria', level: 10 }]);
+    applyStatusRaw(b, b.player, 'quantized', 2);
+    expect(rollAutoTiming(drawing(0.15), oneZoneFactor(b.player)).id).toBe('pocket');
+    expect(rollAutoTiming(drawing(0.15)).id).toBe('one');
+    expect(rollAutoTiming(drawing(0.72), 10).id).toBe('loose');
   });
 });
