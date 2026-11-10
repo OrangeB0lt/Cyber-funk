@@ -161,7 +161,7 @@ Combat mechanics, one behavior per test. These double as executable documentatio
 - Source: [src/engine/combat/combat.test.ts](../../../src/engine/combat/combat.test.ts)
 - Imports: core: [helpers](core.md#src-core-helpers-ts), [ids/characters](core.md#src-core-ids-characters-ts), [ids/enemies](core.md#src-core-ids-enemies-ts), [rng](core.md#src-core-rng-ts), [types/index](core.md#src-core-types-index-ts) · content: [data](content.md#src-content-data-ts) · engine: [combat/statuses](engine.md#src-engine-combat-statuses-ts), [combat/turns](engine.md#src-engine-combat-turns-ts), [index](engine.md#src-engine-index-ts)
 - Packages: `vitest`
-- Suites: “riffs and skills”, “statuses”, “items in battle”, “bosses”, “the pull loop”, “assists”, “items in battle”, “the loop guard”, “rewards”, “auto rhythm”, “one-shot boosts on multi-hit skills”
+- Suites: “riffs and skills”, “statuses”, “items in battle”, “bosses”, “the pull loop”, “assists”, “items in battle”, “the loop guard”, “rewards”, “auto rhythm”, “one-shot boosts on multi-hit skills”, “boss telegraphs”
 
 <a id="src-engine-combat-coverage-test-ts"></a>
 

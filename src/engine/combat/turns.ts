@@ -9,6 +9,7 @@
 import type { SkillId } from '@core/ids/combat';
 import type { BossId } from '@core/ids/enemies';
 import { hasStatus, livingEnemies } from '@core/helpers';
+import { restoreRng } from '@core/rng';
 import type { Actor, Battle, TimingResult } from '@core/types';
 import { BANDMATES, BASIC_ATTACK, BOSSES, SKILLS, STATUSES, TIMING } from '@content/data';
 import { makeActor } from './actors';
@@ -138,9 +139,19 @@ export function enemyAct(b: Battle, a: Actor): void {
     telegraph: string | null = null,
     timing: TimingResult | null = null;
   if (a.boss) {
+    const flags = { ...a.flags };
     const r = BOSSES[a.defId as BossId].ai(bossCtx(b, a));
     skillId = r.skill;
     telegraph = r.telegraph || null;
+    if (a.planned) {
+      // The move was announced last turn: it happens as announced, and its telegraph isn't repeated.
+      // The AI still ran, so the random draws stay the same; if it chose something else, its flags
+      // go back to how they were, so that move stays available for later.
+      if (r.skill !== a.planned.skill) a.flags = flags;
+      skillId = a.planned.skill;
+      telegraph = null;
+      a.planned = null;
+    }
   } else if (a.rival || a.clone) {
     if (b.rng.chance(a.rival ? 0.6 : 0.5) && a.skills.length) skillId = b.rng.pick(a.skills);
     else skillId = a.riff!;
@@ -150,6 +161,31 @@ export function enemyAct(b: Battle, a: Actor): void {
   if (telegraph) logLine(b, telegraph, 'telegraph');
   if (skillId !== BASIC_ATTACK && !sk.riff) logLine(b, `${a.name} uses ${sk.name}!`, a.boss ? 'boss' : '');
   resolveSkill(b, a, sk, b.player, timing);
+}
+
+/**
+ * After a boss's turn, look one move ahead: run its AI for its next turn as a dry run (on a copy of
+ * the random stream, with its flags restored). If that move is telegraphed, announce it now and
+ * lock it in, so the warning comes a turn before the move and the boss keeps its pace. A charged
+ * move releasing next turn, or a move already announced, needs no look.
+ */
+export function planAhead(b: Battle, a: Actor): void {
+  if (!a.alive || a.charged || a.planned) return;
+  const rng = b.rng;
+  const flags = { ...a.flags };
+  a.turnCount++;
+  b.rng = restoreRng(rng.save());
+  let r;
+  try {
+    r = BOSSES[a.defId as BossId].ai(bossCtx(b, a));
+  } finally {
+    b.rng = rng;
+    a.turnCount--;
+    a.flags = flags;
+  }
+  if (!r.telegraph) return;
+  a.planned = { skill: r.skill, telegraph: r.telegraph };
+  logLine(b, r.telegraph, 'telegraph');
 }
 
 /**
@@ -179,6 +215,7 @@ export function runUntilPlayer(b: Battle): boolean {
     }
     if (canAct) enemyAct(b, a);
     if (!b.over) endTurn(b, a);
+    if (!b.over && a.boss) planAhead(b, a);
   }
   if (!b.over) callOff(b);
   return false;

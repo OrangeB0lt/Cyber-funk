@@ -103,6 +103,11 @@ export interface Actor {
   guard: Guard | null;
   /** A charged move waiting to release next turn. */
   charged: SkillId | null;
+  /**
+   * A boss's telegraphed move, announced at the end of its previous turn and played on its next
+   * action (boss only; see `planAhead`).
+   */
+  planned?: { skill: SkillId; telegraph: string } | null;
   /** Mr. Ledger's compounding Chops bonus (fraction). */
   chopsStack: number;
   /** Extra turns per round (Rougarou's overclock). */

@@ -179,7 +179,7 @@ Each boss has a hand-written AI in `src/content/bosses/<id>.ts`, plus optional h
 - `onTurnStart`: every boss turn.
 - `onHp`: after every hit.
 
-Telegraphs are logged as warnings. Moves that `charge` give a real one-turn warning, so **VAMP** through them.
+Telegraphs come a turn early. At the end of a boss's turn it looks one move ahead (`planAhead`): if that move is telegraphed, the warning is logged then and the move is locked in, so you get a turn to answer it and the boss keeps its pace. An announced move happens as announced even if the boss would now pick something else (Isolde dropping under 40% Heart charges her Cadenza a turn later). Moves that `charge` also warn a turn ahead, so **VAMP** through them.
 
 | Boss | Tells |
 |---|---|

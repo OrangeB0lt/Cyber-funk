@@ -24,7 +24,7 @@ import {
   runUntilPlayer,
 } from '../index';
 import { applyStatusRaw } from './statuses';
-import { endTurn, runAssists } from './turns';
+import { endTurn, planAhead, runAssists } from './turns';
 
 function setup(
   cls: ClassId,
@@ -332,5 +332,42 @@ describe('one-shot boosts on multi-hit skills', () => {
     const hit = plain.map((d, i) => [d, boosted[i]!] as const).filter(([d]) => d > 0);
     expect(hit.length).toBeGreaterThanOrEqual(2);
     hit.forEach(([d, x]) => expect(x / d).toBeGreaterThan(1.4));
+  });
+});
+
+describe('boss telegraphs', () => {
+  const RAISE = 'Captain Hush raises his dampener...';
+  const logs = (b: Battle) => ofType(b, 'log').map(e => e.text);
+
+  it('a telegraph comes a turn before its move, so the player can answer it', () => {
+    const b = setup('trumpet', [{ id: 'captain_hush', level: 3 }], { boss: 'captain_hush', noFlee: true });
+    const hush = b.enemies[0]!;
+    b.player.maxHp = b.player.hp = 9999;
+    let warnedAt = -1;
+    for (let i = 0; i < 8 && warnedAt < 0; i++) {
+      b.events.length = 0;
+      playerAction(b, { type: 'vamp' }, null);
+      runUntilPlayer(b);
+      if (logs(b).includes(RAISE)) warnedAt = hush.turnCount;
+    }
+    // Announced at the end of his second turn, while the player still has a turn to answer it.
+    expect(warnedAt).toBe(2);
+    expect(hush.planned?.skill).toBe('b_baton');
+    expect(b.waiting).toBe(true);
+    b.events.length = 0;
+    playerAction(b, { type: 'vamp' }, null);
+    runUntilPlayer(b);
+    expect(hush.turnCount).toBe(3);
+    expect(logs(b)).not.toContain(RAISE);
+    expect(hush.planned).toBeNull();
+  });
+
+  it('looking ahead draws nothing from the random stream', () => {
+    const b = setup('trumpet', [{ id: 'captain_hush', level: 3 }], { boss: 'captain_hush', noFlee: true });
+    const draws = b.rng.draws;
+    const flags = { ...b.enemies[0]!.flags };
+    planAhead(b, b.enemies[0]!);
+    expect(b.rng.draws).toBe(draws);
+    expect(b.enemies[0]!.flags).toEqual(flags);
   });
 });

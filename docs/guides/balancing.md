@@ -23,7 +23,7 @@ BOSS captain_hush  L3: win 95% rounds 8.1 items 0.6 beads 0.0 hpLeft 41%
 
 - **Street rows:** 60 fights per class per district at the district's minimum level + 1, with a sensible loadout for that level. Each row reports win rate, rounds and Heart lost in wins.
 - **Boss rows:** 40 fights at the boss's level, carrying 3 gumbo, 3 po'boys and tone beads. Each row reports win rate, rounds, items used, beads used and Heart left.
-- The scripted player heals when low, VAMPs through telegraphs, uses beads against resistances, SOLOs when ready, and otherwise picks the highest expected-damage skill. It plays like a decent player, not a perfect one.
+- The scripted player heals when low, VAMPs through charged moves, uses beads against resistances, SOLOs when ready, and otherwise picks the highest expected-damage skill. It plays like a decent player, not a perfect one.
 
 ## Workflow
 
